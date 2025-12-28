@@ -5,6 +5,7 @@ from typing import Dict, Any, List
 from datetime import date, timedelta, datetime
 import time
 
+#launch-> uvicorn API_ServerV4:app --host 0.0.0.0 --port 50000 --reload
 print("INFO: Script cliente iniciado. Intentando conectar a la API...")
 
 # --- Configuracion del Script ---
@@ -14,7 +15,7 @@ OUTPUT_BASE_DIR = os.path.join(os.getcwd(), "output_devocionales")
 # --- Parámetros de Generación ---
 GENERATION_QUANTITY = 365  #Cantidad de devocionales a generar
 # --- Fecha de Inicio ---
-START_DATE = date(2025,8,1) # Fecha de inicio para la generación de devocionales
+START_DATE = date(2026,8,1) # Fecha de inicio para la generación de devocionales
 GENERATION_TOPIC = None
 GENERATION_MAIN_VERSE_HINT = None
 
@@ -27,8 +28,8 @@ GENERATION_MAIN_VERSE_HINT = None
 # Francés: "fr", versión: "LS1910"
 # Chino simplificado: "zh", versión: "CUVS" (ejemplo)
 # Japonés: "ja", versión: "JCB" (ejemplo)
-MASTER_LANG = "ja"      # Cambia a "zh" para chino o "ja" para japonés
-MASTER_VERSION = "新改訳2003"  # Cambia a "CUVS" para chino o "JCB" para japonés
+MASTER_LANG = "zh"      # Cambia a "zh" para chino o "ja" para japonés
+MASTER_VERSION = "和合本1919"  # Cambia a "CUVS" para chino o "JCB" para japonés
 
 
 #Referencia a otros parametros master
