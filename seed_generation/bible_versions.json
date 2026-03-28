@@ -1,0 +1,65 @@
+{
+  "meta": {
+    "version": "1.0.0",
+    "last_updated": "2026-03-20",
+    "note": "Single source of truth for Bible versions and reading speeds. Used by all validators and translation agents. To add a language: add one block under 'languages', zero code changes required."
+  },
+  "languages": {
+    "en": {
+      "name": "English",
+      "script": "latin",
+      "primary_version": "KJV",
+      "fallback_version": "NIV",
+      "allowed_versions": ["KJV", "NIV"],
+      "reading_speed": { "unit": "wpm", "rate": 200 }
+    },
+    "es": {
+      "name": "Español",
+      "script": "latin",
+      "primary_version": "RVR1960",
+      "fallback_version": "NVI",
+      "allowed_versions": ["RVR1960", "NVI"],
+      "reading_speed": { "unit": "wpm", "rate": 200 }
+    },
+    "pt": {
+      "name": "Português",
+      "script": "latin",
+      "primary_version": "ARC",
+      "fallback_version": "NVI",
+      "allowed_versions": ["ARC", "NVI"],
+      "reading_speed": { "unit": "wpm", "rate": 200 }
+    },
+    "fr": {
+      "name": "Français",
+      "script": "latin",
+      "primary_version": "LSG1910",
+      "fallback_version": "TOB",
+      "allowed_versions": ["LSG1910", "TOB"],
+      "reading_speed": { "unit": "wpm", "rate": 200 }
+    },
+    "ja": {
+      "name": "日本語",
+      "script": "cjk",
+      "primary_version": "新改訳2003",
+      "fallback_version": "リビングバイブル",
+      "allowed_versions": ["新改訳2003", "リビングバイブル"],
+      "reading_speed": { "unit": "cpm", "rate": 400 }
+    },
+    "zh": {
+      "name": "中文",
+      "script": "cjk",
+      "primary_version": "和合本1919",
+      "fallback_version": "新译本",
+      "allowed_versions": ["和合本1919", "新译本"],
+      "reading_speed": { "unit": "cpm", "rate": 400 }
+    },
+    "hi": {
+      "name": "हिन्दी",
+      "script": "devanagari",
+      "primary_version": "पवित्र बाइबिल (ओ.वी.)",
+      "fallback_version": "पवित्र बाइबिल",
+      "allowed_versions": ["पवित्र बाइबिल (ओ.वी.)", "पवित्र बाइबिल"],
+      "reading_speed": { "unit": "wpm", "rate": 180 }
+    }
+  }
+}

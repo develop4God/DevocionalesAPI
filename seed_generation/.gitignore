@@ -1,0 +1,64 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+*~
+.DS_Store
+Thumbs.db
+
+# Database files (large binary files)
+Bibles/**/*.SQLite3
+
+# Generated/Output files
+validation_report_*.json
+raw_*.json
+*-Devocional_*.json
+*.log
+
+# Generated Devocional outputs (keep seeds, ignore generated files)
+2025/*-Devocional_*.json
+2026/*-Devocional_*.json
+2025/Partial-test/
+
+# Backup/Old files
+*-old.py
+*-old.json
+
+# Temporary files
+*.tmp
+.env
+.env.local
