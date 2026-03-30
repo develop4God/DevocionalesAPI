@@ -69,7 +69,31 @@ _DEVA = str.maketrans("०१२३४५६७८९", "0123456789")
 
 
 # =============================================================================
-# 2. TAG SERVICE
+# 2. VERSE TEXT NORMALIZER
+# =============================================================================
+
+def normalize_verse_text(text: str) -> str:
+    """Remove [N] footnote markers from Bible verse text.
+
+    Applies to SCH2000 (de), HIOV/HERV (hi) and any translation that embeds
+    inline footnote reference numbers in verse text.
+
+    Preserves translator word-additions like [selbst], [der Wesensart], [zur]
+    since \\[\\d+\\] only matches purely numeric content.
+
+    Two-step removal is intentional: a greedy \\s*\\[\\d+\\]\\s* pattern would
+    collapse दिन[१] उसे → दिनउसे, losing the post-tag space when the tag is
+    directly attached to the preceding word.
+    """
+    text = re.sub(r' \[\d+\] ', ' ', text)   # space-[N]-space → single space
+    text = re.sub(r'\[\d+\]', '', text)        # remove tag, preserve surrounding whitespace
+    text = re.sub(r'  +', ' ', text)           # collapse double spaces
+    text = re.sub(r' ([,;।.])', r'\1', text)   # fix orphaned space before punctuation
+    return text.strip()
+
+
+# =============================================================================
+# 3. TAG SERVICE
 # =============================================================================
 
 def normalize_tag(tag: str) -> str:
