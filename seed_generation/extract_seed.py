@@ -66,7 +66,31 @@ _DEVA = str.maketrans("०१२३४५६७८९", "0123456789")
 
 
 # =============================================================================
-# 2. TAG SERVICE
+# 2. VERSE TEXT NORMALIZER
+# =============================================================================
+
+def normalize_verse_text(text: str) -> str:
+    """Remove [N] footnote markers from Bible verse text.
+
+    Applies to SCH2000 (de), HIOV/HERV (hi) and any translation that embeds
+    inline footnote reference numbers in verse text.
+
+    Preserves translator word-additions like [selbst], [der Wesensart], [zur]
+    since \\[\\d+\\] only matches purely numeric content.
+
+    Two-step removal is intentional: a greedy \\s*\\[\\d+\\]\\s* pattern would
+    collapse दिन[१] उसे → दिनउसे, losing the post-tag space when the tag is
+    directly attached to the preceding word.
+    """
+    text = re.sub(r' \[\d+\] ', ' ', text)   # space-[N]-space → single space
+    text = re.sub(r'\[\d+\]', '', text)        # remove tag, preserve surrounding whitespace
+    text = re.sub(r'  +', ' ', text)           # collapse double spaces
+    text = re.sub(r' ([,;।.])', r'\1', text)   # fix orphaned space before punctuation
+    return text.strip()
+
+
+# =============================================================================
+# 3. TAG SERVICE
 # =============================================================================
 
 def normalize_tag(tag: str) -> str:
@@ -489,6 +513,8 @@ def extract_seed(
         # Main verse
         main_ref_en = extract_ref_from_versiculo(entry.get("versiculo", ""))
         hi_main_cita, main_texto, main_err = resolve_reference(main_ref_en, book_map, cursor, target_lang)
+        if main_texto:
+            main_texto = normalize_verse_text(main_texto)
         if main_err:
             date_errors.append({"field": "versiculo", "reference": main_ref_en, "reason": main_err})
 
@@ -504,7 +530,7 @@ def extract_seed(
                     "reason":    pm_err,
                 })
             else:
-                pm_results.append({"cita": hi_pm_cita, "texto": pm_texto})
+                pm_results.append({"cita": hi_pm_cita, "texto": normalize_verse_text(pm_texto)})
 
         # Decision
         if date_errors:
