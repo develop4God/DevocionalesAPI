@@ -3,344 +3,412 @@
     "Genesis": {
       "book_number": 10,
       "hi_name": "उत्पत्ति",
-      "de_name": "1. Mose"
+      "de_name": "1. Mose",
+      "zh_name": "創世記"
     },
     "Exodus": {
       "book_number": 20,
       "hi_name": "निर्गमन",
-      "de_name": "2. Mose"
+      "de_name": "2. Mose",
+      "zh_name": "出埃及記"
     },
     "Leviticus": {
       "book_number": 30,
       "hi_name": "लैव्यव्यवस्था",
-      "de_name": "3. Mose"
+      "de_name": "3. Mose",
+      "zh_name": "利未記"
     },
     "Numbers": {
       "book_number": 40,
       "hi_name": "गिनती",
-      "de_name": "4. Mose"
+      "de_name": "4. Mose",
+      "zh_name": "民數記"
     },
     "Deuteronomy": {
       "book_number": 50,
       "hi_name": "व्यवस्थाविवरण",
-      "de_name": "5. Mose"
+      "de_name": "5. Mose",
+      "zh_name": "申命記"
     },
     "Joshua": {
       "book_number": 60,
       "hi_name": "यहोशू",
-      "de_name": "Josua"
+      "de_name": "Josua",
+      "zh_name": "約書亞記"
     },
     "Judges": {
       "book_number": 70,
       "hi_name": "न्यायियों",
-      "de_name": "Richter"
+      "de_name": "Richter",
+      "zh_name": "士師記"
     },
     "Ruth": {
       "book_number": 80,
       "hi_name": "रूत",
-      "de_name": "Rut"
+      "de_name": "Rut",
+      "zh_name": "路得記"
     },
     "1 Samuel": {
       "book_number": 90,
       "hi_name": "1 शमूएल",
-      "de_name": "1. Samuel"
+      "de_name": "1. Samuel",
+      "zh_name": "撒母耳記上"
     },
     "2 Samuel": {
       "book_number": 100,
       "hi_name": "2 शमूएल",
-      "de_name": "2. Samuel"
+      "de_name": "2. Samuel",
+      "zh_name": "撒母耳記下"
     },
     "1 Kings": {
       "book_number": 110,
       "hi_name": "1 राजा",
-      "de_name": "1. Könige"
+      "de_name": "1. Könige",
+      "zh_name": "列王紀上"
     },
     "2 Kings": {
       "book_number": 120,
       "hi_name": "2 राजा",
-      "de_name": "2. Könige"
+      "de_name": "2. Könige",
+      "zh_name": "列王紀下"
     },
     "1 Chronicles": {
       "book_number": 130,
       "hi_name": "1 इतिहास",
-      "de_name": "1. Chronik"
+      "de_name": "1. Chronik",
+      "zh_name": "歷代志上"
     },
     "2 Chronicles": {
       "book_number": 140,
       "hi_name": "2 इतिहास",
-      "de_name": "2. Chronik"
+      "de_name": "2. Chronik",
+      "zh_name": "歷代志下"
     },
     "Ezra": {
       "book_number": 150,
       "hi_name": "एज्रा",
-      "de_name": "Esra"
+      "de_name": "Esra",
+      "zh_name": "以斯拉記"
     },
     "Nehemiah": {
       "book_number": 160,
       "hi_name": "नहेम्याह",
-      "de_name": "Nehemia"
+      "de_name": "Nehemia",
+      "zh_name": "尼希米記"
     },
     "Esther": {
       "book_number": 190,
       "hi_name": "एस्तेर",
-      "de_name": "Ester"
+      "de_name": "Ester",
+      "zh_name": "以斯帖記"
     },
     "Job": {
       "book_number": 220,
       "hi_name": "अय्यूब",
-      "de_name": "Hiob"
+      "de_name": "Hiob",
+      "zh_name": "約伯記"
     },
     "Psalm": {
       "book_number": 230,
       "hi_name": "भजन संहिता",
-      "de_name": "Psalm"
+      "de_name": "Psalm",
+      "zh_name": "詩篇"
     },
     "Psalms": {
       "book_number": 230,
       "hi_name": "भजन संहिता",
-      "de_name": "Psalm"
+      "de_name": "Psalm",
+      "zh_name": "詩篇"
     },
     "Proverbs": {
       "book_number": 240,
       "hi_name": "नीतिवचन",
-      "de_name": "Sprüche"
+      "de_name": "Sprüche",
+      "zh_name": "箴言"
     },
     "Ecclesiastes": {
       "book_number": 250,
       "hi_name": "सभोपदेशक",
-      "de_name": "Prediger"
+      "de_name": "Prediger",
+      "zh_name": "傳道書"
     },
     "Song of Solomon": {
       "book_number": 260,
       "hi_name": "श्रेष्ठगीत",
-      "de_name": "Hohelied"
+      "de_name": "Hohelied",
+      "zh_name": "雅歌"
     },
     "Song of Songs": {
       "book_number": 260,
       "hi_name": "श्रेष्ठगीत",
-      "de_name": "Hohelied"
+      "de_name": "Hohelied",
+      "zh_name": "雅歌"
     },
     "Isaiah": {
       "book_number": 290,
       "hi_name": "यशायाह",
-      "de_name": "Jesaja"
+      "de_name": "Jesaja",
+      "zh_name": "以賽亞書"
     },
     "Jeremiah": {
       "book_number": 300,
       "hi_name": "यिर्मयाह",
-      "de_name": "Jeremia"
+      "de_name": "Jeremia",
+      "zh_name": "耶利米書"
     },
     "Lamentations": {
       "book_number": 310,
       "hi_name": "विलापगीत",
-      "de_name": "Klagelieder"
+      "de_name": "Klagelieder",
+      "zh_name": "耶利米哀歌"
     },
     "Ezekiel": {
       "book_number": 330,
       "hi_name": "यहेजकेल",
-      "de_name": "Hesekiel"
+      "de_name": "Hesekiel",
+      "zh_name": "以西結書"
     },
     "Daniel": {
       "book_number": 340,
       "hi_name": "दानिय्येल",
-      "de_name": "Daniel"
+      "de_name": "Daniel",
+      "zh_name": "但以理書"
     },
     "Hosea": {
       "book_number": 350,
       "hi_name": "होशे",
-      "de_name": "Hosea"
+      "de_name": "Hosea",
+      "zh_name": "何西阿書"
     },
     "Joel": {
       "book_number": 360,
       "hi_name": "योएल",
-      "de_name": "Joel"
+      "de_name": "Joel",
+      "zh_name": "約珥書"
     },
     "Amos": {
       "book_number": 370,
       "hi_name": "आमोस",
-      "de_name": "Amos"
+      "de_name": "Amos",
+      "zh_name": "阿摩司書"
     },
     "Obadiah": {
       "book_number": 380,
       "hi_name": "ओबद्याह",
-      "de_name": "Obadja"
+      "de_name": "Obadja",
+      "zh_name": "俄巴底亞書"
     },
     "Jonah": {
       "book_number": 390,
       "hi_name": "योना",
-      "de_name": "Jona"
+      "de_name": "Jona",
+      "zh_name": "約拿書"
     },
     "Micah": {
       "book_number": 400,
       "hi_name": "मीका",
-      "de_name": "Micha"
+      "de_name": "Micha",
+      "zh_name": "彌迦書"
     },
     "Nahum": {
       "book_number": 410,
       "hi_name": "नहूम",
-      "de_name": "Nahum"
+      "de_name": "Nahum",
+      "zh_name": "那鴻書"
     },
     "Habakkuk": {
       "book_number": 420,
       "hi_name": "हबक्कूक",
-      "de_name": "Habakuk"
+      "de_name": "Habakuk",
+      "zh_name": "哈巴谷書"
     },
     "Zephaniah": {
       "book_number": 430,
       "hi_name": "सपन्याह",
-      "de_name": "Zefanja"
+      "de_name": "Zefanja",
+      "zh_name": "西番雅書"
     },
     "Haggai": {
       "book_number": 440,
       "hi_name": "हाग्गै",
-      "de_name": "Haggai"
+      "de_name": "Haggai",
+      "zh_name": "哈該書"
     },
     "Zechariah": {
       "book_number": 450,
       "hi_name": "जकर्याह",
-      "de_name": "Sacharja"
+      "de_name": "Sacharja",
+      "zh_name": "撒迦利亞書"
     },
     "Malachi": {
       "book_number": 460,
       "hi_name": "मलाकी",
-      "de_name": "Maleachi"
+      "de_name": "Maleachi",
+      "zh_name": "瑪拉基書"
     }
   },
   "NT": {
     "Matthew": {
       "book_number": 470,
       "hi_name": "मत्ती",
-      "de_name": "Matthäus"
+      "de_name": "Matthäus",
+      "zh_name": "馬太福音"
     },
     "Mark": {
       "book_number": 480,
       "hi_name": "मरकुस",
-      "de_name": "Markus"
+      "de_name": "Markus",
+      "zh_name": "馬可福音"
     },
     "Luke": {
       "book_number": 490,
       "hi_name": "लूका",
-      "de_name": "Lukas"
+      "de_name": "Lukas",
+      "zh_name": "路加福音"
     },
     "John": {
       "book_number": 500,
       "hi_name": "यूहन्ना",
-      "de_name": "Johannes"
+      "de_name": "Johannes",
+      "zh_name": "約翰福音"
     },
     "Acts": {
       "book_number": 510,
       "hi_name": "प्रेरितों के काम",
-      "de_name": "Apostelgeschichte"
+      "de_name": "Apostelgeschichte",
+      "zh_name": "使徒行傳"
     },
     "Romans": {
       "book_number": 520,
       "hi_name": "रोमियों",
-      "de_name": "Römer"
+      "de_name": "Römer",
+      "zh_name": "羅馬書"
     },
     "1 Corinthians": {
       "book_number": 530,
       "hi_name": "1 कुरिन्थियों",
-      "de_name": "1. Korinther"
+      "de_name": "1. Korinther",
+      "zh_name": "哥林多前書"
     },
     "2 Corinthians": {
       "book_number": 540,
       "hi_name": "2 कुरिन्थियों",
-      "de_name": "2. Korinther"
+      "de_name": "2. Korinther",
+      "zh_name": "哥林多後書"
     },
     "Galatians": {
       "book_number": 550,
       "hi_name": "गलातियों",
-      "de_name": "Galater"
+      "de_name": "Galater",
+      "zh_name": "加拉徕書"
     },
     "Ephesians": {
       "book_number": 560,
       "hi_name": "इफिसियों",
-      "de_name": "Epheser"
+      "de_name": "Epheser",
+      "zh_name": "以弗所書"
     },
     "Philippians": {
       "book_number": 570,
       "hi_name": "फिलिप्पियों",
-      "de_name": "Philipper"
+      "de_name": "Philipper",
+      "zh_name": "腮立比書"
     },
     "Colossians": {
       "book_number": 580,
       "hi_name": "कुलुस्सियों",
-      "de_name": "Kolosser"
+      "de_name": "Kolosser",
+      "zh_name": "歌羅羅書"
     },
     "1 Thessalonians": {
       "book_number": 590,
       "hi_name": "1 थिस्सलुनीकियों",
-      "de_name": "1. Thessalonicher"
+      "de_name": "1. Thessalonicher",
+      "zh_name": "帖撃羅尼迦前書"
     },
     "2 Thessalonians": {
       "book_number": 600,
       "hi_name": "2 थिस्सलुनीकियों",
-      "de_name": "2. Thessalonicher"
+      "de_name": "2. Thessalonicher",
+      "zh_name": "帖撃羅尼迦後書"
     },
     "1 Timothy": {
       "book_number": 610,
       "hi_name": "1 तीमुथियुस",
-      "de_name": "1. Timotheus"
+      "de_name": "1. Timotheus",
+      "zh_name": "提摩太前書"
     },
     "2 Timothy": {
       "book_number": 620,
       "hi_name": "2 तीमुथियुस",
-      "de_name": "2. Timotheus"
+      "de_name": "2. Timotheus",
+      "zh_name": "提摩太後書"
     },
     "Titus": {
       "book_number": 630,
       "hi_name": "तीतुस",
-      "de_name": "Titus"
+      "de_name": "Titus",
+      "zh_name": "提後脫書"
     },
     "Philemon": {
       "book_number": 640,
       "hi_name": "फिलेमोन",
-      "de_name": "Philemon"
+      "de_name": "Philemon",
+      "zh_name": "腾利巴提舊書"
     },
     "Hebrews": {
       "book_number": 650,
       "hi_name": "इब्रानियों",
-      "de_name": "Hebräer"
+      "de_name": "Hebräer",
+      "zh_name": "希伯来書"
     },
     "James": {
       "book_number": 660,
       "hi_name": "याकूब",
-      "de_name": "Jakobus"
+      "de_name": "Jakobus",
+      "zh_name": "雅各伋書"
     },
     "1 Peter": {
       "book_number": 670,
       "hi_name": "1 पतरस",
-      "de_name": "1. Petrus"
+      "de_name": "1. Petrus",
+      "zh_name": "彼得前書"
     },
     "2 Peter": {
       "book_number": 680,
       "hi_name": "2 पतरस",
-      "de_name": "2. Petrus"
+      "de_name": "2. Petrus",
+      "zh_name": "彼得後書"
     },
     "1 John": {
       "book_number": 690,
       "hi_name": "1 यूहन्ना",
-      "de_name": "1. Johannes"
+      "de_name": "1. Johannes",
+      "zh_name": "約翰一書"
     },
     "2 John": {
       "book_number": 700,
       "hi_name": "2 यूहन्ना",
-      "de_name": "2. Johannes"
+      "de_name": "2. Johannes",
+      "zh_name": "約翰二書"
     },
     "3 John": {
       "book_number": 710,
       "hi_name": "3 यूहन्ना",
-      "de_name": "3. Johannes"
+      "de_name": "3. Johannes",
+      "zh_name": "約翰三書"
     },
     "Jude": {
       "book_number": 720,
       "hi_name": "यहूदा",
-      "de_name": "Judas"
+      "de_name": "Judas",
+      "zh_name": "状帵書"
     },
     "Revelation": {
       "book_number": 730,
       "hi_name": "प्रकाशितवाक्य",
-      "de_name": "Offenbarung"
+      "de_name": "Offenbarung",
+      "zh_name": "啟示錄"
     }
   }
 }
