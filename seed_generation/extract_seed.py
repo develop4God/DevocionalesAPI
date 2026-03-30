@@ -20,11 +20,14 @@ Usage:
                seed_tag_misses_<lang>_<version>_<ts>.json  (if any)
 """
 
+import gzip
 import json
 import re
+import shutil
 import sqlite3
 import sys
 import os
+import tempfile
 from datetime import datetime
 from tkinter import Tk, filedialog, messagebox, simpledialog
 
@@ -394,7 +397,42 @@ def resolve_reference(
 
 
 # =============================================================================
-# 4. SEED WRITER
+# 4. SQLITE OPENER  (supports .db / .sqlite / .SQLite3 and .gz of any of those)
+# =============================================================================
+
+def open_sqlite(path: str) -> tuple[sqlite3.Connection, object]:
+    """
+    Open a SQLite database from a plain file or a .gz-compressed file.
+
+    If path ends with .gz:
+      - Decompresses into a NamedTemporaryFile (delete=False so SQLite can open it).
+      - Returns (conn, tmp) — caller MUST call tmp.close() + os.unlink(tmp.name)
+        when done, or use the context pattern in extract_seed().
+    Otherwise:
+      - Opens directly.
+      - Returns (conn, None) — no cleanup needed.
+
+    Never leaves a decompressed file on disk after the caller finishes.
+    """
+    if path.lower().endswith(".gz"):
+        tmp = tempfile.NamedTemporaryFile(suffix=".db", delete=False)
+        try:
+            with gzip.open(path, "rb") as gz_in:
+                shutil.copyfileobj(gz_in, tmp)
+            tmp.flush()
+            tmp.close()                          # close write handle; SQLite opens its own
+            conn = sqlite3.connect(tmp.name)
+            return conn, tmp
+        except Exception:
+            tmp.close()
+            os.unlink(tmp.name)
+            raise
+    else:
+        return sqlite3.connect(path), None
+
+
+# =============================================================================
+# 5. SEED WRITER
 # =============================================================================
 
 def save_seed(seed: dict, output_dir: str, target_lang: str, target_version: str) -> str:
@@ -453,14 +491,23 @@ def extract_seed(
     print(f"      ✅ {len(dates)} dates\n")
 
     print("[4/7] Connecting to SQLite...")
+    is_gz = sqlite_path.lower().endswith(".gz")
+    if is_gz:
+        print(f"      🗜️  Detected .gz — decompressing to temp file (will be deleted on exit)...")
+    tmp_db = None
     try:
-        conn = sqlite3.connect(sqlite_path)
+        conn, tmp_db = open_sqlite(sqlite_path)
         cursor = conn.cursor()
         cursor.execute("SELECT COUNT(*) FROM verses")
         verse_count = cursor.fetchone()[0]
         print(f"      ✅ {verse_count:,} verses available\n")
     except Exception as e:
         print(f"      ❌ FATAL: Cannot open SQLite — {e}")
+        if tmp_db is not None:
+            try:
+                os.unlink(tmp_db.name)
+            except OSError:
+                pass
         sys.exit(1)
 
     # ── Preflight tag coverage ────────────────────────────────────────────────
@@ -476,58 +523,66 @@ def extract_seed(
     ok_count    = 0
     skip_count  = 0
 
-    for date_key in dates:
-        try:
-            entry = kjv_dates[date_key][0]
-        except (KeyError, IndexError):
-            errors.append({"date": date_key, "reason": "entry not accessible in KJV JSON"})
-            skip_count += 1
-            continue
+    try:
+        for date_key in dates:
+            try:
+                entry = kjv_dates[date_key][0]
+            except (KeyError, IndexError):
+                errors.append({"date": date_key, "reason": "entry not accessible in KJV JSON"})
+                skip_count += 1
+                continue
 
-        date_errors = []
+            date_errors = []
 
-        # Main verse
-        main_ref_en = extract_ref_from_versiculo(entry.get("versiculo", ""))
-        hi_main_cita, main_texto, main_err = resolve_reference(main_ref_en, book_map, cursor, target_lang)
-        if main_err:
-            date_errors.append({"field": "versiculo", "reference": main_ref_en, "reason": main_err})
+            # Main verse
+            main_ref_en = extract_ref_from_versiculo(entry.get("versiculo", ""))
+            hi_main_cita, main_texto, main_err = resolve_reference(main_ref_en, book_map, cursor, target_lang)
+            if main_err:
+                date_errors.append({"field": "versiculo", "reference": main_ref_en, "reason": main_err})
 
-        # Para meditar
-        pm_results = []
-        for idx, pm in enumerate(entry.get("para_meditar", [])):
-            cita_en = pm.get("cita", "").strip()
-            hi_pm_cita, pm_texto, pm_err = resolve_reference(cita_en, book_map, cursor, target_lang)
-            if pm_err:
-                date_errors.append({
-                    "field":     f"para_meditar[{idx}]",
-                    "reference": cita_en,
-                    "reason":    pm_err,
-                })
-            else:
-                pm_results.append({"cita": hi_pm_cita, "texto": pm_texto})
+            # Para meditar
+            pm_results = []
+            for idx, pm in enumerate(entry.get("para_meditar", [])):
+                cita_en = pm.get("cita", "").strip()
+                hi_pm_cita, pm_texto, pm_err = resolve_reference(cita_en, book_map, cursor, target_lang)
+                if pm_err:
+                    date_errors.append({
+                        "field":     f"para_meditar[{idx}]",
+                        "reference": cita_en,
+                        "reason":    pm_err,
+                    })
+                else:
+                    pm_results.append({"cita": hi_pm_cita, "texto": pm_texto})
 
-        # Decision
-        if date_errors:
-            errors.append({"date": date_key, "errors": date_errors})
-            skip_count += 1
-            print(f"  ⏭️  {date_key} — SKIPPED ({len(date_errors)} error(s))")
-            for e in date_errors:
-                print(f"       {e['field']}: {e['reason']}")
-            continue
+            # Decision
+            if date_errors:
+                errors.append({"date": date_key, "errors": date_errors})
+                skip_count += 1
+                print(f"  ⏭️  {date_key} — SKIPPED ({len(date_errors)} error(s))")
+                for e in date_errors:
+                    print(f"       {e['field']}: {e['reason']}")
+                continue
 
-        # Translate tags — all misses logged to tag_misses
-        en_tags     = entry.get("tags") or []
-        target_tags = translate_tags(en_tags, tags_map, effective_merge, target_lang, tag_misses)
+            # Translate tags — all misses logged to tag_misses
+            en_tags     = entry.get("tags") or []
+            target_tags = translate_tags(en_tags, tags_map, effective_merge, target_lang, tag_misses)
 
-        seed[date_key] = {
-            "versiculo":   {"cita": hi_main_cita, "texto": main_texto},
-            "para_meditar": pm_results,
-            "tags":         target_tags,
-        }
-        ok_count += 1
-        print(f"  ✅  {date_key} — {hi_main_cita} | tags: {target_tags}")
+            seed[date_key] = {
+                "versiculo":   {"cita": hi_main_cita, "texto": main_texto},
+                "para_meditar": pm_results,
+                "tags":         target_tags,
+            }
+            ok_count += 1
+            print(f"  ✅  {date_key} — {hi_main_cita} | tags: {target_tags}")
 
-    conn.close()
+    finally:
+        conn.close()
+        if tmp_db is not None:
+            try:
+                os.unlink(tmp_db.name)
+                print(f"      🗑️  Temp file deleted: {tmp_db.name}")
+            except OSError as e:
+                print(f"      ⚠️  Could not delete temp file {tmp_db.name}: {e}")
 
     # ── Reverse validation ────────────────────────────────────────────────────
     violations = reverse_validate_seed(seed, tags_map, effective_merge, target_lang)
@@ -583,10 +638,14 @@ def main() -> None:
         print("Cancelled.")
         sys.exit(0)
 
-    messagebox.showinfo("Seed Extractor — Step 2 of 4", "Select the SQLite Bible database.")
+    messagebox.showinfo("Seed Extractor — Step 2 of 4", "Select the SQLite Bible database (.db / .sqlite / .SQLite3 or .gz).")
     sqlite_path = filedialog.askopenfilename(
         title="Select SQLite DB",
-        filetypes=[("SQLite files", "*.SQLite3 *.db *.sqlite"), ("All files", "*.*")],
+        filetypes=[
+            ("SQLite files", "*.SQLite3 *.db *.sqlite"),
+            ("Compressed SQLite (.gz)", "*.gz"),
+            ("All files", "*.*"),
+        ],
     )
     if not sqlite_path:
         print("Cancelled.")
