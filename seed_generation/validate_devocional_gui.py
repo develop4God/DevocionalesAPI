@@ -48,7 +48,7 @@ ORACION_MIN_CHARS    = 150
 # CJK languages use denser characters; 250 CJK chars ≈ 900+ Latin chars of content
 CJK_REFLEXION_MIN    = 250
 CJK_ORACION_MIN      = 80
-SENTENCE_ENDINGS     = ('.', '!', '?', '»', '"', "'", '\u201c', '\u201d', '।', '。', '！', '？')
+SENTENCE_ENDINGS     = ('.', '!', '?', '»', '"', "'", '\u2018', '\u2019', '\u201c', '\u201d', '।', '。', '！', '？')
 # Words whose consecutive repetition is grammatically valid (not a copy error):
 #   - liturgical: intentional repetition (heilig heilig, holy holy)
 #   - reflexive pronouns: 'nous nous' in FR is a standard reflexive-verb construction
