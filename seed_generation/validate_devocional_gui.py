@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-validate_devocional_gui.py — v4
+validate_devocional_gui.py — v5
 - Non-Latin langs (hi, ja, zh): flag Latin chars, group allowed labels
 - Latin langs (en, pt, fr): detect Spanish leaks
 - Content quality checks (Phase 1): truncation, min length, prayer ending,
@@ -30,11 +30,14 @@ ALWAYS_ALLOWED  = {"HIOV", "OV", "HERV", "ERV", "KJV", "NIV", "NVI",
 LATIN_RE = re.compile(r"[a-zA-Z]+")
 
 # Spanish leak words to detect in non-Spanish Latin-script files
+# Removed: 'Jesus' (valid EN/PT/FR), 'amen' (universal liturgical),
+#          'Salvador'/'salvador' (valid PT: savior),
+#          'santo'/'santa' (valid PT: Espírito Santo, etc.)
 SPANISH_LEAKS = {
-    "Amén", "amen", "Jesús", "Jesus", "Señor", "señor", "también",
-    "también", "Espíritu", "espíritu", "oración", "también", "Padre",
-    "padre", "gracia", "gloria", "alabanza", "misericordia", "Salvador",
-    "salvador", "bendición", "bendicion", "nombre", "santo", "santa",
+    "Amén", "Jesús", "Señor", "señor", "también",
+    "Espíritu", "espíritu", "oración", "Padre",
+    "padre", "gracia", "gloria", "alabanza", "misericordia",
+    "bendición", "bendicion", "nombre",
     "corazón", "corazon", "Dios",
 }
 
@@ -42,44 +45,84 @@ SPANISH_LEAKS = {
 # ── Content quality constants (Phase 1) ──────────────────────────────────────
 REFLEXION_MIN_CHARS  = 800
 ORACION_MIN_CHARS    = 150
-SENTENCE_ENDINGS     = ('.', '!', '?', '»', '"', '\u201c', '\u201d', '।', '。', '！', '？')
-LITURGICAL_WHITELIST = frozenset({
-    'heilig', 'holy', 'kadosh', 'halleluja', 'hosanna', 'amen', 'amén', 'āmen'
+# CJK languages use denser characters; 250 CJK chars ≈ 900+ Latin chars of content
+CJK_REFLEXION_MIN    = 250
+CJK_ORACION_MIN      = 80
+SENTENCE_ENDINGS     = ('.', '!', '?', '»', '"', "'", '\u201c', '\u201d', '।', '。', '！', '？')
+# Words whose consecutive repetition is grammatically valid (not a copy error):
+#   - liturgical: intentional repetition (heilig heilig, holy holy)
+#   - reflexive pronouns: 'nous nous' in FR is a standard reflexive-verb construction
+CONSECUTIVE_DUP_SKIP = frozenset({
+    'heilig', 'holy', 'kadosh', 'halleluja', 'hosanna', 'amen', 'amén', 'āmen',
+    'nous', 'vous',  # French reflexive pronouns (nous nous aimons = we love one another)
+    'पवित्र',        # Hindi 'holy' — intentional liturgical repetition (cf. Rev 4:8)
+    'saul',          # Biblical quote: "Saul, Saul, why do you persecute me?" (Acts 9:4)
 })
-AMEN_VARIANTS = frozenset({'amen', 'amén', 'āmen'})
+# Sentence-ending punctuation: repetition across a sentence boundary is rhetorical, not an error
+SENT_END_PUNCT = frozenset({'.', '!', '?', ':', '»', '\u201d'})
+AMEN_VARIANTS = frozenset({'amen', 'amén', 'āmen', 'amem'})  # amem covers PT 'amém'
+CJK_AMEN_VARIANTS = frozenset({'阿们', '阿门', '阿們', '阿門', 'アーメン', 'ア-メン'})
+HINDI_AMEN_VARIANTS = frozenset({'आमीन', 'आमेन', 'आमीन', 'आमेन'})
 
 
 def _find_consecutive_dup(text: str):
-    """Returns first consecutive duplicate word (len > 3, not liturgical), or None."""
+    """Returns first consecutive duplicate word (len > 3, not in skip list), or None.
+
+    Skips repetition at sentence boundaries (rhetorical anaphora) and
+    known grammatical constructions (e.g. French reflexive 'nous nous').
+    """
     words = text.split()
     for i in range(len(words) - 1):
-        w1 = words[i].strip('.,;:!?').lower()
+        raw1 = words[i]
+        # Skip sentence-boundary repetition (e.g. 'love. Love,' or 'grace: Grace')
+        if raw1 and raw1[-1] in SENT_END_PUNCT:
+            continue
+        w1 = raw1.strip('.,;:!?').lower()
         w2 = words[i + 1].strip('.,;:!?').lower()
-        if w1 == w2 and len(w1) > 3 and w1 not in LITURGICAL_WHITELIST:
-            return f'"{words[i]} {words[i+1]}"'
+        if w1 == w2 and len(w1) > 3 and w1 not in CONSECUTIVE_DUP_SKIP:
+            return f'"{raw1} {words[i+1]}"'
     return None
 
 
 def _check_prayer_ending(oracion: str) -> bool:
-    last = oracion.strip().rstrip('.!,;।').split()[-1].lower()
     import unicodedata
-    last = unicodedata.normalize('NFD', last).encode('ascii', 'ignore').decode()
-    return last in AMEN_VARIANTS
+    text = oracion.strip()
+    # CJK scripts: check suffix directly (no word boundaries)
+    stripped_cjk = text.rstrip('。！？.!,;')
+    for cjk in CJK_AMEN_VARIANTS:
+        if stripped_cjk.endswith(cjk):
+            return True
+    # Latin / Devanagari: check last whitespace-separated word
+    parts = text.rstrip('.!,;।。！？').split()
+    if not parts:
+        return False
+    last_w = parts[-1].strip('.,;:!?।').lower()
+    # Hindi Devanagari
+    if last_w in HINDI_AMEN_VARIANTS:
+        return True
+    # Latin-script (normalize accents for PT 'amém' → 'amem')
+    last_ascii = unicodedata.normalize('NFD', last_w).encode('ascii', 'ignore').decode()
+    return last_ascii in AMEN_VARIANTS
 
 
-def check_content_quality(entry: dict) -> list:
+def check_content_quality(entry: dict, lang: str = '') -> list:
     """
     Phase 1 content checks — returns list of issue strings.
     Checks: min length, truncation, prayer ending, double Amen, dup words.
+    lang: ISO 639-1 code used to apply language-appropriate thresholds.
     """
     issues = []
     r = entry.get('reflexion', '').strip()
     o = entry.get('oracion',   '').strip()
 
-    if len(r) < REFLEXION_MIN_CHARS:
-        issues.append(f'reflexion too short: {len(r)} chars (min {REFLEXION_MIN_CHARS})')
-    if len(o) < ORACION_MIN_CHARS:
-        issues.append(f'oracion too short: {len(o)} chars (min {ORACION_MIN_CHARS})')
+    cjk = lang in ('zh', 'ja')
+    reflexion_min = CJK_REFLEXION_MIN if cjk else REFLEXION_MIN_CHARS
+    oracion_min   = CJK_ORACION_MIN   if cjk else ORACION_MIN_CHARS
+
+    if len(r) < reflexion_min:
+        issues.append(f'reflexion too short: {len(r)} chars (min {reflexion_min})')
+    if len(o) < oracion_min:
+        issues.append(f'oracion too short: {len(o)} chars (min {oracion_min})')
     if r and not r.endswith(SENTENCE_ENDINGS):
         issues.append(f'reflexion truncated — ends: ...{r.rstrip()[-40:]}')
     if len(re.findall(r'\bAm[eé]n\b', o[-120:], re.IGNORECASE)) >= 2:
@@ -219,7 +262,7 @@ def validate(filepath, lang_override, version_override):
                 for word in leaks: spanish_issues.append(f"{date_key} [{field}]: \"{word}\"")
 
         # Content quality check (Phase 1)
-        for issue in check_content_quality(entry):
+        for issue in check_content_quality(entry, lang=expected_lang):
             content_issues.append(f"{date_key}: {issue}")
 
     # Summaries
