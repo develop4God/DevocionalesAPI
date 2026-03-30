@@ -300,7 +300,7 @@
       "book_number": 550,
       "hi_name": "गलातियों",
       "de_name": "Galater",
-      "zh_name": "加拉徕書"
+      "zh_name": "加拉太書"
     },
     "Ephesians": {
       "book_number": 560,
@@ -312,25 +312,25 @@
       "book_number": 570,
       "hi_name": "फिलिप्पियों",
       "de_name": "Philipper",
-      "zh_name": "腮立比書"
+      "zh_name": "腓立比書"
     },
     "Colossians": {
       "book_number": 580,
       "hi_name": "कुलुस्सियों",
       "de_name": "Kolosser",
-      "zh_name": "歌羅羅書"
+      "zh_name": "歌羅西書"
     },
     "1 Thessalonians": {
       "book_number": 590,
       "hi_name": "1 थिस्सलुनीकियों",
       "de_name": "1. Thessalonicher",
-      "zh_name": "帖撃羅尼迦前書"
+      "zh_name": "帖撒羅尼迦前書"
     },
     "2 Thessalonians": {
       "book_number": 600,
       "hi_name": "2 थिस्सलुनीकियों",
       "de_name": "2. Thessalonicher",
-      "zh_name": "帖撃羅尼迦後書"
+      "zh_name": "帖撒羅尼迦後書"
     },
     "1 Timothy": {
       "book_number": 610,
@@ -348,13 +348,13 @@
       "book_number": 630,
       "hi_name": "तीतुस",
       "de_name": "Titus",
-      "zh_name": "提後脫書"
+      "zh_name": "提多書"
     },
     "Philemon": {
       "book_number": 640,
       "hi_name": "फिलेमोन",
       "de_name": "Philemon",
-      "zh_name": "腾利巴提舊書"
+      "zh_name": "腓利門書"
     },
     "Hebrews": {
       "book_number": 650,
@@ -366,7 +366,7 @@
       "book_number": 660,
       "hi_name": "याकूब",
       "de_name": "Jakobus",
-      "zh_name": "雅各伋書"
+      "zh_name": "雅各書"
     },
     "1 Peter": {
       "book_number": 670,
@@ -402,7 +402,7 @@
       "book_number": 720,
       "hi_name": "यहूदा",
       "de_name": "Judas",
-      "zh_name": "状帵書"
+      "zh_name": "猶大書"
     },
     "Revelation": {
       "book_number": 730,

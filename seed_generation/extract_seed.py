@@ -576,7 +576,7 @@ def extract_seed(
                         "reason":    pm_err,
                     })
                 else:
-                    pm_results.append({"cita": hi_pm_cita, "texto": pm_texto})
+                    pm_results.append({"cita": hi_pm_cita, "texto": normalize_verse_text(pm_texto)})
 
             # Decision
             if date_errors:
@@ -592,7 +592,7 @@ def extract_seed(
             target_tags = translate_tags(en_tags, tags_map, effective_merge, target_lang, tag_misses)
 
             seed[date_key] = {
-                "versiculo":   {"cita": hi_main_cita, "texto": main_texto},
+                "versiculo":   {"cita": hi_main_cita, "texto": normalize_verse_text(main_texto)},
                 "para_meditar": pm_results,
                 "tags":         target_tags,
             }
