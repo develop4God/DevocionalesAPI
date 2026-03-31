@@ -28,6 +28,7 @@ import sqlite3
 import sys
 import os
 import tempfile
+import urllib.request
 from datetime import datetime
 from tkinter import Tk, filedialog, messagebox, simpledialog
 
@@ -36,8 +37,14 @@ from tkinter import Tk, filedialog, messagebox, simpledialog
 # =============================================================================
 
 _SCRIPT_DIR      = os.path.dirname(os.path.abspath(__file__))
-BOOK_MAP_PATH    = os.path.join(_SCRIPT_DIR, "book_map.json")
 TAGS_MASTER_PATH = os.path.join(_SCRIPT_DIR, "tags_master.json")
+
+# SOT for EN book name → book_number; native name read from DB's books table
+BOOKS_SOT_URL = (
+    "https://raw.githubusercontent.com/develop4god/bible_versions"
+    "/refs/heads/main/bible_books.json"
+)
+_books_sot_cache: dict | None = None
 
 # Normalized key → canonical key.
 # Applied BEFORE tags_master lookup — redirects deprecated variants.
@@ -303,20 +310,32 @@ def reverse_validate_seed(
 # 3. REFERENCE RESOLVER
 # =============================================================================
 
-def load_book_map() -> dict:
-    """Load book_map.json. Returns flat EN→{book_number, hi_name} dict."""
-    if not os.path.exists(BOOK_MAP_PATH):
-        raise FileNotFoundError(
-            f"book_map.json not found at: {BOOK_MAP_PATH}\n"
-            f"Place book_map.json next to this script."
-        )
-    with open(BOOK_MAP_PATH, encoding="utf-8") as f:
-        raw = json.load(f)
-    flat = {}
-    for testament in ("OT", "NT"):
-        for en_name, entry in raw.get(testament, {}).items():
-            flat[en_name] = entry
-    return flat
+def load_books_sot(local_path: str | None = None) -> dict:
+    """
+    Load the bible_books.json SOT.
+    Returns flat dict: EN book name → book_number (int)
+
+    Priority:
+      1. Module-level cache (subsequent calls are instant)
+      2. local_path if provided and the file exists
+      3. Remote fetch from BOOKS_SOT_URL
+    """
+    global _books_sot_cache
+    if _books_sot_cache is not None:
+        return _books_sot_cache
+
+    if local_path and os.path.exists(local_path):
+        with open(local_path, encoding="utf-8") as f:
+            data = json.load(f)
+    else:
+        with urllib.request.urlopen(BOOKS_SOT_URL) as resp:
+            data = json.loads(resp.read())
+
+    _books_sot_cache = {
+        name: entry["book_number"]
+        for name, entry in data["books"].items()
+    }
+    return _books_sot_cache
 
 
 def load_kjv(json_path: str) -> tuple[str, dict]:
@@ -375,32 +394,49 @@ def fetch_text(
     return combined
 
 
+def _native_book_name(cursor: sqlite3.Cursor, book_number: int, fallback: str) -> str:
+    """
+    Query the DB's `books` table for the long_name of book_number.
+    Returns fallback (the EN name) if the table is absent or the row is missing.
+    """
+    try:
+        cursor.execute(
+            "SELECT long_name FROM books WHERE book_number = ?",
+            (book_number,),
+        )
+        row = cursor.fetchone()
+        if row and row[0]:
+            return row[0]
+    except sqlite3.OperationalError:
+        pass  # `books` table absent in some minimal DB builds
+    return fallback
+
+
 def resolve_reference(
     cita: str,
-    book_map: dict,
+    books_sot: dict,
     cursor: sqlite3.Cursor,
-    target_lang: str = "hi",
 ) -> tuple[str | None, str | None, str | None]:
     """
     Resolve EN reference → (local_cita, texto, error_reason).
     On success: (local_cita, texto, None)
     On failure: (None, None, reason_string)
-    Fails hard if target_lang has no name key in book_map — no silent fallback.
+
+    book_number comes from the bible_books.json SOT (EN name → number).
+    Native book name is read from the DB's own `books` table — no per-language
+    mapping file is required.
     """
     parsed = parse_en_ref(cita)
     if parsed is None:
         return None, None, f"could not parse reference: '{cita}'"
 
     book_en, chapter, v_start, v_end = parsed
-    entry = book_map.get(book_en)
-    if not entry:
-        return None, None, f"unknown book: '{book_en}'"
 
-    book_number = entry["book_number"]
-    name_key    = f"{target_lang}_name"
-    if name_key not in entry:
-        return None, None, f"no '{name_key}' in book_map for book '{book_en}' — add it before running lang='{target_lang}'"
-    local_name  = entry[name_key]
+    book_number = books_sot.get(book_en)
+    if book_number is None:
+        return None, None, f"unknown book: '{book_en}' — not in bible_books.json SOT"
+
+    local_name = _native_book_name(cursor, book_number, fallback=book_en)
 
     texto = fetch_text(cursor, book_number, chapter, v_start, v_end)
     if texto is None:
@@ -501,9 +537,9 @@ def extract_seed(
     print(f"{SEP}\n")
 
     # ── Load resources ────────────────────────────────────────────────────────
-    print("[1/7] Loading book_map.json...")
-    book_map = load_book_map()
-    print(f"      ✅ {len(book_map)} book entries\n")
+    print("[1/7] Loading bible_books.json SOT...")
+    books_sot = load_books_sot()
+    print(f"      ✅ {len(books_sot)} book entries\n")
 
     print("[2/7] Loading tags_master.json...")
     tags_map, effective_merge = load_tags_master()
@@ -560,7 +596,7 @@ def extract_seed(
 
             # Main verse
             main_ref_en = extract_ref_from_versiculo(entry.get("versiculo", ""))
-            hi_main_cita, main_texto, main_err = resolve_reference(main_ref_en, book_map, cursor, target_lang)
+            hi_main_cita, main_texto, main_err = resolve_reference(main_ref_en, books_sot, cursor)
             if main_err:
                 date_errors.append({"field": "versiculo", "reference": main_ref_en, "reason": main_err})
 
@@ -568,7 +604,7 @@ def extract_seed(
             pm_results = []
             for idx, pm in enumerate(entry.get("para_meditar", [])):
                 cita_en = pm.get("cita", "").strip()
-                hi_pm_cita, pm_texto, pm_err = resolve_reference(cita_en, book_map, cursor, target_lang)
+                hi_pm_cita, pm_texto, pm_err = resolve_reference(cita_en, books_sot, cursor)
                 if pm_err:
                     date_errors.append({
                         "field":     f"para_meditar[{idx}]",
