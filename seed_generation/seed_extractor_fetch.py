@@ -23,6 +23,7 @@ Output files (in chosen folder):
   seed_violations_<...>.json  (reverse-validation failures, if any)
 """
 
+import argparse
 import gzip
 import json
 import os
@@ -32,7 +33,11 @@ import sqlite3
 import sys
 import urllib.request
 from datetime import datetime
-from tkinter import Tk, filedialog
+try:
+    from tkinter import Tk, filedialog
+    _HAS_TKINTER = True
+except ImportError:
+    _HAS_TKINTER = False
 
 # ─────────────────────────────────────────────────────────────────────────────
 # 1.  CONSTANTS & PATHS
@@ -128,8 +133,9 @@ def load_books_sot() -> dict:
     print(f"  Fetching bible_books.json SOT...")
     with urllib.request.urlopen(BOOKS_SOT_URL) as resp:
         data = json.loads(resp.read())
+    # Strip whitespace from keys — the SOT JSON has some keys like "Lamentations\n"
     _books_sot_cache = {
-        name: entry["book_number"]
+        name.strip(): entry["book_number"]
         for name, entry in data["books"].items()
     }
     print(f"      ✅ {len(_books_sot_cache)} books\n")
@@ -596,6 +602,9 @@ def select_language_version(
 
 def pick_output_folder() -> str:
     """Minimal tkinter dialog to choose an output folder."""
+    if not _HAS_TKINTER:
+        print("ERROR: tkinter is not available. Use --output <folder> to specify output folder.")
+        sys.exit(1)
     root = Tk()
     root.withdraw()
     folder = filedialog.askdirectory(title="Select output folder for seed files")
@@ -616,6 +625,7 @@ def run(
     version_code:  str,
     version_entry: dict,
     output_dir:    str,
+    lang_entry:    dict | None = None,
 ) -> None:
     display_name = version_entry["name"]
 
@@ -641,7 +651,7 @@ def run(
     _, kjv_dates = fetch_kjv(year)
     dates = sorted(kjv_dates.keys())
 
-    # ── Step 4: SQLite DB ────────────────────────────────────────────────────
+    # ── Step 4: Primary SQLite DB + optional fallback DB ─────────────────────
     print("[4/7] Bible SQLite DB...")
     local_db = find_or_download_db(version_entry, lang_code)
 
@@ -650,6 +660,28 @@ def run(
     cursor.execute("SELECT COUNT(*) FROM verses")
     verse_count = cursor.fetchone()[0]
     print(f"      ✅ {verse_count:,} verses loaded\n")
+
+    # Try to open a fallback DB when the primary is missing verses
+    fallback_cursor = None
+    fallback_conn   = None
+    fallback_code   = None
+    if lang_entry is not None:
+        fallback_code = lang_entry.get("fallback_version")
+        if fallback_code and fallback_code != version_code:
+            fb_entry = lang_entry["versions"].get(fallback_code)
+            if fb_entry:
+                try:
+                    print(f"      ℹ️  Fallback DB: {fallback_code} ({fb_entry['name']})")
+                    fb_local = find_or_download_db(fb_entry, lang_code)
+                    fallback_conn   = sqlite3.connect(fb_local)
+                    fallback_cursor = fallback_conn.cursor()
+                    fallback_cursor.execute("SELECT COUNT(*) FROM verses")
+                    fb_count = fallback_cursor.fetchone()[0]
+                    print(f"      ✅ Fallback {fallback_code}: {fb_count:,} verses loaded\n")
+                except Exception as fb_err:
+                    print(f"      ⚠️  Could not load fallback DB: {fb_err}\n")
+                    fallback_cursor = None
+                    fallback_conn   = None
 
     # ── Step 5: Preflight tag coverage ──────────────────────────────────────
     print("[5/7] Tag preflight coverage check...")
@@ -674,18 +706,29 @@ def run(
                 continue
 
             date_errors: list[dict] = []
+            fallback_used: list[str] = []
 
-            # Main verse
+            # Main verse — try primary, then fallback
             main_ref_en = extract_ref_from_versiculo(entry.get("versiculo", ""))
             main_cita, main_texto, main_err = resolve_reference(main_ref_en, books_sot, cursor)
+            if main_err and fallback_cursor is not None:
+                fb_cita, fb_texto, fb_err = resolve_reference(main_ref_en, books_sot, fallback_cursor)
+                if not fb_err:
+                    main_cita, main_texto, main_err = fb_cita, fb_texto, fb_err
+                    fallback_used.append(f"versiculo:{main_ref_en}")
             if main_err:
                 date_errors.append({"field": "versiculo", "reference": main_ref_en, "reason": main_err})
 
-            # Para meditar verses
+            # Para meditar verses — try primary, then fallback per verse
             pm_results: list[dict] = []
             for idx, pm in enumerate(entry.get("para_meditar", [])):
                 cita_en = pm.get("cita", "").strip()
                 pm_cita, pm_texto, pm_err = resolve_reference(cita_en, books_sot, cursor)
+                if pm_err and fallback_cursor is not None:
+                    fb_cita, fb_texto, fb_err = resolve_reference(cita_en, books_sot, fallback_cursor)
+                    if not fb_err:
+                        pm_cita, pm_texto, pm_err = fb_cita, fb_texto, fb_err
+                        fallback_used.append(f"para_meditar[{idx}]:{cita_en}")
                 if pm_err:
                     date_errors.append({
                         "field":     f"para_meditar[{idx}]",
@@ -716,10 +759,13 @@ def run(
                 "tags":         target_tags,
             }
             ok_count += 1
-            print(f"  ✅  {date_key}  {main_cita}  |  tags: {target_tags}")
+            fb_note = f"  [fallback: {fallback_code}]" if fallback_used else ""
+            print(f"  ✅  {date_key}  {main_cita}  |  tags: {target_tags}{fb_note}")
 
     finally:
         conn.close()
+        if fallback_conn is not None:
+            fallback_conn.close()
 
     # ── Step 7: Reverse validation & write outputs ───────────────────────────
     violations = reverse_validate_seed(seed, tags_map, effective_merge, lang_code)
@@ -762,6 +808,29 @@ def run(
 # 10.  ENTRY POINT
 # ─────────────────────────────────────────────────────────────────────────────
 
+def _parse_cli() -> argparse.Namespace | None:
+    """
+    Parse CLI arguments when all four required flags are present.
+    Returns a Namespace if CLI mode is active, or None for interactive mode.
+
+    CLI usage example:
+      python seed_extractor_fetch.py --year 2025 --lang ar --version ALAB --output ./seeds/2025
+    """
+    parser = argparse.ArgumentParser(
+        description="Seed Extractor Fetch — SOT Edition",
+        add_help=True,
+    )
+    parser.add_argument("--year",    type=int, help="Target year (2025 or 2026)")
+    parser.add_argument("--lang",    type=str, help="Target language code  (e.g. ar, de, hi)")
+    parser.add_argument("--version", type=str, help="Bible version code    (e.g. ALAB, LU17, HERV)")
+    parser.add_argument("--output",  type=str, help="Output folder path")
+
+    args, _ = parser.parse_known_args()
+    if args.year and args.lang and args.version and args.output:
+        return args
+    return None   # fall through to interactive mode
+
+
 def main() -> None:
     print(f"\n{SEP}")
     print("  SEED EXTRACTOR FETCH  —  SOT Edition")
@@ -774,18 +843,40 @@ def main() -> None:
 
     _ = books_sot  # already fetched; run() will call load_books_sot() → cache hit
 
-    # ── User selections ───────────────────────────────────────────────────────
-    year = select_year()
-    print()
+    # ── CLI or interactive? ───────────────────────────────────────────────────
+    cli = _parse_cli()
+    if cli:
+        year = cli.year
+        lang_code = cli.lang.lower()
+        version_code = cli.version.upper()
+        output_dir = cli.output
 
-    lang_code, version_code, version_entry = select_language_version(index)
-    print()
+        # Resolve version_entry from the remote index
+        lang_entry = index["languages"].get(lang_code)
+        if lang_entry is None:
+            print(f"ERROR: language '{lang_code}' not found in versions index.")
+            sys.exit(1)
+        version_entry = lang_entry["versions"].get(version_code)
+        if version_entry is None:
+            available = list(lang_entry["versions"].keys())
+            print(f"ERROR: version '{version_code}' not found for language '{lang_code}'.")
+            print(f"       Available versions: {available}")
+            sys.exit(1)
+    else:
+        # ── Interactive selections ────────────────────────────────────────────
+        year = select_year()
+        print()
 
-    output_dir = pick_output_folder()
+        lang_code, version_code, version_entry = select_language_version(index)
+        lang_entry = index["languages"].get(lang_code)
+        print()
+
+        output_dir = pick_output_folder()
+
     os.makedirs(output_dir, exist_ok=True)
 
     # ── Run ───────────────────────────────────────────────────────────────────
-    run(year, lang_code, version_code, version_entry, output_dir)
+    run(year, lang_code, version_code, version_entry, output_dir, lang_entry=lang_entry)
 
 
 if __name__ == "__main__":
