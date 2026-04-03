@@ -1,0 +1,12 @@
+[
+  {
+    "date": "2026-05-17",
+    "errors": [
+      {
+        "field": "versiculo",
+        "reference": "Revelation 22:20",
+        "reason": "verse not found: 'Revelation 22:20' → رُؤْيَا يُوحَنَّا ٱللَّاهُوتِيِّ 22:20 (chapter has 17 verses)"
+      }
+    ]
+  }
+]

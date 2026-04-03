@@ -23,6 +23,7 @@ Output files (in chosen folder):
   seed_violations_<...>.json  (reverse-validation failures, if any)
 """
 
+import argparse
 import gzip
 import json
 import os
@@ -32,7 +33,11 @@ import sqlite3
 import sys
 import urllib.request
 from datetime import datetime
-from tkinter import Tk, filedialog
+try:
+    from tkinter import Tk, filedialog
+    _HAS_TKINTER = True
+except ImportError:
+    _HAS_TKINTER = False
 
 # ─────────────────────────────────────────────────────────────────────────────
 # 1.  CONSTANTS & PATHS
@@ -596,6 +601,9 @@ def select_language_version(
 
 def pick_output_folder() -> str:
     """Minimal tkinter dialog to choose an output folder."""
+    if not _HAS_TKINTER:
+        print("ERROR: tkinter is not available. Use --output <folder> to specify output folder.")
+        sys.exit(1)
     root = Tk()
     root.withdraw()
     folder = filedialog.askdirectory(title="Select output folder for seed files")
@@ -762,6 +770,29 @@ def run(
 # 10.  ENTRY POINT
 # ─────────────────────────────────────────────────────────────────────────────
 
+def _parse_cli() -> argparse.Namespace | None:
+    """
+    Parse CLI arguments when all four required flags are present.
+    Returns a Namespace if CLI mode is active, or None for interactive mode.
+
+    CLI usage example:
+      python seed_extractor_fetch.py --year 2025 --lang ar --version ALAB --output ./seeds/2025
+    """
+    parser = argparse.ArgumentParser(
+        description="Seed Extractor Fetch — SOT Edition",
+        add_help=True,
+    )
+    parser.add_argument("--year",    type=int, help="Target year (2025 or 2026)")
+    parser.add_argument("--lang",    type=str, help="Target language code  (e.g. ar, de, hi)")
+    parser.add_argument("--version", type=str, help="Bible version code    (e.g. ALAB, LU17, HERV)")
+    parser.add_argument("--output",  type=str, help="Output folder path")
+
+    args, _ = parser.parse_known_args()
+    if args.year and args.lang and args.version and args.output:
+        return args
+    return None   # fall through to interactive mode
+
+
 def main() -> None:
     print(f"\n{SEP}")
     print("  SEED EXTRACTOR FETCH  —  SOT Edition")
@@ -774,14 +805,35 @@ def main() -> None:
 
     _ = books_sot  # already fetched; run() will call load_books_sot() → cache hit
 
-    # ── User selections ───────────────────────────────────────────────────────
-    year = select_year()
-    print()
+    # ── CLI or interactive? ───────────────────────────────────────────────────
+    cli = _parse_cli()
+    if cli:
+        year = cli.year
+        lang_code = cli.lang.lower()
+        version_code = cli.version.upper()
+        output_dir = cli.output
 
-    lang_code, version_code, version_entry = select_language_version(index)
-    print()
+        # Resolve version_entry from the remote index
+        lang_entry = index["languages"].get(lang_code)
+        if lang_entry is None:
+            print(f"ERROR: language '{lang_code}' not found in versions index.")
+            sys.exit(1)
+        version_entry = lang_entry["versions"].get(version_code)
+        if version_entry is None:
+            available = list(lang_entry["versions"].keys())
+            print(f"ERROR: version '{version_code}' not found for language '{lang_code}'.")
+            print(f"       Available versions: {available}")
+            sys.exit(1)
+    else:
+        # ── Interactive selections ────────────────────────────────────────────
+        year = select_year()
+        print()
 
-    output_dir = pick_output_folder()
+        lang_code, version_code, version_entry = select_language_version(index)
+        print()
+
+        output_dir = pick_output_folder()
+
     os.makedirs(output_dir, exist_ok=True)
 
     # ── Run ───────────────────────────────────────────────────────────────────
