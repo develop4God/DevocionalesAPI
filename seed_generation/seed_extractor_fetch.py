@@ -133,8 +133,9 @@ def load_books_sot() -> dict:
     print(f"  Fetching bible_books.json SOT...")
     with urllib.request.urlopen(BOOKS_SOT_URL) as resp:
         data = json.loads(resp.read())
+    # Strip whitespace from keys — the SOT JSON has some keys like "Lamentations\n"
     _books_sot_cache = {
-        name: entry["book_number"]
+        name.strip(): entry["book_number"]
         for name, entry in data["books"].items()
     }
     print(f"      ✅ {len(_books_sot_cache)} books\n")
@@ -624,6 +625,7 @@ def run(
     version_code:  str,
     version_entry: dict,
     output_dir:    str,
+    lang_entry:    dict | None = None,
 ) -> None:
     display_name = version_entry["name"]
 
@@ -649,7 +651,7 @@ def run(
     _, kjv_dates = fetch_kjv(year)
     dates = sorted(kjv_dates.keys())
 
-    # ── Step 4: SQLite DB ────────────────────────────────────────────────────
+    # ── Step 4: Primary SQLite DB + optional fallback DB ─────────────────────
     print("[4/7] Bible SQLite DB...")
     local_db = find_or_download_db(version_entry, lang_code)
 
@@ -658,6 +660,28 @@ def run(
     cursor.execute("SELECT COUNT(*) FROM verses")
     verse_count = cursor.fetchone()[0]
     print(f"      ✅ {verse_count:,} verses loaded\n")
+
+    # Try to open a fallback DB when the primary is missing verses
+    fallback_cursor = None
+    fallback_conn   = None
+    fallback_code   = None
+    if lang_entry is not None:
+        fallback_code = lang_entry.get("fallback_version")
+        if fallback_code and fallback_code != version_code:
+            fb_entry = lang_entry["versions"].get(fallback_code)
+            if fb_entry:
+                try:
+                    print(f"      ℹ️  Fallback DB: {fallback_code} ({fb_entry['name']})")
+                    fb_local = find_or_download_db(fb_entry, lang_code)
+                    fallback_conn   = sqlite3.connect(fb_local)
+                    fallback_cursor = fallback_conn.cursor()
+                    fallback_cursor.execute("SELECT COUNT(*) FROM verses")
+                    fb_count = fallback_cursor.fetchone()[0]
+                    print(f"      ✅ Fallback {fallback_code}: {fb_count:,} verses loaded\n")
+                except Exception as fb_err:
+                    print(f"      ⚠️  Could not load fallback DB: {fb_err}\n")
+                    fallback_cursor = None
+                    fallback_conn   = None
 
     # ── Step 5: Preflight tag coverage ──────────────────────────────────────
     print("[5/7] Tag preflight coverage check...")
@@ -682,18 +706,29 @@ def run(
                 continue
 
             date_errors: list[dict] = []
+            fallback_used: list[str] = []
 
-            # Main verse
+            # Main verse — try primary, then fallback
             main_ref_en = extract_ref_from_versiculo(entry.get("versiculo", ""))
             main_cita, main_texto, main_err = resolve_reference(main_ref_en, books_sot, cursor)
+            if main_err and fallback_cursor is not None:
+                fb_cita, fb_texto, fb_err = resolve_reference(main_ref_en, books_sot, fallback_cursor)
+                if not fb_err:
+                    main_cita, main_texto, main_err = fb_cita, fb_texto, fb_err
+                    fallback_used.append(f"versiculo:{main_ref_en}")
             if main_err:
                 date_errors.append({"field": "versiculo", "reference": main_ref_en, "reason": main_err})
 
-            # Para meditar verses
+            # Para meditar verses — try primary, then fallback per verse
             pm_results: list[dict] = []
             for idx, pm in enumerate(entry.get("para_meditar", [])):
                 cita_en = pm.get("cita", "").strip()
                 pm_cita, pm_texto, pm_err = resolve_reference(cita_en, books_sot, cursor)
+                if pm_err and fallback_cursor is not None:
+                    fb_cita, fb_texto, fb_err = resolve_reference(cita_en, books_sot, fallback_cursor)
+                    if not fb_err:
+                        pm_cita, pm_texto, pm_err = fb_cita, fb_texto, fb_err
+                        fallback_used.append(f"para_meditar[{idx}]:{cita_en}")
                 if pm_err:
                     date_errors.append({
                         "field":     f"para_meditar[{idx}]",
@@ -724,10 +759,13 @@ def run(
                 "tags":         target_tags,
             }
             ok_count += 1
-            print(f"  ✅  {date_key}  {main_cita}  |  tags: {target_tags}")
+            fb_note = f"  [fallback: {fallback_code}]" if fallback_used else ""
+            print(f"  ✅  {date_key}  {main_cita}  |  tags: {target_tags}{fb_note}")
 
     finally:
         conn.close()
+        if fallback_conn is not None:
+            fallback_conn.close()
 
     # ── Step 7: Reverse validation & write outputs ───────────────────────────
     violations = reverse_validate_seed(seed, tags_map, effective_merge, lang_code)
@@ -830,6 +868,7 @@ def main() -> None:
         print()
 
         lang_code, version_code, version_entry = select_language_version(index)
+        lang_entry = index["languages"].get(lang_code)
         print()
 
         output_dir = pick_output_folder()
@@ -837,7 +876,7 @@ def main() -> None:
     os.makedirs(output_dir, exist_ok=True)
 
     # ── Run ───────────────────────────────────────────────────────────────────
-    run(year, lang_code, version_code, version_entry, output_dir)
+    run(year, lang_code, version_code, version_entry, output_dir, lang_entry=lang_entry)
 
 
 if __name__ == "__main__":

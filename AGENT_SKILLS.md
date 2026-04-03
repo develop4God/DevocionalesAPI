@@ -244,8 +244,8 @@ LATIN_LANGS = {"en", "es", "pt", "fr", "de"}  # do NOT add ar here; it needs scr
 
 ```bash
 # Step 1 — Seeds already generated (see seeds/2025/ and seeds/2026/)
-# seed_ar_NAV_2025_<ts>.json  →  364 entries  ✅
-# seed_ar_NAV_2026_<ts>.json  →  364 entries  ✅
+# seed_ar_NAV_2025_<ts>.json  →  365 entries  ✅
+# seed_ar_NAV_2026_<ts>.json  →  365 entries  ✅
 
 # Step 2 — Start the generation server (Gemini or Claude version)
 uvicorn API_Server_Seed:app --host 127.0.0.1 --port 50002
@@ -260,6 +260,54 @@ python client_generate_from_seed.py
 To run fully offline / without a server (Claude-direct mode):
 
 ```bash
-# No uvicorn server needed
-python client_generate_from_seed.py   # with the Claude-direct modification from §2b above
+export ANTHROPIC_API_KEY=sk-ant-...
+
+# No uvicorn server needed — calls Claude directly
+python client_generate_from_seed_claude.py \
+       --seed  seeds/2025/seed_ar_NAV_2025_<ts>.json \
+       --lang  ar \
+       --version NAV \
+       --output 2025
 ```
+
+---
+
+## 8. Known Data Fixes Applied to `seed_extractor_fetch.py`
+
+Two bugs were found and fixed during Arabic seed generation:
+
+### 8a. `bible_books.json` SOT — "Lamentations\n" key has trailing newline
+
+The remote `bible_books.json` SOT file has `"Lamentations\n"` (with a literal newline in the
+JSON key) which causes the book lookup to fail for "Lamentations 3:22-23" references.
+
+**Fix applied in `load_books_sot()`:**
+```python
+# Strip whitespace from keys — the SOT JSON has some keys like "Lamentations\n"
+_books_sot_cache = {
+    name.strip(): entry["book_number"]
+    for name, entry in data["books"].items()
+}
+```
+
+### 8b. NAV Arabic Bible DB — Revelation 22 only has 17 verses (missing 18–21)
+
+The NAV (`الترجمة العربية الجديدة`) SQLite database is missing Revelation 22:18–21.
+The fallback version SVDA (`ترجمة سميث وفاندايك`) has all 21 verses.
+
+**Fix applied in `run()`:** Added automatic fallback DB support.
+When `lang_entry` is passed and a `fallback_version` is configured in the versions index,
+a second DB is opened. If the primary DB misses a verse, the fallback DB is tried automatically.
+
+For Arabic: `primary=NAV → fallback=SVDA`.
+
+The affected date `2026-05-17` (Revelation 22:20) now resolves via SVDA and is logged with
+`[fallback: SVDA]` in the console output.
+
+**To regenerate seeds with these fixes:**
+```bash
+python seed_extractor_fetch.py --year 2025 --lang ar --version NAV --output seeds/2025
+python seed_extractor_fetch.py --year 2026 --lang ar --version NAV --output seeds/2026
+# Both now produce 365 entries, 0 errors, 0 violations
+```
+
