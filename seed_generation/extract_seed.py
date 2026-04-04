@@ -60,11 +60,12 @@ MERGE_MAP: dict[str, str] = {
 
 # Script ranges for reverse validation
 SCRIPT_RANGES: dict[str, tuple[int, int]] = {
-    "hi": (0x0900, 0x097F),
-    "ko": (0xAC00, 0xD7A3),
-    "ja": (0x3040, 0x30FF),
-    "zh": (0x4E00, 0x9FFF),
-    "ru": (0x0400, 0x04FF),
+    "ar": (0x0600, 0x06FF),     # Arabic
+    "hi": (0x0900, 0x097F),     # Devanagari
+    "ko": (0xAC00, 0xD7A3),     # Hangul
+    "ja": (0x3040, 0x30FF),     # Hiragana + Katakana
+    "zh": (0x4E00, 0x9FFF),     # CJK Unified Ideographs
+    "ru": (0x0400, 0x04FF),     # Cyrillic
 }
 SCRIPT_THRESHOLD = 0.5   # min ratio of target-script chars to flag as valid
 
