@@ -24,6 +24,7 @@ from typing import Optional
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, status
 from google import genai
+from google.genai import types
 from pydantic import BaseModel
 from tenacity import RetryError, retry, retry_if_exception_type, stop_after_attempt, wait_exponential
 
@@ -40,20 +41,20 @@ try:
 except KeyError:
     raise ValueError("GOOGLE_API_KEY not set. Add it to your .env file.")
 
-# Set API key for google-genai
-genai.api_key = _GEMINI_API_KEY
+# Initialize google-genai client
+_client = genai.Client(api_key=_GEMINI_API_KEY)
 
 _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # =============================================================================
 # GEMINI CONFIG (new google-genai SDK)
 # =============================================================================
-_GENERATION_CONFIG = {
-    "temperature": 0.7,
-    "top_p": 0.95,
-    "top_k": 64,
-    "max_output_tokens": 8192,
-}
+_GENERATION_CONFIG = types.GenerateContentConfig(
+    temperature=0.7,
+    top_p=0.95,
+    top_k=64,
+    max_output_tokens=8192,
+)
 
 # Generation model — best quality for devotional content
 GENERATION_MODEL = "gemini-2.5-flash"
@@ -164,8 +165,11 @@ async def _call_gemini_raw(
     ])
 
     print(f"DEBUG: Gemini call — verse: {verse_cita}, lang: {lang}")
-    model = genai.GenerativeModel(GENERATION_MODEL, generation_config=_GENERATION_CONFIG)
-    response = await model.aio.generate_content(prompt_parts)
+    response = await _client.aio.models.generate_content(
+        model=GENERATION_MODEL,
+        contents=prompt_parts,
+        config=_GENERATION_CONFIG,
+    )
     raw  = response.text.strip().replace("```json", "").replace("```", "").strip()
     # Extract JSON object robustly — handles preamble from thinking models
     match = re.search(r'\{.*\}', raw, re.DOTALL)
@@ -203,8 +207,11 @@ async def _call_gemini_fix_script(
     )
 
     print(f"WARNING: Script fix retry — verse: {verse_cita}, lang: {lang}")
-    model = genai.GenerativeModel(GENERATION_MODEL, generation_config=_GENERATION_CONFIG)
-    response = await model.aio.generate_content(prompt)
+    response = await _client.aio.models.generate_content(
+        model=GENERATION_MODEL,
+        contents=prompt,
+        config=_GENERATION_CONFIG,
+    )
     raw  = response.text.strip().replace("```json", "").replace("```", "").strip()
     # Extract JSON object robustly — handles preamble from thinking models
     match = re.search(r'\{.*\}', raw, re.DOTALL)
