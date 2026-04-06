@@ -12,7 +12,7 @@ New in v2 vs v1:
   - MAX_CONTENT_RETRIES controls how many full regeneration attempts are made
 
 Launch:
-  uvicorn API_Server_Seed:app --host 0.0.0.0 --port 50002 --reload
+  server_folder and venv activated>uvicorn API_Server_Seed:app --host 0.0.0.0 --port 50002 --reload
 """
 
 import json
@@ -60,7 +60,7 @@ _GENERATION_CONFIG = types.GenerateContentConfig(
 GENERATION_MODEL = "gemini-2.5-flash"
 
 # How many full Gemini regeneration attempts before giving up
-MAX_CONTENT_RETRIES = 2
+MAX_CONTENT_RETRIES = 3
 
 # =============================================================================
 # RATE LIMITER
