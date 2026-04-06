@@ -56,7 +56,7 @@ _GENERATION_CONFIG = {
 }
 
 # Generation model — best quality for devotional content
-GENERATION_MODEL = "gemini-2.0-flash"
+GENERATION_MODEL = "gemini-2.5-flash"
 
 # How many full Gemini regeneration attempts before giving up
 MAX_CONTENT_RETRIES = 2
