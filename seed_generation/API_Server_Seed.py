@@ -12,7 +12,7 @@ New in v2 vs v1:
   - MAX_CONTENT_RETRIES controls how many full regeneration attempts are made
 
 Launch:
-  server_folder and venv activated>uvicorn API_Server_Seed:app --host 0.0.0.0 --port 50002 --reload
+  /home/develop4god/python/DevocionalesAPI/seed_generation/start_server.sh
 """
 
 import json
