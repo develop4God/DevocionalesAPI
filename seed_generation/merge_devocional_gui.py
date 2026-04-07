@@ -59,6 +59,19 @@ class MergeApp(tk.Tk):
             self.status_var.set("⚠️  Please select input and output files"); return
         self.status_var.set("Merging…"); self.update()
         try:
+            def recursive_merge(a, b):
+                for k, v in b.items():
+                    if k in a:
+                        if isinstance(a[k], dict) and isinstance(v, dict):
+                            recursive_merge(a[k], v)
+                        elif isinstance(a[k], list) and isinstance(v, list):
+                            a[k].extend(v)
+                        else:
+                            a[k] = v
+                    else:
+                        a[k] = v
+                return a
+
             merged = None
             for path in files:
                 with open(path, encoding="utf-8") as f:
@@ -66,10 +79,10 @@ class MergeApp(tk.Tk):
                 if merged is None:
                     merged = data
                 else:
-                    if isinstance(merged, list) and isinstance(data, list):
+                    if isinstance(merged, dict) and isinstance(data, dict):
+                        merged = recursive_merge(merged, data)
+                    elif isinstance(merged, list) and isinstance(data, list):
                         merged.extend(data)
-                    elif isinstance(merged, dict) and isinstance(data, dict):
-                        merged.update(data)
                     else:
                         raise Exception(f"Type mismatch: {path} is {type(data)}, expected {type(merged)}")
             with open(output_path, "w", encoding="utf-8") as f:
