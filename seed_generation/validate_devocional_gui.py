@@ -64,6 +64,19 @@ AMEN_VARIANTS = frozenset({'amen', 'amén', 'āmen', 'amem'})  # amem covers PT 
 CJK_AMEN_VARIANTS = frozenset({'阿们', '阿门', '阿們', '阿門', 'アーメン', 'ア-メン'})
 HINDI_AMEN_VARIANTS = frozenset({'आमीन', 'आमेन', 'आमीन', 'आमेन'})
 
+# Load all Amen variants from prayer_endings.json (covers ar, ru, ko, uk, etc.)
+_PRAYER_ENDINGS_FILE = Path(__file__).with_name('prayer_endings.json')
+UNICODE_AMEN_VARIANTS: frozenset = frozenset()
+try:
+    _pe = json.load(open(_PRAYER_ENDINGS_FILE, encoding='utf-8'))
+    UNICODE_AMEN_VARIANTS = frozenset(
+        v.lower() for variants in _pe.values()
+        if isinstance(variants, list)
+        for v in variants
+    )
+except Exception:
+    pass
+
 
 def _find_consecutive_dup(text: str):
     """Returns first consecutive duplicate word (len > 3, not in skip list), or None.
@@ -92,15 +105,15 @@ def _check_prayer_ending(oracion: str) -> bool:
     for cjk in CJK_AMEN_VARIANTS:
         if stripped_cjk.endswith(cjk):
             return True
-    # Latin / Devanagari: check last whitespace-separated word
+    # All other scripts: check last whitespace-separated word
     parts = text.rstrip('.!,;।。！？').split()
     if not parts:
         return False
     last_w = parts[-1].strip('.,;:!?।').lower()
-    # Hindi Devanagari
-    if last_w in HINDI_AMEN_VARIANTS:
+    # Unicode variants from prayer_endings.json (ar: آمين, ru: аминь, ko: 아멘, …)
+    if last_w in UNICODE_AMEN_VARIANTS:
         return True
-    # Latin-script (normalize accents for PT 'amém' → 'amem')
+    # Latin-script fallback (normalize accents: PT amém → amem)
     last_ascii = unicodedata.normalize('NFD', last_w).encode('ascii', 'ignore').decode()
     return last_ascii in AMEN_VARIANTS
 
