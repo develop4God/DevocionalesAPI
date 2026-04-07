@@ -111,7 +111,11 @@ def _check_prayer_ending(oracion: str) -> bool:
         return False
     last_w = parts[-1].strip('.,;:!?।').lower()
     # Unicode variants from prayer_endings.json (ar: آمين, ru: аминь, ko: 아멘, …)
-    if last_w in UNICODE_AMEN_VARIANTS:
+    # Normalize Arabic diacritics (tashkeel U+064B–U+065F) before lookup so that
+    # e.g. آمِينَ (with harakat) matches the plain form آمين stored in prayer_endings.json
+    import re as _re
+    last_w_normalized = _re.sub(r'[\u064b-\u065f]', '', last_w)
+    if last_w_normalized in UNICODE_AMEN_VARIANTS:
         return True
     # Latin-script fallback (normalize accents: PT amém → amem)
     last_ascii = unicodedata.normalize('NFD', last_w).encode('ascii', 'ignore').decode()
