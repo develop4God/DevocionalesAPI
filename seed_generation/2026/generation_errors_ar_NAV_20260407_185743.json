@@ -1,0 +1,17 @@
+[
+  {
+    "date": "2026-12-12",
+    "cita": "اَلرِّسَالَةُ إِلَى ٱلْعِبْرَانِيِّينَ 3:6",
+    "reason": "ReadTimeout: HTTPConnectionPool(host='127.0.0.1', port=50003): Read timed out. (read timeout=300)"
+  },
+  {
+    "date": "2027-02-12",
+    "cita": "رِسَالَةُ بُولُسَ ٱلرَّسُولِ ٱلثَّانِيةُ إِلَى أَهْلِ كُورِنْثُوسَ 4:6",
+    "reason": "ReadTimeout: HTTPConnectionPool(host='127.0.0.1', port=50003): Read timed out. (read timeout=300)"
+  },
+  {
+    "date": "2027-02-13",
+    "cita": "رِسَالَةُ بُولُسَ ٱلرَّسُولِ ٱلْأُولَى إِلَى تِيمُوثَاوُسَ 4:12",
+    "reason": "503 exhausted 4 retries — checkpoint saved, resume to retry same verse"
+  }
+]
