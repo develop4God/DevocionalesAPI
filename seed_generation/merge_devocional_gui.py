@@ -284,7 +284,10 @@ class MergeApp(tk.Tk):
         self.minsize(1100, 760)
 
         self.partial_files: list[PartialFile] = []
-        self._cov_date_rects = {}   # date_str → canvas item id for tooltip
+        self._cov_date_rects = {}   # rect_id → date_str (kept for legacy compat)
+        self._cov_coord_map  = {}   # (col_i, row_i) → date_str  (O(1) lookup)
+        self._cov_cache      = ({}, {}, {})   # (merged, sources, overlaps) snapshot
+        self._cov_issues     = {}             # issues snapshot
 
         self._build()
 
@@ -607,10 +610,23 @@ class MergeApp(tk.Tk):
         return out
 
     def _all_issues(self) -> dict:
-        """Merged entry_issues across all active files."""
-        out = {}
+        """Issues for the merged result: each date uses the winning (last-loaded) file's issues.
+
+        Using .update() over all files in order would keep stale issues from a losing
+        file when the winning file's entry is clean — e.g. if file A has issues for
+        date D but file B (which wins for D) does not, the old .update() approach would
+        still report D as having issues.  This implementation corrects that.
+        """
+        # Determine which file actually contributes each date to the merged result
+        # (last file in active order wins, matching _build_merged logic)
+        source_pf: dict = {}
         for pf in self._active_files():
-            out.update(pf.entry_issues)
+            for dk in pf.entries:
+                source_pf[dk] = pf
+        out = {}
+        for dk, pf in source_pf.items():
+            if dk in pf.entry_issues:
+                out[dk] = pf.entry_issues[dk]
         return out
 
     # ══════════════════════════════════════════ Tab refreshes ════════════════
@@ -679,10 +695,15 @@ class MergeApp(tk.Tk):
     def _refresh_coverage(self):
         self.cov_canvas.delete("all")
         self._cov_date_rects.clear()
+        self._cov_coord_map.clear()
 
-        merged, _, overlaps = self._build_merged()
+        merged, sources, overlaps = self._build_merged()
         all_dates = self._all_dates_in_range()
         issues    = self._all_issues()
+
+        # Cache for O(1) tooltip lookups — avoids rebuilding on every mouse move
+        self._cov_cache  = (merged, sources, overlaps)
+        self._cov_issues = issues
 
         if not all_dates:
             self.cov_canvas.create_text(200, 50, text="No data loaded", fill="grey")
@@ -710,7 +731,7 @@ class MergeApp(tk.Tk):
                                         font=("Helvetica", 7), fill="#333")
 
         row_y = TOP
-        for (yr_m, mo_m) in sorted_months:
+        for row_i, (yr_m, mo_m) in enumerate(sorted_months):
             month_name = date(yr_m, mo_m, 1).strftime("%b %Y")
             self.cov_canvas.create_text(LEFT - 4, row_y + CELL // 2, text=month_name,
                                         font=("Helvetica", 8, "bold"), anchor="e",
@@ -738,6 +759,7 @@ class MergeApp(tk.Tk):
                     text=str(d_obj.day), font=("Helvetica", 7),
                 )
                 self._cov_date_rects[rect_id] = ds
+                self._cov_coord_map[(col_i, row_i)] = ds  # O(1) reverse lookup
 
             row_y += CELL + 2   # small gap between month rows
 
@@ -757,22 +779,22 @@ class MergeApp(tk.Tk):
         self.cov_canvas.configure(scrollregion=(0, 0, max_x, max_y))
 
     def _canvas_date_at(self, cx, cy):
-        """Return date string for canvas coordinates, or None."""
-        for rid, ds in self._cov_date_rects.items():
-            coords = self.cov_canvas.coords(rid)
-            if coords:
-                x1, y1, x2, y2 = coords
-                if x1 <= cx <= x2 and y1 <= cy <= y2:
-                    return ds
-        return None
+        """Return date string for canvas coordinates in O(1) using coord grid map."""
+        col_i = int((cx - LBL_W) // CELL)
+        # Each month row is CELL+2 pixels tall; TOP=30 is the first row offset
+        row_i = int((cy - 30) // (CELL + 2))
+        if col_i < 0 or row_i < 0:
+            return None
+        return self._cov_coord_map.get((col_i, row_i))
 
     def _on_cov_motion(self, event):
         cx = self.cov_canvas.canvasx(event.x)
         cy = self.cov_canvas.canvasy(event.y)
         ds = self._canvas_date_at(cx, cy)
         if ds:
-            merged, sources, overlaps = self._build_merged()
-            issues = self._all_issues()
+            # Use cached data — avoids rebuilding merged on every mouse-move pixel
+            merged, sources, overlaps = self._cov_cache
+            issues = self._cov_issues
             parts = [ds]
             if ds in merged:
                 parts.append(f"from: {sources[ds]}")
@@ -894,7 +916,7 @@ class MergeApp(tk.Tk):
 
         covered = sum(1 for d in all_dates if d in merged)
         self.review_count.set(
-            f"Showing {len(rows_data)} / {len(all_dates)}   Covered: {covered}/365"
+            f"Showing {len(rows_data)} / {len(all_dates)}   Covered: {covered}/{len(all_dates)}"
         )
 
     def _on_review_select(self, _event):
