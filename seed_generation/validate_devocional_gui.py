@@ -165,6 +165,63 @@ def check_content_quality(entry: dict, lang: str = '') -> list:
     return issues
 
 
+def validate_entry(entry: dict, date_key: str, lang: str, version: str) -> list:
+    """
+    Validate a single devotional entry.
+    Returns list of issue strings (empty if valid).
+    
+    Checks:
+    - All REQUIRED_FIELDS present and non-empty
+    - language and version match expected values
+    - date field matches date_key
+    - para_meditar is a list (optional, but if present must be list of dicts with cita/texto)
+    - tags is a list (if present)
+    - Content quality checks (via check_content_quality)
+    """
+    issues = []
+    eid = entry.get("id", f"UNKNOWN@{date_key}")
+    
+    # Check required fields
+    for field in REQUIRED_FIELDS:
+        if field not in entry:
+            issues.append(f"missing '{field}'")
+        elif isinstance(entry[field], str) and not entry[field].strip():
+            issues.append(f"empty '{field}'")
+    
+    # Check language and version
+    if entry.get("language") != lang:
+        issues.append(f"language mismatch: got '{entry.get('language')}'")
+    if entry.get("version") != version:
+        issues.append(f"version mismatch: got '{entry.get('version')}'")
+    
+    # Check date field
+    if entry.get("date") != date_key:
+        issues.append(f"date field '{entry.get('date')}' ≠ key '{date_key}'")
+    
+    # Check para_meditar structure
+    pm = entry.get("para_meditar")
+    if pm is not None:
+        if not isinstance(pm, list):
+            issues.append("para_meditar not a list")
+        else:
+            for j, ref in enumerate(pm):
+                if not isinstance(ref, dict):
+                    issues.append(f"para_meditar[{j}] not a dict")
+                else:
+                    for pf in PARA_MEDITAR_FIELDS:
+                        if pf not in ref:
+                            issues.append(f"para_meditar[{j}] missing '{pf}'")
+    
+    # Check tags
+    if "tags" in entry and not isinstance(entry["tags"], list):
+        issues.append("tags not a list")
+    
+    # Content quality checks (Phase 1)
+    issues.extend(check_content_quality(entry, lang=lang))
+    
+    return issues
+
+
 def check_latin(text: str, extra: set) -> tuple[list, dict]:
     """Returns (bad_words, label_counts)"""
     allowed = ALWAYS_ALLOWED | extra

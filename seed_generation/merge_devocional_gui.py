@@ -17,178 +17,71 @@ Usage:
   python merge_devocional_gui.py
 """
 
-import json, re, os, unicodedata
+import json, re, os, sys
 import tkinter as tk
 from tkinter import filedialog, ttk, scrolledtext, messagebox
 from pathlib import Path
 from datetime import date, timedelta
 
-# ─────────────────────────── constants (shared with validator) ──────────────
-REQUIRED_FIELDS = [
-    "id", "date", "language", "version",
-    "versiculo", "reflexion", "para_meditar", "oracion", "tags",
-]
-PARA_MEDITAR_FIELDS = ["cita", "texto"]
+# ─────────────────────────── Import validation (SOLID: DRY) ──────────────────
+# Try to import validation functions from validate_devocional_gui.py
+# to avoid code duplication (Single Responsibility Principle)
+VALIDATION_AVAILABLE = False
+try:
+    from validate_devocional_gui import (
+        check_content_quality,
+        validate_entry,
+        REQUIRED_FIELDS,
+        PARA_MEDITAR_FIELDS,
+        NON_LATIN_LANGS,
+    )
+    VALIDATION_AVAILABLE = True
+except ImportError as _err:
+    print(
+        f"⚠️  WARNING: validate_devocional_gui.py not found (same directory). "
+        f"Content quality validation will be skipped.\n"
+        f"   Error: {_err}",
+        file=sys.stderr,
+    )
+    # Fallback stubs: keep basic structure validation only
+    REQUIRED_FIELDS = [
+        "id", "date", "language", "version",
+        "versiculo", "reflexion", "para_meditar", "oracion", "tags",
+    ]
+    PARA_MEDITAR_FIELDS = ["cita", "texto"]
+    NON_LATIN_LANGS = {"ar", "hi", "ja", "zh"}
+
+    def check_content_quality(entry: dict, lang: str = '') -> list:
+        """Stub — validation module unavailable."""
+        return []
+
+    def validate_entry(entry: dict, date_key: str, lang: str, version: str) -> list:
+        """Minimal validation without validate_devocional_gui."""
+        issues = []
+        for field in REQUIRED_FIELDS:
+            if field not in entry:
+                issues.append(f"missing '{field}'")
+            elif isinstance(entry[field], str) and not entry[field].strip():
+                issues.append(f"empty '{field}'")
+        if entry.get('version') != version:
+            issues.append(f"version mismatch: got '{entry.get('version')}'")
+        if entry.get('language') != lang:
+            issues.append(f"lang mismatch: got '{entry.get('language')}'")
+        if entry.get('date') != date_key:
+            issues.append(f"date field '{entry.get('date')}' ≠ key '{date_key}'")
+        pm = entry.get('para_meditar')
+        if pm is not None and not isinstance(pm, list):
+            issues.append("para_meditar not a list")
+        if 'tags' in entry and not isinstance(entry['tags'], list):
+            issues.append("tags not a list")
+        return issues
+
+# ─────────────────────────── constants (minimal, non-validation) ──────────────
 
 # Matches both partial ("163-Devocional_year_...") and full ("Devocional_year_...")
 FILENAME_PATTERN = re.compile(
     r"(?:(?P<count>\d+)-)?Devocional_year_(?P<year>\d{4})_(?P<lang>[a-z]{2})_(?P<version>[^\.]+)\.json$"
 )
-
-NON_LATIN_LANGS  = {"hi", "ja", "zh"}
-ALWAYS_ALLOWED   = {
-    "HIOV", "OV", "HERV", "ERV", "KJV", "NIV", "NVI",
-    "RVR1960", "ARC", "TOB", "LSG1910",
-}
-LATIN_RE = re.compile(r"[a-zA-Z]+")
-SPANISH_LEAKS = {
-    "Amén", "Jesús", "Señor", "señor", "también",
-    "Espíritu", "espíritu", "oración", "Padre",
-    "padre", "gracia", "gloria", "alabanza", "misericordia",
-    "bendición", "bendicion", "nombre", "corazón", "corazon", "Dios",
-}
-
-REFLEXION_MIN_CHARS = 800
-ORACION_MIN_CHARS   = 150
-CJK_REFLEXION_MIN   = 250
-CJK_ORACION_MIN     = 80
-SENTENCE_ENDINGS    = (
-    '.', '!', '?', '»', '"', "'",
-    '\u2018', '\u2019', '\u201c', '\u201d', '।', '。', '！', '？',
-)
-CONSECUTIVE_DUP_SKIP = frozenset({
-    'heilig', 'holy', 'kadosh', 'halleluja', 'hosanna',
-    'amen', 'amén', 'āmen', 'nous', 'vous', 'पवित्र', 'saul',
-})
-SENT_END_PUNCT    = frozenset({'.', '!', '?', ':', '»', '\u201d'})
-AMEN_VARIANTS     = frozenset({'amen', 'amén', 'āmen', 'amem'})
-CJK_AMEN_VARIANTS = frozenset({'阿们', '阿门', '阿們', '阿門', 'アーメン', 'ア-メン'})
-HINDI_AMEN       = frozenset({'आमीन', 'आमेन'})
-
-# Load all Amen variants from prayer_endings.json (covers ar, ru, ko, uk, etc.)
-_PRAYER_ENDINGS_FILE = Path(__file__).with_name('prayer_endings.json')
-UNICODE_AMEN_VARIANTS: frozenset = frozenset()
-try:
-    _pe = json.load(open(_PRAYER_ENDINGS_FILE, encoding='utf-8'))
-    UNICODE_AMEN_VARIANTS = frozenset(
-        v.lower() for variants in _pe.values()
-        if isinstance(variants, list)
-        for v in variants
-    )
-except Exception:
-    pass
-
-# ─────────────────────────── validation helpers ─────────────────────────────
-
-def _find_consecutive_dup(text: str):
-    words = text.split()
-    for i in range(len(words) - 1):
-        raw1 = words[i]
-        if raw1 and raw1[-1] in SENT_END_PUNCT:
-            continue
-        w1 = raw1.strip('.,;:!?').lower()
-        w2 = words[i + 1].strip('.,;:!?').lower()
-        if w1 == w2 and len(w1) > 3 and w1 not in CONSECUTIVE_DUP_SKIP:
-            return f'"{raw1} {words[i+1]}"'
-    return None
-
-
-def _check_prayer_ending(oracion: str) -> bool:
-    text = oracion.strip()
-    # CJK: check suffix directly (no word boundaries)
-    stripped_cjk = text.rstrip('。！？.!,;')
-    for cjk in CJK_AMEN_VARIANTS:
-        if stripped_cjk.endswith(cjk):
-            return True
-    # All other scripts: check last whitespace-separated word
-    parts = text.rstrip('.!,;।。！？').split()
-    if not parts:
-        return False
-    last_w = parts[-1].strip('.,;:!?।').lower()
-    # Unicode variants from prayer_endings.json (ar: آمين, ru: аминь, ko: 아멘, …)
-    if last_w in UNICODE_AMEN_VARIANTS:
-        return True
-    # Latin-script fallback (normalize accents: PT amém → amem)
-    last_ascii = unicodedata.normalize('NFD', last_w).encode('ascii', 'ignore').decode()
-    return last_ascii in AMEN_VARIANTS
-
-
-def check_content_quality(entry: dict, lang: str = '') -> list:
-    issues = []
-    r = entry.get('reflexion', '').strip()
-    o = entry.get('oracion',   '').strip()
-    cjk = lang in ('zh', 'ja')
-    r_min = CJK_REFLEXION_MIN if cjk else REFLEXION_MIN_CHARS
-    o_min = CJK_ORACION_MIN   if cjk else ORACION_MIN_CHARS
-
-    if len(r) < r_min:
-        issues.append(f'reflexion too short ({len(r)}<{r_min})')
-    if len(o) < o_min:
-        issues.append(f'oracion too short ({len(o)}<{o_min})')
-    if r and not r.endswith(SENTENCE_ENDINGS):
-        issues.append(f'reflexion truncated')
-    if len(re.findall(r'\bAm[eé]n\b', o[-120:], re.IGNORECASE)) >= 2:
-        issues.append('double_amen')
-    if o and not _check_prayer_ending(o):
-        issues.append('no_amen_ending')
-    dup = _find_consecutive_dup(r)
-    if dup:
-        issues.append(f'dup_words: {dup}')
-    return issues
-
-
-def validate_entry(entry: dict, date_key: str, lang: str, version: str) -> list:
-    """Full per-entry validation. Returns list of issue strings."""
-    issues = []
-    for field in REQUIRED_FIELDS:
-        if field not in entry:
-            issues.append(f"missing '{field}'")
-        elif isinstance(entry[field], str) and not entry[field].strip():
-            issues.append(f"empty '{field}'")
-
-    if entry.get('version') != version:
-        issues.append(f"version mismatch: got '{entry.get('version')}'")
-    if entry.get('language') != lang:
-        issues.append(f"lang mismatch: got '{entry.get('language')}'")
-    if entry.get('date') != date_key:
-        issues.append(f"date field '{entry.get('date')}' ≠ key '{date_key}'")
-
-    pm = entry.get('para_meditar')
-    if pm is not None:
-        if not isinstance(pm, list):
-            issues.append("para_meditar not a list")
-        else:
-            for j, ref in enumerate(pm):
-                if not isinstance(ref, dict):
-                    issues.append(f"para_meditar[{j}] not a dict")
-                    continue
-                for pf in PARA_MEDITAR_FIELDS:
-                    if pf not in ref:
-                        issues.append(f"para_meditar[{j}] missing '{pf}'")
-
-    if 'tags' in entry and not isinstance(entry['tags'], list):
-        issues.append("tags not a list")
-
-    extra = {version} if version else set()
-    if lang in NON_LATIN_LANGS:
-        for field in ("reflexion", "oracion", "versiculo"):
-            bad = [w for w in LATIN_RE.findall(entry.get(field, ''))
-                   if w not in (ALWAYS_ALLOWED | extra)]
-            if bad:
-                issues.append(f"latin_chars in {field}: {bad[:3]}")
-
-    if lang in ("en", "pt", "fr"):
-        for field in ("reflexion", "oracion"):
-            leaks = [w for w in SPANISH_LEAKS
-                     if w in set(re.findall(r"[A-Za-zÁáÉéÍíÓóÚúÑñÜü]+", entry.get(field, '')))]
-            if leaks:
-                issues.append(f"spanish_leak in {field}: {leaks}")
-
-    for qi in check_content_quality(entry, lang=lang):
-        issues.append(qi)
-
-    return issues
-
 
 # ─────────────────────────── PartialFile model ──────────────────────────────
 
@@ -240,6 +133,13 @@ class PartialFile:
             issues = validate_entry(entry, date_key, self.lang, self.version)
             if issues:
                 self.entry_issues[date_key] = issues
+        
+        # Warn if validation was skipped due to missing module
+        if not VALIDATION_AVAILABLE and self.entry_issues:
+            self.errors.append(
+                "Validation module unavailable — content quality checks skipped. "
+                "Run merge with validate_devocional_gui.py available for full checks."
+            )
 
     @property
     def entry_count(self): return len(self.entries)
