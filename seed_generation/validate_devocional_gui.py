@@ -24,7 +24,7 @@ FILENAME_PATTERN = re.compile(
     r"Devocional_year_(?P<year>\d{4})_(?P<lang>[a-z]{2})_(?P<version>.+)\.json$"
 )
 
-NON_LATIN_LANGS = {"hi", "ja", "zh"}
+NON_LATIN_LANGS = {"ar", "hi", "ja", "zh"}
 ALWAYS_ALLOWED  = {"HIOV", "OV", "HERV", "ERV", "KJV", "NIV", "NVI",
                    "RVR1960", "ARC", "TOB", "LSG1910"}
 LATIN_RE = re.compile(r"[a-zA-Z]+")
@@ -68,14 +68,21 @@ HINDI_AMEN_VARIANTS = frozenset({'आमीन', 'आमेन', 'आमीन',
 _PRAYER_ENDINGS_FILE = Path(__file__).with_name('prayer_endings.json')
 UNICODE_AMEN_VARIANTS: frozenset = frozenset()
 try:
-    _pe = json.load(open(_PRAYER_ENDINGS_FILE, encoding='utf-8'))
+    with open(_PRAYER_ENDINGS_FILE, encoding='utf-8') as _f:
+        _pe = json.load(_f)
     UNICODE_AMEN_VARIANTS = frozenset(
         v.lower() for variants in _pe.values()
         if isinstance(variants, list)
         for v in variants
     )
-except Exception:
-    pass
+except FileNotFoundError:
+    print(
+        f"WARNING: {_PRAYER_ENDINGS_FILE.name} not found — "
+        "Arabic/Korean/Russian Amen validation will be disabled.",
+        file=sys.stderr,
+    )
+except Exception as _ex:
+    print(f"WARNING: Could not load {_PRAYER_ENDINGS_FILE.name}: {_ex}", file=sys.stderr)
 
 
 def _find_consecutive_dup(text: str):
@@ -106,10 +113,11 @@ def _check_prayer_ending(oracion: str) -> bool:
         if stripped_cjk.endswith(cjk):
             return True
     # All other scripts: check last whitespace-separated word
-    parts = text.rstrip('.!,;।。！？').split()
+    # U+060C (،) is the Arabic comma — must be stripped so آمين، is found correctly
+    parts = text.rstrip('.!,;،।。！？').split()
     if not parts:
         return False
-    last_w = parts[-1].strip('.,;:!?।').lower()
+    last_w = parts[-1].strip('.,;:!?،।').lower()
     # Unicode variants from prayer_endings.json (ar: آمين, ru: аминь, ko: 아멘, …)
     # Normalize Arabic diacritics (tashkeel U+064B–U+065F) before lookup so that
     # e.g. آمِينَ (with harakat) matches the plain form آمين stored in prayer_endings.json
@@ -142,7 +150,10 @@ def check_content_quality(entry: dict, lang: str = '') -> list:
         issues.append(f'oracion too short: {len(o)} chars (min {oracion_min})')
     if r and not r.endswith(SENTENCE_ENDINGS):
         issues.append(f'reflexion truncated — ends: ...{r.rstrip()[-40:]}')
-    if len(re.findall(r'\bAm[eé]n\b', o[-120:], re.IGNORECASE)) >= 2:
+    closing = o[-120:]
+    _latin_amens   = len(re.findall(r'\bAm[eé]n\b', closing, re.IGNORECASE))
+    _unicode_amens = sum(closing.count(v) for v in (UNICODE_AMEN_VARIANTS | CJK_AMEN_VARIANTS))
+    if _latin_amens + _unicode_amens >= 2:
         issues.append('double_amen: duplicate Amen in closing')
     if o and not _check_prayer_ending(o):
         issues.append(f'prayer_ending: oracion does not end with Amen variant')
@@ -171,7 +182,7 @@ def check_spanish_leak(text: str) -> list:
     return [w for w in SPANISH_LEAKS if w in words]
 
 
-def validate(filepath, lang_override, version_override):
+def validate(filepath, lang_override, version_override, expected_min: int = 0):
     lines, errors = [], []
     summary = {"file": "", "entries": 0, "version_err": 0, "lang_err": 0,
                "date_gaps": 0, "latin_err": 0, "content_err": 0, "other_err": 0, "status": "—"}
@@ -200,7 +211,8 @@ def validate(filepath, lang_override, version_override):
     info(f"Latin check: {'ENABLED — non-Latin script' if non_latin else 'Spanish leak check' if latin_script else 'skipped'}")
 
     try:
-        data = json.load(open(path, encoding="utf-8"))
+        with open(path, encoding="utf-8") as _f:
+            data = json.load(_f)
     except json.JSONDecodeError as ex:
         e(f"Invalid JSON: {ex}"); summary["status"] = "❌ INVALID JSON"
         return False, "\n".join(lines), summary
@@ -229,7 +241,23 @@ def validate(filepath, lang_override, version_override):
     total = len(all_entries)
     summary["entries"] = total
     ok(f"Total entries: {total}")
-    if total < EXPECTED_MIN_ENTRIES: w(f"Only {total} entries — expected ≥ {EXPECTED_MIN_ENTRIES}")
+    # Auto-derive expected count from the file's own date range; overridable via --expected
+    if date_map:
+        _rdates = sorted(date_map.keys())
+        try:
+            _d0 = date.fromisoformat(_rdates[0])
+            _d1 = date.fromisoformat(_rdates[-1])
+            _auto_expected = (_d1 - _d0).days + 1
+            _range_label   = f"{_rdates[0]} → {_rdates[-1]}"
+        except ValueError:
+            _auto_expected = EXPECTED_MIN_ENTRIES
+            _range_label   = "unknown range"
+    else:
+        _auto_expected = EXPECTED_MIN_ENTRIES
+        _range_label   = "unknown range"
+    _expected = expected_min if expected_min > 0 else _auto_expected
+    if total < _expected:
+        w(f"Only {total} entries — expected ≥ {_expected} (date range: {_range_label})")
     if total == 0:
         e("No entries — aborting"); summary["status"] = "❌ FAILED"
         return False, "\n".join(lines), summary
@@ -344,9 +372,10 @@ def validate(filepath, lang_override, version_override):
 class App(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.title("Devocional JSON Validator v3")
+        self.title("Devocional JSON Validator v5")
         self.resizable(True, True)
         self.minsize(820, 640)
+        self._last_result = ""
         self._build()
 
     def _build(self):
@@ -369,8 +398,9 @@ class App(tk.Tk):
         ttk.Label(mf, text="(HIOV, RVR1960, KJV…)").grid(row=1, column=2, sticky="w", padx=(8,0), pady=(6,0))
 
         bf = tk.Frame(self); bf.pack(pady=(4,0))
-        ttk.Button(bf, text="▶  Validate",    command=self._run).pack(side="left", padx=4)
-        ttk.Button(bf, text="🗑  Clear Table", command=self._clear).pack(side="left", padx=4)
+        ttk.Button(bf, text="▶  Validate",     command=self._run).pack(side="left", padx=4)
+        ttk.Button(bf, text="🗑  Clear Table",  command=self._clear).pack(side="left", padx=4)
+        ttk.Button(bf, text="💾  Save Report",  command=self._save_report).pack(side="left", padx=4)
 
         tf = ttk.LabelFrame(self, text="Validation Summary Table", padding=8)
         tf.pack(fill="x", **pad)
@@ -406,6 +436,7 @@ class App(tk.Tk):
         if not fp: self.status_var.set("⚠️  Please select a file first"); return
         self.status_var.set("Validating…"); self.update()
         passed, result, summary = validate(fp, self.lang_var.get(), self.version_var.get())
+        self._last_result = result
         self.output.config(state="normal")
         self.output.delete("1.0", "end")
         self.output.insert("end", result)
@@ -422,11 +453,28 @@ class App(tk.Tk):
     def _clear(self):
         for row in self.tree.get_children(): self.tree.delete(row)
 
+    def _save_report(self):
+        if not self._last_result:
+            self.status_var.set("⚠️  No report to save — run validation first")
+            return
+        fp = filedialog.asksaveasfilename(
+            title="Save validation report",
+            defaultextension=".txt",
+            filetypes=[("Text files", "*.txt"), ("All files", "*.*")],
+        )
+        if not fp:
+            return
+        try:
+            Path(fp).write_text(self._last_result, encoding="utf-8")
+            self.status_var.set(f"✅ Report saved: {Path(fp).name}")
+        except OSError as ex:
+            self.status_var.set(f"❌ Save failed: {ex}")
+
 if __name__ == "__main__":
     # ── CLI mode: at least --file provided ────────────────────────────────────
     if len(sys.argv) > 1:
         parser = argparse.ArgumentParser(
-            description="Devocional JSON Validator v4",
+            description="Devocional JSON Validator v5",
             epilog=(
                 "Examples:\n"
                 "  python validate_devocional_gui.py --file path.json --lang de --version LU17\n"
@@ -438,9 +486,11 @@ if __name__ == "__main__":
         parser.add_argument("--file",    required=True, help="Path to devotional JSON file")
         parser.add_argument("--lang",    default="",    help="Language code (e.g. de, hi, es, en)")
         parser.add_argument("--version", default="",    help="Bible version code (e.g. LU17, HIOV, RVR1960)")
+        parser.add_argument("--expected", type=int, default=0,
+                            help="Expected minimum entry count (0 = auto-detect from date range)")
         args = parser.parse_args()
 
-        passed, result, summary = validate(args.file, args.lang, args.version)
+        passed, result, summary = validate(args.file, args.lang, args.version, args.expected)
         print(result)
         print()
         print(f"  Entries   : {summary['entries']}")
