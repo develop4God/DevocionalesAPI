@@ -150,7 +150,7 @@ def check_content_quality(entry: dict, lang: str = '') -> list:
         issues.append(f'oracion too short: {len(o)} chars (min {oracion_min})')
     if r and not r.endswith(SENTENCE_ENDINGS):
         issues.append(f'reflexion truncated — ends: ...{r.rstrip()[-40:]}')
-    closing = o[-50:]
+    closing = o[-30:]
     _latin_amens   = len(re.findall(r'\bAm[eé]n\b', closing, re.IGNORECASE))
     _unicode_amens = sum(closing.count(v) for v in (UNICODE_AMEN_VARIANTS | CJK_AMEN_VARIANTS))
     if _latin_amens + _unicode_amens >= 2:
