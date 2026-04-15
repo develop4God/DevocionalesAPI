@@ -70,7 +70,7 @@ SCRIPT_RANGES: dict[str, tuple[int, int]] = {
 SCRIPT_THRESHOLD = 0.5   # min ratio of target-script chars to flag as valid
 
 # Latin-script languages — no script check needed
-LATIN_LANGS = {"en", "es", "pt", "fr", "de"}
+LATIN_LANGS = {"en", "es", "pt", "fr", "de", "tl"}
 
 # Devanagari digit → ASCII digit
 _DEVA = str.maketrans("०१२३४५६७८९", "0123456789")
