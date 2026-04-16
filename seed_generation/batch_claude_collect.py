@@ -239,6 +239,106 @@ def _safe_custom_id(date_key: str) -> str:
     return re.sub(r"[^a-zA-Z0-9_-]", "_", date_key)[:64]
 
 
+# =============================================================================
+# ROBUST JSON REPAIR  (handles control chars, extra data, trailing commas, etc.)
+# =============================================================================
+
+def _extract_first_balanced_object(text: str) -> Optional[str]:
+    """Extract the first balanced {} object from text."""
+    start = text.find('{')
+    if start == -1:
+        return None
+    depth = 0
+    in_string = False
+    escape = False
+    for i, c in enumerate(text[start:], start):
+        if escape:
+            escape = False
+            continue
+        if c == '\\' and in_string:
+            escape = True
+            continue
+        if c == '"':
+            in_string = not in_string
+            continue
+        if in_string:
+            continue
+        if c == '{':
+            depth += 1
+        elif c == '}':
+            depth -= 1
+            if depth == 0:
+                return text[start:i + 1]
+    return None
+
+
+def repair_json(raw_text: str) -> Optional[dict]:
+    """
+    Try multiple strategies to extract and parse a JSON object from Claude output.
+    Returns the parsed dict or None if all strategies fail.
+    """
+    # Strip markdown code fences
+    text = re.sub(r'```(?:json)?\s*', '', raw_text)
+    text = re.sub(r'```\s*$', '', text, flags=re.MULTILINE).strip()
+
+    # Strategy 1: Direct parse
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError:
+        pass
+
+    # Strategy 2: First balanced JSON object, parse as-is
+    candidate = _extract_first_balanced_object(text)
+    if candidate:
+        try:
+            return json.loads(candidate)
+        except json.JSONDecodeError:
+            pass
+
+        # Strategy 3: Remove trailing commas before } or ]
+        fixed = re.sub(r',(\s*[}\]])', r'\1', candidate)
+        try:
+            return json.loads(fixed)
+        except json.JSONDecodeError:
+            pass
+
+        # Strategy 4: Remove unescaped control characters
+        fixed2 = re.sub(r'[\x00-\x08\x0b\x0c\x0e-\x1f]', '', fixed)
+        try:
+            return json.loads(fixed2)
+        except json.JSONDecodeError:
+            pass
+
+        # Strategy 5: Fix literal newlines inside string values
+        fixed3 = re.sub(r',(\s*[}\]])', r'\1', candidate)
+        fixed3 = re.sub(r'(?<=: ")([^"]*?)\n([^"]*?)(?=")', r'\1\\n\2', fixed3)
+        try:
+            return json.loads(fixed3)
+        except json.JSONDecodeError:
+            pass
+
+    # Strategy 6: Regex extraction of reflexion + oracion fields
+    reflexion_m = re.search(
+        r'"reflexion"\s*:\s*"((?:[^"\\]|\\.)*)"', text, re.DOTALL
+    )
+    oracion_m = re.search(
+        r'"oracion"\s*:\s*"((?:[^"\\]|\\.)*)"', text, re.DOTALL
+    )
+    if reflexion_m and oracion_m:
+        try:
+            return {
+                "reflexion": reflexion_m.group(1).encode('raw_unicode_escape').decode('unicode_escape'),
+                "oracion":   oracion_m.group(1).encode('raw_unicode_escape').decode('unicode_escape'),
+            }
+        except Exception:
+            return {
+                "reflexion": reflexion_m.group(1),
+                "oracion":   oracion_m.group(1),
+            }
+
+    return None
+
+
 def save_output(completed: dict, lang: str, version: str, output_dir: str) -> str:
     os.makedirs(output_dir, exist_ok=True)
     ts       = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -369,25 +469,17 @@ def collect(state_path: str, poll_interval: int = 60) -> None:
             })
             continue
 
-        # ── Parse JSON response ────────────────────────────────────────────
+        # ── Parse JSON response (with robust multi-strategy repair) ──────────
         raw_text = result.result.message.content[0].text.strip()
-        raw_text = raw_text.replace("```json", "").replace("```", "").strip()
-        match    = re.search(r'\{.*\}', raw_text, re.DOTALL)
+        data = repair_json(raw_text)
 
-        if not match:
-            print(f"  [PARSE_ERROR] {date_key} — no JSON object found in response")
+        if data is None:
+            print(f"  [PARSE_ERROR] {date_key} — all JSON repair strategies failed")
             error_records.append({
                 "date":   date_key,
                 "reason": "parse_error",
                 "detail": raw_text[:200],
             })
-            continue
-
-        try:
-            data = json.loads(match.group())
-        except json.JSONDecodeError as e:
-            print(f"  [JSON_ERROR] {date_key} — {e}")
-            error_records.append({"date": date_key, "reason": "json_decode_error", "detail": str(e)})
             continue
 
         reflexion = data.get("reflexion", "").strip()
