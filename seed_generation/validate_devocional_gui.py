@@ -57,6 +57,7 @@ CONSECUTIVE_DUP_SKIP = frozenset({
     'nous', 'vous',  # French reflexive pronouns (nous nous aimons = we love one another)
     'पवित्र',        # Hindi 'holy' — intentional liturgical repetition (cf. Rev 4:8)
     'saul',          # Biblical quote: "Saul, Saul, why do you persecute me?" (Acts 9:4)
+    'banal',         # Tagalog 'holy' — Trisagion "Banal, banal, banal ang Panginoon" (Rev 4:8)
 })
 # Sentence-ending punctuation: repetition across a sentence boundary is rhetorical, not an error
 SENT_END_PUNCT = frozenset({'.', '!', '?', ':', '»', '\u201d'})
@@ -155,7 +156,7 @@ def check_content_quality(entry: dict, lang: str = '') -> list:
         issues.append(f'oracion too short: {len(o)} chars (min {oracion_min})')
     if r and not r.endswith(SENTENCE_ENDINGS):
         issues.append(f'reflexion truncated — ends: ...{r.rstrip()[-40:]}')
-    closing = o[-30:]
+    closing = o[-15:]
     _latin_amens   = len(re.findall(r'\bAm[eé]n\b', closing, re.IGNORECASE))
     # Exclude Latin AMEN_VARIANTS from unicode count to avoid double-counting:
     # _latin_amens already covers {'amen','amén','āmen','amem'} via regex.
