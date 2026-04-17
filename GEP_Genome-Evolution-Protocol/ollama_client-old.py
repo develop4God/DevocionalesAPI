@@ -41,20 +41,20 @@ def call_ollama(
         "format": "json",
         "options": {
             "temperature": 0.1,
-            "num_predict": 4096,  # thinking mode needs room for <think> block + JSON
+            "num_predict": 500,   # reader reaction is short — no need for 1500
         },
     }).encode("utf-8")
 
+    req = urllib.request.Request(
+        OLLAMA_URL,
+        data=payload,
+        headers={"Content-Type": "application/json"},
+        method="POST",
+    )
+
     for attempt in range(1, MAX_RETRIES + 1):
         try:
-            # Request rebuilt each attempt — payload is consumed on first read
-            req = urllib.request.Request(
-                OLLAMA_URL,
-                data=payload,
-                headers={"Content-Type": "application/json"},
-                method="POST",
-            )
-            with urllib.request.urlopen(req, timeout=180) as resp:
+            with urllib.request.urlopen(req, timeout=120) as resp:
                 result  = json.loads(resp.read().decode("utf-8"))
                 raw     = result.get("response", "").strip()
                 return _parse_reaction(raw), None

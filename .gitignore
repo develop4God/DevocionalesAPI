@@ -1,1 +1,57 @@
 venv/
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# VS Code settings
+.vscode/
+
+# Environment and dependency files
+.env
+.venv/
+ENV/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Sensitive and credential files
+*.sqlite3
+*.db
+*.log
+*.pem
+*.key
+*.crt
+*.pfx
+*.p12
+secrets.*
+*.env
+
+# Project-specific sensitive files
+seed_generation/Bibles/
+seed_generation/ERRORS-RAG/
+*.jsonl
+*.json
+!README*.md
+
+# Ignore large data and output files
+yearly_devotionals/
+*.bak
+*.tmp
+
+# Exclude user scripts and batch files
+*.sh
+*.bat
+
+# Ignore audit and validation outputs
+*.audit
+*.validation
+
+# Ignore excluded verses and tags
+1st_version_API_generation/excluded_verses.json
+seed_generation/tags_master*.json
