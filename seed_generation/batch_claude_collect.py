@@ -31,14 +31,16 @@ Requires:
 import argparse
 import json
 import os
-import re
+
 import sys
 import time
-import unicodedata
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
 from typing import Optional
+
+# Import shared utilities
+from pipeline_shared import repair_json, _extract_first_balanced_object, build_prompt, _load_prayer_endings, _normalize_word, _check_prayer_ending, LITURGICAL_WHITELIST
 
 try:
     import anthropic
@@ -61,145 +63,11 @@ REFLEXION_MIN_CHARS = 800
 ORACION_MIN_CHARS   = 150
 
 LITURGICAL_WHITELIST: frozenset = frozenset({
-    "heilig", "holy", "kadosh", "halleluja", "hosanna",
-    "amen", "amén", "āmen", "aleluya", "panginoon",
-})
-
-_PRAYER_ENDINGS: dict = {}
-_SENTENCE_ENDINGS = ('.', '!', '?', '»', '"', '\u201c', '\u201d', '।', '。', '！', '？')
-
-
-def _load_prayer_endings() -> dict:
     global _PRAYER_ENDINGS
-    if _PRAYER_ENDINGS:
-        return _PRAYER_ENDINGS
-    path = os.path.join(_SCRIPT_DIR, "prayer_endings.json")
-    try:
-        with open(path, encoding="utf-8") as f:
-            data = json.load(f)
-        _PRAYER_ENDINGS = {k: v for k, v in data.items() if not k.startswith("_")}
-    except Exception as e:
-        print(f"WARNING: Could not load prayer_endings.json: {e} — using ['Amen'] fallback")
-        _PRAYER_ENDINGS = {}
-    return _PRAYER_ENDINGS
-
-
-def _normalize_word(word: str) -> str:
     return unicodedata.normalize("NFD", word).encode("ascii", "ignore").decode().lower()
-
-
-def _check_prayer_ending(oracion: str, lang: str) -> bool:
     endings = _load_prayer_endings().get(lang, ["Amen"])
-    clean   = oracion.strip().rstrip(".!,;।").strip()
-    words   = clean.split()
-    for ending in endings:
-        n    = len(ending.split())
-        tail = " ".join(words[-n:]) if len(words) >= n else clean
-        if _normalize_word(ending) == _normalize_word(tail):
-            return True
-    return False
-
-
-def _find_consecutive_dup(text: str) -> Optional[str]:
-    strip_chars = ".,;:!?"
-    words = text.split()
-    for i in range(len(words) - 1):
         w1 = words[i].strip(strip_chars).lower()
-        w2 = words[i + 1].strip(strip_chars).lower()
-        if w1 == w2 and len(w1) > 3 and w1 not in LITURGICAL_WHITELIST:
-            return f"'{words[i]} {words[i + 1]}'"
-    return None
-
-
-def run_phase1(reflexion: str, oracion: str, lang: str) -> tuple[bool, list[str]]:
-    """Returns (passed, issues_list)."""
-    issues = []
-    r, o = reflexion.strip(), oracion.strip()
-
-    if len(r) < REFLEXION_MIN_CHARS:
-        issues.append(f"reflexion too short: {len(r)} chars (min {REFLEXION_MIN_CHARS})")
-    if len(o) < ORACION_MIN_CHARS:
-        issues.append(f"oracion too short: {len(o)} chars (min {ORACION_MIN_CHARS})")
-
-    if not _check_prayer_ending(o, lang):
-        last     = o.rstrip(".!,;।").split()[-1] if o.split() else "(empty)"
-        expected = _load_prayer_endings().get(lang, ["Amen"])
-        issues.append(f"prayer_ending: last word '{last}' — expected one of {expected}")
-
-    if len(re.findall(r'\bAm[eé]n\b', o[-120:], re.IGNORECASE)) >= 2:
-        issues.append("double_amen: duplicate Amen artifact detected")
-
-    dup = _find_consecutive_dup(o)
-    if dup:
-        issues.append(f"dup_words_oracion: consecutive duplicate {dup}")
-
     dup = _find_consecutive_dup(r)
-    if dup:
-        issues.append(f"dup_words_reflexion: consecutive duplicate {dup}")
-
-    if r and not r.rstrip().endswith(_SENTENCE_ENDINGS):
-        issues.append(f"reflexion_truncated: ends mid-sentence — '...{r.rstrip()[-40:]}'")
-
-    return len(issues) == 0, issues
-
-
-# =============================================================================
-# SCRIPT VALIDATION  (same logic as API_Server_Seed_Claude.py)
-# =============================================================================
-
-SCRIPT_RANGES = {
-    "hi": (0x0900, 0x097F),
-    "ja": (0x3040, 0x30FF),
-    "zh": (0x4E00, 0x9FFF),
-}
-SCRIPT_THRESHOLD = 0.6
-
-
-def validate_script(text: str, lang: str) -> tuple[bool, float]:
-    if lang not in SCRIPT_RANGES:
-        return True, 1.0
-    lo, hi = SCRIPT_RANGES[lang]
-    alpha_chars = [c for c in text if c.isalpha()]
-    if not alpha_chars:
-        return False, 0.0
-    ratio = sum(1 for c in alpha_chars if lo <= ord(c) <= hi) / len(alpha_chars)
-    return ratio >= SCRIPT_THRESHOLD, ratio
-
-
-# =============================================================================
-# DEVOTIONAL BUILDER  (identical to client_generate_from_seed_claude.py)
-# =============================================================================
-
-class DevotionalValidationError(ValueError):
-    pass
-
-
-class DevotionalBuilder:
-
-    def __init__(self, date_key: str, seed_entry: dict, master_lang: str, master_version: str):
-        self._date      = date_key
-        self._seed      = seed_entry
-        self._lang      = master_lang
-        self._version   = master_version
-        self._reflexion = ""
-        self._oracion   = ""
-
-    def merge(self, reflexion: str, oracion: str) -> "DevotionalBuilder":
-        self._reflexion = reflexion.strip()
-        self._oracion   = oracion.strip()
-        return self
-
-    def _build_versiculo(self) -> str:
-        cita  = self._seed["versiculo"]["cita"]
-        texto = self._seed["versiculo"]["texto"]
-        return cita + " " + self._version + ': "' + texto + '"'
-
-    def _build_id(self) -> str:
-        cita         = self._seed["versiculo"]["cita"]
-        id_part      = re.sub(r"\s+", "", cita).replace(":", "")
-        date_compact = self._date.replace("-", "")
-        return id_part + self._version + date_compact
-
     def _extract_tags(self) -> list:
         tags = self._seed.get("tags", [])
         if isinstance(tags, list) and tags:

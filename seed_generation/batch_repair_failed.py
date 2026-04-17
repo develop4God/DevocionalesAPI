@@ -17,14 +17,16 @@ Usage:
 
 import argparse
 import json
-import os
-import re
+
 import sys
 import time
-import unicodedata
+from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
 from typing import Optional
+
+# Import shared utilities
+from pipeline_shared import repair_json, _extract_first_balanced_object, build_prompt, _load_prayer_endings, _normalize_word, _check_prayer_ending, LITURGICAL_WHITELIST
 
 try:
     import anthropic
@@ -75,145 +77,11 @@ def _extract_first_balanced_object(text: str) -> Optional[str]:
 def repair_json(raw_text: str) -> Optional[dict]:
     """
     Try multiple strategies to extract and parse a JSON object.
-    Returns the parsed dict or None if all strategies fail.
-    """
-    # Strip markdown code fences
-    text = re.sub(r'```(?:json)?\s*', '', raw_text)
-    text = re.sub(r'```\s*$', '', text, flags=re.MULTILINE).strip()
-
-    # Strategy 1: Direct parse
-    try:
-        return json.loads(text)
     except json.JSONDecodeError:
-        pass
-
-    # Strategy 2: Find first balanced JSON object, then parse as-is
-    candidate = _extract_first_balanced_object(text)
-    if candidate:
-        try:
-            return json.loads(candidate)
         except json.JSONDecodeError:
-            pass
-
-        # Strategy 3: Remove trailing commas before } or ]
-        fixed = re.sub(r',(\s*[}\]])', r'\1', candidate)
-        try:
-            return json.loads(fixed)
-        except json.JSONDecodeError:
-            pass
-
-        # Strategy 4: Also fix unescaped control characters
         fixed2 = re.sub(r'[\x00-\x08\x0b\x0c\x0e-\x1f]', '', fixed)
-        try:
-            return json.loads(fixed2)
-        except json.JSONDecodeError:
-            pass
-
-        # Strategy 5: Re-encode newlines inside strings
-        # Replace literal newlines inside JSON string values with \n
-        def fix_newlines(m):
-            s = m.group(0)
-            # Replace real newlines with escaped ones (but not in keys)
-            return s.replace('\n', '\\n').replace('\r', '\\r')
-        # Match string values (between quotes, handling escapes)
-        fixed3 = re.sub(r'(?<="): *"((?:[^"\\]|\\.)*)"', lambda m: m.group(0), candidate)
-        # More aggressive: just remove unescaped newlines within the object
         fixed3 = re.sub(r'(?<=: ")([^"]*?)\n([^"]*?)(?=")', r'\1\\n\2', candidate)
-        fixed3 = re.sub(r',(\s*[}\]])', r'\1', fixed3)
-        try:
-            return json.loads(fixed3)
-        except json.JSONDecodeError:
-            pass
-
-    # Strategy 6: Use regex to extract reflexion and oracion manually
-    reflexion_m = re.search(
-        r'"reflexion"\s*:\s*"((?:[^"\\]|\\.)*)"\s*[,}]',
-        text, re.DOTALL
-    )
-    oracion_m = re.search(
-        r'"oracion"\s*:\s*"((?:[^"\\]|\\.)*)"\s*[,}]',
-        text, re.DOTALL
-    )
-    if reflexion_m and oracion_m:
-        try:
-            return {
-                "reflexion": reflexion_m.group(1).encode('raw_unicode_escape').decode('unicode_escape'),
-                "oracion":   oracion_m.group(1).encode('raw_unicode_escape').decode('unicode_escape'),
-            }
-        except Exception:
-            # Simpler fallback - just return the raw captured strings
-            return {
-                "reflexion": reflexion_m.group(1),
-                "oracion":   oracion_m.group(1),
-            }
-
     return None
-
-
-# =============================================================================
-# DEVOTIONAL BUILDER  (same as batch_claude_collect.py)
-# =============================================================================
-SENTENCE_ENDINGS = ('.', '!', '?', '»', '"', '\u201c', '\u201d', '।', '。', '！', '？')
-
-
-def _load_prayer_endings() -> dict:
-    path = os.path.join(_SCRIPT_DIR, "prayer_endings.json")
-    try:
-        with open(path, encoding="utf-8") as f:
-            data = json.load(f)
-        return {k: v for k, v in data.items() if not k.startswith("_")}
-    except Exception:
-        return {}
-
-
-def _normalize_word(word: str) -> str:
-    return unicodedata.normalize("NFD", word).encode("ascii", "ignore").decode().lower()
-
-
-def _check_prayer_ending(oracion: str, lang: str) -> bool:
-    endings = _load_prayer_endings().get(lang, ["Amen"])
-    clean   = oracion.strip().rstrip(".!,;।").strip()
-    words   = clean.split()
-    for ending in endings:
-        n    = len(ending.split())
-        tail = " ".join(words[-n:]) if len(words) >= n else clean
-        if _normalize_word(ending) == _normalize_word(tail):
-            return True
-    return False
-
-
-def _build_versiculo(seed_entry: dict, version: str) -> str:
-    cita  = seed_entry["versiculo"]["cita"]
-    texto = seed_entry["versiculo"]["texto"]
-    return cita + " " + version + ': "' + texto + '"'
-
-
-def _build_id(date_key: str, seed_entry: dict, version: str) -> str:
-    cita        = seed_entry["versiculo"]["cita"]
-    id_part     = re.sub(r"\s+", "", cita).replace(":", "")
-    date_compact = date_key.replace("-", "")
-    return id_part + version + date_compact
-
-
-def build_devotional(date_key, seed_entry, lang, version, reflexion, oracion) -> dict:
-    return {
-        "id":           _build_id(date_key, seed_entry, version),
-        "date":         date_key,
-        "language":     lang,
-        "version":      version,
-        "versiculo":    _build_versiculo(seed_entry, version),
-        "reflexion":    reflexion.strip(),
-        "para_meditar": seed_entry.get("para_meditar", []),
-        "oracion":      oracion.strip(),
-        "tags":         seed_entry.get("tags", ["devotional"]),
-    }
-
-
-# =============================================================================
-# PROMPT BUILDER (same as batch_claude_submit.py)
-# =============================================================================
-
-def build_prompt(verse_cita: str, lang: str, topic: str | None = None) -> str:
     parts = "\n\n".join([
         f"You are a devoted biblical devotional writer. "
         f"Write a devotional in {lang.upper()} based on the key verse: \"{verse_cita}\".",

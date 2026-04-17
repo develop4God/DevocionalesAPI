@@ -56,10 +56,16 @@ def run_checks(oracion: str, reflexion: str, lang: str = "de") -> list[str]:
 
 def validate_progress_json(json_path: str):
     path = Path(json_path)
+
     with open(path, encoding="utf-8") as f:
         data = json.load(f)
 
-    entries = data.get("completed", {})
+    lang_data = data.get("data", {})
+    entries = {}
+    for lang, dates in lang_data.items():
+        for date_key, devo_list in dates.items():
+            if devo_list:
+                entries[date_key] = devo_list[0]
     print(f"Entries to validate: {len(entries)}\n{'='*60}")
 
     failed = {}
