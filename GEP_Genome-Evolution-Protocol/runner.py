@@ -27,12 +27,13 @@ def _process_entry(
     system = build_system_prompt(lang, version, genome)
     user   = build_user_prompt(entry)
 
-    reaction, raw_error = call_ollama(model, system, user)
+    # Modified: always capture the raw model response (with <think> blocks) for every entry
+    reaction, raw_response = call_ollama(model, system, user, return_raw=True)
     if reaction is None:
-        return None, None, raw_error
+        return None, None, raw_response
 
     genome, fragment_id = absorb_reaction(genome, reaction, entry.date, year)
-    return reaction, fragment_id, None
+    return reaction, fragment_id, raw_response
 
 
 def _print_reaction(entry: DevotionalEntry, reaction: ReaderReaction, fragment_id: str | None):

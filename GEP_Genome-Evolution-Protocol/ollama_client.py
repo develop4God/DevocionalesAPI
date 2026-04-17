@@ -4,6 +4,7 @@ Single responsibility: call Ollama, parse JSON, retry on failure.
 """
 
 import json
+import re
 import time
 import urllib.request
 import urllib.error
@@ -28,20 +29,28 @@ def call_ollama(
     model: str,
     system: str,
     user: str,
-) -> tuple[ReaderReaction | None, str | None]:
+    -> tuple[ReaderReaction | None, str | None]:
     """
-    Returns (ReaderReaction, None) on success.
+    Returns (ReaderReaction, raw_response) on success.
     Returns (None, raw_response_or_error) on failure.
+    If return_raw=True, always returns the full raw model response (with <think> blocks) as the second tuple value.
     """
+    import inspect
+    # Backward compatible: support return_raw kwarg
+    frame = inspect.currentframe().f_back
+    return_raw = frame.f_locals.get('return_raw', False)
+
     payload = json.dumps({
         "model": model,
         "prompt": user,
         "system": system,
         "stream": False,
-        "format": "json",
+        # NOTE: Do NOT use "format": "json" with Qwen3 thinking models.
+        # Ollama's grammar-constrained JSON conflicts with thinking-token generation
+        # and produces an empty response. The prompts already instruct JSON output.
         "options": {
             "temperature": 0.1,
-            "num_predict": 4096,  # thinking mode needs room for <think> block + JSON
+            "num_predict": 8192,  # thinking models need room for reasoning + JSON
         },
     }).encode("utf-8")
 
@@ -54,26 +63,36 @@ def call_ollama(
                 headers={"Content-Type": "application/json"},
                 method="POST",
             )
-            with urllib.request.urlopen(req, timeout=180) as resp:
+            with urllib.request.urlopen(req, timeout=300) as resp:
                 result  = json.loads(resp.read().decode("utf-8"))
                 raw     = result.get("response", "").strip()
-                return _parse_reaction(raw), None
+                parsed  = _parse_reaction(raw)
+                if parsed is None:
+                    # Parse failure — retry if attempts remain, otherwise surface raw
+                    if attempt < MAX_RETRIES:
+                        time.sleep(RETRY_DELAY_S)
+                        continue
+                    return None, raw if return_raw else f"ParseError: could not extract JSON from model response.\nRaw ({len(raw)} chars): {raw[:600]}"
+                return parsed, raw if return_raw else None
 
         except urllib.error.URLError as e:
             if attempt < MAX_RETRIES:
                 time.sleep(RETRY_DELAY_S)
                 continue
-            return None, f"URLError: {e.reason}"
+            return None, None if return_raw else f"URLError: {e.reason}"
 
         except json.JSONDecodeError as e:
-            return None, f"JSONDecodeError on Ollama response: {e}"
+            return None, None if return_raw else f"JSONDecodeError on Ollama response: {e}"
 
-    return None, "Max retries exceeded"
+    return None, None if return_raw else "Max retries exceeded"
 
 
 def _parse_reaction(raw: str) -> ReaderReaction | None:
-    # Strip markdown fences if present
     text = raw
+    # Strip <think>...</think> blocks from reasoning models (Qwen3, deepseek-r1, etc.)
+    # Ollama normally hides these for supported models, but not always.
+    text = re.sub(r"<think>.*?</think>", "", text, flags=re.DOTALL).strip()
+    # Strip markdown fences if present
     if text.startswith("```"):
         parts = text.split("```")
         text = parts[1] if len(parts) > 1 else text
