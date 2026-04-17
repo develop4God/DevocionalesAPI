@@ -21,30 +21,27 @@ OLLAMA_URL = "http://localhost:11434/api/generate"
 #   <tag>  → any direct Ollama tag, e.g. qwen2.5:7b
 MODEL_KEYS = ["auto", "fast", "best"]
 
-MAX_RETRIES    = 2
-RETRY_DELAY_S  = 3
+MAX_RETRIES   = 2
+RETRY_DELAY_S = 3
 
 
 def call_ollama(
     model: str,
     system: str,
     user: str,
-    -> tuple[ReaderReaction | None, str | None]:
+    verbose: bool = True,
+) -> tuple[ReaderReaction | None, str | None]:
     """
-    Returns (ReaderReaction, raw_response) on success.
-    Returns (None, raw_response_or_error) on failure.
-    If return_raw=True, always returns the full raw model response (with <think> blocks) as the second tuple value.
+    Streams response from Ollama.
+    Returns (ReaderReaction, raw_full) on success — raw_full includes <think> blocks.
+    Returns (None, error_str) on failure.
+    When verbose=True, prints live thinking progress and verdict to stdout.
     """
-    import inspect
-    # Backward compatible: support return_raw kwarg
-    frame = inspect.currentframe().f_back
-    return_raw = frame.f_locals.get('return_raw', False)
-
     payload = json.dumps({
         "model": model,
         "prompt": user,
         "system": system,
-        "stream": False,
+        "stream": True,  # streaming avoids read-timeout on thinking models
         # NOTE: Do NOT use "format": "json" with Qwen3 thinking models.
         # Ollama's grammar-constrained JSON conflicts with thinking-token generation
         # and produces an empty response. The prompts already instruct JSON output.
@@ -56,41 +53,94 @@ def call_ollama(
 
     for attempt in range(1, MAX_RETRIES + 1):
         try:
-            # Request rebuilt each attempt — payload is consumed on first read
             req = urllib.request.Request(
                 OLLAMA_URL,
                 data=payload,
                 headers={"Content-Type": "application/json"},
                 method="POST",
             )
-            with urllib.request.urlopen(req, timeout=300) as resp:
-                result  = json.loads(resp.read().decode("utf-8"))
-                raw     = result.get("response", "").strip()
-                parsed  = _parse_reaction(raw)
-                if parsed is None:
-                    # Parse failure — retry if attempts remain, otherwise surface raw
-                    if attempt < MAX_RETRIES:
-                        time.sleep(RETRY_DELAY_S)
-                        continue
-                    return None, raw if return_raw else f"ParseError: could not extract JSON from model response.\nRaw ({len(raw)} chars): {raw[:600]}"
-                return parsed, raw if return_raw else None
+            raw = _collect_stream(req, verbose=verbose)
+            parsed = _parse_reaction(raw)
+            if parsed is None:
+                if attempt < MAX_RETRIES:
+                    if verbose:
+                        print(f"  ⚠️  parse failed, retrying ({attempt}/{MAX_RETRIES})...")
+                    time.sleep(RETRY_DELAY_S)
+                    continue
+                return None, f"ParseError: could not extract JSON.\nRaw ({len(raw)} chars): {raw[:600]}"
+            return parsed, raw
 
         except urllib.error.URLError as e:
             if attempt < MAX_RETRIES:
                 time.sleep(RETRY_DELAY_S)
                 continue
-            return None, None if return_raw else f"URLError: {e.reason}"
+            return None, f"URLError: {e.reason}"
 
-        except json.JSONDecodeError as e:
-            return None, None if return_raw else f"JSONDecodeError on Ollama response: {e}"
+        except (json.JSONDecodeError, TimeoutError, OSError) as e:
+            if attempt < MAX_RETRIES:
+                time.sleep(RETRY_DELAY_S)
+                continue
+            return None, f"{type(e).__name__}: {e}"
 
-    return None, None if return_raw else "Max retries exceeded"
+    return None, "Max retries exceeded"
+
+
+def _collect_stream(req: urllib.request.Request, verbose: bool) -> str:
+    """
+    Reads Ollama NDJSON stream. Returns the complete accumulated response string
+    (including any <think> blocks). When verbose=True, prints live progress:
+      - Dots for thinking tokens (one dot per 200 chars)
+      - Final think size summary when </think> is found
+    """
+    tokens: list[str] = []
+    in_think = False
+    think_chars = 0
+    dots_printed = 0
+
+    # timeout=60 is per-read idle timeout, not total.
+    # Thinking models send tokens continuously so this won't fire mid-stream.
+    with urllib.request.urlopen(req, timeout=60) as resp:
+        if verbose:
+            print("  💭 ", end="", flush=True)
+
+        for raw_line in resp:
+            raw_line = raw_line.strip()
+            if not raw_line:
+                continue
+            try:
+                chunk = json.loads(raw_line)
+            except json.JSONDecodeError:
+                continue
+
+            token = chunk.get("response", "")
+            tokens.append(token)
+
+            if verbose:
+                if not in_think and "<think>" in token:
+                    in_think = True
+                if in_think:
+                    think_chars += len(token)
+                    new_dots = think_chars // 200 - dots_printed
+                    if new_dots > 0:
+                        print("." * new_dots, end="", flush=True)
+                        dots_printed += new_dots
+                if in_think and "</think>" in token:
+                    in_think = False
+                    print(f" ({think_chars} chars)", flush=True)
+                    print("  📄 response...", flush=True)
+
+            if chunk.get("done"):
+                break
+
+    if verbose:
+        print()  # finish the output line
+
+    return "".join(tokens)
 
 
 def _parse_reaction(raw: str) -> ReaderReaction | None:
     text = raw
     # Strip <think>...</think> blocks from reasoning models (Qwen3, deepseek-r1, etc.)
-    # Ollama normally hides these for supported models, but not always.
     text = re.sub(r"<think>.*?</think>", "", text, flags=re.DOTALL).strip()
     # Strip markdown fences if present
     if text.startswith("```"):

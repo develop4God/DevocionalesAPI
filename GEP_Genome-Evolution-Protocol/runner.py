@@ -3,6 +3,7 @@ runner.py — GEP Critic v3
 Single responsibility: orchestrate review modes (interactive / overnight).
 """
 
+import re
 from pathlib import Path
 
 from audit import append_record, build_record, load_reviewed_dates, print_summary, audit_path
@@ -27,8 +28,9 @@ def _process_entry(
     system = build_system_prompt(lang, version, genome)
     user   = build_user_prompt(entry)
 
-    # Modified: always capture the raw model response (with <think> blocks) for every entry
-    reaction, raw_response = call_ollama(model, system, user, return_raw=True)
+    # verbose=True: streams live thinking progress to stdout
+    # raw_response always contains the full output including <think> blocks for training
+    reaction, raw_response = call_ollama(model, system, user, verbose=True)
     if reaction is None:
         return None, None, raw_response
 
@@ -153,31 +155,41 @@ def run_overnight(
 
     try:
         for i, entry in enumerate(pending, 1):
-            print(f"  [{i}/{len(pending)}] {entry.date}...", end=" ", flush=True)
+            # Use a newline here — streaming will print thinking progress on subsequent lines
+            print(f"\n{'─'*60}")
+            print(f"  [{i}/{len(pending)}] {entry.date} | {entry.id}")
 
-            reaction, fragment_id, raw_error = _process_entry(
+            reaction, fragment_id, raw_response = _process_entry(
                 entry, model, lang, version, year, genome
             )
 
             if reaction is None:
-                print(f"⚠️  error")
+                print(f"  ⚠️  error — {raw_response[:200] if raw_response else 'unknown'}")
                 record = build_record(
                     entry.date, entry.id, lang, version,
                     action="error",
                     reaction=ReaderReaction(verdict=Verdict.OK, reaction="model error"),
-                    raw_response=raw_error,
+                    raw_response=raw_response,
                 )
                 append_record(log_path, record)
                 continue
 
-            icon = "✅" if reaction.verdict == Verdict.OK else f"🔶 [{reaction.category.value if reaction.category else 'other'}]"
-            print(icon)
+            icon = "✅ OK" if reaction.verdict == Verdict.OK else f"🔶 PAUSE [{reaction.category.value if reaction.category else 'other'}]"
+            print(f"  {icon} | confidence: {reaction.confidence:.2f}")
+            print(f"  {reaction.reaction[:120]}")
+            if reaction.quoted_pause:
+                print(f"  pause: \"{reaction.quoted_pause[:80]}\"")
+            think_match = re.search(r'<think>(.*?)</think>', raw_response or '', re.DOTALL)
+            if think_match:
+                think_len = len(think_match.group(1))
+                print(f"  🧠 thinking stored: {think_len} chars")
 
             record = build_record(
                 entry.date, entry.id, lang, version,
                 action="overnight",
                 reaction=reaction,
                 genome_fragment_id=fragment_id,
+                raw_response=raw_response,
             )
             append_record(log_path, record)
 
