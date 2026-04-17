@@ -554,7 +554,14 @@ if __name__ == "__main__":
         parser.add_argument("--version", default="",    help="Bible version code (e.g. LU17, HIOV, RVR1960)")
         parser.add_argument("--expected", type=int, default=0,
                             help="Expected minimum entry count (0 = auto-detect from date range)")
+        parser.add_argument("--bible-db", default="", help="Path to Bible DB (.SQLite3 or .gz)")
         args = parser.parse_args()
+
+        # Set Bible DB path for validate
+        if args.bible_db:
+            validate.bible_db_path = args.bible_db
+        else:
+            validate.bible_db_path = None
 
         passed, result, summary = validate(args.file, args.lang, args.version, args.expected)
         print(result)

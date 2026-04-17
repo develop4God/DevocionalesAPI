@@ -173,15 +173,6 @@ class VerseResolver:
         sqlite_path: str,
         books_sot_path: str | None = None,
     ) -> None:
-        import tempfile, gzip, shutil
-        self._tempfile = None
-        # If .gz, extract to temp file
-        if sqlite_path.endswith('.gz'):
-            tmp = tempfile.NamedTemporaryFile(delete=False, suffix='.SQLite3')
-            with gzip.open(sqlite_path, 'rb') as f_in, open(tmp.name, 'wb') as f_out:
-                shutil.copyfileobj(f_in, f_out)
-            self._tempfile = tmp.name
-            sqlite_path = self._tempfile
         self.books_sot = load_books_sot(books_sot_path)
         self.conn      = sqlite3.connect(sqlite_path)
         self.cursor    = self.conn.cursor()
@@ -195,17 +186,11 @@ class VerseResolver:
         self.close()
 
     def close(self) -> None:
-        """Close the SQLite connection and remove temp file if used."""
+        """Close the SQLite connection."""
         if self.conn:
             self.conn.close()
             self.conn   = None
             self.cursor = None
-        if self._tempfile:
-            try:
-                os.remove(self._tempfile)
-            except Exception:
-                pass
-            self._tempfile = None
 
     # ── internal helpers ──────────────────────────────────────────────────────
 
