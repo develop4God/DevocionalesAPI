@@ -97,7 +97,7 @@ def main():
     print(f"\n{'═'*60}")
     print(f"  📖 GEP Critic v3 — Simulated Reader")
     print(f"  Lang: {args.lang} | Version: {args.version} | Year: {args.year}")
-    print(f"  Mode: {args.mode} | Model: {MODELS[args.model]}")
+    print(f"  Mode: {args.mode} | Model: {get_model_for_key(args.model)}")
     print(f"{'═'*60}")
 
     if args.local:
