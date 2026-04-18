@@ -184,7 +184,10 @@ def run_interactive(
                 action="error",
                 reaction=ReaderReaction(verdict=Verdict.OK, reaction="model error"),
                 raw_response=p2_raw,
-                phase1_result=phase1_result,
+                phase1_verdict=(phase1_result or {}).get("verdict"),
+                phase1_issue=(phase1_result or {}).get("issue"),
+                phase1_quoted=(phase1_result or {}).get("quoted"),
+                phase1_confidence=(phase1_result or {}).get("confidence"),
                 phase1_raw=p1_raw,
             )
             append_record(log_path, record)
@@ -207,7 +210,10 @@ def run_interactive(
                 action="approved",
                 reaction=reaction,
                 genome_fragment_id=fragment_id,
-                phase1_result=phase1_result,
+                phase1_verdict=(phase1_result or {}).get("verdict"),
+                phase1_issue=(phase1_result or {}).get("issue"),
+                phase1_quoted=(phase1_result or {}).get("quoted"),
+                phase1_confidence=(phase1_result or {}).get("confidence"),
                 phase1_raw=p1_raw,
             )
             append_record(log_path, record)
@@ -301,7 +307,10 @@ def run_overnight(
                     action="error",
                     reaction=ReaderReaction(verdict=Verdict.OK, reaction="model error"),
                     raw_response=p2_raw,
-                    phase1_result=phase1_result,
+                    phase1_verdict=(phase1_result or {}).get("verdict"),
+                    phase1_issue=(phase1_result or {}).get("issue"),
+                    phase1_quoted=(phase1_result or {}).get("quoted"),
+                    phase1_confidence=(phase1_result or {}).get("confidence"),
                     phase1_raw=p1_raw,
                 )
                 append_record(log_path, record)
@@ -334,7 +343,10 @@ def run_overnight(
                 reaction=reaction,
                 genome_fragment_id=fragment_id,
                 raw_response=p2_raw,
-                phase1_result=phase1_result,
+                phase1_verdict=(phase1_result or {}).get("verdict"),
+                phase1_issue=(phase1_result or {}).get("issue"),
+                phase1_quoted=(phase1_result or {}).get("quoted"),
+                phase1_confidence=(phase1_result or {}).get("confidence"),
                 phase1_raw=p1_raw,
             )
             append_record(log_path, record)
