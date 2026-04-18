@@ -9,10 +9,18 @@ Every PAUSE reaction grows the genome for future runs.
 
 Usage:
   python critic_v3.py --lang pt --version ARC --year 2025 --mode overnight
+  python critic_v3.py --lang pt --version ARC --year 2025 --role elder --mode overnight
+  python critic_v3.py --lang pt --version ARC --year 2025 --role charismatic
   python critic_v3.py --lang es --version NVI --year 2025 --mode interactive
   python critic_v3.py --lang pt --version ARC --year 2025 --local ./Devocional_year_2025_pt_ARC.json
   python critic_v3.py --list-files
   python critic_v3.py --genome pt ARC 2025
+
+Available roles for pt:
+  (default)     Carlos, 42, São Paulo, Baptist — 15 years of devotionals
+  elder         Dona Aparecida, 68, Belo Horizonte, Presbyterian — deep ARC memory
+  charismatic   Jéssica, 34, Fortaleza, Assembly of God — encounter-oriented
+  new_believer  Lucas, 27, Recife — 6 months as Christian, accessibility check
 """
 
 import argparse
@@ -47,6 +55,9 @@ def main():
         epilog=(
             "Examples:\n"
             "  python critic_v3.py --lang pt --version ARC --year 2025 --mode overnight\n"
+            "  python critic_v3.py --lang pt --version ARC --year 2025 --role elder\n"
+            "  python critic_v3.py --lang pt --version ARC --year 2025 --role charismatic\n"
+            "  python critic_v3.py --lang pt --version ARC --year 2025 --role new_believer\n"
             "  python critic_v3.py --lang es --version NVI --year 2025\n"
             "  python critic_v3.py --lang pt --version ARC --year 2025 --local ./file.json\n"
             "  python critic_v3.py --genome pt ARC 2025\n"
@@ -59,8 +70,12 @@ def main():
     parser.add_argument("--year",       type=int, help="Year (2025, 2026, ...)")
     parser.add_argument("--mode",       choices=["interactive", "overnight"],
                         default="overnight")
+    parser.add_argument("--role",       default="default",
+                        help="Reader role: default, elder, charismatic, new_believer (pt only for now)")
     parser.add_argument("--model", default="auto",
                         help="Model key: auto (default), fast, best, or any Ollama tag e.g. qwen2.5:7b")
+    parser.add_argument("--phase", type=int, default=0,
+                        help="Run only phase 1 or 2. Default 0 = both.")
     parser.add_argument("--start-date", dest="start_date",
                         help="Skip entries before YYYY-MM-DD")
     parser.add_argument("--local",      metavar="FILE",
@@ -90,13 +105,14 @@ def main():
         parser.error(f"Required: {', '.join(missing)}")
 
     if args.report:
-        print_summary(audit_path(args.lang, args.version, args.year))
+        print_summary(audit_path(args.lang, args.version, args.year, role=args.role))
         return
 
     # ── Load source data ───────────────────────────────────────────────────────
     print(f"\n{'═'*60}")
     print(f"  📖 GEP Critic v3 — Simulated Reader")
     print(f"  Lang: {args.lang} | Version: {args.version} | Year: {args.year}")
+    print(f"  Role: {args.role}")
     print(f"  Mode: {args.mode} | Model: {get_model_for_key(args.model)}")
     print(f"{'═'*60}")
 
@@ -117,12 +133,15 @@ def main():
         year=args.year,
         model_key=args.model,
         start_date=args.start_date,
+        role=args.role,
+        phase=args.phase,
     )
 
     if args.mode == "interactive":
         run_interactive(**kwargs)
     else:
-        run_overnight(**kwargs)
+        overnight_kwargs = {k: v for k, v in kwargs.items() if k != "role"}
+        run_overnight(**overnight_kwargs)
 
 
 if __name__ == "__main__":

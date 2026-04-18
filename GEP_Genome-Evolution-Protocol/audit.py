@@ -11,8 +11,9 @@ from pathlib import Path
 from models import AuditRecord, ReaderReaction, Verdict
 
 
-def audit_path(lang: str, version: str, year: int) -> Path:
-    return Path(f"critic_audit_{lang}_{version}_{year}.jsonl")
+def audit_path(lang: str, version: str, year: int, role: str = "default") -> Path:
+    suffix = f"_{role}" if role != "default" else ""
+    return Path(f"critic_audit_{lang}_{version}_{year}{suffix}.jsonl")
 
 
 def load_reviewed_dates(log_path: Path) -> set[str]:

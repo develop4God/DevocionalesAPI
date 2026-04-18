@@ -19,9 +19,10 @@ class PauseCategory(str, Enum):
     TYPO             = "typo"              # spelling / grammar error
     NAME_ERROR       = "name_error"        # biblical name misspelled or wrong
     PRAYER_DRIFT     = "prayer_drift"      # prayer disconnected from verse/reflection
-    HALLUCINATION    = "hallucination"     # invented detail (attribution, citation)
-    REGISTER_DRIFT   = "register_drift"    # tone too academic or too casual
-    OTHER            = "other"
+    HALLUCINATION      = "hallucination"       # invented detail (attribution, citation)
+    REGISTER_DRIFT     = "register_drift"      # tone too academic or too casual
+    GENERIC_REFLECTION = "generic_reflection"  # reflection could apply to any verse
+    OTHER              = "other"
 
 
 @dataclass
@@ -64,6 +65,11 @@ class AuditRecord:
     confidence: float = 1.0
     genome_fragment_id: Optional[str] = None   # if this reaction produced a genome fragment
     raw_response: Optional[str] = None         # stored on model error for debugging
+    phase1_verdict:    Optional[str] = None
+    phase1_issue:      Optional[str] = None
+    phase1_quoted:     Optional[str] = None
+    phase1_confidence: Optional[float] = None
+    phase1_raw:        Optional[str] = None
 
 
 @dataclass

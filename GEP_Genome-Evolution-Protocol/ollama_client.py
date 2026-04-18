@@ -122,12 +122,9 @@ def _collect_stream(req: urllib.request.Request, verbose: bool) -> str:
             if verbose:
                 if think_token:
                     think_chars += len(think_token)
-                    new_dots = think_chars // 200 - dots_printed
-                    if new_dots > 0:
-                        print("." * new_dots, end="", flush=True)
-                        dots_printed += new_dots
+                    print(think_token, end="", flush=True)
                 if resp_token and think_chars > 0 and len(tokens) == 1:
-                    print(f" ({think_chars} chars)", flush=True)
+                    print(f"\n  ({think_chars} chars)", flush=True)
                     print("  📄 response...", flush=True)
 
             if chunk.get("done"):
