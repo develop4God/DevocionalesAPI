@@ -135,7 +135,7 @@ def _print_reaction(entry: DevotionalEntry, reaction: ReaderReaction, fragment_i
             print(f"  Genome  : {fragment_id}")
     if phase1_result and phase1_result.get("verdict") == "FLAG":
         print(f"  P1 issue: {phase1_result.get('issue')}")
-        print(f"  P1 quote: \"{phase1_result.get('quoted_problem')}\"")
+        print(f"  P1 quote: \"{phase1_result.get('quoted')}\"")
     print(f"{'─'*60}")
 
 
@@ -285,7 +285,7 @@ def run_overnight(
             _log(run_log, entry_header)
 
             reaction, fragment_id, p2_raw, elapsed, phase1_result, p1_raw = _process_entry(
-                entry, model, lang, version, year, genome, verbose=True
+                entry, model, lang, version, year, genome, verbose=True, phase=phase
             )
 
             # Phase 1 summary
