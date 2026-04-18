@@ -57,6 +57,7 @@ CONSECUTIVE_DUP_SKIP = frozenset({
     'nous', 'vous',  # French reflexive pronouns (nous nous aimons = we love one another)
     'पवित्र',        # Hindi 'holy' — intentional liturgical repetition (cf. Rev 4:8)
     'saul',          # Biblical quote: "Saul, Saul, why do you persecute me?" (Acts 9:4)
+    'banal',         # Tagalog 'holy' — Trisagion "Banal, banal, banal ang Panginoon" (Rev 4:8)
 })
 # Sentence-ending punctuation: repetition across a sentence boundary is rhetorical, not an error
 SENT_END_PUNCT = frozenset({'.', '!', '?', ':', '»', '\u201d'})
@@ -112,22 +113,27 @@ def _check_prayer_ending(oracion: str) -> bool:
     for cjk in CJK_AMEN_VARIANTS:
         if stripped_cjk.endswith(cjk):
             return True
-    # All other scripts: check last whitespace-separated word
+    # All other scripts: check last 1–3 whitespace-separated words to support
+    # multi-word endings like 'Siya nawa' (tl).
     # U+060C (،) is the Arabic comma — must be stripped so آمين، is found correctly
     parts = text.rstrip('.!,;،।。！？').split()
     if not parts:
         return False
-    last_w = parts[-1].strip('.,;:!?،।').lower()
-    # Unicode variants from prayer_endings.json (ar: آمين, ru: аминь, ko: 아멘, …)
-    # Normalize Arabic diacritics (tashkeel U+064B–U+065F) before lookup so that
-    # e.g. آمِينَ (with harakat) matches the plain form آمين stored in prayer_endings.json
     import re as _re
-    last_w_normalized = _re.sub(r'[\u064b-\u065f]', '', last_w)
-    if last_w_normalized in UNICODE_AMEN_VARIANTS:
-        return True
-    # Latin-script fallback (normalize accents: PT amém → amem)
-    last_ascii = unicodedata.normalize('NFD', last_w).encode('ascii', 'ignore').decode()
-    return last_ascii in AMEN_VARIANTS
+    for n in range(1, 4):
+        if len(parts) < n:
+            break
+        tail = ' '.join(parts[-n:]).strip('.,;:!?،।').lower()
+        # Unicode variants from prayer_endings.json (ar: آمين, ru: аминь, ko: 아멘, tl: siya nawa…)
+        # Normalize Arabic diacritics (tashkeel U+064B–U+065F) before lookup
+        tail_normalized = _re.sub(r'[\u064b-\u065f]', '', tail)
+        if tail_normalized in UNICODE_AMEN_VARIANTS:
+            return True
+        # Latin-script fallback (normalize accents: PT amém → amem)
+        tail_ascii = unicodedata.normalize('NFD', tail).encode('ascii', 'ignore').decode()
+        if tail_ascii in AMEN_VARIANTS:
+            return True
+    return False
 
 
 def check_content_quality(entry: dict, lang: str = '') -> list:
@@ -150,9 +156,12 @@ def check_content_quality(entry: dict, lang: str = '') -> list:
         issues.append(f'oracion too short: {len(o)} chars (min {oracion_min})')
     if r and not r.endswith(SENTENCE_ENDINGS):
         issues.append(f'reflexion truncated — ends: ...{r.rstrip()[-40:]}')
-    closing = o[-30:]
+    closing = o[-15:]
     _latin_amens   = len(re.findall(r'\bAm[eé]n\b', closing, re.IGNORECASE))
-    _unicode_amens = sum(closing.count(v) for v in (UNICODE_AMEN_VARIANTS | CJK_AMEN_VARIANTS))
+    # Exclude Latin AMEN_VARIANTS from unicode count to avoid double-counting:
+    # _latin_amens already covers {'amen','amén','āmen','amem'} via regex.
+    _non_latin_unicode = UNICODE_AMEN_VARIANTS - AMEN_VARIANTS
+    _unicode_amens = sum(closing.count(v) for v in (_non_latin_unicode | CJK_AMEN_VARIANTS))
     if _latin_amens + _unicode_amens >= 2:
         issues.append('double_amen: duplicate Amen in closing')
     if o and not _check_prayer_ending(o):
@@ -545,7 +554,14 @@ if __name__ == "__main__":
         parser.add_argument("--version", default="",    help="Bible version code (e.g. LU17, HIOV, RVR1960)")
         parser.add_argument("--expected", type=int, default=0,
                             help="Expected minimum entry count (0 = auto-detect from date range)")
+        parser.add_argument("--bible-db", default="", help="Path to Bible DB (.SQLite3 or .gz)")
         args = parser.parse_args()
+
+        # Set Bible DB path for validate
+        if args.bible_db:
+            validate.bible_db_path = args.bible_db
+        else:
+            validate.bible_db_path = None
 
         passed, result, summary = validate(args.file, args.lang, args.version, args.expected)
         print(result)

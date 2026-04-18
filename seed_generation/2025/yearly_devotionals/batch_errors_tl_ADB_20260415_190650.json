@@ -1,0 +1,202 @@
+[
+  {
+    "date": "2025-08-11",
+    "reason": "json_decode_error",
+    "detail": "Invalid control character at: line 2 column 823 (char 824)"
+  },
+  {
+    "date": "2025-08-17",
+    "reason": "empty_fields",
+    "detail": "reflexion=True oracion=False"
+  },
+  {
+    "date": "2025-08-21",
+    "reason": "json_decode_error",
+    "detail": "Invalid control character at: line 2 column 568 (char 569)"
+  },
+  {
+    "date": "2025-08-24",
+    "reason": "json_decode_error",
+    "detail": "Invalid control character at: line 2 column 547 (char 548)"
+  },
+  {
+    "date": "2025-09-01",
+    "reason": "json_decode_error",
+    "detail": "Invalid control character at: line 2 column 478 (char 479)"
+  },
+  {
+    "date": "2025-09-04",
+    "reason": "json_decode_error",
+    "detail": "Invalid control character at: line 2 column 564 (char 565)"
+  },
+  {
+    "date": "2025-09-07",
+    "reason": "json_decode_error",
+    "detail": "Invalid control character at: line 2 column 797 (char 798)"
+  },
+  {
+    "date": "2025-09-20",
+    "reason": "json_decode_error",
+    "detail": "Invalid control character at: line 2 column 381 (char 382)"
+  },
+  {
+    "date": "2025-09-26",
+    "reason": "json_decode_error",
+    "detail": "Invalid control character at: line 2 column 729 (char 730)"
+  },
+  {
+    "date": "2025-10-17",
+    "reason": "json_decode_error",
+    "detail": "Expecting ',' delimiter: line 2 column 364 (char 365)"
+  },
+  {
+    "date": "2025-10-23",
+    "reason": "json_decode_error",
+    "detail": "Invalid control character at: line 2 column 504 (char 505)"
+  },
+  {
+    "date": "2025-11-02",
+    "reason": "json_decode_error",
+    "detail": "Invalid control character at: line 2 column 561 (char 562)"
+  },
+  {
+    "date": "2025-11-13",
+    "reason": "json_decode_error",
+    "detail": "Invalid control character at: line 2 column 653 (char 654)"
+  },
+  {
+    "date": "2025-11-24",
+    "reason": "json_decode_error",
+    "detail": "Invalid control character at: line 2 column 529 (char 530)"
+  },
+  {
+    "date": "2025-12-02",
+    "reason": "json_decode_error",
+    "detail": "Invalid control character at: line 2 column 608 (char 609)"
+  },
+  {
+    "date": "2025-12-31",
+    "reason": "json_decode_error",
+    "detail": "Invalid control character at: line 2 column 478 (char 479)"
+  },
+  {
+    "date": "2026-01-24",
+    "reason": "json_decode_error",
+    "detail": "Invalid control character at: line 2 column 487 (char 488)"
+  },
+  {
+    "date": "2026-01-26",
+    "reason": "empty_fields",
+    "detail": "reflexion=True oracion=False"
+  },
+  {
+    "date": "2026-02-04",
+    "reason": "json_decode_error",
+    "detail": "Expecting ',' delimiter: line 2 column 50 (char 51)"
+  },
+  {
+    "date": "2026-02-08",
+    "reason": "json_decode_error",
+    "detail": "Invalid control character at: line 2 column 645 (char 646)"
+  },
+  {
+    "date": "2026-03-08",
+    "reason": "json_decode_error",
+    "detail": "Invalid control character at: line 2 column 487 (char 488)"
+  },
+  {
+    "date": "2026-03-11",
+    "reason": "json_decode_error",
+    "detail": "Invalid control character at: line 2 column 572 (char 573)"
+  },
+  {
+    "date": "2026-03-19",
+    "reason": "json_decode_error",
+    "detail": "Invalid control character at: line 2 column 590 (char 591)"
+  },
+  {
+    "date": "2026-03-28",
+    "reason": "json_decode_error",
+    "detail": "Invalid control character at: line 2 column 560 (char 561)"
+  },
+  {
+    "date": "2026-03-31",
+    "reason": "json_decode_error",
+    "detail": "Invalid control character at: line 2 column 539 (char 540)"
+  },
+  {
+    "date": "2026-04-12",
+    "reason": "json_decode_error",
+    "detail": "Invalid control character at: line 2 column 502 (char 503)"
+  },
+  {
+    "date": "2026-05-01",
+    "reason": "json_decode_error",
+    "detail": "Invalid control character at: line 2 column 696 (char 697)"
+  },
+  {
+    "date": "2026-05-06",
+    "reason": "json_decode_error",
+    "detail": "Invalid control character at: line 2 column 790 (char 791)"
+  },
+  {
+    "date": "2026-05-07",
+    "reason": "json_decode_error",
+    "detail": "Invalid control character at: line 2 column 351 (char 352)"
+  },
+  {
+    "date": "2026-05-18",
+    "reason": "json_decode_error",
+    "detail": "Invalid control character at: line 2 column 623 (char 624)"
+  },
+  {
+    "date": "2026-05-25",
+    "reason": "json_decode_error",
+    "detail": "Invalid control character at: line 2 column 518 (char 519)"
+  },
+  {
+    "date": "2026-05-28",
+    "reason": "json_decode_error",
+    "detail": "Invalid control character at: line 2 column 386 (char 387)"
+  },
+  {
+    "date": "2026-06-02",
+    "reason": "json_decode_error",
+    "detail": "Invalid control character at: line 2 column 653 (char 654)"
+  },
+  {
+    "date": "2026-06-09",
+    "reason": "json_decode_error",
+    "detail": "Invalid control character at: line 2 column 641 (char 642)"
+  },
+  {
+    "date": "2026-06-12",
+    "reason": "json_decode_error",
+    "detail": "Invalid control character at: line 2 column 504 (char 505)"
+  },
+  {
+    "date": "2026-06-22",
+    "reason": "json_decode_error",
+    "detail": "Invalid control character at: line 2 column 362 (char 363)"
+  },
+  {
+    "date": "2026-07-04",
+    "reason": "json_decode_error",
+    "detail": "Invalid control character at: line 2 column 564 (char 565)"
+  },
+  {
+    "date": "2026-07-16",
+    "reason": "json_decode_error",
+    "detail": "Invalid control character at: line 2 column 397 (char 398)"
+  },
+  {
+    "date": "2026-07-20",
+    "reason": "json_decode_error",
+    "detail": "Invalid control character at: line 2 column 684 (char 685)"
+  },
+  {
+    "date": "2026-07-21",
+    "reason": "json_decode_error",
+    "detail": "Invalid control character at: line 2 column 568 (char 569)"
+  }
+]
