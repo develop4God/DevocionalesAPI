@@ -62,6 +62,8 @@ ORACION_MIN_CHARS   = 150
 LITURGICAL_WHITELIST: frozenset = frozenset({
     "heilig", "holy", "kadosh", "halleluja", "hosanna",
     "amen", "amén", "āmen",
+    # Tagalog liturgical phrases
+    "amen", "aleluya", "hosanna", "panginoon",
 })
 
 # =============================================================================
@@ -99,10 +101,17 @@ def _get_amen_phrase(lang: str) -> str:
 
 
 def check_prayer_ending(oracion: str, lang: str) -> bool:
-    """Returns True if oracion ends with a valid Amen variant for lang."""
-    endings   = _load_prayer_endings().get(lang, ["Amen"])
-    last_word = oracion.strip().rstrip(".!,;।").split()[-1]
-    return any(_normalize_word(e) == _normalize_word(last_word) for e in endings)
+    """Returns True if oracion ends with a valid Amen variant for lang.
+    Handles both single-word (e.g. 'Amen') and multi-word (e.g. 'Siya nawa') endings."""
+    endings = _load_prayer_endings().get(lang, ["Amen"])
+    clean   = oracion.strip().rstrip(".!,;।").strip()
+    words   = clean.split()
+    for ending in endings:
+        n = len(ending.split())
+        tail = " ".join(words[-n:]) if len(words) >= n else clean
+        if _normalize_word(ending) == _normalize_word(tail):
+            return True
+    return False
 
 
 # =============================================================================

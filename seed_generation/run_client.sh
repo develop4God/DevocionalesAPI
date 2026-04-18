@@ -6,7 +6,6 @@ REPODIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
 # 2. Move into that directory
 cd "$REPODIR"
 
-echo "📡 Starting Seed Generation Client..."
-
-# 3. Run the client script using the venv python
-./venv/bin/python3 client_generate_from_seed.py
+SCRIPT="${1:-client_generate_from_seed.py}"
+echo "📡 Starting Seed Generation Client → $SCRIPT"
+./venv/bin/python3 "$SCRIPT"
