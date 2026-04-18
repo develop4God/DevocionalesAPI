@@ -45,6 +45,7 @@ def call_ollama(
         # NOTE: Do NOT use "format": "json" with Qwen3 thinking models.
         # Ollama's grammar-constrained JSON conflicts with thinking-token generation
         # and produces an empty response. The prompts already instruct JSON output.
+        "think": True,  # expose thinking tokens in separate field (Ollama 0.6+)
         "options": {
             "temperature": 0.1,
             "num_predict": 8192,  # thinking models need room for reasoning + JSON
@@ -93,7 +94,7 @@ def _collect_stream(req: urllib.request.Request, verbose: bool) -> str:
       - Final think size summary when </think> is found
     """
     tokens: list[str] = []
-    in_think = False
+    think_tokens: list[str] = []
     think_chars = 0
     dots_printed = 0
 
@@ -112,20 +113,20 @@ def _collect_stream(req: urllib.request.Request, verbose: bool) -> str:
             except json.JSONDecodeError:
                 continue
 
-            token = chunk.get("response", "")
-            tokens.append(token)
+            think_token = chunk.get("thinking", "")
+            resp_token  = chunk.get("response", "")
+            if think_token:
+                think_tokens.append(think_token)
+            tokens.append(resp_token)
 
             if verbose:
-                if not in_think and "<think>" in token:
-                    in_think = True
-                if in_think:
-                    think_chars += len(token)
+                if think_token:
+                    think_chars += len(think_token)
                     new_dots = think_chars // 200 - dots_printed
                     if new_dots > 0:
                         print("." * new_dots, end="", flush=True)
                         dots_printed += new_dots
-                if in_think and "</think>" in token:
-                    in_think = False
+                if resp_token and think_chars > 0 and len(tokens) == 1:
                     print(f" ({think_chars} chars)", flush=True)
                     print("  📄 response...", flush=True)
 
@@ -135,7 +136,11 @@ def _collect_stream(req: urllib.request.Request, verbose: bool) -> str:
     if verbose:
         print()  # finish the output line
 
-    return "".join(tokens)
+    thinking_text = "".join(think_tokens)
+    response_text = "".join(tokens)
+    if thinking_text:
+        return f"<think>{thinking_text}</think>\n{response_text}"
+    return response_text
 
 
 def _parse_reaction(raw: str) -> ReaderReaction | None:
