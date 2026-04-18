@@ -54,6 +54,11 @@ def append_record(log_path: Path, record: AuditRecord):
         "confidence": record.confidence,
         "genome_fragment_id": record.genome_fragment_id,
         "raw_response": record.raw_response,
+        "phase1_verdict": record.phase1_verdict,
+        "phase1_issue": record.phase1_issue,
+        "phase1_quoted": record.phase1_quoted,
+        "phase1_confidence": record.phase1_confidence,
+        "phase1_raw": record.phase1_raw,
     }
     row["asset_id"] = compute_asset_id(row)
     with open(log_path, "a", encoding="utf-8") as f:
@@ -69,6 +74,11 @@ def build_record(
     reaction: ReaderReaction,
     genome_fragment_id: str | None = None,
     raw_response: str | None = None,
+    phase1_verdict: str | None = None,
+    phase1_issue: str | None = None,
+    phase1_quoted: str | None = None,
+    phase1_confidence: float | None = None,
+    phase1_raw: str | None = None,
 ) -> AuditRecord:
     return AuditRecord(
         date=entry_date,
@@ -84,6 +94,11 @@ def build_record(
         confidence=reaction.confidence,
         genome_fragment_id=genome_fragment_id,
         raw_response=raw_response,
+        phase1_verdict=phase1_verdict,
+        phase1_issue=phase1_issue,
+        phase1_quoted=phase1_quoted,
+        phase1_confidence=phase1_confidence,
+        phase1_raw=phase1_raw,
     )
 
 

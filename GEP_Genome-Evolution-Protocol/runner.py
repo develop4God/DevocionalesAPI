@@ -25,7 +25,7 @@ from prompts import (
 )
 
 # Phase 1 always uses the fast model
-PHASE1_MODEL = "qwen3:4b"
+PHASE1_MODEL = "qwen2.5:3b"
 
 
 def _run_log_path(lang: str, version: str, year: int) -> Path:
