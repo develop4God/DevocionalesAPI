@@ -38,6 +38,10 @@ def call_ollama(
     Returns (None, error_str) on failure.
     When verbose=True, prints live thinking progress and verdict to stdout.
     """
+    # Validate model parameter (catches common typos/missing models early)
+    if not model or model.isspace():
+        return None, f"Error: invalid model parameter '{model}'"
+    
     payload = json.dumps({
         "model": model,
         "prompt": user,
@@ -76,7 +80,15 @@ def call_ollama(
             if attempt < MAX_RETRIES:
                 time.sleep(RETRY_DELAY_S)
                 continue
-            return None, f"URLError: {e.reason}"
+            # Capture HTTP response body if available (400 Bad Request usually has details)
+            error_msg = f"URLError: {e.reason}"
+            if hasattr(e, 'read'):
+                try:
+                    details = e.read().decode('utf-8')[:400]
+                    error_msg += f"\n[Response: {details}]"
+                except Exception:
+                    pass
+            return None, error_msg
 
         except (json.JSONDecodeError, TimeoutError, OSError) as e:
             if attempt < MAX_RETRIES:
