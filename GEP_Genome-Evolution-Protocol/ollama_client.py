@@ -30,6 +30,7 @@ def call_ollama(
     system: str,
     user: str,
     verbose: bool = True,
+    think: bool = True,
 ) -> tuple[ReaderReaction | None, str | None]:
     """
     Streams response from Ollama.
@@ -45,7 +46,7 @@ def call_ollama(
         # NOTE: Do NOT use "format": "json" with Qwen3 thinking models.
         # Ollama's grammar-constrained JSON conflicts with thinking-token generation
         # and produces an empty response. The prompts already instruct JSON output.
-        "think": True,  # expose thinking tokens in separate field (Ollama 0.6+)
+        "think": think,  # expose thinking tokens in separate field (Ollama 0.6+)
         "options": {
             "temperature": 0.1,
             "num_predict": 8192,  # thinking models need room for reasoning + JSON

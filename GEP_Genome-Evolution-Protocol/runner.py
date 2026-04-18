@@ -86,7 +86,7 @@ def _process_entry(
         print("  [P1] linguistic...", end=" ", flush=True)
 
     p1_t0 = time.monotonic()
-    _, p1_raw = call_ollama(PHASE1_MODEL, p1_system, p1_user, verbose=True)
+    _, p1_raw = call_ollama(PHASE1_MODEL, p1_system, p1_user, verbose=True, think=False)
     p1_elapsed = time.monotonic() - p1_t0
     phase1_result = _parse_phase1(p1_raw or "") if p1_raw else None
 
