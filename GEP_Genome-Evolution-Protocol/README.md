@@ -109,7 +109,7 @@ Everything needed to spin up a fresh critic for a new language/version.
 
 ```bash
 # Overnight batch — full two-phase run
-python critic_v3.py --lang tl --version ASND --year 2026 --mode overnight
+python3 critic_v3.py --lang tl --version ASND --year 2026 --mode overnight
 
 # Phase 1 only — fast linguistic scan, no content review
 python critic_v3.py --lang tl --version ASND --year 2026 --phase 1
