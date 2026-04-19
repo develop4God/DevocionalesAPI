@@ -102,3 +102,31 @@ def list_known_files():
     for (lang, version), pattern in sorted(KNOWN_FILES.items()):
         print(f"  {lang:<6} {version:<18} {pattern}")
     print()
+
+def get_sample_entries():
+    """Returns 5 stub DevotionalEntry objects for pipeline testing. No network needed."""
+    entries = []
+    stubs = [
+        ("2025-01-01", "es_NVI_2025-01-01", "Porque de tal manera amó Dios al mundo.",
+         "Dios nos ama profundamente y desea lo mejor para cada uno de nosotros.",
+         "Señor, gracias por tu amor incondicional que nos sostiene cada día."),
+        ("2025-01-02", "es_NVI_2025-01-02", "El Señor es mi pastor, nada me faltará.",
+         "Cuando confiamos en el Señor él provee todo lo que necesitamos en la vida.",
+         "Padre, ayúdame a confiar en tu provisión y no en mis propias fuerzas."),
+        ("2025-01-03", "es_NVI_2025-01-03", "Todo lo puedo en Cristo que me fortalece.",
+         "La fuerza no viene de nosotros mismos sino del Cristo que vive en nosotros nosotros.",
+         "Señor, dame tu fuerza para enfrentar los retos de hoy con fe y esperanza."),
+        ("2025-01-04", "es_NVI_2025-01-04", "La fe es la certeza de lo que se espera.",
+         "La fe activa nos permite ver más allá de las circunstancias actuales con esperanza.",
+         "Dios mío, aumenta mi fe para caminar contigo en los momentos difíciles."),
+        ("2025-01-05", "es_NVI_2025-01-05", "Encomienda al Señor tu camino y confía en él.",
+         "Dios tiene un plan perfecto para nuestra vida mucho mejor que nuestros propios planes.",
+         "Padre, entrego mi camino a tus manos sabiendo que tú diriges mis pasos."),
+    ]
+    for date, id_, vers, refl, orac in stubs:
+        entries.append(DevotionalEntry(
+            date=date, id=id_, language="es", version="NVI",
+            versiculo=vers, reflexion=refl, oracion=orac,
+            para_meditar=[], tags=[],
+        ))
+    return entries

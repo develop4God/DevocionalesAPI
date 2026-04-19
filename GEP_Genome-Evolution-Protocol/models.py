@@ -72,6 +72,39 @@ class AuditRecord:
     phase1_raw:        Optional[str] = None
 
 
+
+
+class GeneState(str, Enum):
+    CANDIDATE  = "candidate"   # seen once — not yet trusted
+    CONFIRMED  = "confirmed"   # confidence >= 0.7, appears in prompts
+
+
+@dataclass
+class Capsule:
+    """
+    A bundled, language-ready critic configuration.
+    GEP asset: everything needed to run a fresh critic for a new lang/version.
+
+    Contains:
+      - Native speaker identity (language, country)
+      - Known Bible versions for this language
+      - Field label translations (versiculo, reflexion, oracion, para_meditar)
+      - Seed genome fragments (optional — empty for new languages)
+
+    Capsule state:
+      - draft     → hand-crafted or auto-generated, not yet validated
+      - validated → at least one full overnight run completed with acceptable flag rate
+    """
+    id: str
+    language: str
+    country: str                        # native speaker origin (e.g. "Philippines")
+    known_versions: list[str]           # e.g. ["ASND", "ADB"]
+    field_labels: dict[str, str]        # e.g. {"verse": "Talata", "reflection": "Pagninilay"}
+    seed_fragments: list["GenomeFragment"] = field(default_factory=list)
+    state: str = "draft"                # "draft" | "validated"
+    created_at: str = ""
+    updated_at: str = ""
+
 @dataclass
 class GenomeFragment:
     """
@@ -86,8 +119,9 @@ class GenomeFragment:
     example_quote: str                     # the phrase that caused the first pause
     evidence_dates: list[str]             # audit dates that confirmed this pattern
     confidence: float                      # grows as more evidence accumulates
-    created_at: str
-    updated_at: str
+    state: GeneState = GeneState.CANDIDATE # promoted to CONFIRMED at confidence >= 0.7
+    created_at: str = ""
+    updated_at: str = ""
 
 
 @dataclass

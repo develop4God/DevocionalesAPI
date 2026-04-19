@@ -560,7 +560,7 @@ def build_phase1_system(lang: str) -> str:
 
 def build_phase1_user(entry: DevotionalEntry, lang: str = "es") -> str:
     """Phase 1 uses the same entry format as Phase 2."""
-    return build_user_prompt(entry, lang) + "\n\nRead as a native speaker. Return only the JSON verdict."
+    return build_user_prompt(entry, lang) + "\n\nRead as a native speaker. Return only the JSON object."
 
 
 # ══════════════════════════════════════════════════════════════════════════════

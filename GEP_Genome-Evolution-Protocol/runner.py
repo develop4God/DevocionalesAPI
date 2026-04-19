@@ -219,7 +219,7 @@ def run_interactive(
             append_record(log_path, record)
             print("  ✅ Approved and logged.")
 
-    save_genome(genome)
+    save_genome(genome, year)
     print_summary(log_path)
 
 def run_overnight(
@@ -382,5 +382,5 @@ def run_overnight(
         f"{'═'*60}"
     )
     _log(run_log, footer)
-    save_genome(genome)
+    save_genome(genome, year)
     print_summary(log_path)

@@ -9,7 +9,7 @@ from datetime import datetime
 from pathlib import Path
 
 from models import (
-    Genome, GenomeFragment, PauseCategory, ReaderReaction, Verdict
+    Genome, GenomeFragment, GeneState, PauseCategory, ReaderReaction, Verdict
 )
 
 # Minimum confidence a fragment needs to appear in prompts
@@ -74,6 +74,7 @@ def save_genome(genome: Genome, year: int):
                 "example_quote": f.example_quote,
                 "evidence_dates": f.evidence_dates,
                 "confidence": f.confidence,
+                "state": f.state.value,
                 "created_at": f.created_at,
                 "updated_at": f.updated_at,
             }
@@ -133,6 +134,8 @@ def absorb_reaction(
         existing.confidence = min(
             existing.confidence + CONFIDENCE_BOOST, CONFIDENCE_MAX
         )
+        if existing.confidence >= 0.7:
+            existing.state = GeneState.CONFIRMED
         existing.updated_at = now
         save_genome(genome, year)
         return genome, existing.id
@@ -173,3 +176,8 @@ def _find_similar_fragment(
         if overlap >= 0.4:
             return frag
     return None
+
+def get_saved_genomes() -> list[str]:
+    """Returns list of genome JSON filenames found in the current working directory."""
+    from pathlib import Path
+    return [str(p) for p in Path(".").glob("genome_*.json")]
