@@ -25,7 +25,7 @@ from prompts import (
 )
 
 # Phase 1 always uses the fast model
-PHASE1_MODEL = "qwen2.5:3b"
+PHASE1_MODEL = "qwen3:4b"
 
 
 def _run_log_path(lang: str, version: str, year: int) -> Path:
@@ -86,7 +86,7 @@ def _process_entry(
         print("  [P1] linguistic...", end=" ", flush=True)
 
     p1_t0 = time.monotonic()
-    _, p1_raw = call_ollama(PHASE1_MODEL, p1_system, p1_user, verbose=True, think=False)
+    _, p1_raw = call_ollama(PHASE1_MODEL, p1_system, p1_user, verbose=True, think=True)
     p1_elapsed = time.monotonic() - p1_t0
     phase1_result = _parse_phase1(p1_raw or "") if p1_raw else None
 
