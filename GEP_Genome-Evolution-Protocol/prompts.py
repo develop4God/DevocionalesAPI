@@ -524,7 +524,7 @@ Your only job: read this text as a native speaker and flag linguistic problems.
 
 Look for:
 1. Typos or spelling errors
-2. Repeated words or phrases within the same paragraph
+2. Repeated meaningful phrases (3+ content words) within the same paragraph
 3. Grammar errors or broken sentence structure
 4. Unnatural phrasing — sentences that feel machine-translated or awkward to a native ear
 
@@ -534,6 +534,10 @@ Look for:
 - Only flag clear linguistic errors a native speaker would notice immediately.
 - If nothing is wrong linguistically → verdict CLEAN.
 - A high CLEAN rate is expected and healthy.
+- NEVER flag repetition of single words or common grammatical particles.
+- ONLY flag repeated phrases of 3 or more meaningful content words.
+- The quoted_problem MUST be copied verbatim from the text. If you cannot find it
+  word-for-word in the entry, verdict CLEAN. Never paraphrase or reconstruct.
 
 Always respond in English regardless of the devotional language.
 
@@ -543,7 +547,7 @@ Schema:
 {{
   "verdict": "CLEAN" | "FLAG",
   "issue": "One sentence describing the linguistic problem, or null if CLEAN.",
-  "quoted_problem": "The exact phrase with the problem, or null if CLEAN.",
+  "quoted_problem": "The exact phrase copied verbatim from the text, or null if CLEAN.",
   "confidence": 0.0 to 1.0
 }}"""
 
