@@ -18,7 +18,7 @@ from pathlib import Path
 from audit import append_record, build_record, load_reviewed_dates, print_summary, audit_path
 from genome import absorb_reaction, ensure_genome, save_genome
 from models import DevotionalEntry, ReaderReaction, Verdict
-from ollama_client import call_ollama, get_model_for_key
+from ollama_client import call_ollama, get_model_for_key, _unwrap_text
 from prompts import (
     build_phase1_system, build_phase1_user,
     build_phase2_system, build_phase2_user,
@@ -39,33 +39,80 @@ def _log(run_log: Path, msg: str, also_print: bool = True):
         f.write(msg + "\n")
 
 
-def _parse_phase1(raw: str) -> dict | None:
-    """Parse Phase 1 JSON from raw response. Falls back to keyword extraction from prose."""
-    text = re.sub(r"<think>.*?</think>", "", raw, flags=re.DOTALL).strip()
-    if text.startswith("```"):
-        parts = text.split("```")
-        text = parts[1] if len(parts) > 1 else text
-        if text.startswith("json"):
-            text = text[4:]
-    text = text.strip()
+def _normalize_phase1(data: dict) -> dict:
+    """
+    Canonicalise Phase-1 JSON keys.
+    Models sometimes return alternate field names; we normalise to:
+      verdict    → "CLEAN" | "FLAG"
+      issue      → human-readable description of the problem
+      quoted     → exact phrase that triggered the flag
+      confidence → 0.0–1.0 float
+    """
+    # Infer verdict from problem-indicating keys when absent
+    if "verdict" not in data:
+        problem_keys = {"quoted_problem", "problem", "error", "issue", "type"}
+        data["verdict"] = "FLAG" if problem_keys & data.keys() else "CLEAN"
 
-    # 1. Try strict JSON parse
+    # Normalise verdict to CLEAN/FLAG (some models emit OK/PASS instead of CLEAN)
+    v = (data.get("verdict") or "CLEAN").strip().upper()
+    if v in ("OK", "PASS", "NO_ISSUE", "NONE"):
+        v = "CLEAN"
+    elif v in ("ERROR", "PROBLEM", "ISSUE"):
+        v = "FLAG"
+    data["verdict"] = v
+
+    # Map alternate field names to canonical ones
+    if "quoted_problem" in data and "quoted" not in data:
+        data["quoted"] = data.pop("quoted_problem")
+    if "type" in data and "issue" not in data:
+        data["issue"] = data.pop("type")
+    if "problem" in data and "issue" not in data:
+        data["issue"] = data.pop("problem")
+    if "error" in data and "issue" not in data:
+        data["issue"] = data.pop("error")
+    if "description" in data and "issue" not in data:
+        data["issue"] = data.pop("description")
+    if "quote" in data and "quoted" not in data:
+        data["quoted"] = data.pop("quote")
+    if "excerpt" in data and "quoted" not in data:
+        data["quoted"] = data.pop("excerpt")
+
+    return data
+
+
+def _parse_phase1(raw: str) -> dict | None:
+    """Parse Phase 1 JSON from raw response. Accepts any model output format."""
+    text = _unwrap_text(raw)
+
+    # 1. Strict JSON parse on the full cleaned text
     try:
-        return json.loads(text)
+        parsed = json.loads(text)
+        # Model returned a plain JSON string (e.g. "No repeated phrase found") → CLEAN
+        if isinstance(parsed, str):
+            tu = parsed.upper()
+            if re.search(r'\bFLAG\b', tu) or re.search(r'\bPAUSE\b', tu):
+                return {"verdict": "FLAG", "issue": parsed, "quoted": None, "confidence": 0.7}
+            return {"verdict": "CLEAN", "issue": None, "quoted": None, "confidence": 1.0}
+        return _normalize_phase1(parsed)
     except json.JSONDecodeError:
         pass
 
-    # 2. Try extracting any JSON object containing "verdict" anywhere in the text
-    for m in re.finditer(r'\{[^{}]*"verdict"[^{}]*\}', text, re.DOTALL):
+    # 2. Find any JSON object in the text (model may embed JSON inside prose)
+    #    — broadened to any object with at least one recognisable key
+    known_keys = {"verdict", "issue", "quoted", "confidence",
+                  "quoted_problem", "type", "problem", "error"}
+    for m in re.finditer(r'\{[^{}]+\}', text, re.DOTALL):
         try:
-            return json.loads(m.group())
+            candidate = json.loads(m.group())
+            if known_keys & candidate.keys():
+                return _normalize_phase1(candidate)
         except json.JSONDecodeError:
             continue
 
-    # 3. Fallback: extract verdict from prose keywords (model answered in natural language)
+    # 3. Prose keyword fallback (model answered entirely in natural language)
     tu = text.upper()
     if re.search(r'\bFLAG\b', tu):
-        issue_m  = re.search(r'(?:issue|problem|error|found)[:\s]+([^\n.]+)', text, re.IGNORECASE)
+        issue_m  = re.search(r'(?:issue|problem|error|found|type)[:\s]+([^\n.]+)', text, re.IGNORECASE)
         quoted_m = re.search(r'"([^"]{3,80})"', text)
         return {
             "verdict":    "FLAG",
@@ -73,10 +120,17 @@ def _parse_phase1(raw: str) -> dict | None:
             "quoted":     quoted_m.group(1) if quoted_m else "",
             "confidence": 0.85,
         }
-    if re.search(r'\bCLEAN\b', tu) or re.search(r'\bOK\b', tu):
+    if (re.search(r'\bCLEAN\b', tu) or re.search(r'\bOK\b', tu)
+            or re.search(r'no\s+(repeated|issue|problem|error|phrase|flag)\b', tu)
+            or re.search(r'nothing\s+(wrong|found|flagged)\b', tu)
+            or re.search(r'not\s+found\b', tu)):
         return {"verdict": "CLEAN", "issue": None, "quoted": None, "confidence": 1.0}
 
-    return None
+    # Last resort — store what the model said as CLEAN with low confidence.
+    # Never return None so the entry is always logged and the run never stops.
+    lines = [l.strip() for l in text.splitlines() if l.strip()]
+    issue_text = (lines[0] if lines else text[:200]) + " [fallback: unrecognised format]"
+    return {"verdict": "CLEAN", "issue": issue_text, "quoted": None, "confidence": 0.4}
 
 
 def _process_entry(

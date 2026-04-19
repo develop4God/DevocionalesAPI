@@ -495,7 +495,7 @@ Date: {entry.date}
 --- {labels['prayer']} ---
 {entry.oracion}
 
-Now think carefully, then return only the JSON verdict."""
+Now think carefully. Output ONLY the JSON object — no 'Final answer:', no prose, no explanation."""
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -549,7 +549,14 @@ Schema:
   "issue": "One sentence describing the linguistic problem, or null if CLEAN.",
   "quoted_problem": "The exact phrase copied verbatim from the text, or null if CLEAN.",
   "confidence": 0.0 to 1.0
-}}"""
+}}
+
+⚠️  MANDATORY FORMAT RULE:
+Your ENTIRE output (outside <think> tags) must be the JSON object above and NOTHING else.
+Do NOT write "Final answer:" before the JSON.
+Do NOT use \\boxed{{}} or any other wrapper.
+Do NOT add prose before or after the JSON.
+The very first character of your visible output must be {{ and the last must be }}."""
 
 
 def build_phase1_system(lang: str) -> str:
@@ -560,7 +567,11 @@ def build_phase1_system(lang: str) -> str:
 
 def build_phase1_user(entry: DevotionalEntry, lang: str = "es") -> str:
     """Phase 1 uses the same entry format as Phase 2."""
-    return build_user_prompt(entry, lang) + "\n\nRead as a native speaker. Return only the JSON object."
+    return (
+        build_user_prompt(entry, lang)
+        + "\n\nRead as a native speaker."
+        + " Output ONLY the JSON object — no 'Final answer:', no prose, no explanation."
+    )
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -672,7 +683,14 @@ Schema:
   "quoted_pause": "The exact phrase that made you pause, or null if OK.",
   "category": "one of the category values above, or null if OK.",
   "confidence": 0.0 to 1.0
-}}"""
+}}
+
+⚠️  MANDATORY FORMAT RULE:
+Your ENTIRE output (outside <think> tags) must be the JSON object above and NOTHING else.
+Do NOT write "Final answer:" before the JSON.
+Do NOT use \\boxed{{}} or any other wrapper.
+Do NOT add prose before or after the JSON.
+The very first character of your visible output must be {{ and the last must be }}."""
 
 
 def build_phase2_user(entry: DevotionalEntry, lang: str = "es") -> str:
