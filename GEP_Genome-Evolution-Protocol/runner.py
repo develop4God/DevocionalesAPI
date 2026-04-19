@@ -300,8 +300,11 @@ def run_overnight(
 
             if reaction is None:
                 error_count += 1
-                err_msg = (p2_raw or "unknown error")[:400]
-                _log(run_log, f"{p1_info}\n  ⚠️  P2 ERROR ({elapsed:.1f}s)\n  {err_msg}")
+                if phase == 1:
+                    _log(run_log, f"{p1_info}\n  [P1-only] ({elapsed:.1f}s)")
+                else:
+                    err_msg = (p2_raw or "unknown error")[:400]
+                    _log(run_log, f"{p1_info}\n  ⚠️  P2 ERROR ({elapsed:.1f}s)\n  {err_msg}")
                 record = build_record(
                     entry.date, entry.id, lang, version,
                     action="error",
