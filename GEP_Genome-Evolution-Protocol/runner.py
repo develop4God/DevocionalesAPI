@@ -40,7 +40,7 @@ def _log(run_log: Path, msg: str, also_print: bool = True):
 
 
 def _parse_phase1(raw: str) -> dict | None:
-    """Parse Phase 1 JSON from raw response. Falls back to regex extraction from prose."""
+    """Parse Phase 1 JSON from raw response. Falls back to keyword extraction from prose."""
     text = re.sub(r"<think>.*?</think>", "", raw, flags=re.DOTALL).strip()
     if text.startswith("```"):
         parts = text.split("```")
@@ -48,17 +48,34 @@ def _parse_phase1(raw: str) -> dict | None:
         if text.startswith("json"):
             text = text[4:]
     text = text.strip()
+
+    # 1. Try strict JSON parse
     try:
         return json.loads(text)
     except json.JSONDecodeError:
         pass
-    # Fallback: extract first {...} block from prose response
-    match = re.search(r'\{[^{}]*"verdict"[^{}]*\}', text, re.DOTALL)
-    if match:
+
+    # 2. Try extracting any JSON object containing "verdict" anywhere in the text
+    for m in re.finditer(r'\{[^{}]*"verdict"[^{}]*\}', text, re.DOTALL):
         try:
-            return json.loads(match.group())
+            return json.loads(m.group())
         except json.JSONDecodeError:
-            pass
+            continue
+
+    # 3. Fallback: extract verdict from prose keywords (model answered in natural language)
+    tu = text.upper()
+    if re.search(r'\bFLAG\b', tu):
+        issue_m  = re.search(r'(?:issue|problem|error|found)[:\s]+([^\n.]+)', text, re.IGNORECASE)
+        quoted_m = re.search(r'"([^"]{3,80})"', text)
+        return {
+            "verdict":    "FLAG",
+            "issue":      issue_m.group(1).strip() if issue_m else "Linguistic issue (prose response)",
+            "quoted":     quoted_m.group(1) if quoted_m else "",
+            "confidence": 0.85,
+        }
+    if re.search(r'\bCLEAN\b', tu) or re.search(r'\bOK\b', tu):
+        return {"verdict": "CLEAN", "issue": None, "quoted": None, "confidence": 1.0}
+
     return None
 
 

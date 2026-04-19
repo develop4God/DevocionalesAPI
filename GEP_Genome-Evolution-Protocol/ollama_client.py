@@ -73,7 +73,9 @@ def call_ollama(
                         print(f"  ⚠️  parse failed, retrying ({attempt}/{MAX_RETRIES})...")
                     time.sleep(RETRY_DELAY_S)
                     continue
-                return None, f"ParseError: could not extract JSON.\nRaw ({len(raw)} chars): {raw[:600]}"
+                # Return the full raw (incl. <think> blocks) so the caller can store
+                # thinking tokens and the prose response for debugging/audit.
+                return None, raw
             return parsed, raw
 
         except urllib.error.URLError as e:
@@ -165,9 +167,43 @@ def _parse_reaction(raw: str) -> ReaderReaction | None:
             text = text[4:]
     text = text.strip()
 
+    data = None
+
+    # 1. Try strict JSON parse
     try:
         data = json.loads(text)
     except json.JSONDecodeError:
+        pass
+
+    # 2. Try extracting any JSON object containing "verdict" anywhere in the text
+    if data is None:
+        for m in re.finditer(r'\{[^{}]*"verdict"[^{}]*\}', text, re.DOTALL):
+            try:
+                data = json.loads(m.group())
+                break
+            except json.JSONDecodeError:
+                continue
+
+    # 3. Fallback: extract verdict from prose keywords (model answered in natural language)
+    if data is None:
+        tu = text.upper()
+        # PAUSE / FLAG both signal a problem (FLAG is Phase-1 vocabulary, tolerate it here too)
+        if re.search(r'\bPAUSE\b', tu) or re.search(r'\bFLAG\b', tu):
+            lines = [l.strip() for l in text.splitlines() if l.strip()]
+            reaction_text = lines[0] if lines else "Reader paused (prose response)"
+            quoted_m = re.search(r'"([^"]{3,120})"', text)
+            return ReaderReaction(
+                verdict=Verdict.PAUSE,
+                reaction=reaction_text,
+                quoted_pause=quoted_m.group(1) if quoted_m else None,
+                category=PauseCategory.OTHER,
+                confidence=0.7,
+            )
+        # OK / CLEAN both signal no issues
+        if re.search(r'\bOK\b', tu) or re.search(r'\bCLEAN\b', tu):
+            lines = [l.strip() for l in text.splitlines() if l.strip()]
+            reaction_text = lines[0] if lines else "Entry looks good (prose response)"
+            return ReaderReaction(verdict=Verdict.OK, reaction=reaction_text, confidence=1.0)
         return None
 
     verdict_raw = data.get("verdict", "OK").strip().upper()
