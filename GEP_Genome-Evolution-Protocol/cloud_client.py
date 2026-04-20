@@ -327,7 +327,8 @@ def _call_provider(
     # ── Local (Ollama) routing ────────────────────────────────────────────
     if provider.get("client_type") == "local":
         model = provider.get("model")
-        think = (phase == 2)
+        thinking_cfg = provider.get("thinking_mode", {})
+        think = thinking_cfg.get("supported", False) and phase == 2
         reaction, raw = _ollama.call_ollama(model, system, user, verbose=verbose, think=think)
         return reaction, raw, None
     # ── API routing (below) ───────────────────────────────────────────────
