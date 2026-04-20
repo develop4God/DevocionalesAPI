@@ -28,7 +28,7 @@ import sys
 
 from audit import audit_path, print_summary
 from genome import ensure_genome
-from ollama_client import MODEL_KEYS, get_model_for_key
+from cloud_client import MODEL_KEYS, get_model_for_key
 from runner import run_interactive, run_overnight
 from source import extract_entries, fetch_remote, list_known_files, load_local
 

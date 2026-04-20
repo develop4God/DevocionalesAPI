@@ -18,7 +18,7 @@ from pathlib import Path
 from audit import append_record, build_record, load_reviewed_dates, print_summary, audit_path
 from genome import absorb_reaction, ensure_genome, save_genome
 from models import DevotionalEntry, ReaderReaction, Verdict
-from ollama_client import call_ollama, get_model_for_key, _unwrap_text
+from cloud_client import call_ollama, get_model_for_key, _unwrap_text
 from prompts import (
     build_phase1_system, build_phase1_user,
     build_phase2_system, build_phase2_user,

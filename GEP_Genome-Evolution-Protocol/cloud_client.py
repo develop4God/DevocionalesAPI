@@ -1,3 +1,42 @@
+# Shared utility: unwrap model output for JSON parsing
+import re
+def _unwrap_text(text: str) -> str:
+    """
+    Normalize model output before JSON parsing.
+    Handles all known non-standard response wrappers — never raises, never returns None.
+
+    In order:
+      1. Strip <think>...</think> reasoning blocks (Qwen3, DeepSeek-R1)
+      2. Extract content after "Final answer:" when present
+         (Qwen3 and similar models often conclude with "Final answer: <answer>")
+      3. Unwrap \\boxed{ \\{ ... \\} }  LaTeX format
+      4. Strip markdown code fences  ```json ... ```
+
+    Returns the cleanest possible string for json.loads().
+    """
+    # 1. Strip reasoning blocks
+    text = re.sub(r"<think>.*?</think>", "", text, flags=re.DOTALL).strip()
+
+    # 2. Extract content after "Final answer:" / "Final Answer:" / "final answer:"
+    #    Requires the colon to be present (excludes "final answer is:").
+    #    Handles multi-line gap between label and actual answer.
+    fa_m = re.search(r'(?i)final\s+answer\s*:\s*\n*([\s\S]+)', text)
+    if fa_m:
+        text = fa_m.group(1).strip()
+
+    # 3. Unwrap \\boxed{ \\{ ... \\} } — LaTeX format from some model configs
+    boxed_m = re.search(r'\\boxed\s*\{([\s\S]+)\}', text)
+    if boxed_m:
+        text = boxed_m.group(1).replace(r'\\{', '{').replace(r'\\}', '}').strip()
+
+    # 4. Strip markdown fences
+    if text.startswith("````):
+        parts = text.split("````)
+        text = parts[1] if len(parts) > 1 else text
+        if text.lower().startswith("json"):
+            text = text[4:]
+
+    return text.strip()
 """
 cloud_client.py — GEP Critic v3
 Single responsibility: call any cloud LLM provider defined in providers.yml.
