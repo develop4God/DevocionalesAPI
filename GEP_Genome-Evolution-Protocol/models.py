@@ -71,6 +71,13 @@ class AuditRecord:
     phase1_confidence: Optional[float] = None
     phase1_raw:        Optional[str] = None
 
+    # New fields must go after existing fields, at correct indent
+    phase1_thinking: str | None = None
+    phase1_verdict_raw: str | None = None
+    p2_thinking: str | None = None
+    p2_verdict_raw: str | None = None
+    human_correction: str | None = None
+
 
 
 

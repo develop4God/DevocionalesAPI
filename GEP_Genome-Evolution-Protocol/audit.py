@@ -16,6 +16,18 @@ def audit_path(lang: str, version: str, year: int, role: str = "default") -> Pat
     return Path(f"critic_audit_{lang}_{version}_{year}{suffix}.jsonl")
 
 
+def _split_thinking(raw: str | None) -> tuple[str | None, str | None]:
+    """Returns (thinking, verdict_raw) split from a raw model response."""
+    if not raw:
+        return None, None
+    import re
+
+    m = re.search(r"<think>(.*?)</think>(.*)", raw, re.DOTALL)
+    if m:
+        return m.group(1).strip(), m.group(2).strip()
+    return None, raw.strip()
+
+
 def load_reviewed_dates(log_path: Path) -> set[str]:
     reviewed = set()
     if not log_path.exists():
@@ -27,11 +39,7 @@ def load_reviewed_dates(log_path: Path) -> set[str]:
                 continue
             try:
                 rec = json.loads(line)
-                if (
-                    rec.get("action") != "error"
-                    and rec.get("phase1_verdict") is not None
-                    and rec.get("verdict") in ("OK", "PAUSE")
-                ):
+                if rec.get("action") == "reviewed":
                     reviewed.add(rec["date"])
             except (json.JSONDecodeError, KeyError):
                 pass
@@ -86,6 +94,8 @@ def build_record(
     phase1_confidence: float | None = None,
     phase1_raw: str | None = None,
 ) -> AuditRecord:
+    p1_thinking, p1_verdict_raw = _split_thinking(phase1_raw)
+    p2_thinking, p2_verdict_raw = _split_thinking(raw_response)
     return AuditRecord(
         date=entry_date,
         id=entry_id,
@@ -105,6 +115,10 @@ def build_record(
         phase1_quoted=phase1_quoted,
         phase1_confidence=phase1_confidence,
         phase1_raw=phase1_raw,
+        phase1_thinking=p1_thinking,
+        phase1_verdict_raw=p1_verdict_raw,
+        p2_thinking=p2_thinking,
+        p2_verdict_raw=p2_verdict_raw,
     )
 
 

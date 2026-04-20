@@ -254,9 +254,10 @@ def run_interactive(
 
         if reaction is None:
             print(f"  ⚠️  Phase 2 model error — {p2_raw}")
+            action_type = ("error_tech" if any(x in (p2_raw or "") for x in ["429", "HTTP", "timeout", "URLError", "OSError"]) else "error_parse")
             record = build_record(
                 entry.date, entry.id, lang, version,
-                action="error",
+                action=action_type,
                 reaction=ReaderReaction(verdict=Verdict.OK, reaction="model error"),
                 raw_response=p2_raw,
                 phase1_verdict=(phase1_result or {}).get("verdict"),
@@ -280,9 +281,10 @@ def run_interactive(
             break
 
         if choice == "a":
+            action_type = "flagged" if reaction.verdict == Verdict.PAUSE else "reviewed"
             record = build_record(
                 entry.date, entry.id, lang, version,
-                action="approved",
+                action=action_type,
                 reaction=reaction,
                 genome_fragment_id=fragment_id,
                 phase1_verdict=(phase1_result or {}).get("verdict"),
@@ -387,6 +389,7 @@ def run_overnight(
             p2_think_text = p2_think_m.group(1).strip() if p2_think_m else ""
             think_info = f"  thinking: {len(p2_think_text):,} chars\n" if p2_think_text else ""
 
+
             if reaction is None:
                 error_count += 1
                 if phase == 1:
@@ -394,9 +397,10 @@ def run_overnight(
                 else:
                     err_msg = (p2_raw or "unknown error")[:800]
                     _log(run_log, f"{p1_info}\n  ⚠️  P2 ERROR ({elapsed:.1f}s)\n  {err_msg}")
+                action_type = ("error_tech" if any(x in (p2_raw or "") for x in ["429", "HTTP", "timeout", "URLError", "OSError"]) else "error_parse")
                 record = build_record(
                     entry.date, entry.id, lang, version,
-                    action="error",
+                    action=action_type,
                     reaction=ReaderReaction(verdict=Verdict.OK, reaction="model error"),
                     raw_response=p2_raw,
                     phase1_verdict=(phase1_result or {}).get("verdict"),
@@ -411,10 +415,12 @@ def run_overnight(
             if reaction.verdict.value == "OK":
                 ok_count += 1
                 p2_icon = "✅ OK"
+                action_type = "reviewed"
             else:
                 pause_count += 1
                 cat = reaction.category.value if reaction.category else "other"
                 p2_icon = f"🔶 PAUSE [{cat}]"
+                action_type = "flagged"
 
             # Save P2 thinking + clean response to log (file only)
             if p2_think_text:
@@ -440,7 +446,7 @@ def run_overnight(
 
             record = build_record(
                 entry.date, entry.id, lang, version,
-                action="overnight",
+                action=action_type,
                 reaction=reaction,
                 genome_fragment_id=fragment_id,
                 raw_response=p2_raw,
