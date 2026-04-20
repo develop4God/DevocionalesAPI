@@ -67,7 +67,7 @@ providers:
     env_var: OLLAMA_DUMMY_KEY
     thinking_mode:
       supported: true
-      style: none
+      style: cot
     limits:
       tpd: null
       rpd: null
