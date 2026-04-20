@@ -21,14 +21,14 @@ providers:
       # tpm: 500000   # Paid tier: 500k tokens/min
       # rpm: 500     # Paid tier: 500 requests/min
 
-  - id: groq_phase2
-    name: "Groq/qwen-qwq-32b"
+  - id: groq_qwen3_phase2
+    name: "Groq/qwen3-32b"
     phase: phase2
     priority: 1
     default: true
     client_type: api
     base_url: "https://api.groq.com/openai/v1"
-    model: "qwen-qwq-32b"
+    model: "qwen/qwen3-32b"
     env_var: GROQ_API_KEY
     thinking_mode:
       supported: false
