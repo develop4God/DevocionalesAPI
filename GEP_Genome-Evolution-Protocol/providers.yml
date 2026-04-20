@@ -21,6 +21,23 @@ providers:
       # tpm: 500000   # Paid tier: 500k tokens/min
       # rpm: 500     # Paid tier: 500 requests/min
 
+  - id: fireworks_batch_phase2
+    name: "Fireworks/qwen3-vl-30b-a3b-thinking"
+    phase: phase2
+    priority: 1
+    default: false
+    client_type: api
+    base_url: "https://api.fireworks.ai/inference/v1"
+    model: "accounts/fireworks/models/qwen3-vl-30b-a3b-thinking"
+    env_var: FIREWORKS_API_KEY
+    thinking_mode:
+      supported: true
+      style: cot
+    limits:
+      tpd: null
+      tpm: null
+      rpm: null
+
   - id: groq_qwen3_phase1
     name: "Groq/qwen3-32b"
     phase: phase1

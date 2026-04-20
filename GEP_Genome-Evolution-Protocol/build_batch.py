@@ -44,8 +44,8 @@ GITHUB_URL = (
     "/refs/heads/main/Devocional_year_{year}_{lang}_{version}.json"
 )
 
-# Default model — qwen2p5-72b is best multilingual on Fireworks
-DEFAULT_MODEL = "accounts/fireworks/models/qwen2p5-72b-instruct"
+# Default model — Fireworks thinking model for batch phase2
+DEFAULT_MODEL = "accounts/fireworks/models/qwen3-vl-30b-a3b-thinking"
 
 
 # ── Entry loading ─────────────────────────────────────────────────────────────
@@ -134,7 +134,7 @@ def build_batch(
             "custom_id": entry.id,
             "body": {
                 "model": model,
-                "max_tokens": 1024,
+                "max_tokens": 4096,
                 "temperature": 0.1,
                 "messages": [
                     {"role": "system", "content": system_prompt},
