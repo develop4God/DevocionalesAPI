@@ -61,8 +61,13 @@ def load_entries(lang: str, version: str, year: int, local: str | None) -> list[
         with urllib.request.urlopen(url, timeout=30) as resp:
             raw = json.load(resp)
 
+    # Support both list format and {"data": {date: entry}} dict format
+    raw_data = raw.get("data", raw) if isinstance(raw, dict) else raw
+    items = list(raw_data.values()) if isinstance(raw_data, dict) else raw_data
     entries = []
-    for item in raw:
+    for item in items:
+        if not isinstance(item, dict):
+            continue
         entries.append(DevotionalEntry(
             date         = item.get("date", item.get("fecha", "")),
             id           = item.get("id", ""),
