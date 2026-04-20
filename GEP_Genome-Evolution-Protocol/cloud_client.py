@@ -41,7 +41,8 @@ from models import PauseCategory, ReaderReaction, Verdict
 # --- Load .env automatically ---
 try:
     from dotenv import load_dotenv
-    load_dotenv()
+    from pathlib import Path
+    load_dotenv(dotenv_path=Path(__file__).parent / ".env")
 except ImportError:
     pass
 
