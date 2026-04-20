@@ -85,9 +85,17 @@ def save_genome(genome: Genome, year: int):
         json.dump(data, f, ensure_ascii=False, indent=2)
 
 
+def _promote_pending(genome: Genome):
+    """Promote any fragment already at or above threshold."""
+    for f in genome.fragments:
+        if f.confidence >= 0.7 and f.state != GeneState.CONFIRMED:
+            f.state = GeneState.CONFIRMED
+
+
 def ensure_genome(lang: str, version: str, year: int) -> Genome:
     genome = load_genome(lang, version, year)
     if genome:
+        _promote_pending(genome)
         return genome
     return Genome(
         language=lang,
@@ -169,10 +177,13 @@ def _find_similar_fragment(
     for frag in genome.fragments:
         if frag.category != category:
             continue
+        # High-confidence fragments match on category alone — pattern is established
+        if frag.confidence >= 0.7:
+            return frag
         frag_words = set(frag.example_quote.lower().split())
         if not quote_words or not frag_words:
             continue
-        overlap = len(quote_words & frag_words) / max(len(quote_words), len(frag_words))
+        overlap = len(quote_words & frag_words) / min(len(quote_words), len(frag_words))
         if overlap >= 0.4:
             return frag
     return None
