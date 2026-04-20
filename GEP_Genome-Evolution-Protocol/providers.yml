@@ -21,9 +21,9 @@ providers:
       # tpm: 500000   # Paid tier: 500k tokens/min
       # rpm: 500     # Paid tier: 500 requests/min
 
-  - id: groq_qwen3_phase2
+  - id: groq_qwen3_phase1
     name: "Groq/qwen3-32b"
-    phase: phase2
+    phase: phase1
     priority: 1
     default: true
     client_type: api
@@ -39,42 +39,42 @@ providers:
       rpd: 500
       rpm: 30
 
-  # - id: local_phase1
-  #   name: "Local/qwen3:4b"
-  #   phase: phase1
-  #   priority: 99
-  #   default: false
-  #   client_type: local
-  #   base_url: "http://localhost:11434/v1"
-  #   model: "qwen3:4b"
-  #   env_var: OLLAMA_DUMMY_KEY
-  #   thinking_mode:
-  #     supported: false
-  #     style: none
-  #   limits:
-  #     tpd: null
-  #     rpd: null
-  #     rpm: null
+  - id: local_phase1
+    name: "Local/qwen3:4b"
+    phase: phase1
+    priority: 99
+    default: false
+    client_type: local
+    base_url: "http://localhost:11434/v1"
+    model: "qwen3:4b"
+    env_var: OLLAMA_DUMMY_KEY
+    thinking_mode:
+      supported: false
+      style: none
+    limits:
+      tpd: null
+      rpd: null
+      rpm: null
 
-  # - id: local_phase2
-  #   name: "Local/qwen3:14b"
-  #   phase: phase2
-  #   priority: 99
-  #   default: false
-  #   client_type: local
-  #   base_url: "http://localhost:11434/v1"
-  #   model: "qwen3:14b"
-  #   env_var: OLLAMA_DUMMY_KEY
-  #   thinking_mode:
-  #     supported: false
-  #     style: none
-  #   limits:
-  #     tpd: null
-  #     rpd: null
-  #     rpm: null
+  - id: local_phase2
+    name: "Local/qwen3:14b"
+    phase: phase2
+    priority: 99
+    default: false
+    client_type: local
+    base_url: "http://localhost:11434/v1"
+    model: "qwen3:14b"
+    env_var: OLLAMA_DUMMY_KEY
+    thinking_mode:
+      supported: false
+      style: none
+    limits:
+      tpd: null
+      rpd: null
+      rpm: null
 
 settings:
-  default_backend: api        # "api" or "local" — switches all phases at once
+  default_backend: local         #"api" or "local" — switches all phases at once
   daily_token_tracking: true
   daily_counter_path: ".gep_daily_tokens.json"
   max_retries: 2
