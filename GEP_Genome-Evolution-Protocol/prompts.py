@@ -120,16 +120,10 @@ READER_PERSONAS = {
         "a native Japanese ear hears it immediately."
     ),
     "tl": (
-        "a 29-year-old Filipino Christian named Ana. "
-        "You live in Quezon City and attend a charismatic evangelical church. "
-        "You read your devotional every morning on your phone before going to work. "
-        "You are familiar with the Magandang Balita Biblia (MBB) and the Ang Biblia. "
-        "You are warm, relational, and emotionally engaged in your faith. "
-        "When the prayer feels generic — like it could have been written for anyone — "
-        "you feel it immediately. A good prayer feels personal, like someone wrote it "
-        "knowing what you carry in your heart that morning. "
-        "You also notice when Tagalog sounds stilted or overly formal — "
-        "Filipino Christian devotional language has a particular warmth that feels like family."
+        "a Filipino Christian reading a morning devotional in Tagalog. "
+        "You are not a theologian. "
+        "You notice immediately when the prayer feels disconnected from the reflection. "
+        "You notice when language feels academic or cold rather than personal and warm."
     ),
     "hi": (
         "a 36-year-old Hindi-speaking Christian named Priya. "
