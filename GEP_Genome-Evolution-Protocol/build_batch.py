@@ -61,9 +61,22 @@ def load_entries(lang: str, version: str, year: int, local: str | None) -> list[
         with urllib.request.urlopen(url, timeout=30) as resp:
             raw = json.load(resp)
 
-    # Support both list format and {"data": {date: entry}} dict format
+    # Support {"data": {date: entry}} and nested {"data": {lang: {date: [entry, ...]}}}
+    # Support {"data": {lang: {date: [entry, ...]}}} nested format
     raw_data = raw.get("data", raw) if isinstance(raw, dict) else raw
-    items = list(raw_data.values()) if isinstance(raw_data, dict) else raw_data
+    # Unwrap one more level if keyed by language
+    if isinstance(raw_data, dict) and lang in raw_data:
+        raw_data = raw_data[lang]
+    # raw_data is now {date: entry_or_list}
+    items = []
+    if isinstance(raw_data, dict):
+        for val in raw_data.values():
+            if isinstance(val, list):
+                items.extend(val)
+            else:
+                items.append(val)
+    else:
+        items = raw_data
     entries = []
     for item in items:
         if not isinstance(item, dict):
