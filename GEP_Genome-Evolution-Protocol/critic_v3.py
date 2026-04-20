@@ -84,6 +84,7 @@ def main():
     # Dynamic import/alias for LLM client
 
     global run_interactive, run_overnight, get_model_for_key, call_ollama
+    args = parser.parse_args()
     prefer_local = False
     if args.provider == "local":
         from ollama_client import call_ollama, get_model_for_key as _get_model_for_key
@@ -115,8 +116,6 @@ def main():
                 return f"{p['name']}/{p['model']} ({p.get('client_type','api')})"
             return "cloud/auto"
         print("[INFO] Using auto provider selection.")
-
-    args = parser.parse_args()
 
     # ── Special commands ───────────────────────────────────────────────────────
     if args.list_files:
