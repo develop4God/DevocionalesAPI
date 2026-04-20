@@ -407,6 +407,7 @@ def call_ollama(
     user: str,
     verbose: bool = True,
     phase: int = 2,
+    think: bool = True,  # Ignored, for compatibility
 ) -> tuple[Optional[ReaderReaction], Optional[str]]:
     """
     Drop-in replacement for ollama_client.call_ollama.
