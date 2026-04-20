@@ -29,9 +29,10 @@ def _unwrap_text(text: str) -> str:
     if boxed_m:
         text = boxed_m.group(1).replace(r'\\{', '{').replace(r'\\}', '}').strip()
 
+
     # 4. Strip markdown fences
-    if text.startswith("````):
-        parts = text.split("````)
+    if text.startswith("```"):
+        parts = text.split("```")
         text = parts[1] if len(parts) > 1 else text
         if text.lower().startswith("json"):
             text = text[4:]
