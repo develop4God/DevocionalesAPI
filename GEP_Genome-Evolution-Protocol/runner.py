@@ -157,7 +157,7 @@ def _process_entry(
         print("  [P1] linguistic...", end=" ", flush=True)
 
     p1_t0 = time.monotonic()
-    _p1_rxn, p1_raw = call_ollama(PHASE1_MODEL, p1_system, p1_user, verbose=True, think=True)
+    _p1_rxn, p1_raw = call_ollama(PHASE1_MODEL, p1_system, p1_user, verbose=True, think=True, phase=1)
     p1_elapsed = time.monotonic() - p1_t0
     # Only parse the raw string when the provider actually returned a response;
     # if _p1_rxn is None the call failed and p1_raw is an error message, not JSON.
