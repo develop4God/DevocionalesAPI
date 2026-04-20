@@ -157,13 +157,17 @@ def _process_entry(
         print("  [P1] linguistic...", end=" ", flush=True)
 
     p1_t0 = time.monotonic()
-    _, p1_raw = call_ollama(PHASE1_MODEL, p1_system, p1_user, verbose=True, think=True)
+    _p1_rxn, p1_raw = call_ollama(PHASE1_MODEL, p1_system, p1_user, verbose=True, think=True)
     p1_elapsed = time.monotonic() - p1_t0
-    phase1_result = _parse_phase1(p1_raw or "") if p1_raw else None
+    # Only parse the raw string when the provider actually returned a response;
+    # if _p1_rxn is None the call failed and p1_raw is an error message, not JSON.
+    phase1_result = _parse_phase1(p1_raw or "") if (_p1_rxn is not None and p1_raw) else None
 
     if verbose and phase1_result:
         icon = "🔤 FLAG" if phase1_result.get("verdict") == "FLAG" else "✅ CLEAN"
         print(f"{icon} ({p1_elapsed:.0f}s)")
+    elif verbose and _p1_rxn is None:
+        print(f"⚠️  P1 ERROR ({p1_elapsed:.0f}s)")
     elif verbose:
         print(f"⚠️  parse error ({p1_elapsed:.0f}s)")
 
@@ -366,15 +370,29 @@ def run_overnight(
                 p1_flag_count += 1
                 p1_info += f" | {(phase1_result or {}).get('issue','')[:80]}"
 
-            think_match = re.search(r'<think>(.*?)</think>', p2_raw or '', re.DOTALL)
-            think_info  = f"  thinking: {len(think_match.group(1)):,} chars\n" if think_match else ""
+            # ── Save P1 thinking + response to log (file only) ──────────────
+            if p1_raw:
+                p1_think_m = re.search(r'<think>(.*?)</think>', p1_raw, re.DOTALL)
+                if p1_think_m:
+                    p1_think_text = p1_think_m.group(1).strip()
+                    _log(run_log,
+                         f"  [P1 THINKING {len(p1_think_text):,} chars]\n{p1_think_text}",
+                         also_print=False)
+                p1_clean = re.sub(r'<think>.*?</think>', '', p1_raw, flags=re.DOTALL).strip()
+                if p1_clean and p1_verdict != "error":
+                    _log(run_log, f"  [P1 RESPONSE]\n{p1_clean}", also_print=False)
+
+            # ── P2 thinking extraction ──────────────────────────────────────
+            p2_think_m = re.search(r'<think>(.*?)</think>', p2_raw or '', re.DOTALL)
+            p2_think_text = p2_think_m.group(1).strip() if p2_think_m else ""
+            think_info = f"  thinking: {len(p2_think_text):,} chars\n" if p2_think_text else ""
 
             if reaction is None:
                 error_count += 1
                 if phase == 1:
                     _log(run_log, f"{p1_info}\n  [P1-only] ({elapsed:.1f}s)")
                 else:
-                    err_msg = (p2_raw or "unknown error")[:400]
+                    err_msg = (p2_raw or "unknown error")[:800]
                     _log(run_log, f"{p1_info}\n  ⚠️  P2 ERROR ({elapsed:.1f}s)\n  {err_msg}")
                 record = build_record(
                     entry.date, entry.id, lang, version,
@@ -397,6 +415,15 @@ def run_overnight(
                 pause_count += 1
                 cat = reaction.category.value if reaction.category else "other"
                 p2_icon = f"🔶 PAUSE [{cat}]"
+
+            # Save P2 thinking + clean response to log (file only)
+            if p2_think_text:
+                _log(run_log,
+                     f"  [P2 THINKING {len(p2_think_text):,} chars]\n{p2_think_text}",
+                     also_print=False)
+            p2_clean = re.sub(r'<think>.*?</think>', '', p2_raw or '', flags=re.DOTALL).strip()
+            if p2_clean:
+                _log(run_log, f"  [P2 RESPONSE]\n{p2_clean}", also_print=False)
 
             result_lines = (
                 f"{p1_info}\n"

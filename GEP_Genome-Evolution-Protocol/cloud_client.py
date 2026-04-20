@@ -419,13 +419,16 @@ def call_ollama(
         return None, f"No providers configured for phase {phase} in providers.yml"
 
     swap_on_429 = settings().get("swap_on_429", True)
+    failures: list[str] = []
 
     for provider in candidates:
         pid = provider["id"]
 
         if _provider_exhausted(provider):
+            msg = f"[{provider['name']}] daily limit reached — skipped"
             if verbose:
-                print(f"  [{provider['name']}] daily limit reached — skipping")
+                print(f"  {msg}")
+            failures.append(msg)
             continue
 
         if _provider_warned(provider) and verbose:
@@ -435,8 +438,10 @@ def call_ollama(
 
         if raw == "429":
             if swap_on_429:
+                msg = f"[{provider['name']}] 429 rate-limit → swapped"
                 if verbose:
                     print(f"  swapping to next provider...")
+                failures.append(msg)
                 continue
             return None, f"429 rate limit on {provider['name']}"
 
@@ -445,13 +450,16 @@ def call_ollama(
                 _record_tokens(pid, tokens)
             return reaction, raw
 
-        # Non-429 failure — log and try next
+        # Non-429 failure — record detail and try next
+        fail_detail = f"[{provider['name']}] {raw}"
         if verbose:
             print(f"  [{provider['name']}] failed: {raw}")
         if tokens:
             _record_tokens(pid, tokens)
+        failures.append(fail_detail)
 
-    return None, f"All providers exhausted for phase {phase}"
+    failures_str = " | ".join(failures) if failures else "no providers available"
+    return None, f"All providers exhausted for phase {phase}: {failures_str}"
 
 
 # ── CLI ───────────────────────────────────────────────────────────────────────
