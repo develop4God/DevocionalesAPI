@@ -27,7 +27,11 @@ def load_reviewed_dates(log_path: Path) -> set[str]:
                 continue
             try:
                 rec = json.loads(line)
-                if rec.get("phase1_verdict") is not None:
+                if (
+                    rec.get("action") != "error"
+                    and rec.get("phase1_verdict") is not None
+                    and rec.get("verdict") in ("OK", "PAUSE")
+                ):
                     reviewed.add(rec["date"])
             except (json.JSONDecodeError, KeyError):
                 pass
