@@ -242,6 +242,7 @@ def _build_http_request(provider: dict, payload: dict, api_key: str) -> urllib.r
     headers = {
         "Content-Type": "application/json",
         "Authorization": f"Bearer {api_key}",
+        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36",
     }
     # Extra headers from config (e.g. OpenRouter referer)
     for k, v in provider.get("headers", {}).items():
