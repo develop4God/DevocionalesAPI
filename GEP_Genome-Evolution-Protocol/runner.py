@@ -328,6 +328,13 @@ def run_overnight(
         _p2 = providers_for_phase(2)
         if _p2:
             model = _p2[0]["model"]
+    # DEBUG — confirm model SOT
+    _p1_dbg = providers_for_phase(1)
+    _p2_dbg = providers_for_phase(2)
+    _p1_think = _p1_dbg[0].get("thinking_mode", {}).get("supported", False) if _p1_dbg else "?"
+    _p2_think = _p2_dbg[0].get("thinking_mode", {}).get("supported", False) if _p2_dbg else "?"
+    print(f"  [DEBUG] P1 -> {_p1_dbg[0]['model']} | think={_p1_think}")
+    print(f"  [DEBUG] P2 -> {model} | think={_p2_think}")
     log_path = audit_path(lang, version, year)
     run_log  = _run_log_path(lang, version, year)
     genome   = ensure_genome(lang, version, year)
