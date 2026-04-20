@@ -230,12 +230,12 @@ def _build_request(provider: dict, system: str, user: str, phase: int) -> tuple[
 
     api_key_env = provider.get("env_var", "")
     api_key = os.environ.get(api_key_env, "")
-    if not api_key:
+    if not api_key and provider.get("client_type", "api") != "local":
         raise RuntimeError(
             f"API key not set for provider '{provider['id']}'.\n"
             f"Run: export {api_key_env}=your_key_here"
         )
-    return payload, api_key
+    return payload, api_key or "local"
 
 
 def _build_http_request(provider: dict, payload: dict, api_key: str) -> urllib.request.Request:
