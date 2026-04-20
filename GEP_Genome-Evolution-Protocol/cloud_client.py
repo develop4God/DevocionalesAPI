@@ -77,6 +77,7 @@ except ImportError:
     yaml = None  # handled at load time
 
 from models import PauseCategory, ReaderReaction, Verdict
+import ollama_client as _ollama  # local routing
 
 # --- Load .env automatically ---
 try:
@@ -323,6 +324,13 @@ def _call_provider(
     Single provider call. Returns (reaction, raw_full, tokens_used).
     Returns (None, error_str, None) on failure.
     """
+    # ── Local (Ollama) routing ────────────────────────────────────────────
+    if provider.get("client_type") == "local":
+        model = provider.get("model")
+        think = (phase == 2)
+        reaction, raw = _ollama.call_ollama(model, system, user, verbose=verbose, think=think)
+        return reaction, raw, None
+    # ── API routing (below) ───────────────────────────────────────────────
     cfg = settings()
     max_retries = cfg.get("max_retries", 2)
     retry_delay = cfg.get("retry_delay_s", 5)
