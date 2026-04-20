@@ -105,15 +105,21 @@ def _load_config() -> dict:
     return _config
 
 
-def providers_for_phase(phase: int) -> list[dict]:
-    """Return providers for the given phase, sorted by priority."""
+
+def providers_for_phase(phase: int, prefer_local: bool = False) -> list[dict]:
+    """Return providers for the given phase, sorted by priority. If prefer_local, prioritize local providers using client_type."""
     cfg = _load_config()
     phase_key = f"phase{phase}"
     result = [
         p for p in cfg["providers"]
         if p.get("phase") in (phase_key, "both", phase)
     ]
-    return sorted(result, key=lambda p: p.get("priority", 99))
+    if prefer_local:
+        # Prioritize local providers using client_type
+        result = sorted(result, key=lambda p: (p.get("client_type", "api") != "local", p.get("priority", 99)))
+    else:
+        result = sorted(result, key=lambda p: p.get("priority", 99))
+    return result
 
 
 def settings() -> dict:
@@ -389,11 +395,12 @@ def _call_provider(
 MODEL_KEYS = ["auto", "fast", "best"]
 
 
-def get_model_for_key(key: str) -> str:
+
+def get_model_for_key(key: str, prefer_local: bool = False) -> str:
     """Returns a display string for the active provider/model for a given key."""
     try:
         phase = 1 if key == "fast" else 2
-        providers = providers_for_phase(phase)
+        providers = providers_for_phase(phase, prefer_local=prefer_local)
         if providers:
             p = providers[0]
             return f"{p['name']}/{p['model']}"

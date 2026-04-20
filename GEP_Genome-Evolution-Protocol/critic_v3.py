@@ -80,17 +80,41 @@ def main():
     parser.add_argument("--report",     action="store_true", help="Print audit report and exit")
     parser.add_argument("--genome",     nargs=3, metavar=("LANG", "VERSION", "YEAR"), help="Print genome and exit")
     parser.add_argument("--list-files", action="store_true", help="List known lang/version combinations and exit")
-    parser.add_argument("--provider", choices=["cloud", "local"], default="cloud", help="Which LLM client to use: cloud (default) or local (Ollama)")
+    parser.add_argument("--provider", choices=["cloud", "local", "auto"], default="auto", help="Which LLM client to use: cloud, local (Ollama), or auto (default)")
     # Dynamic import/alias for LLM client
+
     global run_interactive, run_overnight, get_model_for_key, call_ollama
+    prefer_local = False
     if args.provider == "local":
-        from ollama_client import call_ollama, get_model_for_key
+        from ollama_client import call_ollama, get_model_for_key as _get_model_for_key
         from runner import run_interactive, run_overnight
+        get_model_for_key = lambda key: _get_model_for_key(key)
+        prefer_local = True
         print("[INFO] Using local Ollama client.")
-    else:
-        from cloud_client import call_ollama, get_model_for_key
+    elif args.provider == "cloud":
+        from cloud_client import call_ollama, get_model_for_key as _get_model_for_key
         from runner import run_interactive, run_overnight
+        get_model_for_key = lambda key: _get_model_for_key(key)
         print("[INFO] Using cloud client.")
+    else:  # auto
+        from cloud_client import call_ollama, get_model_for_key as _get_model_for_key
+        from runner import run_interactive, run_overnight
+        def get_model_for_key(key):
+            # Auto: prefer provider with default: true, fallback to priority
+            from cloud_client import providers_for_phase, _load_config
+            phase = 1 if key == "fast" else 2
+            cfg = _load_config()
+            phase_key = f"phase{phase}"
+            candidates = [p for p in cfg["providers"] if p.get("phase") in (phase_key, "both", phase)]
+            default_providers = [p for p in candidates if p.get("default", False)]
+            if default_providers:
+                p = default_providers[0]
+                return f"{p['name']}/{p['model']} ({p.get('client_type','api')})"
+            if candidates:
+                p = sorted(candidates, key=lambda p: p.get("priority", 99))[0]
+                return f"{p['name']}/{p['model']} ({p.get('client_type','api')})"
+            return "cloud/auto"
+        print("[INFO] Using auto provider selection.")
 
     args = parser.parse_args()
 

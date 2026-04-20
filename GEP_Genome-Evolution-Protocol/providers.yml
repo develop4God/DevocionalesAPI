@@ -4,6 +4,8 @@ providers:
     name: "Cerebras/qwen3-235b"
     phase: phase2
     priority: 2
+    default: false
+    client_type: api
     base_url: "https://api.cerebras.ai/v1"
     model: "qwen-3-235b-a22b-instruct-2507"
     env_var: CEREBRAS_API_KEY
@@ -23,6 +25,8 @@ providers:
     name: "Groq/qwen-qwq-32b"
     phase: phase2
     priority: 1
+    default: true
+    client_type: api
     base_url: "https://api.groq.com/openai/v1"
     model: "qwen-qwq-32b"
     env_var: GROQ_API_KEY
@@ -39,6 +43,8 @@ providers:
   #   name: "Local/qwen3:4b"
   #   phase: phase1
   #   priority: 99
+  #   default: false
+  #   client_type: local
   #   base_url: "http://localhost:11434/v1"
   #   model: "qwen3:4b"
   #   env_var: OLLAMA_DUMMY_KEY
@@ -54,6 +60,8 @@ providers:
   #   name: "Local/qwen3:14b"
   #   phase: phase2
   #   priority: 99
+  #   default: false
+  #   client_type: local
   #   base_url: "http://localhost:11434/v1"
   #   model: "qwen3:14b"
   #   env_var: OLLAMA_DUMMY_KEY
