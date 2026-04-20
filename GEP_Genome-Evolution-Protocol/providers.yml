@@ -66,7 +66,7 @@ providers:
     model: "qwen3:14b"
     env_var: OLLAMA_DUMMY_KEY
     thinking_mode:
-      supported: false
+      supported: true
       style: none
     limits:
       tpd: null
