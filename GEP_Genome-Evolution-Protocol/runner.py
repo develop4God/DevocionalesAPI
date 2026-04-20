@@ -226,6 +226,12 @@ def run_interactive(
     phase: int = 0,
 ):
     model    = get_model_for_key(model_key)
+    # When local backend is active, providers.yml is the SOT for model selection
+    from cloud_client import providers_for_phase, settings as _settings
+    if _settings().get("default_backend") == "local":
+        _p2 = providers_for_phase(2)
+        if _p2:
+            model = _p2[0]["model"]
     log_path = audit_path(lang, version, year)
     genome   = ensure_genome(lang, version, year)
     reviewed = load_reviewed_dates(log_path)
@@ -309,6 +315,12 @@ def run_overnight(
     phase: int = 0,
 ):
     model    = get_model_for_key(model_key)
+    # When local backend is active, providers.yml is the SOT for model selection
+    from cloud_client import providers_for_phase, settings as _settings
+    if _settings().get("default_backend") == "local":
+        _p2 = providers_for_phase(2)
+        if _p2:
+            model = _p2[0]["model"]
     log_path = audit_path(lang, version, year)
     run_log  = _run_log_path(lang, version, year)
     genome   = ensure_genome(lang, version, year)
