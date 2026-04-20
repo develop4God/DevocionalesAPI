@@ -38,6 +38,13 @@ except ImportError:
 
 from models import PauseCategory, ReaderReaction, Verdict
 
+# --- Load .env automatically ---
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
 # ── Config loading ────────────────────────────────────────────────────────────
 
 _PROVIDERS_YML = Path(__file__).parent / "providers.yml"
