@@ -8,3 +8,4 @@ venv/
 .env.*
 # Ignore token and credential files
 .gep_daily_tokens.json
+.venv/
