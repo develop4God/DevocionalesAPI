@@ -106,20 +106,17 @@ def _load_config() -> dict:
 
 
 
-def providers_for_phase(phase: int, prefer_local: bool = False) -> list[dict]:
-    """Return providers for the given phase, sorted by priority. If prefer_local, prioritize local providers using client_type."""
+def providers_for_phase(phase: int) -> list[dict]:
+    """Return providers for the given phase filtered by default_backend, sorted by priority."""
     cfg = _load_config()
+    backend = cfg["settings"].get("default_backend", "api")  # "api" or "local"
     phase_key = f"phase{phase}"
     result = [
         p for p in cfg["providers"]
         if p.get("phase") in (phase_key, "both", phase)
+        and p.get("client_type", "api") == backend
     ]
-    if prefer_local:
-        # Prioritize local providers using client_type
-        result = sorted(result, key=lambda p: (p.get("client_type", "api") != "local", p.get("priority", 99)))
-    else:
-        result = sorted(result, key=lambda p: p.get("priority", 99))
-    return result
+    return sorted(result, key=lambda p: p.get("priority", 99))
 
 
 def settings() -> dict:
@@ -396,11 +393,11 @@ MODEL_KEYS = ["auto", "fast", "best"]
 
 
 
-def get_model_for_key(key: str, prefer_local: bool = False) -> str:
+def get_model_for_key(key: str) -> str:
     """Returns a display string for the active provider/model for a given key."""
     try:
         phase = 1 if key == "fast" else 2
-        providers = providers_for_phase(phase, prefer_local=prefer_local)
+        providers = providers_for_phase(phase)
         if providers:
             p = providers[0]
             return f"{p['name']}/{p['model']}"

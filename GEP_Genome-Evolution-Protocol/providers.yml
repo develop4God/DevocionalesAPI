@@ -74,6 +74,7 @@ providers:
   #     rpm: null
 
 settings:
+  default_backend: api        # "api" or "local" — switches all phases at once
   daily_token_tracking: true
   daily_counter_path: ".gep_daily_tokens.json"
   max_retries: 2
