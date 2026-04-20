@@ -1,9 +1,9 @@
 providers:
 
-  - id: cerebras_phase1
+  - id: cerebras_phase2
     name: "Cerebras/qwen3-235b"
-    phase: phase1
-    priority: 1
+    phase: phase2
+    priority: 2
     base_url: "https://api.cerebras.ai/v1"
     model: "qwen-3-235b-a22b-instruct-2507"
     env_var: CEREBRAS_API_KEY
@@ -35,35 +35,35 @@ providers:
       rpd: 500
       rpm: 30
 
-  - id: local_phase1
-    name: "Local/qwen3:4b"
-    phase: phase1
-    priority: 99
-    base_url: "http://localhost:11434/v1"
-    model: "qwen3:4b"
-    env_var: OLLAMA_DUMMY_KEY
-    thinking_mode:
-      supported: false
-      style: none
-    limits:
-      tpd: null
-      rpd: null
-      rpm: null
+  # - id: local_phase1
+  #   name: "Local/qwen3:4b"
+  #   phase: phase1
+  #   priority: 99
+  #   base_url: "http://localhost:11434/v1"
+  #   model: "qwen3:4b"
+  #   env_var: OLLAMA_DUMMY_KEY
+  #   thinking_mode:
+  #     supported: false
+  #     style: none
+  #   limits:
+  #     tpd: null
+  #     rpd: null
+  #     rpm: null
 
-  - id: local_phase2
-    name: "Local/qwen3:14b"
-    phase: phase2
-    priority: 99
-    base_url: "http://localhost:11434/v1"
-    model: "qwen3:14b"
-    env_var: OLLAMA_DUMMY_KEY
-    thinking_mode:
-      supported: false
-      style: none
-    limits:
-      tpd: null
-      rpd: null
-      rpm: null
+  # - id: local_phase2
+  #   name: "Local/qwen3:14b"
+  #   phase: phase2
+  #   priority: 99
+  #   base_url: "http://localhost:11434/v1"
+  #   model: "qwen3:14b"
+  #   env_var: OLLAMA_DUMMY_KEY
+  #   thinking_mode:
+  #     supported: false
+  #     style: none
+  #   limits:
+  #     tpd: null
+  #     rpd: null
+  #     rpm: null
 
 settings:
   daily_token_tracking: true
