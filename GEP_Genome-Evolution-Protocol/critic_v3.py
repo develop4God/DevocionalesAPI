@@ -28,8 +28,11 @@ import sys
 
 from audit import audit_path, print_summary
 from genome import ensure_genome
-from ollama_client import MODEL_KEYS, get_model_for_key
-from runner import run_interactive, run_overnight
+MODEL_KEYS = ["auto", "fast", "best"]
+run_interactive = None
+run_overnight = None
+get_model_for_key = None
+call_ollama = None
 from source import extract_entries, fetch_remote, list_known_files, load_local
 
 
@@ -68,26 +71,51 @@ def main():
     parser.add_argument("--lang",       help="Language code (pt, es, en, ...)")
     parser.add_argument("--version",    help="Bible version (ARC, NVI, KJV, ...)")
     parser.add_argument("--year",       type=int, help="Year (2025, 2026, ...)")
-    parser.add_argument("--mode",       choices=["interactive", "overnight"],
-                        default="overnight")
-    parser.add_argument("--role",       default="default",
-                        help="Reader role: default, elder, charismatic, new_believer (pt only for now)")
-    parser.add_argument("--model", default="auto",
-                        help="Model key: auto (default), fast, best, or any Ollama tag e.g. qwen2.5:7b")
-    parser.add_argument("--phase", type=int, default=0,
-                        help="Run only phase 1 or 2. Default 0 = both.")
-    parser.add_argument("--start-date", dest="start_date",
-                        help="Skip entries before YYYY-MM-DD")
-    parser.add_argument("--local",      metavar="FILE",
-                        help="Use local JSON file instead of GitHub fetch")
-    parser.add_argument("--report",     action="store_true",
-                        help="Print audit report and exit")
-    parser.add_argument("--genome",     nargs=3, metavar=("LANG", "VERSION", "YEAR"),
-                        help="Print genome and exit")
-    parser.add_argument("--list-files", action="store_true",
-                        help="List known lang/version combinations and exit")
+    parser.add_argument("--mode",       choices=["interactive", "overnight"], default="overnight")
+    parser.add_argument("--role",       default="default", help="Reader role: default, elder, charismatic, new_believer (pt only for now)")
+    parser.add_argument("--model", default="auto", help="Model key: auto (default), fast, best, or any Ollama tag e.g. qwen2.5:7b")
+    parser.add_argument("--phase", type=int, default=0, help="Run only phase 1 or 2. Default 0 = both.")
+    parser.add_argument("--start-date", dest="start_date", help="Skip entries before YYYY-MM-DD")
+    parser.add_argument("--local",      metavar="FILE", help="Use local JSON file instead of GitHub fetch")
+    parser.add_argument("--report",     action="store_true", help="Print audit report and exit")
+    parser.add_argument("--genome",     nargs=3, metavar=("LANG", "VERSION", "YEAR"), help="Print genome and exit")
+    parser.add_argument("--list-files", action="store_true", help="List known lang/version combinations and exit")
+    parser.add_argument("--provider", choices=["cloud", "local", "auto"], default="auto", help="Which LLM client to use: cloud, local (Ollama), or auto (default)")
+    # Dynamic import/alias for LLM client
 
+    global run_interactive, run_overnight, get_model_for_key, call_ollama
     args = parser.parse_args()
+    prefer_local = False
+    if args.provider == "local":
+        from ollama_client import call_ollama, get_model_for_key as _get_model_for_key
+        from runner import run_interactive, run_overnight
+        get_model_for_key = lambda key: _get_model_for_key(key)
+        prefer_local = True
+        print("[INFO] Using local Ollama client.")
+    elif args.provider == "cloud":
+        from cloud_client import call_ollama, get_model_for_key as _get_model_for_key
+        from runner import run_interactive, run_overnight
+        get_model_for_key = lambda key: _get_model_for_key(key)
+        print("[INFO] Using cloud client.")
+    else:  # auto
+        from cloud_client import call_ollama, get_model_for_key as _get_model_for_key
+        from runner import run_interactive, run_overnight
+        def get_model_for_key(key):
+            # Auto: prefer provider with default: true, fallback to priority
+            from cloud_client import providers_for_phase, _load_config
+            phase = 1 if key == "fast" else 2
+            cfg = _load_config()
+            phase_key = f"phase{phase}"
+            candidates = [p for p in cfg["providers"] if p.get("phase") in (phase_key, "both", phase)]
+            default_providers = [p for p in candidates if p.get("default", False)]
+            if default_providers:
+                p = default_providers[0]
+                return f"{p['name']}/{p['model']} ({p.get('client_type','api')})"
+            if candidates:
+                p = sorted(candidates, key=lambda p: p.get("priority", 99))[0]
+                return f"{p['name']}/{p['model']} ({p.get('client_type','api')})"
+            return "cloud/auto"
+        print("[INFO] Using auto provider selection.")
 
     # ── Special commands ───────────────────────────────────────────────────────
     if args.list_files:
@@ -113,7 +141,7 @@ def main():
     print(f"  📖 GEP Critic v3 — Simulated Reader")
     print(f"  Lang: {args.lang} | Version: {args.version} | Year: {args.year}")
     print(f"  Role: {args.role}")
-    print(f"  Mode: {args.mode} | Model: {get_model_for_key(args.model)}")
+    print(f"  Mode: {args.mode} | Model: {get_model_for_key(args.model)} | Provider: {args.provider}")
     print(f"{'═'*60}")
 
     if args.local:

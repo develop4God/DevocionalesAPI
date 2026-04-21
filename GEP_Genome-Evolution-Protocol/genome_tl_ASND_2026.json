@@ -1,0 +1,119 @@
+{
+  "language": "tl",
+  "version": "ASND",
+  "genome_version": "tl-ASND-seed-v1",
+  "total_entries_reviewed": 24,
+  "total_pauses": 12,
+  "updated_at": "2026-04-20T21:50:18.111343",
+  "fragments": [
+    {
+      "id": "seed_tl_001",
+      "language": "tl",
+      "version": "ASND",
+      "category": "typo",
+      "pattern": "Sonnet uses the wrong verb form when the correct form appears in the verse itself. Example: verse says 'mamumunga' but reflection writes 'makakapag-produce ng prutas' — English mix when pure Tagalog exists.",
+      "example_quote": "hindi na makakapag-produce ng prutas",
+      "evidence_dates": [
+        "2026-04-18"
+      ],
+      "confidence": 0.85,
+      "state": "confirmed",
+      "created_at": "2026-04-18T19:21:49.538165+00:00",
+      "updated_at": "2026-04-18T19:21:49.538185+00:00"
+    },
+    {
+      "id": "seed_tl_002",
+      "language": "tl",
+      "version": "ASND",
+      "category": "register_drift",
+      "pattern": "Prayer register inconsistency: shifts between formal plural address to God (kayo/inyo) and intimate singular (mo/iyong) within the same prayer. Filipino Christian devotional prayer should use one register consistently — intimate (mo/iyong) is strongly preferred.",
+      "example_quote": "Huwag mo kaming hayaang maligaw... Ang inyong pakikipag-ugnayan",
+      "evidence_dates": [
+        "2026-04-18",
+        "2026-08-01",
+        "2026-08-11"
+      ],
+      "confidence": 0.95,
+      "state": "confirmed",
+      "created_at": "2026-04-18T19:21:49.538193+00:00",
+      "updated_at": "2026-04-20T21:44:19.614398"
+    },
+    {
+      "id": "seed_tl_003",
+      "language": "tl",
+      "version": "ASND",
+      "category": "register_drift",
+      "pattern": "Unnatural reduplication or over-compounding of words that no native Tagalog writer would produce. Sounds machine-generated. Example: 'pagkakabukod-bukod' instead of 'paghihiwalay' or 'pagbubukod'.",
+      "example_quote": "labis na pagkakabukod-bukod ng isang tao",
+      "evidence_dates": [
+        "2026-04-18"
+      ],
+      "confidence": 0.8,
+      "state": "confirmed",
+      "created_at": "2026-04-18T19:21:49.538200+00:00",
+      "updated_at": "2026-04-18T19:21:49.538202+00:00"
+    },
+    {
+      "id": "frag_50c496b9",
+      "language": "tl",
+      "version": "ASND",
+      "category": "register_drift",
+      "pattern": "Ang panalangin ay mabuti, pero may pagbabago sa tono at pagtawag sa Diyos na nagdistract sa akin — biglang gumamit ng 'inyo' at 'inyong' sa gitna ng panalangin na mas personal sana ang dating.",
+      "example_quote": "Huwag mo kaming hayaang maligaw sa landas ng katotohanan kundi gabayan mo kami sa pamamagitan ng inyong Banal na Espiritu araw-araw.",
+      "evidence_dates": [
+        "2026-08-01"
+      ],
+      "confidence": 0.55,
+      "state": "candidate",
+      "created_at": "2026-04-20T18:23:55.231305",
+      "updated_at": "2026-04-20T18:54:16.673392"
+    },
+    {
+      "id": "frag_cef9e51f",
+      "language": "tl",
+      "version": "ASND",
+      "category": "prayer_drift",
+      "pattern": "Ang panalangin ay parang umalis sa tema ng pagiging si Kristo lamang ang pundasyon at lumipat sa mas malawak na paksa ng paggawa ng desisyon at pagsunod sa kalooban ng Diyos, na kahit konektado, ay hindi direktang pagpapatuloy ng diwa ng talata.",
+      "example_quote": "Nawa ang aming mga desisyon ay palaging nakaayon sa Iyong kalooban at hindi sa sariling kagustuhan.",
+      "evidence_dates": [
+        "2026-08-04",
+        "2026-08-25"
+      ],
+      "confidence": 0.8500000000000001,
+      "state": "confirmed",
+      "created_at": "2026-04-20T18:54:53.775328",
+      "updated_at": "2026-04-20T20:04:49.594272"
+    },
+    {
+      "id": "frag_dd74d0fc",
+      "language": "tl",
+      "version": "ASND",
+      "category": "prayer_drift",
+      "pattern": "Ang panalangin ay parang nagbago ng tono at paksa — mula sa tiyak na imahe ng sundalo tungo sa mas pangkalahatang paksa ng pagtitiis at pagmamahal, na wala nang direktang ugnayan sa disiplina, pokus, at paghihiwalay mula sa mundo bilang sundalo ni Cristo.",
+      "example_quote": "Tulungan Mo kaming magtiis ng kahirapan nang may kagalakan, alam na ang bawat sakit ay nagdadala ng mas malalim na pag-unawa sa Iyong pag-ibig.",
+      "evidence_dates": [
+        "2026-08-08",
+        "2026-08-04"
+      ],
+      "confidence": 0.55,
+      "state": "candidate",
+      "created_at": "2026-04-20T19:03:01.965601",
+      "updated_at": "2026-04-20T20:03:17.877521"
+    },
+    {
+      "id": "frag_4e5b1b0f",
+      "language": "tl",
+      "version": "ASND",
+      "category": "prayer_drift",
+      "pattern": "Ang panalangin ay parang nagbago ng tono at paksa — mula sa personal na pagmamahal at pagsunod tungo sa pangkalahatang paghingi ng gabay, na pakiramdam ay hindi direktang kumukonekta sa sentro ng talata: ang pagpapakilala ni Hesus sa mga nagmamahal sa Kanya.",
+      "example_quote": "Gabayan Mo ang aming mga paa sa tamang daan at palakihin ang aming pananampalataya sa bawat pagsubok na aming harapin.",
+      "evidence_dates": [
+        "2026-08-10"
+      ],
+      "confidence": 0.4,
+      "state": "candidate",
+      "created_at": "2026-04-20T19:03:18.935701",
+      "updated_at": "2026-04-20T19:03:18.935701"
+    }
+  ]
+}

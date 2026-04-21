@@ -18,7 +18,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 
-from models import Genome, GenomeFragment, PauseCategory
+from models import GeneState, Genome, GenomeFragment, PauseCategory
 
 LANG    = "tl"
 VERSIONS = ["ASND", "ADB"]
@@ -42,6 +42,7 @@ SEED_FRAGMENTS = [
         confidence=0.85,
         created_at=datetime.now(timezone.utc).isoformat(),
         updated_at=datetime.now(timezone.utc).isoformat(),
+        state=GeneState.CONFIRMED,
     ),
     GenomeFragment(
         id="seed_tl_002",
@@ -59,6 +60,7 @@ SEED_FRAGMENTS = [
         confidence=0.88,
         created_at=datetime.now(timezone.utc).isoformat(),
         updated_at=datetime.now(timezone.utc).isoformat(),
+        state=GeneState.CONFIRMED,
     ),
     GenomeFragment(
         id="seed_tl_003",
@@ -75,6 +77,7 @@ SEED_FRAGMENTS = [
         confidence=0.80,
         created_at=datetime.now(timezone.utc).isoformat(),
         updated_at=datetime.now(timezone.utc).isoformat(),
+        state=GeneState.CONFIRMED,
     ),
 ]
 
@@ -171,6 +174,7 @@ def seed_version(version: str):
             confidence=frag.confidence,
             created_at=frag.created_at,
             updated_at=frag.updated_at,
+            state=frag.state,
         )
         genome.fragments.append(clone)
         added += 1

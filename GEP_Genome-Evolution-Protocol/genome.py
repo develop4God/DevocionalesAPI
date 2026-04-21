@@ -9,7 +9,7 @@ from datetime import datetime
 from pathlib import Path
 
 from models import (
-    Genome, GenomeFragment, PauseCategory, ReaderReaction, Verdict
+    Genome, GenomeFragment, GeneState, PauseCategory, ReaderReaction, Verdict
 )
 
 # Minimum confidence a fragment needs to appear in prompts
@@ -74,6 +74,7 @@ def save_genome(genome: Genome, year: int):
                 "example_quote": f.example_quote,
                 "evidence_dates": f.evidence_dates,
                 "confidence": f.confidence,
+                "state": f.state.value,
                 "created_at": f.created_at,
                 "updated_at": f.updated_at,
             }
@@ -84,9 +85,17 @@ def save_genome(genome: Genome, year: int):
         json.dump(data, f, ensure_ascii=False, indent=2)
 
 
+def _promote_pending(genome: Genome):
+    """Promote any fragment already at or above threshold."""
+    for f in genome.fragments:
+        if f.confidence >= 0.7 and f.state != GeneState.CONFIRMED:
+            f.state = GeneState.CONFIRMED
+
+
 def ensure_genome(lang: str, version: str, year: int) -> Genome:
     genome = load_genome(lang, version, year)
     if genome:
+        _promote_pending(genome)
         return genome
     return Genome(
         language=lang,
@@ -133,6 +142,8 @@ def absorb_reaction(
         existing.confidence = min(
             existing.confidence + CONFIDENCE_BOOST, CONFIDENCE_MAX
         )
+        if existing.confidence >= 0.7:
+            existing.state = GeneState.CONFIRMED
         existing.updated_at = now
         save_genome(genome, year)
         return genome, existing.id
@@ -166,10 +177,18 @@ def _find_similar_fragment(
     for frag in genome.fragments:
         if frag.category != category:
             continue
+        # High-confidence fragments match on category alone — pattern is established
+        if frag.confidence >= 0.7:
+            return frag
         frag_words = set(frag.example_quote.lower().split())
         if not quote_words or not frag_words:
             continue
-        overlap = len(quote_words & frag_words) / max(len(quote_words), len(frag_words))
+        overlap = len(quote_words & frag_words) / min(len(quote_words), len(frag_words))
         if overlap >= 0.4:
             return frag
     return None
+
+def get_saved_genomes() -> list[str]:
+    """Returns list of genome JSON filenames found in the current working directory."""
+    from pathlib import Path
+    return [str(p) for p in Path(".").glob("genome_*.json")]

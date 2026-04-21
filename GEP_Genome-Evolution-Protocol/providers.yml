@@ -1,0 +1,101 @@
+providers:
+
+  - id: cerebras_phase2
+    name: "Cerebras/qwen3-235b"
+    phase: phase2
+    priority: 2
+    default: false
+    client_type: api
+    base_url: "https://api.cerebras.ai/v1"
+    model: "qwen-3-235b-a22b-instruct-2507"
+    env_var: CEREBRAS_API_KEY
+    thinking_mode:
+      supported: false
+      style: none
+    limits:
+      tpd: 1000000   # Free tier: 1M tokens/day
+      tpm: 60000     # Free tier: 60k tokens/min
+      rpm: 30        # Free tier: 30 requests/min
+      # Paid tier example (uncomment if using paid):
+      # tpd: null
+      # tpm: 500000   # Paid tier: 500k tokens/min
+      # rpm: 500     # Paid tier: 500 requests/min
+
+  - id: fireworks_batch_phase2
+    name: "Fireworks/qwen3-vl-30b-a3b-thinking"
+    phase: phase2
+    priority: 1
+    default: false
+    client_type: api
+    base_url: "https://api.fireworks.ai/inference/v1"
+    model: "accounts/fireworks/models/qwen3-vl-30b-a3b-thinking"
+    env_var: FIREWORKS_API_KEY
+    thinking_mode:
+      supported: true
+      style: cot
+    limits:
+      tpd: null
+      tpm: null
+      rpm: null
+
+  - id: groq_qwen3_phase1
+    name: "Groq/qwen3-32b"
+    phase: phase1
+    priority: 1
+    default: true
+    client_type: api
+    base_url: "https://api.groq.com/openai/v1"
+    model: "qwen/qwen3-32b"
+    env_var: GROQ_API_KEY
+    thinking_mode:
+      supported: false
+      style: none
+    limits:
+      tpd: null
+      tpm: 60000
+      rpd: 500
+      rpm: 30
+
+  - id: local_phase1
+    name: "Local/qwen3:4b"
+    phase: phase1
+    priority: 99
+    default: false
+    client_type: local
+    base_url: "http://localhost:11434/v1"
+    model: "qwen3:4b"
+    env_var: OLLAMA_DUMMY_KEY
+    thinking_mode:
+      supported: false
+      style: none
+    limits:
+      tpd: null
+      rpd: null
+      rpm: null
+
+  - id: local_phase2
+    name: "Local/qwen3:14b"
+    phase: phase2
+    priority: 99
+    default: false
+    client_type: local
+    base_url: "http://localhost:11434/v1"
+    model: "qwen3:14b"
+    env_var: OLLAMA_DUMMY_KEY
+    thinking_mode:
+      supported: true
+      style: cot
+    limits:
+      tpd: null
+      rpd: null
+      rpm: null
+
+settings:
+  default_backend: local         #"api" or "local" — switches all phases at once
+  daily_token_tracking: true
+  daily_counter_path: ".gep_daily_tokens.json"
+  max_retries: 2
+  retry_delay_s: 5
+  swap_on_429: true
+  skip_at_percent: 95
+  warn_at_percent: 80
