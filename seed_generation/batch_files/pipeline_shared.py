@@ -85,56 +85,39 @@ def repair_json(raw_text: str) -> Optional[dict]:
 
 # --- Prompt Builder ---
 def build_prompt(verse_cita: str, lang: str, topic: str | None = None) -> str:
-    parts = "\n\n".join([
-        f"You are a warm, theologian, pastoral biblical devotional writer and . "
-        f"Write a personal, reader-focused devotional in {lang.upper()} "
-        f"based on the key verse: \"{verse_cita}\". "
-        f"Your tone is warm and pastoral — use inclusive, communal language (we/us) whenever natural in {lang}, walking alongside the reader rather than addressing them from above. "
-        f"Every sentence must serve the reader's spiritual growth, and explain the meaning without complex theological terms or jargon.",
+    # Resolve canonical Amen for this language so the model never has to guess
+    canonical_amen = _load_prayer_endings().get(lang, ["Amen"])[0]
+    topic_line = f"\n- Suggested theme: {topic}." if topic else ""
 
-        "Return ONLY a valid JSON object with these exact keys:",
+    return (
+        f"You are a devoted biblical devotional writer. "
+        f"Write a devotional in {lang.upper()} based on the key verse: \"{verse_cita}\".\n\n"
 
-        f"- `reflexion`: A warm, personal reflection (minimum 900 characters, maximum 1100 characters, in {lang}). "
-        f"Write exactly 4 paragraphs — no more, no less:\n"
-        f"  Paragraph 1: Quote or closely paraphrase the key verse, then reveal what it shows about God's character or heart toward the reader.\n"
-        f"  Paragraph 2: Explain what the central image or promise of the verse means practically — "
-        f"what does 'staying connected', 'believing', 'trusting' actually look like on an ordinary day?\n"
-        f"  Paragraph 3: Speak honestly about the gap — where do we fall short of this truth? "
-        f"Name a real, recognizable struggle without being vague.\n"
-        f"  Paragraph 4: Give one specific, concrete challenge or encouragement for today — "
-        f"something the reader can actually do or hold onto before the day ends.\n"
-        f"IMPORTANT: Before returning, count your paragraphs. If you have more or fewer than 4, rewrite until exactly 4 remain — no exceptions.\n"
-        f"NEVER include academic observations about theologians, scholars, churches, or history. "
-        f"NEVER add filler sentences unrelated to the verse. "
-        f"Do NOT repeat any word consecutively, even when separated by punctuation marks. "
-        f"Do NOT repeat the same sentence, phrase, or idea in different words.",
+        f"Return ONLY a valid JSON object with these two exact keys:\n\n"
 
-        f"- `oracion`: A prayer in first-person plural ('we'/'nos') "
-        f"(minimum 120 words, maximum 160 words, 100% in {lang}). "
-        f"Write exactly 2 paragraphs:\n"
-        f"  Paragraph 1 — Confession: begin with 1-2 sentences of gratitude for what the verse reveals about God, "
-        f"then honestly acknowledge before God where we fall short of the verse's truth (2-3 sentences). "
-        f"Do not be vague — name the specific failure the reflexion identified.\n"
-        f"  Paragraph 2 — Petition: ask God for what we specifically need to live this verse today (4-5 sentences). "
-        f"Each sentence must express a distinct request — do not string multiple requests into one sentence.\n"
-        f"The prayer must flow directly from the reflexion theme. "
+        f"- `reflexion`: Deep contextualized reflection on the verse "
+        f"(minimum 900 characters, approximately 300 words, in {lang}). "
+        f"Each paragraph must develop a distinct aspect of the verse.\n"
+        f"  Do NOT repeat any word consecutively, even when separated by punctuation marks — "
+        f"never write patterns like 'word, word' or 'word. Word'.\n"
+        f"  Do NOT repeat the same sentence, phrase, or idea in different words.\n\n"
+
+        f"- `oracion`: Prayer on the devotional theme (minimum 150 words, 100% in {lang}). "
         f"MUST end with 'in the name of Jesus, amen' correctly translated to {lang}. "
-        f"End with exactly one Amen — never write Amen twice. "
-        f"Do NOT repeat any word consecutively, even when separated by punctuation marks. "
-        f"Do NOT repeat the same sentence, phrase, or idea in different words.",
+        f"The correct closing word in {lang} is \"{canonical_amen}\" — "
+        f"use it exactly once at the very end, never twice.\n"
+        f"  Do NOT repeat any word consecutively, even when separated by punctuation marks — "
+        f"never write patterns like 'word, word' or 'word. Word'.\n"
+        f"  Do NOT repeat the same sentence, phrase, or idea in different words.\n\n"
 
         f"RULES:\n"
         f"- ALL text MUST be 100% in {lang} — no language mixing.\n"
         f"- Do NOT include transliterations, romanizations, or text in parentheses.\n"
-        f"- Do NOT write about what scholars, theologians, churches, or young people do — "
-        f"write TO the reader about what God says and how it applies TODAY.\n"
-        f"- Every sentence must introduce new content or a new perspective.\n"
-        f"- Do NOT pad sentences with adverbs. Let verbs and nouns carry the meaning.\n"
-        f"- The confession in the prayer must name the same struggle identified in reflexion paragraph 3."
-        f"Use strong verbs and specific nouns instead of adverbs — never modify a verb or adjective with an adverb"
-        + (f"\n- Suggested theme: {topic}." if topic else ""),
-    ])
-    return parts
+        f"- Do NOT repeat any word consecutively.\n"
+        f"- Every sentence must introduce new content or a new perspective.{topic_line}\n\n"
+
+        f"Return ONLY the JSON object — no markdown, no preamble, no explanation."
+    )
 
 # --- Prayer Endings ---
 def _load_prayer_endings() -> dict:
