@@ -30,6 +30,7 @@ from pathlib import Path
 # ── Project imports ───────────────────────────────────────────────────────────
 from audit import audit_path, append_record, build_record
 from cloud_client import _parse_reaction
+from models import ReaderReaction, Verdict
 
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
