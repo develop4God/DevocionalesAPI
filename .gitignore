@@ -35,8 +35,6 @@ secrets.*
 # Project-specific sensitive files
 seed_generation/Bibles/
 seed_generation/ERRORS-RAG/
-*.jsonl
-*.json
 !README*.md
 
 # Ignore large data and output files
