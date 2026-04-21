@@ -1,2 +1,11 @@
 __pycache__/
 *.pyc
+# Ignore Python virtual environments
+venv/
+# Ignore environment and credential files
+.env
+*.env
+.env.*
+# Ignore token and credential files
+.gep_daily_tokens.json
+.venv/

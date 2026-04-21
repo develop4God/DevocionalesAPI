@@ -1,0 +1,52 @@
+{
+  "language": "tl",
+  "version": "ASND",
+  "genome_version": "tl-ASND-seed-v1",
+  "total_entries_reviewed": 0,
+  "total_pauses": 0,
+  "updated_at": "2026-04-18T19:21:49.538440+00:00",
+  "fragments": [
+    {
+      "id": "seed_tl_001",
+      "language": "tl",
+      "version": "ASND",
+      "category": "typo",
+      "pattern": "Sonnet uses the wrong verb form when the correct form appears in the verse itself. Example: verse says 'mamumunga' but reflection writes 'makakapag-produce ng prutas' — English mix when pure Tagalog exists.",
+      "example_quote": "hindi na makakapag-produce ng prutas",
+      "evidence_dates": [
+        "2026-04-18"
+      ],
+      "confidence": 0.85,
+      "created_at": "2026-04-18T19:21:49.538165+00:00",
+      "updated_at": "2026-04-18T19:21:49.538185+00:00"
+    },
+    {
+      "id": "seed_tl_002",
+      "language": "tl",
+      "version": "ASND",
+      "category": "register_drift",
+      "pattern": "Prayer register inconsistency: shifts between formal plural address to God (kayo/inyo) and intimate singular (mo/iyong) within the same prayer. Filipino Christian devotional prayer should use one register consistently — intimate (mo/iyong) is strongly preferred.",
+      "example_quote": "Huwag mo kaming hayaang maligaw... Ang inyong pakikipag-ugnayan",
+      "evidence_dates": [
+        "2026-04-18"
+      ],
+      "confidence": 0.88,
+      "created_at": "2026-04-18T19:21:49.538193+00:00",
+      "updated_at": "2026-04-18T19:21:49.538196+00:00"
+    },
+    {
+      "id": "seed_tl_003",
+      "language": "tl",
+      "version": "ASND",
+      "category": "register_drift",
+      "pattern": "Unnatural reduplication or over-compounding of words that no native Tagalog writer would produce. Sounds machine-generated. Example: 'pagkakabukod-bukod' instead of 'paghihiwalay' or 'pagbubukod'.",
+      "example_quote": "labis na pagkakabukod-bukod ng isang tao",
+      "evidence_dates": [
+        "2026-04-18"
+      ],
+      "confidence": 0.8,
+      "created_at": "2026-04-18T19:21:49.538200+00:00",
+      "updated_at": "2026-04-18T19:21:49.538202+00:00"
+    }
+  ]
+}
