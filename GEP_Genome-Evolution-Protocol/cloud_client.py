@@ -284,7 +284,13 @@ def _parse_reaction(raw: str) -> Optional[ReaderReaction]:
     try:
         data = json.loads(text)
     except json.JSONDecodeError:
-        return None
+        match = re.search(r'\{[^{}]*"verdict"[^{}]*\}', text, re.DOTALL)
+        if not match:
+            return None
+        try:
+            data = json.loads(match.group())
+        except json.JSONDecodeError:
+            return None
 
     verdict_raw = data.get("verdict", "OK").strip().upper()
     verdict = Verdict.PAUSE if verdict_raw == "PAUSE" else Verdict.OK
