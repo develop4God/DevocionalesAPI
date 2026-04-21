@@ -44,7 +44,7 @@ SPANISH_LEAKS = {
 
 # ── Content quality constants (Phase 1) ──────────────────────────────────────
 REFLEXION_MIN_CHARS  = 800
-ORACION_MIN_CHARS    = 150
+ORACION_MIN_CHARS    = 500
 # CJK languages use denser characters; 250 CJK chars ≈ 900+ Latin chars of content
 CJK_REFLEXION_MIN    = 250
 CJK_ORACION_MIN      = 80

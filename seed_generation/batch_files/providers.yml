@@ -1,0 +1,97 @@
+# providers.yml
+# ─────────────────────────────────────────────────────────────────────────────
+# Single source of truth for AI provider configuration.
+# Used by batch_submit.py, batch_collect.py, and batch_repair.py.
+#
+# batch_strategy:
+#   native          — provider has a real async batch API (submit → poll → collect)
+#   async_parallel  — no native batch; pipeline fires N parallel async requests
+#
+# To add a new provider: add one block here. Zero code changes required.
+# ─────────────────────────────────────────────────────────────────────────────
+
+providers:
+
+  anthropic:
+    api_key_env: ANTHROPIC_API_KEY
+    batch_strategy: native
+    base_url: null                        # uses SDK default
+    models:
+      claude-haiku-4-5:
+        model_id: claude-haiku-4-5-20251001
+        max_tokens: 4096
+        quality: draft                    # fast, cheap — for testing only
+        cost_input_per_mtok: 0.80
+        cost_output_per_mtok: 4.00
+      claude-sonnet-4-6:
+        model_id: claude-sonnet-4-6
+        max_tokens: 4096
+        quality: production
+        cost_input_per_mtok: 3.00
+        cost_output_per_mtok: 15.00
+      claude-opus-4-6:
+        model_id: claude-opus-4-6
+        max_tokens: 4096
+        quality: premium
+        cost_input_per_mtok: 15.00
+        cost_output_per_mtok: 75.00
+    defaults:
+      model: claude-sonnet-4-6
+      poll_interval_seconds: 60
+      max_parallel: null                  # N/A for native batch
+
+  gemini:
+    api_key_env: GEMINI_API_KEY
+    batch_strategy: async_parallel
+    base_url: null                        # uses SDK default
+    models:
+      gemini-2.0-flash:
+        model_id: gemini-2.0-flash
+        max_tokens: 4096
+        quality: production
+        cost_input_per_mtok: 0.10
+        cost_output_per_mtok: 0.40
+      gemini-2.5-flash:
+        model_id: gemini-2.5-flash-preview-04-17
+        max_tokens: 4096
+        quality: premium
+        cost_input_per_mtok: 0.15
+        cost_output_per_mtok: 0.60
+      gemini-2.5-pro:
+        model_id: gemini-2.5-pro-preview-03-25
+        max_tokens: 4096
+        quality: premium
+        cost_input_per_mtok: 1.25
+        cost_output_per_mtok: 10.00
+    defaults:
+      model: gemini-2.0-flash
+      poll_interval_seconds: null         # N/A for async_parallel
+      max_parallel: 20
+
+  fireworks:
+    api_key_env: FIREWORKS_API_KEY
+    batch_strategy: async_parallel
+    base_url: https://api.fireworks.ai/inference/v1
+    models:
+      qwen3-30b-a3b:
+        model_id: accounts/fireworks/models/qwen3-30b-a3b
+        max_tokens: 4096
+        quality: production
+        cost_input_per_mtok: 0.22
+        cost_output_per_mtok: 0.88
+      qwen3-235b-a22b:
+        model_id: accounts/fireworks/models/qwen3-235b-a22b
+        max_tokens: 4096
+        quality: premium
+        cost_input_per_mtok: 0.90
+        cost_output_per_mtok: 3.60
+      llama4-maverick:
+        model_id: accounts/fireworks/models/llama4-maverick-instruct-basic
+        max_tokens: 4096
+        quality: production
+        cost_input_per_mtok: 0.22
+        cost_output_per_mtok: 0.88
+    defaults:
+      model: qwen3-30b-a3b
+      poll_interval_seconds: null         # N/A for async_parallel
+      max_parallel: 20
