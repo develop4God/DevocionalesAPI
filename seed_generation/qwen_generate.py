@@ -43,7 +43,7 @@ logger = logging.getLogger(__name__)
 
 # ── Constants ─────────────────────────────────────────────────────────────────
 
-QWEN_MODEL    = "qwen3.6-flash"
+QWEN_MODEL    = "qwen-flash"
 QWEN_BASE_URL = "https://dashscope-intl.aliyuncs.com/compatible-mode/v1"
 
 MAX_RETRIES    = 3

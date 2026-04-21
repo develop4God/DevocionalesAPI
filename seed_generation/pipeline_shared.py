@@ -130,6 +130,7 @@ def build_prompt(verse_cita: str, lang: str, topic: str | None = None) -> str:
         f"write TO the reader about what God says and how it applies TODAY.\n"
         f"- Every sentence must introduce new content or a new perspective.\n"
         f"- Do NOT pad sentences with adverbs. Let verbs and nouns carry the meaning.\n"
+        f"- The oracion must express ideas in fresh language — never copy sentences verbatim from the reflexion.\n"
         f"- The confession in the prayer must name the same struggle identified in reflexion paragraph 3."
         f"Use strong verbs and specific nouns instead of adverbs — never modify a verb or adjective with an adverb"
         + (f"\n- Suggested theme: {topic}." if topic else ""),
