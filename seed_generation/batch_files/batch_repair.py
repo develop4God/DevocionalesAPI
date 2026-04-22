@@ -3,8 +3,9 @@ batch_repair.py
 ───────────────
 Repair failed dates from any provider using the same or a different provider.
 
-For async_parallel providers (Gemini, Fireworks) there is no batch to re-fetch —
+For Fireworks (async_parallel) there is no batch to re-fetch —
 all repairs go directly to the provider's generate_one() API call.
+For Gemini (native batch) the same applies — collect() is not re-invoked for repair.
 For Anthropic (native batch) it re-fetches the original batch first, then falls
 back to direct API for still-failed dates.
 

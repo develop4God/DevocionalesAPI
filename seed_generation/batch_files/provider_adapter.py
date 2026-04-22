@@ -193,14 +193,17 @@ class AnthropicAdapter(BaseAdapter):
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Gemini adapter  (async parallel)
+# Gemini adapter  (native Batch API)
 # ─────────────────────────────────────────────────────────────────────────────
 
-class GeminiAdapter(BaseAdapter):
+class GeminiBatchAdapter(BaseAdapter):
     """
-    Uses google-genai SDK with asyncio parallel requests.
-    submit() → serialized requests JSON path (used as job_id)
-    collect() → fires all requests concurrently, returns results
+    Uses Gemini Batch API via google-genai SDK.
+    submit()  → uploads JSONL via File API, calls client.batches.create(),
+                returns real batch job name as job_id
+    collect() → polls client.batches.get() until COMPLETED/FAILED,
+                downloads and parses output JSONL, returns list[RawResult]
+    generate_one() → direct generate_content() call for repair
     """
 
     def __init__(self, provider_cfg: dict, model_alias: str):
@@ -210,71 +213,185 @@ class GeminiAdapter(BaseAdapter):
             from google.genai import types as _types
         except ImportError:
             raise ImportError("Run: pip install google-genai")
-        self._genai  = _genai
-        self._types  = _types
-        self._client = _genai.Client(api_key=self._api_key)
-        self._max_parallel = provider_cfg["defaults"].get("max_parallel", 20)
+        self._genai        = _genai
+        self._types        = _types
+        self._client       = _genai.Client(api_key=self._api_key)
+        self._poll_interval = provider_cfg["defaults"].get("poll_interval_seconds", 120)
+
+    # ── JSONL builder ─────────────────────────────────────────────────────
+
+    @staticmethod
+    def _to_jsonl_line(request: BatchRequest) -> str:
+        """
+        Format one BatchRequest as a Gemini Batch API JSONL line.
+        Official shape: {"key": "...", "request": {"contents": [{"parts": [{"text": "..."}], "role": "user"}]}}
+        """
+        record = {
+            "key": request.custom_id,
+            "request": {
+                "contents": [
+                    {
+                        "parts": [{"text": request.prompt}],
+                        "role": "user",
+                    }
+                ],
+                "generationConfig": {
+                    "maxOutputTokens": request.max_tokens,
+                },
+            },
+        }
+        return json.dumps(record, ensure_ascii=False)
+
+    # ── submit ────────────────────────────────────────────────────────────
 
     def submit(self, requests: list[BatchRequest]) -> str:
-        """
-        For async_parallel providers there is no remote job to submit.
-        We serialize the requests to a temp JSON file and return its path
-        as the job_id so collect() can re-read them.
-        """
         import tempfile
-        payload = [
-            {"date_key": r.date_key, "custom_id": r.custom_id,
-             "prompt": r.prompt, "model_id": r.model_id, "max_tokens": r.max_tokens}
-            for r in requests
-        ]
-        tmp = tempfile.NamedTemporaryFile(
-            mode="w", suffix=".json", delete=False, encoding="utf-8",
-            prefix="gemini_job_"
+
+        # 1. Write JSONL to temp file
+        with tempfile.NamedTemporaryFile(
+            mode="w", suffix=".jsonl", delete=False,
+            encoding="utf-8", prefix="gemini_batch_"
+        ) as tmp:
+            for r in requests:
+                tmp.write(self._to_jsonl_line(r) + "\n")
+            tmp_path = tmp.name
+
+        print(f"INFO: JSONL written — {len(requests)} lines → {tmp_path}")
+
+        # 2. Upload via File API
+        print("INFO: Uploading JSONL to Gemini File API...")
+        uploaded_file = self._client.files.upload(
+            file=tmp_path,
+            config=self._types.UploadFileConfig(mime_type="application/jsonl"),
         )
-        json.dump(payload, tmp, ensure_ascii=False)
-        tmp.close()
-        print(f"INFO: Gemini async job queued — {len(requests)} requests → {tmp.name}")
-        return tmp.name   # job_id = path to temp file
+        print(f"INFO: File uploaded — URI: {uploaded_file.uri}")
+
+        # 3. Create batch job
+        job = self._client.batches.create(
+            model=self._model_id,
+            src=uploaded_file.uri,
+            config=self._types.CreateBatchJobConfig(
+                display_name=f"devocionales_{requests[0].date_key[:7]}_{len(requests)}req",
+            ),
+        )
+        print(f"INFO: Gemini batch submitted — job name: {job.name}")
+        print(f"INFO: State: {job.state}")
+        return job.name   # job_id = job.name (e.g. "batches/123456789")
+
+    # ── collect ───────────────────────────────────────────────────────────
 
     def collect(self, job_id: str, requests: list[BatchRequest]) -> list[RawResult]:
-        return asyncio.run(self._collect_async(requests))
+        # Build lookup: custom_id → date_key
+        cid_map = {r.custom_id: r.date_key for r in requests}
 
-    async def _collect_async(self, requests: list[BatchRequest]) -> list[RawResult]:
-        sem = asyncio.Semaphore(self._max_parallel)
+        # Poll until terminal state.
+        # IMPORTANT: job.state is a JobState enum — use .name to get the string,
+        # not str() which produces "JobState.JOB_STATE_SUCCEEDED" (never matches).
+        TERMINAL = {"JOB_STATE_SUCCEEDED", "JOB_STATE_FAILED",
+                    "JOB_STATE_CANCELLED", "JOB_STATE_EXPIRED"}
+        print(f"INFO: Polling Gemini batch {job_id} every {self._poll_interval}s...")
+        while True:
+            job = self._client.batches.get(name=job_id)
+            state = job.state.name          # ← .name, not str()
+            counts = getattr(job, "request_counts", None)
+            count_str = ""
+            if counts:
+                count_str = (
+                    f" | total={getattr(counts, 'total', '?')} "
+                    f"completed={getattr(counts, 'completed', '?')} "
+                    f"failed={getattr(counts, 'failed', '?')}"
+                )
+            print(f"  state={state}{count_str}")
+            if state in TERMINAL:
+                break
+            time.sleep(self._poll_interval)
 
-        async def _one(req: BatchRequest) -> RawResult:
-            async with sem:
+        if job.state.name != "JOB_STATE_SUCCEEDED":
+            print(f"WARNING: Batch ended with state {job.state.name} — results may be partial")
+
+        # Per official docs: dest.file_name holds the result file name (e.g. "files/abc123").
+        # client.files.download(file=<name_string>) returns raw bytes directly.
+        dest = getattr(job, "dest", None)
+        if dest is None:
+            print("ERROR: No dest field on completed job — cannot retrieve results")
+            return [RawResult(date_key=r.date_key, error="no_output_dest") for r in requests]
+
+        result_file_name = getattr(dest, "file_name", None)
+        if not result_file_name:
+            print(f"ERROR: dest.file_name is empty — dest={dest!r}")
+            return [RawResult(date_key=r.date_key, error="no_output_file_name") for r in requests]
+
+        print(f"INFO: Downloading output from {result_file_name}...")
+
+        import tempfile
+
+        # files.download() returns bytes — write directly to temp file
+        content: bytes = self._client.files.download(file=result_file_name)
+        with tempfile.NamedTemporaryFile(
+            mode="wb", suffix=".jsonl", delete=False, prefix="gemini_out_"
+        ) as out_tmp:
+            out_tmp.write(content)
+            out_path = out_tmp.name
+
+        print(f"INFO: Output downloaded → {out_path}")
+
+        # Parse output JSONL
+        results: list[RawResult] = []
+        missing_keys = set(cid_map.keys())
+
+        with open(out_path, encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
                 try:
-                    response = await self._client.aio.models.generate_content(
-                        model=req.model_id,
-                        contents=req.prompt,
-                        config=self._types.GenerateContentConfig(
-                            max_output_tokens=req.max_tokens,
-                            response_mime_type="text/plain",
-                        ),
-                    )
-                    text = response.text.strip() if response.text else ""
-                    if not text:
-                        return RawResult(date_key=req.date_key, error="empty response")
-                    return RawResult(date_key=req.date_key, raw_text=text)
-                except Exception as e:
-                    return RawResult(date_key=req.date_key, error=str(e))
+                    obj = json.loads(line)
+                except json.JSONDecodeError as e:
+                    print(f"WARNING: Could not parse output line: {e}")
+                    continue
 
-        tasks = [_one(r) for r in requests]
-        results = []
-        done = 0
-        total = len(tasks)
-        for coro in asyncio.as_completed(tasks):
-            result = await coro
-            done += 1
-            if done % 25 == 0 or done == total:
-                status = "✅" if result.succeeded else "❌"
-                print(f"  {status} {done}/{total} — {result.date_key}")
-            results.append(result)
+                key = obj.get("key", "")
+                date_key = cid_map.get(key, key)
+                missing_keys.discard(key)
+
+                # Check for API-level error in this line
+                response_obj = obj.get("response", {})
+                error_obj    = obj.get("error")
+                if error_obj:
+                    results.append(RawResult(
+                        date_key=date_key,
+                        error=f"gemini_error: {error_obj}",
+                    ))
+                    continue
+
+                # Extract text from response
+                try:
+                    text = (
+                        response_obj["candidates"][0]["content"]["parts"][0]["text"].strip()
+                    )
+                    if not text:
+                        results.append(RawResult(date_key=date_key, error="empty_text"))
+                    else:
+                        results.append(RawResult(date_key=date_key, raw_text=text))
+                except (KeyError, IndexError, TypeError) as e:
+                    results.append(RawResult(
+                        date_key=date_key,
+                        error=f"parse_response_error: {e} | raw: {str(obj)[:120]}",
+                    ))
+
+        # Any keys not present in output file
+        for missing_key in missing_keys:
+            date_key = cid_map.get(missing_key, missing_key)
+            print(f"WARNING: No output for key {missing_key!r} ({date_key})")
+            results.append(RawResult(date_key=date_key, error="missing_from_output"))
+
+        print(f"INFO: Parsed {len(results)} results from output JSONL")
         return results
 
+    # ── generate_one (repair) ─────────────────────────────────────────────
+
     def generate_one(self, request: BatchRequest) -> RawResult:
-        """Sync fallback for repair."""
+        """Direct generate_content() call for repair — not a batch."""
         try:
             response = self._client.models.generate_content(
                 model=request.model_id,
@@ -391,7 +508,7 @@ class FireworksAdapter(BaseAdapter):
 
 _ADAPTER_MAP: dict[str, type[BaseAdapter]] = {
     "anthropic": AnthropicAdapter,
-    "gemini":    GeminiAdapter,
+    "gemini":    GeminiBatchAdapter,
     "fireworks": FireworksAdapter,
 }
 
