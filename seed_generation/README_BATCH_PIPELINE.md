@@ -1,62 +1,60 @@
 
-# 📖 DevocionalesAPI Batch Pipeline (2026)
+# DevocionalesAPI — Batch Pipeline (provider-agnostic)
 
-This pipeline generates yearly devotionals in multiple languages using Anthropic Claude's Message Batches API. It is robust to JSON errors and automates the full process from seed to validated output.
+See main project README: [README.md](../README.md)
 
-## 🚦 Pipeline Overview
+This directory contains the batch pipeline used to generate yearly devotionals from seed files. The pipeline is provider-agnostic: `batch_submit.py` now supports multiple providers via a pluggable adapter layer (`provider_adapter.py`).
 
-1. 🌱 **Seed Preparation**
-   - Seeds are JSON files with all required verse data for a year (see `seed_generation/2025/seeds/` and `2026/seeds/`).
+Key points (updated logic)
 
-2. 📤 **Batch Submission**
-   - Use `batch_claude_submit.py` to submit all seed entries as a single batch to Anthropic.
-   - CLI: `python batch_claude_submit.py --seed <seed.json> --lang <code> --version <code> --output <dir>`
-   - This creates a `batch_state_*.json` file with batch ID and metadata.
+- `batch_submit.py` — provider-agnostic batch submitter.
+  - `--provider` and `--model` select which adapter and model alias to use.
+  - `--dry-run`: builds provider-agnostic JSONL prompts into the output directory (no API calls).
+  - `--dry-run-full`: prints the exact wire payload that would be sent to the provider for the first seed entry (no API calls, no uploads). Useful to inspect adapter formatting (Gemini adapter implements `_to_jsonl_line`).
 
-3. 📥 **Batch Collection**
-   - Use `batch_claude_collect.py` to poll the batch, download results, and build devotional records.
-   - CLI: `python batch_claude_collect.py --state <batch_state_*.json>`
-   - Now includes robust JSON repair to handle malformed Claude output.
-   - Outputs:
-     - 📄 `raw_<lang>_<version>_batch_<ts>.json` (all successful entries)
-     - ❌ `batch_errors_<lang>_<version>_<ts>.json` (any failures)
-     - ⚠️ `batch_val_warnings_<lang>_<version>_<ts>.json` (validation warnings)
+- `submit_batch()` in `batch_submit.py` builds `BatchRequest` objects and calls the adapter's `submit()` method. The adapter abstracts provider details (Gemini, Anthropic, etc.).
 
-4. 🛠️ **Repair (if needed)**
-   - If any entries fail, use `batch_repair_failed.py` to re-fetch, repair, and (if needed) regenerate via API.
-   - CLI: `python batch_repair_failed.py --state <batch_state> --errors <batch_errors> --existing <partial_output> --output <final_output>`
+- `batch_collect.py` / `batch_repair_failed.py` / `validation_helper.py` — collection, repair, and validation utilities remain in this folder and operate on the state and output files produced by `batch_submit.py`.
 
-5. ✅ **Validation**
-   - Use `validation_helper.py` to check output files for length, prayer ending, duplicate words, etc.
-   - CLI: `python validation_helper.py <output.json>`
+CLI examples
 
-## 🏃 Typical Workflow
+Dry-run (write agnostic prompts to output dir):
+```bash
+python batch_submit.py \
+  --seed 2025/seeds/seed_tl_ADB_for_2025.json \
+  --lang tl --version ADB --output 2025/yearly_devotionals/TL \
+  --dry-run
+```
 
-1. 🌱 Prepare your seed file in `seeds/`.
-2. 📤 Submit the batch:
-   ```bash
-   python batch_claude_submit.py --seed seeds/2026/seed_tl_ASND_for_2026.json --lang tl --version ASND --output 2026/yearly_devotionals/TL
-   ```
-3. 📥 Collect results:
-   ```bash
-   python batch_claude_collect.py --state batch_state_tl_ASND_20260415_173212.json
-   ```
-4. 🛠️ If errors remain, repair:
-   ```bash
-   python batch_repair_failed.py --state batch_state_tl_ASND_20260415_173212.json --errors 2026/yearly_devotionals/batch_errors_tl_ASND_20260415_182836.json --existing 2026/yearly_devotionals/TL/279-Devocional_year_2026_tl_ASND.json --output 2026/yearly_devotionals/TL/Devocional_year_2026_tl_ASND.json
-   ```
-5. ✅ Validate:
-   ```bash
-   python validation_helper.py 2026/yearly_devotionals/TL/Devocional_year_2026_tl_ASND.json
-   ```
+Dry-run full (show exact provider wire payload for 1 entry — no API call):
+```bash
+python batch_submit.py \
+  --seed ../2025/seeds/TL/seed_tl_ADB_for_2025.json \
+  --lang tl --version ADB \
+  --provider gemini --model gemini-2.5-flash \
+  --dry-run-full
+```
 
-## 🚀 One-Click Orchestration
+Submit (real run — submits via configured provider adapter):
+```bash
+python batch_submit.py \
+  --seed 2025/seeds/seed_tl_ADB_for_2025.json \
+  --lang tl --version ADB --output 2025/yearly_devotionals/TL \
+  --provider gemini --model gemini-2.5-flash
+```
 
-You can use the new `main_batch_pipeline.py` to run all steps in sequence (see that file for usage).
+Notes and recommendations
 
----
+- `--dry-run-full` does not write files and does not require `--output`.
+- If an adapter does not implement `_to_jsonl_line()`, `--dry-run-full` will fall back to printing the agnostic prompt and a warning — inspect that adapter's `submit()` method manually.
+- For Gemini, the adapter exposes `_to_jsonl_line()` and the full wire payload will be printed.
 
-**ℹ️ Note:**
-- Requires `anthropic` and `python-dotenv` packages.
-- Set your `ANTHROPIC_API_KEY` in a `.env` file or environment variable.
-- All scripts are in `seed_generation/`.
+Files of interest
+
+- `batch_submit.py` — build and submit batches (provider-agnostic).
+- `provider_adapter.py` — adapter registry and adapter implementations.
+- `batch_collect.py` — collect/poll batch results.
+- `batch_repair_failed.py` — repair or regenerate failed entries.
+- `validation_helper.py` — validate generated devotionals.
+
+See also the main project README: [README.md](../README.md)
