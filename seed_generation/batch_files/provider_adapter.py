@@ -264,12 +264,12 @@ class GeminiBatchAdapter(BaseAdapter):
             file=tmp_path,
             config=self._types.UploadFileConfig(mime_type="application/jsonl"),
         )
-        print(f"INFO: File uploaded — URI: {uploaded_file.uri}")
+        print(f"INFO: File uploaded — URI: {uploaded_file.uri}  name: {uploaded_file.name}")
 
-        # 3. Create batch job
+        # 3. Create batch job — src must be the file name ("files/<id>"), not the URI
         job = self._client.batches.create(
             model=self._model_id,
-            src=uploaded_file.uri,
+            src=uploaded_file.name,
             config=self._types.CreateBatchJobConfig(
                 display_name=f"devocionales_{requests[0].date_key[:7]}_{len(requests)}req",
             ),
