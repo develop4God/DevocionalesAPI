@@ -41,7 +41,7 @@ providers:
       max_parallel: null                  # N/A for native batch
 
   gemini:
-    api_key_env: GEMINI_API_KEY
+    api_key_env: GOOGLE_API_KEY
     batch_strategy: native
     base_url: null                        # uses SDK default
     models:
