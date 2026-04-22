@@ -42,7 +42,7 @@ providers:
 
   gemini:
     api_key_env: GEMINI_API_KEY
-    batch_strategy: async_parallel
+    batch_strategy: native
     base_url: null                        # uses SDK default
     models:
       gemini-2.0-flash:
@@ -65,8 +65,8 @@ providers:
         cost_output_per_mtok: 10.00
     defaults:
       model: gemini-2.0-flash
-      poll_interval_seconds: null         # N/A for async_parallel
-      max_parallel: 20
+      poll_interval_seconds: 120          # real batch — poll every 2 min
+      max_parallel: null                  # N/A for native batch
 
   fireworks:
     api_key_env: FIREWORKS_API_KEY
