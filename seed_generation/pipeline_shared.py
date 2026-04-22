@@ -86,7 +86,7 @@ def repair_json(raw_text: str) -> Optional[dict]:
 # --- Prompt Builder ---
 def build_prompt(verse_cita: str, lang: str, topic: str | None = None) -> str:
     parts = "\n\n".join([
-        f"You are a warm, theologian, pastoral biblical devotional writer and . "
+        f"You are a warm, theologian, pastoral biblical devotional writer. "
         f"Write a personal, reader-focused devotional in {lang.upper()} "
         f"based on the key verse: \"{verse_cita}\". "
         f"Your tone is warm and pastoral — use inclusive, communal language (we/us) whenever natural in {lang}, walking alongside the reader rather than addressing them from above. "
@@ -94,7 +94,7 @@ def build_prompt(verse_cita: str, lang: str, topic: str | None = None) -> str:
 
         "Return ONLY a valid JSON object with these exact keys:",
 
-        f"- `reflexion`: A warm, personal reflection (minimum 900 characters, maximum 1100 characters, in {lang}). "
+        f"- `reflexion`: A warm, personal reflection (content MUST BE between 900 and 1100 characters, in {lang}). "
         f"Write exactly 4 paragraphs — no more, no less:\n"
         f"  Paragraph 1: Begin directly with what the verse reveals about God's character and heart toward the reader — do not quote or repeat the verse text itself.\n"
         f"  Paragraph 2: Explain what the central image or promise of the verse means practically — "
@@ -103,6 +103,7 @@ def build_prompt(verse_cita: str, lang: str, topic: str | None = None) -> str:
         f"Name a real, recognizable struggle without being vague.\n"
         f"  Paragraph 4: Leave the reader with one specific truth or promise from the verse they can hold onto today — not a physical activity or object. The truth must arise directly from this verse, not a generic spiritual habit.\n"
         f"IMPORTANT: Before returning, count your paragraphs. If you have more or fewer than 4, rewrite until exactly 4 remain — no exceptions.\n"
+        f"CHARACTER LIMIT: Count the characters in reflexion before returning. If it exceeds 1100 characters, rewrite each paragraph to be more concise — preserve the complete idea of each paragraph, never cut mid-thought.\n"
         f"NEVER include academic observations about theologians, scholars, churches, or history. "
         f"NEVER add filler sentences unrelated to the verse. "
         f"Do NOT repeat any word consecutively, even when separated by punctuation marks. "

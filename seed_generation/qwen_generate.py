@@ -115,7 +115,7 @@ def _call_qwen(
             {"role": "system", "content": system_msg},
             {"role": "user",   "content": prompt},
         ],
-        temperature=0.7,
+        temperature=0.6,
         max_tokens=4096,   # reflexion ≥900 chars + oracion ≥150 words needs room
         **extra,
     )
