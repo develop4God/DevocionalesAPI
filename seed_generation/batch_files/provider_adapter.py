@@ -284,13 +284,15 @@ class GeminiBatchAdapter(BaseAdapter):
         # Build lookup: custom_id → date_key
         cid_map = {r.custom_id: r.date_key for r in requests}
 
-        # Poll until terminal state
+        # Poll until terminal state.
+        # IMPORTANT: job.state is a JobState enum — use .name to get the string,
+        # not str() which produces "JobState.JOB_STATE_SUCCEEDED" (never matches).
         TERMINAL = {"JOB_STATE_SUCCEEDED", "JOB_STATE_FAILED",
-                    "JOB_STATE_CANCELLED", "JOB_STATE_PAUSED"}
+                    "JOB_STATE_CANCELLED", "JOB_STATE_EXPIRED"}
         print(f"INFO: Polling Gemini batch {job_id} every {self._poll_interval}s...")
         while True:
             job = self._client.batches.get(name=job_id)
-            state = str(job.state)
+            state = job.state.name          # ← .name, not str()
             counts = getattr(job, "request_counts", None)
             count_str = ""
             if counts:
@@ -304,31 +306,32 @@ class GeminiBatchAdapter(BaseAdapter):
                 break
             time.sleep(self._poll_interval)
 
-        if str(job.state) != "JOB_STATE_SUCCEEDED":
-            print(f"WARNING: Batch ended with state {job.state} — results may be partial")
+        if job.state.name != "JOB_STATE_SUCCEEDED":
+            print(f"WARNING: Batch ended with state {job.state.name} — results may be partial")
 
-        # Fetch output JSONL
+        # Per official docs: dest.file_name holds the result file name (e.g. "files/abc123").
+        # client.files.download(file=<name_string>) returns raw bytes directly.
         dest = getattr(job, "dest", None)
         if dest is None:
             print("ERROR: No dest field on completed job — cannot retrieve results")
             return [RawResult(date_key=r.date_key, error="no_output_dest") for r in requests]
 
-        output_uri = getattr(dest, "file_uri", None) or str(dest)
-        print(f"INFO: Fetching output from {output_uri}")
+        result_file_name = getattr(dest, "file_name", None)
+        if not result_file_name:
+            print(f"ERROR: dest.file_name is empty — dest={dest!r}")
+            return [RawResult(date_key=r.date_key, error="no_output_file_name") for r in requests]
 
-        import urllib.request
+        print(f"INFO: Downloading output from {result_file_name}...")
+
         import tempfile
 
+        # files.download() returns bytes — write directly to temp file
+        content: bytes = self._client.files.download(file=result_file_name)
         with tempfile.NamedTemporaryFile(
             mode="wb", suffix=".jsonl", delete=False, prefix="gemini_out_"
         ) as out_tmp:
+            out_tmp.write(content)
             out_path = out_tmp.name
-
-        # Use File API to read output
-        output_file = self._client.files.get(name=output_uri.split("/")[-1])
-        content = self._client.files.download(file=output_file)
-        with open(out_path, "wb") as f:
-            f.write(content)
 
         print(f"INFO: Output downloaded → {out_path}")
 
