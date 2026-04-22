@@ -125,6 +125,61 @@ def dry_run(
     return str(out_path)
 
 
+def dry_run_full(
+    seed_path:      str,
+    master_lang:    str,
+    master_version: str,
+    provider:       str,
+    model_alias:    str | None = None,
+) -> None:
+    """
+    Show the exact wire payload for the first seed entry — what the
+    adapter actually sends to the provider API.
+    No API call. No upload. No cost.
+    """
+    SEP = "=" * 60
+
+    adapter = load_adapter(provider, model_alias)
+
+    with open(seed_path, encoding="utf-8") as f:
+        seed = json.load(f)
+
+    first_date = sorted(seed.keys())[0]
+    entry = seed[first_date]
+    cita  = entry["versiculo"]["cita"]
+    topic = entry.get("topic")
+
+    req = BatchRequest(
+        date_key=first_date,
+        custom_id=_safe_custom_id(first_date),
+        prompt=build_prompt(cita, master_lang, topic),
+        model_id=adapter.model_id,
+    )
+
+    print("\n" + SEP)
+    print("DRY RUN FULL — exact wire payload (1 sample entry)")
+    print(SEP)
+    print(f"  Provider : {provider}")
+    print(f"  Model    : {adapter.model_id}  (quality={adapter.quality})")
+    print(f"  Seed     : {seed_path}")
+    print(f"  Entry    : {first_date}  |  Verse: {cita}")
+    print(SEP)
+
+    if hasattr(adapter, "_to_jsonl_line"):
+        wire = json.loads(adapter._to_jsonl_line(req))
+        print("\n--- WIRE PAYLOAD (as sent to provider) ---")
+        print(json.dumps(wire, ensure_ascii=False, indent=2))
+    else:
+        print(f"\n⚠️  Adapter '{provider}' has no _to_jsonl_line().")
+        print("   Inspect its submit() method manually.")
+        print(f"\n--- PROMPT CONTENT (agnostic) ---")
+        print(req.prompt[:500] + ("..." if len(req.prompt) > 500 else ""))
+
+    print("\n--- PROMPT TEXT (truncated to 300 chars) ---")
+    print(req.prompt[:300] + ("..." if len(req.prompt) > 300 else ""))
+    print(SEP + "\n")
+
+
 def submit_batch(
     seed_path:      str,
     master_lang:    str,
@@ -235,6 +290,8 @@ def main():
     parser.add_argument("--limit",      type=int, default=None)
     parser.add_argument("--dry-run",    action="store_true",
                         help="Write agnostic prompt JSONL to output dir — no API call, no cost")
+    parser.add_argument("--dry-run-full", action="store_true",
+                        help="Show exact provider wire payload for 1 entry — no API call, no cost")
     parser.add_argument("--list-providers", action="store_true",
                         help="Print all configured providers and models, then exit")
     args = parser.parse_args()
@@ -261,6 +318,16 @@ def main():
             output_dir     = args.output,
             start_date     = args.start_date,
             limit          = args.limit,
+        )
+        return
+
+    if args.dry_run_full:
+        dry_run_full(
+            seed_path   = args.seed,
+            master_lang = args.lang,
+            master_version = args.version,
+            provider    = args.provider,
+            model_alias = args.model,
         )
         return
 
