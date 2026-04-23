@@ -1,8 +1,7 @@
-# Step 1 — Generate the OpenAI batch JSONL (no API call)
-python batch_submit.py \
-  --seed 2026/seeds/seed_tl_ADB_for_2026.json \
+python3 batch_submit.py \
+  --seed ../2025/seeds/TL/seed_tl_ADB_for_2025.json \
   --lang tl --version ADB \
-  --output 2026/yearly_devotionals/TL \
+  --output ../2025/yearly_devotionals/TL \
   --provider fireworks_batch --model qwen3-vl-30b-a3b-thinking
 
 # → writes batch_input_<date>_<ts>.jsonl to batch_files/
@@ -12,3 +11,4 @@ python batch_submit.py \
 python batch_collect.py \
   --state batch_state_tl_ADB_fireworks_batch_<ts>.json \
   --results fireworks_results.jsonl
+  
