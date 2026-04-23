@@ -21,7 +21,7 @@ class PauseCategory(str, Enum):
     PRAYER_DRIFT     = "prayer_drift"      # prayer disconnected from verse/reflection
     HALLUCINATION      = "hallucination"       # invented detail (attribution, citation)
     REGISTER_DRIFT     = "register_drift"      # tone too academic or too casual
-    GENERIC_REFLECTION = "generic_reflection"  # reflection could apply to any verse
+    # GENERIC_REFLECTION = "generic_reflection"  # disabled — correct Christian content, not harmful
     OTHER              = "other"
 
 

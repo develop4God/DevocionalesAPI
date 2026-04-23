@@ -3,19 +3,19 @@ prompts.py — GEP Critic v3
 Single responsibility: build LLM prompts for the simulated reader.
 
 Design philosophy:
-  - No token budget. This runs locally on Ollama at zero cost.
-  - Thinking mode assumed. The model should reason before reacting.
-  - Every language gets a culturally grounded persona, not a template.
-  - Few-shot examples calibrate the model before the genome is populated.
-  - The genome seeds the reader's memory across runs — it grows forever.
-  - The goal is to emulate a real person more accurately with every run.
+    - No token budget. This runs locally on Ollama at zero cost.
+    - Thinking mode assumed. The model should reason before reacting.
+    - Every language gets a culturally grounded persona, not a template.
+    - Few-shot examples calibrate the model before the genome is populated.
+    - The genome seeds the reader's memory across runs — it grows forever.
+    - The goal is to emulate a real person more accurately with every run.
 
 Two-phase validation:
-  Phase 1 — Linguistic (qwen3:4b, fast, ~15-20s/entry)
-    Native speaker check: typos, repeated words, grammar, unnatural phrasing.
-  Phase 2 — Content coherence (qwen3:14b, thinking mode, ~100s/entry)
-    Carlos reader check: reflection connected to verse, prayer drift, register,
-    generic_reflection, hallucination. Phase 1 result injected to skip linguistics.
+    Phase 1 — Linguistic (qwen3:4b, fast, ~15-20s/entry)
+        Native speaker check: typos, repeated words, grammar, unnatural phrasing.
+    Phase 2 — Content coherence (qwen3:14b, thinking mode, ~100s/entry)
+        Carlos reader check: reflection connected to verse, prayer drift, register,
+        hallucination. Phase 1 result injected to skip linguistics.
 """
 
 from models import DevotionalEntry, Genome, PauseCategory
@@ -231,13 +231,13 @@ Your reaction: "This one hit me. The verse, the reflection, and the prayer all p
 The prayer felt like it was written for someone carrying exactly what I carry some mornings."
 → {"verdict": "OK", "reaction": "Everything connected — the verse, reflection, and prayer formed a single coherent thread that felt personal and spiritually alive.", "quoted_pause": null, "category": null, "confidence": 0.96}
 
-EXAMPLE 2 — verdict: PAUSE (generic_reflection)
+EXAMPLE 2 — verdict: PAUSE (other)
 Entry: verse about God's love (John 3:16), reflection that only says "God loves us and wants
 the best for us. His love is unconditional and eternal. We should trust Him every day."
 Your reaction: "This reflection could have been written about any verse in the Bible.
 It says nothing specific about John 3:16 — giving His Son, whoever believes, eternal life.
 It feels like a template, not a response to this verse."
-→ {"verdict": "PAUSE", "reaction": "The reflection made no specific connection to this verse — it could apply to any passage about God's love. It felt like a generic filler rather than a real response to John 3:16.", "quoted_pause": "God loves us and wants the best for us. His love is unconditional and eternal.", "category": "generic_reflection", "confidence": 0.91}
+→ {"verdict": "PAUSE", "reaction": "The reflection made no specific connection to this verse — it could apply to any passage about God's love. It felt like a generic filler rather than a real response to John 3:16.", "quoted_pause": "God loves us and wants the best for us. His love is unconditional and eternal.", "category": "other", "confidence": 0.91}
 
 EXAMPLE 3 — verdict: PAUSE (hallucination)
 Entry: reflection states "As John Wesley once said, 'God never wastes a wound.'"
@@ -311,12 +311,12 @@ Gottesnamen und ein sachlicher Fehler."
 祷告是自然的延续——我自己也可以这样祷告。"
 → {"verdict": "OK", "reaction": "一切都感觉自然、属灵上连贯。经文、默想和祷告形成了一条单一的线索。", "quoted_pause": null, "category": null, "confidence": 0.95}
 
-示例 2 — 评判：PAUSE (generic_reflection)
+示例 2 — 评判：PAUSE (other)
 条目：关于神爱世人的经文（约翰福音3:16），默想只说："神爱我们，希望我们得最好的。
 祂的爱是无条件的、永恒的。我们应该每天信靠祂。"
 你的感受："这段默想可以用于任何关于神之爱的经文。它没有具体提到约翰福音3:16的独特之处——
 赐下独生子、相信的人、永生。感觉像是模板，不是对这节经文的真实回应。"
-→ {"verdict": "PAUSE", "reaction": "默想与这节经文没有具体联系——它可以适用于任何关于神之爱的段落。感觉像是通用填充，而不是对约翰福音3:16的真实回应。", "quoted_pause": "神爱我们，希望我们得最好的。祂的爱是无条件的、永恒的。", "category": "generic_reflection", "confidence": 0.91}
+→ {"verdict": "PAUSE", "reaction": "默想与这节经文没有具体联系——它可以适用于任何关于神之爱的段落。感觉像是通用填充，而不是对约翰福音3:16的真实回应。", "quoted_pause": "神爱我们，希望我们得最好的。祂的爱是无条件的、永恒的。", "category": "other", "confidence": 0.91}
 """,
 
     "ja": """
@@ -571,23 +571,22 @@ def build_phase1_user(entry: DevotionalEntry, lang: str = "es") -> str:
 # ══════════════════════════════════════════════════════════════════════════════
 # PHASE 2 — Content coherence (qwen3:14b, thinking mode, ~100s/entry)
 # Carlos reader: reflection specific to verse, prayer drift, register,
-# generic_reflection, hallucination. Phase 1 result injected.
+# hallucination. Phase 1 result injected.
 # verse_mismatch removed — handled by external validator.
 # ══════════════════════════════════════════════════════════════════════════════
 
 PHASE2_CATEGORY_HINTS = """\
-  - prayer_drift        (prayer disconnected from verse/reflection theme)
-  - generic_reflection  (reflection could apply to any verse, not this one specifically)
-  - register_drift      (academic or cold language in a devotional context)
-  - hallucination       (fake quote attributed to a real person)
-  - name_error          (biblical name or place misspelled)
-  - other"""
+    - prayer_drift        (prayer disconnected from verse/reflection theme)
+    - register_drift      (academic or cold language in a devotional context)
+    - hallucination       (fake quote attributed to a real person)
+    - name_error          (biblical name or place misspelled)
+    - other"""
 
 PHASE2_THINKING_PREAMBLE = """\
 Before you respond, think through the entry carefully:
 
 1. Read the reflection. Is it SPECIFIC to this verse, or could it have been written
-   about any verse on a similar topic? Generic = flag it as generic_reflection.
+    about any verse on a similar topic? If generic, flag it as "other".
 2. Read the prayer. Does it actually continue the theme of the reflection and verse?
    A prayer that shifts topic is prayer_drift.
 3. Check register. Does any sentence feel copied from a theology textbook?
@@ -616,7 +615,7 @@ def build_phase2_system(
     Phase 2 system prompt — content coherence.
     Extends original build_system_prompt() with:
       - Phase 1 result injected (model skips linguistic work)
-      - generic_reflection category added
+      
       - Mandatory suspicion step
       - verse_mismatch removed
       - Always responds in English
@@ -657,13 +656,13 @@ Linguistic issues are already handled. Focus on meaning, coherence, and flow.
 - Pick the best category:
 {PHASE2_CATEGORY_HINTS}
 
+
 ### Critical rules:
 - You are a reader. Not a theologian. Not an editor.
 - Do NOT flag verse text accuracy — validated separately.
 - Do NOT flag style preferences.
 - Do NOT invent problems. A high OK rate is healthy.
-- generic_reflection is the most important category — a reflection that could apply
-  to ANY verse on the same topic is a real failure, not a style preference.
+- A reflection that could apply to any verse on the same topic is a real failure — flag it as "other".
 
 Always respond in English regardless of the devotional language.
 
