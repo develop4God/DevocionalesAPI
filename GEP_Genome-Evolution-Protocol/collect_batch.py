@@ -99,6 +99,18 @@ def main():
     results_path = Path(args.results)
     log_path     = audit_path(args.lang, args.version, args.year)
 
+    # Load existing audit into memory for dedup (id → verdict)
+    existing: dict[str, str] = {}
+    if log_path.exists():
+        with open(log_path, encoding="utf-8") as f:
+            for line in f:
+                if line.strip():
+                    try:
+                        r = json.loads(line)
+                        existing[r["id"]] = r.get("verdict", "error_parse")
+                    except Exception:
+                        pass
+
     # Load genome for PAUSE absorption
     genome = ensure_genome(args.lang, args.version, args.year)
     genome_dirty = False
@@ -201,8 +213,27 @@ def main():
             # Determine action
             action = "flagged" if reaction.verdict.value == "PAUSE" else "reviewed"
 
+            # Dedup: skip if already audited with a good verdict
+            prior = existing.get(custom_id)
+            if prior and prior != "error_parse":
+                skipped += 1
+                continue
+
             # Build and write record
             if not args.dry_run:
+                # If replacing an error_parse, rewrite the whole file without it
+                if prior == "error_parse":
+                    lines = log_path.read_text(encoding="utf-8").splitlines()
+                    with open(log_path, "w", encoding="utf-8") as f:
+                        for l in lines:
+                            if l.strip():
+                                try:
+                                    if json.loads(l).get("id") != custom_id:
+                                        f.write(l + "\n")
+                                except Exception:
+                                    f.write(l + "\n")
+                    existing[custom_id] = reaction.verdict.value
+
                 record = build_record(
                     entry_date=entry_meta["date"],
                     entry_id=custom_id,
