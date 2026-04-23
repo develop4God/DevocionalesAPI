@@ -2,35 +2,27 @@
   "language": "pt",
   "version": "ARC",
   "genome_version": "pt-ARC-2025-v1",
-  "total_entries_reviewed": 236,
-  "total_pauses": 236,
-  "updated_at": "2026-04-23T01:51:04.273581",
+  "total_entries_reviewed": 118,
+  "total_pauses": 118,
+  "updated_at": "2026-04-23T02:29:03.060828",
   "fragments": [
     {
-      "id": "frag_f3e022be",
+      "id": "frag_8080bbf2",
       "language": "pt",
       "version": "ARC",
-      "category": "generic_reflection",
-      "pattern": "The reflection discusses love as a response to God's grace but could apply to any verse about Christian love without specific connection to 1 John 4:11's unique emphasis on God's love as the foundation for our mutual love.",
-      "example_quote": "O amor cristão transcende as fronteiras do conforto e da conveniência.",
+      "category": "other",
+      "pattern": "The reflection's weakest sentence ('A presença do Espírito Santo não é apenas uma experiência espiritual, mas uma realidade que afeta todos os aspectos de nossa existência') feels generic and could apply to any Spirit-focused verse, diluting the specific connection to Romans 8:11.",
+      "example_quote": "A presença do Espírito Santo não é apenas uma experiência espiritual, mas uma realidade que afeta todos os aspectos de nossa existência",
       "evidence_dates": [
-        "2025-10-23",
-        "2025-10-19",
-        "2025-08-14",
-        "2025-08-19",
-        "2025-11-09",
-        "2025-09-08",
-        "2025-10-10",
-        "2025-12-02",
-        "2025-11-08",
+        "2026-07-06",
         "2025-09-13",
-        "2025-11-21",
         "2025-11-28",
         "2025-10-05",
         "2025-09-10",
         "2025-09-15",
         "2025-10-22",
         "2025-12-04",
+        "2025-10-19",
         "2025-11-23",
         "2025-08-17",
         "2025-12-16",
@@ -91,6 +83,7 @@
         "2026-04-30",
         "2026-07-12",
         "2026-06-14",
+        "2026-03-16",
         "2026-05-12",
         "2026-07-04",
         "2026-05-17",
@@ -105,264 +98,22 @@
         "2026-07-03",
         "2026-06-18",
         "2026-07-28",
-        "2026-07-11",
-        "2026-07-06"
+        "2026-07-11"
       ],
       "confidence": 0.95,
       "state": "confirmed",
-      "created_at": "2026-04-23T01:47:54.101622",
-      "updated_at": "2026-04-23T01:51:04.038801"
+      "created_at": "2026-04-23T02:26:29.067866",
+      "updated_at": "2026-04-23T02:29:03.058324"
     },
     {
-      "id": "frag_83446b01",
-      "language": "pt",
-      "version": "ARC",
-      "category": "generic_reflection",
-      "pattern": "The reflection's core message about joy in seeing others walk in truth could apply to almost any verse about faith or community, lacking specific connection to 3 John 1:4's unique context of spiritual fatherhood and personal testimony.",
-      "example_quote": "Nossa maior alegria deveria ser testemunhar a transformação de vidas pelo poder do Evangelho",
-      "evidence_dates": [
-        "2025-08-14",
-        "2025-11-06"
-      ],
-      "confidence": 0.55,
-      "state": "candidate",
-      "created_at": "2026-04-23T01:47:54.102051",
-      "updated_at": "2026-04-23T01:47:54.131743"
-    },
-    {
-      "id": "frag_fba30a20",
-      "language": "pt",
-      "version": "ARC",
-      "category": "generic_reflection",
-      "pattern": "The reflection could apply to any verse about love without mentioning Mark 12:30-31's specific context, making it feel generic rather than rooted in this passage.",
-      "example_quote": "Este amor não é apenas um sentimento, mas uma entrega total, uma dedicação que permeia cada aspecto da nossa vida.",
-      "evidence_dates": [
-        "2025-08-19",
-        "2025-11-28",
-        "2026-04-22",
-        "2026-05-03",
-        "2026-04-28",
-        "2026-03-27",
-        "2026-01-11",
-        "2026-03-15",
-        "2026-05-20",
-        "2026-05-11",
-        "2026-03-17",
-        "2025-12-14",
-        "2026-03-23",
-        "2026-03-21",
-        "2026-06-05",
-        "2026-05-19",
-        "2026-03-18",
-        "2026-04-30",
-        "2026-07-12",
-        "2026-06-14",
-        "2026-05-12",
-        "2026-07-04",
-        "2026-05-17",
-        "2026-07-31",
-        "2026-07-29",
-        "2026-05-30",
-        "2026-07-30",
-        "2026-06-25",
-        "2026-06-12",
-        "2026-07-25",
-        "2026-07-23",
-        "2026-07-03",
-        "2026-06-18",
-        "2026-07-28",
-        "2026-07-11",
-        "2026-07-06"
-      ],
-      "confidence": 0.95,
-      "state": "confirmed",
-      "created_at": "2026-04-23T01:47:54.110093",
-      "updated_at": "2026-04-23T01:47:54.374377"
-    },
-    {
-      "id": "frag_ad4df5e5",
-      "language": "pt",
-      "version": "ARC",
-      "category": "generic_reflection",
-      "pattern": "The reflection could apply to any calling verse without mentioning Matthew 4:19's unique context, making it feel generic rather than rooted in this specific passage.",
-      "example_quote": "Refletir sobre este versículo nos lembra que o discipulado cristão é uma jornada de transformação.",
-      "evidence_dates": [
-        "2025-11-09",
-        "2025-09-08"
-      ],
-      "confidence": 0.55,
-      "state": "candidate",
-      "created_at": "2026-04-23T01:47:54.111019",
-      "updated_at": "2026-04-23T01:47:54.111441"
-    },
-    {
-      "id": "frag_d0e66bfa",
-      "language": "pt",
-      "version": "ARC",
-      "category": "generic_reflection",
-      "pattern": "The reflection discusses personal responsibility in a way that could apply to any verse about accountability, lacking specific connection to Romans 14:12's unique emphasis on giving an account to God.",
-      "example_quote": "Somos confrontados com a necessidade de viver uma vida que seja agradável a Deus, reconhecendo que cada pensamento, palavra e ação tem consequências eternas.",
-      "evidence_dates": [
-        "2025-10-10"
-      ],
-      "confidence": 0.4,
-      "state": "candidate",
-      "created_at": "2026-04-23T01:47:54.112385",
-      "updated_at": "2026-04-23T01:47:54.112385"
-    },
-    {
-      "id": "frag_0ed3c05a",
-      "language": "pt",
-      "version": "ARC",
-      "category": "generic_reflection",
-      "pattern": "The reflection could apply to any verse about love, not specifically 1 Coríntios 16:14, making it feel generic and disconnected from the unique context of the verse.",
-      "example_quote": "O amor, aqui, não é meramente um sentimento, mas uma atitude ativa, um compromisso com o bem-estar do outro, a busca pela justiça e a prática da bondade.",
-      "evidence_dates": [
-        "2025-12-02",
-        "2025-12-20",
-        "2025-12-30",
-        "2026-02-19",
-        "2026-03-01",
-        "2026-01-28",
-        "2025-09-30",
-        "2026-03-12",
-        "2026-02-13",
-        "2026-04-06",
-        "2026-03-28",
-        "2026-03-22"
-      ],
-      "confidence": 0.95,
-      "state": "confirmed",
-      "created_at": "2026-04-23T01:47:54.112836",
-      "updated_at": "2026-04-23T01:47:54.177912"
-    },
-    {
-      "id": "frag_d680a391",
-      "language": "pt",
-      "version": "ARC",
-      "category": "generic_reflection",
-      "pattern": "The reflection uses generic language about the 'water of life' and salvation that could apply to multiple verses, failing to anchor the message specifically to Revelation 22:17's unique context of the final invitation before Christ's return.",
-      "example_quote": "A promessa da 'água da vida' é central. É uma metáfora poderosa para a salvação, a vida eterna e a satisfação completa em Deus.",
-      "evidence_dates": [
-        "2025-11-08"
-      ],
-      "confidence": 0.4,
-      "state": "candidate",
-      "created_at": "2026-04-23T01:47:54.113647",
-      "updated_at": "2026-04-23T01:47:54.113647"
-    },
-    {
-      "id": "frag_ec067534",
-      "language": "pt",
-      "version": "ARC",
-      "category": "generic_reflection",
-      "pattern": "The reflection discusses discernment and avoiding false teachings in a way that could apply to almost any verse about spiritual vigilance, rather than focusing specifically on Colossenses 2:8's warning against 'tradição dos homens' and 'rudimentos do mundo'.",
-      "example_quote": "A fé em Cristo é um relacionamento, não apenas um sistema de crenças.",
-      "evidence_dates": [
-        "2025-09-13",
-        "2025-09-10",
-        "2025-12-16",
-        "2025-10-26",
-        "2025-10-27",
-        "2025-09-16",
-        "2025-09-27",
-        "2025-11-04",
-        "2025-09-28",
-        "2025-11-03",
-        "2025-10-30",
-        "2026-01-29",
-        "2026-02-20",
-        "2025-12-29",
-        "2025-11-19",
-        "2025-08-21",
-        "2026-02-24",
-        "2026-01-30",
-        "2026-02-04",
-        "2025-12-08",
-        "2025-10-13",
-        "2025-12-31",
-        "2026-02-08",
-        "2026-02-21",
-        "2025-12-24",
-        "2026-02-09",
-        "2025-09-02",
-        "2026-01-18",
-        "2026-03-09",
-        "2026-02-14"
-      ],
-      "confidence": 0.95,
-      "state": "confirmed",
-      "created_at": "2026-04-23T01:47:54.114306",
-      "updated_at": "2026-04-23T01:47:54.165955"
-    },
-    {
-      "id": "frag_a37a8313",
-      "language": "pt",
-      "version": "ARC",
-      "category": "generic_reflection",
-      "pattern": "The reflection's weakest sentence is too generic—it could describe any verse about faith, failing to anchor the message specifically to Marcos 11:24's call to believe we receive what we pray for.",
-      "example_quote": "A beleza deste versículo reside na sua simplicidade e profundidade.",
-      "evidence_dates": [
-        "2025-11-21"
-      ],
-      "confidence": 0.4,
-      "state": "candidate",
-      "created_at": "2026-04-23T01:47:54.114979",
-      "updated_at": "2026-04-23T01:47:54.114979"
-    },
-    {
-      "id": "frag_d8af8361",
+      "id": "frag_c60b29ff",
       "language": "pt",
       "version": "ARC",
       "category": "prayer_drift",
-      "pattern": "The reflection focuses on Christ's role as Creator and Sustainer of all things, but the prayer abruptly shifts to His sacrifice on the cross, which wasn't addressed in the reflection, breaking the thematic flow.",
-      "example_quote": "Agradecemos por seu sacrifício na cruz, que nos reconciliou contigo",
+      "pattern": "The prayer introduced a specific reference to Philippians 4:7 about peace exceeding understanding, which wasn't mentioned in the reflection or tied to Ephesians 1:7, creating a disconnect from the core theme of redemption.",
+      "example_quote": "Que a Tua paz, que excede todo o entendimento, guarde os meus corações e os meus pensamentos em Cristo Jesus",
       "evidence_dates": [
-        "2025-10-31"
-      ],
-      "confidence": 0.55,
-      "state": "candidate",
-      "created_at": "2026-04-23T01:47:54.117124",
-      "updated_at": "2026-04-23T01:51:03.773831"
-    },
-    {
-      "id": "frag_715eb654",
-      "language": "pt",
-      "version": "ARC",
-      "category": "generic_reflection",
-      "pattern": "The reflection discusses patience and consolation in a way that could apply to any Scripture passage about hope, without anchoring specifically to Romans 15:4's unique emphasis on the *purpose* of Scripture being written for our instruction.",
-      "example_quote": "O propósito final da Palavra de Deus é nos equipar para perseverar com paciência e receber consolo em meio às dificuldades.",
-      "evidence_dates": [
-        "2025-10-05"
-      ],
-      "confidence": 0.4,
-      "state": "candidate",
-      "created_at": "2026-04-23T01:47:54.117681",
-      "updated_at": "2026-04-23T01:47:54.117681"
-    },
-    {
-      "id": "frag_77fbf3df",
-      "language": "pt",
-      "version": "ARC",
-      "category": "generic_reflection",
-      "pattern": "The reflection's emphasis on human cooperation ('Devemos buscar uma vida de santidade...') feels disconnected from the verse's core message about God's sovereign completion of His work, making it applicable to any verse about faithfulness rather than specific to Philippians 1:6.",
-      "example_quote": "Devemos buscar uma vida de santidade, oração e comunhão com outros crentes, permitindo que o Espírito Santo nos guie e nos transforme.",
-      "evidence_dates": [
-        "2025-09-15"
-      ],
-      "confidence": 0.4,
-      "state": "candidate",
-      "created_at": "2026-04-23T01:47:54.119566",
-      "updated_at": "2026-04-23T01:47:54.119566"
-    },
-    {
-      "id": "frag_45a37f36",
-      "language": "pt",
-      "version": "ARC",
-      "category": "prayer_drift",
-      "pattern": "The prayer shifts focus to peace exceeding understanding, which isn't addressed in the reflection or tied to the verse's core theme of God's unseen promises, creating a disconnect.",
-      "example_quote": "Que a Tua paz, que excede todo o entendimento, guarde meu coração e minha mente em Cristo Jesus",
-      "evidence_dates": [
+        "2025-10-11",
         "2025-08-01",
         "2025-08-05",
         "2025-12-03",
@@ -382,18 +133,151 @@
         "2026-04-29",
         "2026-02-01",
         "2026-05-09",
-        "2026-02-17",
-        "2025-10-11",
-        "2025-08-23",
-        "2025-09-11"
+        "2026-02-17"
       ],
       "confidence": 0.95,
       "state": "confirmed",
-      "created_at": "2026-04-23T01:47:54.120160",
-      "updated_at": "2026-04-23T01:51:04.079690"
+      "created_at": "2026-04-23T02:26:29.068403",
+      "updated_at": "2026-04-23T02:29:03.040225"
     },
     {
-      "id": "frag_fbec33b2",
+      "id": "frag_e0d41c2f",
+      "language": "pt",
+      "version": "ARC",
+      "category": "other",
+      "pattern": "The reflection discusses love as a response to God's grace but could apply to any verse about Christian love without specific connection to 1 John 4:11's unique emphasis on God's love as the foundation for our mutual love.",
+      "example_quote": "O amor cristão transcende as fronteiras do conforto e da conveniência.",
+      "evidence_dates": [
+        "2025-10-23"
+      ],
+      "confidence": 0.4,
+      "state": "candidate",
+      "created_at": "2026-04-23T02:29:02.940803",
+      "updated_at": "2026-04-23T02:29:02.940803"
+    },
+    {
+      "id": "frag_9f8ef70a",
+      "language": "pt",
+      "version": "ARC",
+      "category": "other",
+      "pattern": "The reflection's core message about joy in seeing others walk in truth could apply to almost any verse about faith or community, lacking specific connection to 3 John 1:4's unique context of spiritual fatherhood and personal testimony.",
+      "example_quote": "Nossa maior alegria deveria ser testemunhar a transformação de vidas pelo poder do Evangelho",
+      "evidence_dates": [
+        "2025-08-14"
+      ],
+      "confidence": 0.4,
+      "state": "candidate",
+      "created_at": "2026-04-23T02:29:02.941245",
+      "updated_at": "2026-04-23T02:29:02.941245"
+    },
+    {
+      "id": "frag_c88da91d",
+      "language": "pt",
+      "version": "ARC",
+      "category": "other",
+      "pattern": "The reflection could apply to any verse about love without mentioning Mark 12:30-31's specific context, making it feel generic rather than rooted in this passage.",
+      "example_quote": "Este amor não é apenas um sentimento, mas uma entrega total, uma dedicação que permeia cada aspecto da nossa vida.",
+      "evidence_dates": [
+        "2025-08-19"
+      ],
+      "confidence": 0.4,
+      "state": "candidate",
+      "created_at": "2026-04-23T02:29:02.949383",
+      "updated_at": "2026-04-23T02:29:02.949383"
+    },
+    {
+      "id": "frag_3bb80908",
+      "language": "pt",
+      "version": "ARC",
+      "category": "other",
+      "pattern": "The reflection could apply to any calling verse without mentioning Matthew 4:19's unique context, making it feel generic rather than rooted in this specific passage.",
+      "example_quote": "Refletir sobre este versículo nos lembra que o discipulado cristão é uma jornada de transformação.",
+      "evidence_dates": [
+        "2025-11-09",
+        "2025-09-08"
+      ],
+      "confidence": 0.55,
+      "state": "candidate",
+      "created_at": "2026-04-23T02:29:02.950238",
+      "updated_at": "2026-04-23T02:29:02.950631"
+    },
+    {
+      "id": "frag_29abe900",
+      "language": "pt",
+      "version": "ARC",
+      "category": "other",
+      "pattern": "The reflection discusses personal responsibility in a way that could apply to any verse about accountability, lacking specific connection to Romans 14:12's unique emphasis on giving an account to God.",
+      "example_quote": "Somos confrontados com a necessidade de viver uma vida que seja agradável a Deus, reconhecendo que cada pensamento, palavra e ação tem consequências eternas.",
+      "evidence_dates": [
+        "2025-10-10"
+      ],
+      "confidence": 0.4,
+      "state": "candidate",
+      "created_at": "2026-04-23T02:29:02.951498",
+      "updated_at": "2026-04-23T02:29:02.951498"
+    },
+    {
+      "id": "frag_84f544bb",
+      "language": "pt",
+      "version": "ARC",
+      "category": "other",
+      "pattern": "The reflection could apply to any verse about love, not specifically 1 Coríntios 16:14, making it feel generic and disconnected from the unique context of the verse.",
+      "example_quote": "O amor, aqui, não é meramente um sentimento, mas uma atitude ativa, um compromisso com o bem-estar do outro, a busca pela justiça e a prática da bondade.",
+      "evidence_dates": [
+        "2025-12-02"
+      ],
+      "confidence": 0.4,
+      "state": "candidate",
+      "created_at": "2026-04-23T02:29:02.951927",
+      "updated_at": "2026-04-23T02:29:02.951927"
+    },
+    {
+      "id": "frag_3c9d30db",
+      "language": "pt",
+      "version": "ARC",
+      "category": "other",
+      "pattern": "The reflection uses generic language about the 'water of life' and salvation that could apply to multiple verses, failing to anchor the message specifically to Revelation 22:17's unique context of the final invitation before Christ's return.",
+      "example_quote": "A promessa da 'água da vida' é central. É uma metáfora poderosa para a salvação, a vida eterna e a satisfação completa em Deus.",
+      "evidence_dates": [
+        "2025-11-08"
+      ],
+      "confidence": 0.4,
+      "state": "candidate",
+      "created_at": "2026-04-23T02:29:02.952686",
+      "updated_at": "2026-04-23T02:29:02.952686"
+    },
+    {
+      "id": "frag_d51e043d",
+      "language": "pt",
+      "version": "ARC",
+      "category": "other",
+      "pattern": "The reflection's weakest sentence is too generic—it could describe any verse about faith, failing to anchor the message specifically to Marcos 11:24's call to believe we receive what we pray for.",
+      "example_quote": "A beleza deste versículo reside na sua simplicidade e profundidade.",
+      "evidence_dates": [
+        "2025-11-21"
+      ],
+      "confidence": 0.4,
+      "state": "candidate",
+      "created_at": "2026-04-23T02:29:02.953896",
+      "updated_at": "2026-04-23T02:29:02.953896"
+    },
+    {
+      "id": "frag_a08b4e11",
+      "language": "pt",
+      "version": "ARC",
+      "category": "prayer_drift",
+      "pattern": "The reflection focuses on Christ's role as Creator and Sustainer of all things, but the prayer abruptly shifts to His sacrifice on the cross, which wasn't addressed in the reflection, breaking the thematic flow.",
+      "example_quote": "Agradecemos por seu sacrifício na cruz, que nos reconciliou contigo",
+      "evidence_dates": [
+        "2025-10-31"
+      ],
+      "confidence": 0.4,
+      "state": "candidate",
+      "created_at": "2026-04-23T02:29:02.955795",
+      "updated_at": "2026-04-23T02:29:02.955795"
+    },
+    {
+      "id": "frag_0c36dcdb",
       "language": "pt",
       "version": "ARC",
       "category": "prayer_drift",
@@ -404,26 +288,11 @@
       ],
       "confidence": 0.4,
       "state": "candidate",
-      "created_at": "2026-04-23T01:47:54.121489",
-      "updated_at": "2026-04-23T01:47:54.121489"
+      "created_at": "2026-04-23T02:29:02.959631",
+      "updated_at": "2026-04-23T02:29:02.959631"
     },
     {
-      "id": "frag_46d3b7d1",
-      "language": "pt",
-      "version": "ARC",
-      "category": "generic_reflection",
-      "pattern": "The reflection could apply to any verse about love overcoming fear, lacking specific connection to 1 João 4:18's unique emphasis on fear being tied to punishment and perfect love's role in casting it out.",
-      "example_quote": "O temor, muitas vezes, nos paralisa, nos impede de confiar, de agir e de viver plenamente.",
-      "evidence_dates": [
-        "2025-10-22"
-      ],
-      "confidence": 0.4,
-      "state": "candidate",
-      "created_at": "2026-04-23T01:47:54.122661",
-      "updated_at": "2026-04-23T01:47:54.122661"
-    },
-    {
-      "id": "frag_3dc336d0",
+      "id": "frag_4a8bc349",
       "language": "pt",
       "version": "ARC",
       "category": "prayer_drift",
@@ -434,68 +303,8 @@
       ],
       "confidence": 0.4,
       "state": "candidate",
-      "created_at": "2026-04-23T01:47:54.123443",
-      "updated_at": "2026-04-23T01:47:54.123443"
-    },
-    {
-      "id": "frag_40deb2df",
-      "language": "pt",
-      "version": "ARC",
-      "category": "generic_reflection",
-      "pattern": "The reflection discusses the temple of God in general terms without tying it to unique aspects of 1 Corinthians 3:16, making it applicable to any similar verse. It felt like a generic meditation on the theme rather than a specific unpacking of this passage.",
-      "example_quote": "This is not just a theological statement but a call to action",
-      "evidence_dates": [
-        "2025-12-04"
-      ],
-      "confidence": 0.4,
-      "state": "candidate",
-      "created_at": "2026-04-23T01:47:54.124456",
-      "updated_at": "2026-04-23T01:47:54.124456"
-    },
-    {
-      "id": "frag_dc0c03db",
-      "language": "pt",
-      "version": "ARC",
-      "category": "generic_reflection",
-      "pattern": "The reflection's weakest sentence felt like a generic statement that could apply to any verse about repentance, not specifically tied to Luke 5:32's focus on Jesus calling sinners to repentance.",
-      "example_quote": "A mensagem de Jesus continua relevante hoje, desafiando-nos a examinar nossos corações, a reconhecer nossa necessidade de Deus e a abraçar a oportunidade de uma vida transformada.",
-      "evidence_dates": [
-        "2025-11-23"
-      ],
-      "confidence": 0.4,
-      "state": "candidate",
-      "created_at": "2026-04-23T01:47:54.125877",
-      "updated_at": "2026-04-23T01:47:54.125877"
-    },
-    {
-      "id": "frag_6063352e",
-      "language": "pt",
-      "version": "ARC",
-      "category": "generic_reflection",
-      "pattern": "The reflection's explanation of spiritual growth as a 'processo contínuo de aprendizado' could apply to almost any verse about faith, lacking specific ties to Judas 1:20-21's unique call to build on the 'santíssima fé' and resist false teachings.",
-      "example_quote": "É um processo contínuo de aprendizado e crescimento espiritual",
-      "evidence_dates": [
-        "2025-08-17"
-      ],
-      "confidence": 0.4,
-      "state": "candidate",
-      "created_at": "2026-04-23T01:47:54.128359",
-      "updated_at": "2026-04-23T01:47:54.128359"
-    },
-    {
-      "id": "frag_65324105",
-      "language": "pt",
-      "version": "ARC",
-      "category": "other",
-      "pattern": "The prayer contained a misspelling ('sabedilha' instead of 'sabedoria') that disrupted the flow and felt like an error in the content.",
-      "example_quote": "sabedilha",
-      "evidence_dates": [
-        "2026-03-16"
-      ],
-      "confidence": 0.55,
-      "state": "candidate",
-      "created_at": "2026-04-23T01:47:54.214441",
-      "updated_at": "2026-04-23T01:51:03.877399"
+      "created_at": "2026-04-23T02:29:02.961306",
+      "updated_at": "2026-04-23T02:29:02.961306"
     }
   ]
 }
