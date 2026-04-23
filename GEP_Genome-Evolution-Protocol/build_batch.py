@@ -134,7 +134,7 @@ def build_batch(
             "custom_id": entry.id,
             "body": {
                 "model": model,
-                "max_tokens": 4096,
+                "max_tokens": 16384,
                 "temperature": 0.1,
                 "messages": [
                     {"role": "system", "content": system_prompt},
@@ -214,6 +214,8 @@ def main():
     parser.add_argument("--skip-reviewed", action="store_true",
                         help="Skip entries already in the audit log")
     parser.add_argument("--output",   metavar="FILE", help="Output JSONL path (default: auto)")
+    parser.add_argument("--ids",      metavar="ID[,ID...]",
+                        help="Comma-separated list of entry IDs to include (re-run specific entries)")
     args = parser.parse_args()
 
     print(f"\n{'═'*60}")
@@ -230,6 +232,12 @@ def main():
     reviewed = load_reviewed_dates(log_path) if args.skip_reviewed else set()
     if args.skip_reviewed:
         print(f"  📋 {len(reviewed)} entries already reviewed — will skip")
+
+    # Filter to specific IDs if --ids provided
+    if getattr(args, "ids", None):
+        id_set = set(i.strip() for i in args.ids.split(","))
+        entries = [e for e in entries if e.id in id_set]
+        print(f"  🎯 --ids filter: {len(entries)} entries matched ({len(id_set)} requested)")
 
     # Load genome (injects confirmed fragments into system prompt)
     genome = ensure_genome(args.lang, args.version, args.year)
