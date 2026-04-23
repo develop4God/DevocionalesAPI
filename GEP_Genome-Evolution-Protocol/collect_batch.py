@@ -107,7 +107,7 @@ def main():
                 if line.strip():
                     try:
                         r = json.loads(line)
-                        existing[r["id"]] = r.get("verdict", "error_parse")
+                        existing[r["id"]] = r.get("action") if r.get("action") == "error_parse" else r.get("verdict", "error_parse")
                     except Exception:
                         pass
 
@@ -220,7 +220,7 @@ def main():
                 continue
 
             # Also skip if we can't improve on existing error_parse
-            if prior == "error_parse" and reaction.verdict.value == "error_parse":
+            if prior == "error_parse" and action == "error_parse":
                 skipped += 1
                 continue
 
