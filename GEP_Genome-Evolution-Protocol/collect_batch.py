@@ -219,6 +219,11 @@ def main():
                 skipped += 1
                 continue
 
+            # Also skip if we can't improve on existing error_parse
+            if prior == "error_parse" and reaction.verdict.value == "error_parse":
+                skipped += 1
+                continue
+
             # Build and write record
             if not args.dry_run:
                 # If replacing an error_parse, rewrite the whole file without it
