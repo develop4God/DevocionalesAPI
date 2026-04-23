@@ -105,18 +105,18 @@ providers:
     base_url: https://api.fireworks.ai/inference/v1
     batch_endpoint: /v1/chat/completions
     models:
-      qwen3-30b-a3b:
-        model_id: accounts/fireworks/models/qwen3-30b-a3b
-        max_tokens: 4096
+      qwen3-vl-30b-a3b-thinking:
+        model_id: accounts/fireworks/models/qwen3-vl-30b-a3b-thinking
+        max_tokens: 8192
         quality: production
-        cost_input_per_mtok: 0.22
-        cost_output_per_mtok: 0.88
-      qwen3-235b-a22b:
-        model_id: accounts/fireworks/models/qwen3-235b-a22b
-        max_tokens: 4096
+        cost_input_per_mtok: 0.15
+        cost_output_per_mtok: 0.60
+      qwen3p6-plus:
+        model_id: accounts/fireworks/models/qwen3p6-plus
+        max_tokens: 8192
         quality: premium
-        cost_input_per_mtok: 0.90
-        cost_output_per_mtok: 3.60
+        cost_input_per_mtok: 0.50
+        cost_output_per_mtok: 3.00
       llama4-maverick:
         model_id: accounts/fireworks/models/llama4-maverick-instruct-basic
         max_tokens: 4096
@@ -124,6 +124,6 @@ providers:
         cost_input_per_mtok: 0.22
         cost_output_per_mtok: 0.88
     defaults:
-      model: qwen3-30b-a3b
+      model: qwen3-vl-30b-a3b-thinking
       poll_interval_seconds: null
       max_parallel: null
