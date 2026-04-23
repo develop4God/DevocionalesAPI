@@ -65,7 +65,7 @@ providers:
         cost_output_per_mtok: 10.00
     defaults:
       model: gemini-2.5-flash
-      poll_interval_seconds: 8192          # real batch — poll every 2 min
+      poll_interval_seconds: 120          # real batch — poll every 2 min
       max_parallel: null                  # N/A for native batch
 
   fireworks:

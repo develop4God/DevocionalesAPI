@@ -40,7 +40,9 @@ def _extract_first_balanced_object(text: str) -> Optional[str]:
     return None
 
 def repair_json(raw_text: str) -> Optional[dict]:
-    text = re.sub(r'```(?:json)?\s*', '', raw_text)
+    # Strip chain-of-thought <think>...</think> blocks (Qwen3, DeepSeek-R1, etc.)
+    text = re.sub(r'<think>[\s\S]*?</think>', '', raw_text, flags=re.IGNORECASE).strip()
+    text = re.sub(r'```(?:json)?\s*', '', text)
     text = re.sub(r'```\s*$', '', text, flags=re.MULTILINE).strip()
     try:
         return json.loads(text)

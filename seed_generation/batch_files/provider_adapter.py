@@ -639,9 +639,14 @@ class FireworksBatchFileAdapter(BaseAdapter):
                     ))
                     continue
 
-                response  = obj.get("response", {})
-                status    = response.get("status_code", 0)
-                if status != 200:
+                response = obj.get("response", {})
+                status   = response.get("status_code", 0)
+
+                # Two supported formats:
+                #   OpenAI batch wrapper : response = {status_code, body: {choices}}
+                #   Fireworks direct     : response = {id, object, choices, ...}
+                has_choices = "choices" in response or "body" in response
+                if not has_choices and status != 200:
                     results.append(RawResult(
                         date_key=date_key,
                         error=f"http_error: status_code={status}",
@@ -649,9 +654,8 @@ class FireworksBatchFileAdapter(BaseAdapter):
                     continue
 
                 try:
-                    text = (
-                        response["body"]["choices"][0]["message"]["content"].strip()
-                    )
+                    body = response.get("body", response)
+                    text = body["choices"][0]["message"]["content"].strip()
                     if not text:
                         results.append(RawResult(date_key=date_key, error="empty_content"))
                     else:
