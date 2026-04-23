@@ -163,6 +163,9 @@ def main():
             # Extract raw model content
             raw_content = extract_content(result)
             if not raw_content:
+                if existing.get(custom_id) == "error_parse":
+                    skipped += 1
+                    continue
                 print(f"  ❌  {custom_id}: empty/missing content — logging as error_parse")
                 if not args.dry_run:
                     err_reaction = ReaderReaction(
@@ -188,6 +191,9 @@ def main():
             # Parse reaction from content
             reaction = _parse_reaction(raw_content)
             if reaction is None:
+                if existing.get(custom_id) == "error_parse":
+                    skipped += 1
+                    continue
                 print(f"  ❌  {custom_id}: failed to parse JSON verdict — logging as error_parse")
                 if not args.dry_run:
                     err_reaction = ReaderReaction(
