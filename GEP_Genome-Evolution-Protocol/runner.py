@@ -319,8 +319,8 @@ def run_interactive(
                 phase1_quoted=(phase1_result or {}).get("quoted"),
                 phase1_confidence=(phase1_result or {}).get("confidence"),
                 phase1_raw=p1_raw,
-                    suggested_reflexion=reaction.suggested_reflexion if reaction else None,
-                    suggested_oracion=reaction.suggested_oracion if reaction else None,
+                suggested_reflexion=reaction.suggested_reflexion if reaction else None,
+                suggested_oracion=reaction.suggested_oracion if reaction else None,
             )
             append_record(log_path, record)
             print("  ✅ Approved and logged.")
