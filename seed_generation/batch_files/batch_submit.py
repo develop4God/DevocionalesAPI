@@ -250,25 +250,31 @@ def submit_batch(
     state_path = _SCRIPT_DIR / state_filename
 
     state = {
-        "job_id":         job_id,
-        "provider":       provider,
-        "model_alias":    model_alias or "default",
-        "model_id":       adapter.model_id,
-        "seed_path":      str(seed_path),
-        "master_lang":    master_lang,
-        "master_version": master_version,
-        "output_dir":     str(output_dir),
-        "dates":          all_dates,
-        "total":          total,
-        "submitted_at":   datetime.now().isoformat(),
+        "job_id":          job_id,
+        "provider":        provider,
+        "batch_strategy":  adapter.batch_strategy,
+        "model_alias":     model_alias or "default",
+        "model_id":        adapter.model_id,
+        "seed_path":       str(seed_path),
+        "master_lang":     master_lang,
+        "master_version":  master_version,
+        "output_dir":      str(output_dir),
+        "dates":           all_dates,
+        "total":           total,
+        "submitted_at":    datetime.now().isoformat(),
     }
 
     with open(state_path, "w", encoding="utf-8") as f:
         json.dump(state, f, ensure_ascii=False, indent=2)
 
     print(f"\nState file → {state_path}")
-    print(f"\nNext step:")
-    print(f"  python batch_collect.py --state {state_path}")
+
+    if adapter.batch_strategy == "openai_batch_file":
+        print(f"\nNext step (after downloading Fireworks results JSONL):")
+        print(f"  python batch_collect.py --state {state_path} --results <results.jsonl>")
+    else:
+        print(f"\nNext step:")
+        print(f"  python batch_collect.py --state {state_path}")
     print(SEP + "\n")
 
     return str(state_path)

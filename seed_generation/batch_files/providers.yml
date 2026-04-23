@@ -95,3 +95,35 @@ providers:
       model: qwen3-30b-a3b
       poll_interval_seconds: null         # N/A for async_parallel
       max_parallel: 20
+
+  # fireworks_batch — generates an OpenAI-format batch JSONL for manual upload.
+  # No API calls are made. Upload the file to Fireworks AI manually, then
+  # collect results with: batch_collect.py --state <state> --results <results.jsonl>
+  fireworks_batch:
+    api_key_env: FIREWORKS_API_KEY        # not required for file generation
+    batch_strategy: openai_batch_file
+    base_url: https://api.fireworks.ai/inference/v1
+    batch_endpoint: /v1/chat/completions
+    models:
+      qwen3-30b-a3b:
+        model_id: accounts/fireworks/models/qwen3-30b-a3b
+        max_tokens: 4096
+        quality: production
+        cost_input_per_mtok: 0.22
+        cost_output_per_mtok: 0.88
+      qwen3-235b-a22b:
+        model_id: accounts/fireworks/models/qwen3-235b-a22b
+        max_tokens: 4096
+        quality: premium
+        cost_input_per_mtok: 0.90
+        cost_output_per_mtok: 3.60
+      llama4-maverick:
+        model_id: accounts/fireworks/models/llama4-maverick-instruct-basic
+        max_tokens: 4096
+        quality: production
+        cost_input_per_mtok: 0.22
+        cost_output_per_mtok: 0.88
+    defaults:
+      model: qwen3-30b-a3b
+      poll_interval_seconds: null
+      max_parallel: null

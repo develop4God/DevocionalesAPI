@@ -183,7 +183,7 @@ def load_state(path: str) -> dict:
 # Main collect logic
 # ─────────────────────────────────────────────────────────────────────────────
 
-def collect(state_path: str) -> None:
+def collect(state_path: str, results_file: Optional[str] = None) -> None:
     SEP = "=" * 60
     state = load_state(state_path)
 
@@ -228,8 +228,21 @@ def collect(state_path: str) -> None:
     if model_alias == "default":
         model_alias = None
     adapter = load_adapter(provider, model_alias)
+
+    # For openai_batch_file, job_id is the submitted file path —
+    # results come from a separate file the user downloads from Fireworks.
+    batch_strategy = state.get("batch_strategy") or adapter.batch_strategy
+    if batch_strategy == "openai_batch_file":
+        if not results_file:
+            print("ERROR: --results <results.jsonl> is required for fireworks_batch provider.")
+            print("       Download the results JSONL from Fireworks AI and pass it here.")
+            sys.exit(1)
+        collect_job_id = results_file
+    else:
+        collect_job_id = job_id
+
     print(f"INFO: Collecting {len(requests)} results from {provider}...")
-    raw_results: list[RawResult] = adapter.collect(job_id, requests)
+    raw_results: list[RawResult] = adapter.collect(collect_job_id, requests)
 
     # ── Process results ────────────────────────────────────────────────────
     completed:    dict[str, dict] = {}
@@ -327,6 +340,9 @@ def main():
     )
     parser.add_argument("--state", type=str, default=None,
                         help="Path to batch_state_*.json (default: auto-find latest)")
+    parser.add_argument("--results", type=str, default=None,
+                        help="Path to results JSONL downloaded from Fireworks AI "
+                             "(required for --provider fireworks_batch)")
     args = parser.parse_args()
 
     state_path = args.state
@@ -341,7 +357,7 @@ def main():
         print(f"ERROR: State file not found: {state_path}")
         sys.exit(1)
 
-    collect(state_path)
+    collect(state_path, results_file=args.results)
 
 
 if __name__ == "__main__":
