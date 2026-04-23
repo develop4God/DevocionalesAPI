@@ -6,9 +6,19 @@ Usage:
     python3 build_batch.py --lang tl --version ASND --year 2026
     python3 build_batch.py --lang tl --version ASND --year 2026 --local path/to/file.json
     python3 build_batch.py --lang tl --version ASND --year 2026 --skip-reviewed
+    python3 build_batch.py --lang en --version KJV  --year 2025 --phase 1
+    python3 build_batch.py --lang en --version KJV  --year 2025 --phase 1,2
 
-Output:
-    batch_input_tl_ASND_2026.jsonl  — ready to upload to Fireworks Batch API
+--phase values:
+    2      Phase 2 content only (default — current behavior)
+    1      Phase 1 linguistic only
+    1,2    Both phases in one request (P1 system+user, then P2 system+user)
+    1,2,3  Future-proof: extend as new phases are added
+
+Output filenames:
+    batch_input_tl_ASND_2026_p2.jsonl    (--phase 2, default)
+    batch_input_en_KJV_2025_p1.jsonl     (--phase 1)
+    batch_input_en_KJV_2025_p1p2.jsonl   (--phase 1,2)
 
 Each line is a self-contained request:
   {
@@ -35,7 +45,10 @@ from pathlib import Path
 from audit  import audit_path, load_reviewed_dates
 from genome import ensure_genome
 from models import DevotionalEntry
-from prompts import build_phase2_system, build_phase2_user
+from prompts import (
+    build_phase1_system, build_phase1_user,
+    build_phase2_system, build_phase2_user,
+)
 
 # ── Config ────────────────────────────────────────────────────────────────────
 
@@ -107,39 +120,52 @@ def build_batch(
     genome,
     model: str,
     skip_reviewed: bool,
+    phases: list[int],
 ) -> list[dict]:
     """
     Builds one JSONL record per entry.
+    phases controls which phases are included:
+      [2]    → Phase 2 only (default, legacy behavior)
+      [1]    → Phase 1 only (linguistic scan)
+      [1, 2] → Both phases in one request (P1 messages first, then P2)
     System prompt is built once and reused — Fireworks caches it automatically.
     """
-    # Build system prompt once (static across all entries — cache hit on Fireworks)
-    system_prompt = build_phase2_system(
-        lang    = lang,
-        version = version,
-        genome  = genome,
-        phase1_result = None,   # no P1 in batch mode
-    )
-
     records = []
     skipped = 0
+
+    # Build system prompts once (static — cache hit on Fireworks)
+    p1_system = build_phase1_system(lang) if 1 in phases else None
+    p2_system = build_phase2_system(
+        lang=lang, version=version, genome=genome, phase1_result=None
+    ) if 2 in phases else None
 
     for entry in entries:
         if skip_reviewed and entry.date in reviewed:
             skipped += 1
             continue
 
-        user_prompt = build_phase2_user(entry, lang)
+        messages = []
+
+        if 1 in phases:
+            messages.append({"role": "system", "content": p1_system})
+            messages.append({"role": "user",   "content": build_phase1_user(entry, lang)})
+
+        if 2 in phases:
+            if 1 in phases:
+                # P2 injected as assistant continuation after P1
+                messages.append({"role": "assistant", "content": "<<P1_DONE>>"})
+                messages.append({"role": "system",    "content": p2_system})
+            else:
+                messages.append({"role": "system", "content": p2_system})
+            messages.append({"role": "user", "content": build_phase2_user(entry, lang)})
 
         record = {
             "custom_id": entry.id,
             "body": {
-                "model": model,
-                "max_tokens": 16384,
+                "model":       model,
+                "max_tokens":  16384,
                 "temperature": 0.1,
-                "messages": [
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user",   "content": user_prompt},
-                ],
+                "messages":    messages,
             },
         }
         records.append(record)
@@ -151,6 +177,11 @@ def build_batch(
 
 
 # ── Output ────────────────────────────────────────────────────────────────────
+
+def phase_suffix(phases: list[int]) -> str:
+    """Returns filename suffix: _p1, _p2, _p1p2, _p1p2p3, etc."""
+    return "_" + "".join(f"p{p}" for p in sorted(phases))
+
 
 def write_jsonl(records: list[dict], path: Path):
     with open(path, "w", encoding="utf-8") as f:
@@ -209,6 +240,8 @@ def main():
     parser.add_argument("--lang",     required=True, help="Language code (tl, es, pt, ...)")
     parser.add_argument("--version",  required=True, help="Bible version (ASND, NVI, ...)")
     parser.add_argument("--year",     required=True, type=int, help="Year (2025, 2026, ...)")
+    parser.add_argument("--phase",    default="2",
+                        help="Phases to include: 1, 2, or comma-separated e.g. 1,2 (default: 2)")
     parser.add_argument("--model",    default=DEFAULT_MODEL, help="Fireworks model ID")
     parser.add_argument("--local",    metavar="FILE", help="Use local JSON file instead of GitHub")
     parser.add_argument("--skip-reviewed", action="store_true",
@@ -218,9 +251,17 @@ def main():
                         help="Comma-separated list of entry IDs to include (re-run specific entries)")
     args = parser.parse_args()
 
+    # Parse --phase into sorted list of ints, validate
+    try:
+        phases = sorted(set(int(p.strip()) for p in args.phase.split(",")))
+    except ValueError:
+        print(f"  ❌ Invalid --phase value: '{args.phase}'. Use e.g. 1, 2, or 1,2")
+        sys.exit(1)
+
     print(f"\n{'═'*60}")
     print(f"  🏗️  GEP Batch Builder")
     print(f"  Lang: {args.lang} | Version: {args.version} | Year: {args.year}")
+    print(f"  Phases: {phases}")
     print(f"  Model: {args.model}")
     print(f"{'═'*60}")
 
@@ -239,10 +280,14 @@ def main():
         entries = [e for e in entries if e.id in id_set]
         print(f"  🎯 --ids filter: {len(entries)} entries matched ({len(id_set)} requested)")
 
-    # Load genome (injects confirmed fragments into system prompt)
-    genome = ensure_genome(args.lang, args.version, args.year)
-    frag_count = len(genome.fragments) if genome else 0
-    print(f"  🧬 Genome: {frag_count} fragments")
+    # Load genome — only needed for Phase 2 (injects confirmed fragments into system prompt)
+    if 2 in phases:
+        genome = ensure_genome(args.lang, args.version, args.year)
+        frag_count = len(genome.fragments) if genome else 0
+        print(f"  🧬 Genome: {frag_count} fragments")
+    else:
+        genome = None
+        print(f"  🧬 Genome: skipped (Phase 1 only)")
 
     # Build JSONL records
     records = build_batch(
@@ -254,6 +299,7 @@ def main():
         genome         = genome,
         model          = args.model,
         skip_reviewed  = args.skip_reviewed,
+        phases         = phases,
     )
 
     if not records:
@@ -265,9 +311,10 @@ def main():
     # Cost estimate
     estimate_cost(records, args.model)
 
-    # Write output
+    # Write output — filename reflects phases included
+    suffix = phase_suffix(phases)
     out_path = Path(args.output) if args.output else \
-               Path(f"batch_input_{args.lang}_{args.version}_{args.year}.jsonl")
+               Path(f"batch_input_{args.lang}_{args.version}_{args.year}{suffix}.jsonl")
     write_jsonl(records, out_path)
 
     print(f"\n  Next step:")
