@@ -31,6 +31,7 @@ from pathlib import Path
 from audit import audit_path, append_record, build_record
 from cloud_client import _parse_reaction
 from models import ReaderReaction, Verdict
+from genome import absorb_reaction, ensure_genome, save_genome
 
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
@@ -97,6 +98,10 @@ def main():
     input_path   = Path(args.input)
     results_path = Path(args.results)
     log_path     = audit_path(args.lang, args.version, args.year)
+
+    # Load genome for PAUSE absorption
+    genome = ensure_genome(args.lang, args.version, args.year)
+    genome_dirty = False
 
     print(f"\n{'═'*60}")
     print(f"  📥  GEP Batch Collector")
@@ -208,6 +213,9 @@ def main():
                     raw_response=raw_content,
                 )
                 append_record(log_path, record)
+                if action == "flagged" and reaction.category and reaction.quoted_pause:
+                    genome, _ = absorb_reaction(genome, reaction, entry_meta["date"], args.year)
+                    genome_dirty = True
 
             total += 1
             if action == "flagged":
@@ -218,6 +226,9 @@ def main():
                 ok += 1
 
     # Summary
+    if genome_dirty and not args.dry_run:
+        save_genome(genome, args.year)
+        print(f"  🧬 Genome updated: {len(genome.fragments)} fragments")
     print(f"\n{'═'*60}")
     print(f"  📊 Collection complete")
     print(f"  ✅ OK      : {ok}")
