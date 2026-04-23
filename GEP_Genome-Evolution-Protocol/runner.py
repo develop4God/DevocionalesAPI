@@ -24,6 +24,14 @@ from prompts import (
     build_phase2_system, build_phase2_user,
 )
 
+
+def _safe_parse_json(raw: str) -> dict | None:
+    try:
+        from cloud_client import _unwrap_text
+        return json.loads(_unwrap_text(raw))
+    except Exception:
+        return None
+
 # Phase 1 always uses the fast model
 PHASE1_MODEL = "qwen3:4b"
 
@@ -185,6 +193,12 @@ def _process_entry(
     reaction, p2_raw = call_ollama(model, p2_system, p2_user, verbose=verbose)
     p2_elapsed = time.monotonic() - p2_t0
 
+    if reaction and isinstance(p2_raw, str):
+        parsed_p2 = _safe_parse_json(p2_raw)
+        # Attach suggested fixes if present in the model JSON
+        reaction.suggested_reflexion = (parsed_p2 or {}).get("suggested_reflexion")
+        reaction.suggested_oracion = (parsed_p2 or {}).get("suggested_oracion")
+
     elapsed_total = time.monotonic() - total_t0
 
     if reaction is None:
@@ -305,6 +319,8 @@ def run_interactive(
                 phase1_quoted=(phase1_result or {}).get("quoted"),
                 phase1_confidence=(phase1_result or {}).get("confidence"),
                 phase1_raw=p1_raw,
+                    suggested_reflexion=reaction.suggested_reflexion if reaction else None,
+                    suggested_oracion=reaction.suggested_oracion if reaction else None,
             )
             append_record(log_path, record)
             print("  ✅ Approved and logged.")
@@ -481,6 +497,8 @@ def run_overnight(
                 phase1_quoted=(phase1_result or {}).get("quoted"),
                 phase1_confidence=(phase1_result or {}).get("confidence"),
                 phase1_raw=p1_raw,
+                suggested_reflexion=reaction.suggested_reflexion if reaction else None,
+                suggested_oracion=reaction.suggested_oracion if reaction else None,
             )
             append_record(log_path, record)
             entry_times.append(elapsed)

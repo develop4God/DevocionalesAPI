@@ -75,6 +75,8 @@ def append_record(log_path: Path, record: AuditRecord):
         "phase1_raw": record.phase1_raw,
     }
     row["asset_id"] = compute_asset_id(row)
+    row["suggested_reflexion"] = record.suggested_reflexion
+    row["suggested_oracion"] = record.suggested_oracion
     with open(log_path, "a", encoding="utf-8") as f:
         f.write(json.dumps(row, ensure_ascii=False) + "\n")
 
@@ -93,6 +95,8 @@ def build_record(
     phase1_quoted: str | None = None,
     phase1_confidence: float | None = None,
     phase1_raw: str | None = None,
+    suggested_reflexion: str | None = None,
+    suggested_oracion: str | None = None,
 ) -> AuditRecord:
     p1_thinking, p1_verdict_raw = _split_thinking(phase1_raw)
     p2_thinking, p2_verdict_raw = _split_thinking(raw_response)
@@ -119,6 +123,8 @@ def build_record(
         phase1_verdict_raw=p1_verdict_raw,
         p2_thinking=p2_thinking,
         p2_verdict_raw=p2_verdict_raw,
+        suggested_reflexion=suggested_reflexion,
+        suggested_oracion=suggested_oracion,
     )
 
 

@@ -513,8 +513,9 @@ PHASE1_NATIVE_SPEAKERS = {
 
 PHASE1_SYSTEM_TEMPLATE = """\
 You are a native {language} speaker from {country}.
-You are NOT a theologian. You know nothing about the Bible content.
-Your only job: read this text as a native speaker and flag linguistic problems.
+Your only job: evaluate the writing quality of the Reflection and Prayer fields.
+The Scripture verse is provided for context only. Do NOT flag it, correct it,
+or comment on it under any circumstance — it is sacred source text, not your concern.
 
 Look for:
 1. Typos or spelling errors
@@ -525,13 +526,14 @@ Look for:
 ### Rules:
 - Do NOT comment on theology, content, or meaning.
 - Do NOT flag style preferences.
+- Do NOT flag anything in the Scripture verse field.
 - Only flag clear linguistic errors a native speaker would notice immediately.
 - If nothing is wrong linguistically → verdict CLEAN.
 - A high CLEAN rate is expected and healthy.
 - NEVER flag repetition of single words or common grammatical particles.
 - ONLY flag repeated phrases of 3 or more meaningful content words.
 - The quoted_problem MUST be copied verbatim from the text. If you cannot find it
-  word-for-word in the entry, verdict CLEAN. Never paraphrase or reconstruct.
+    word-for-word in the entry, verdict CLEAN. Never paraphrase or reconstruct.
 
 Always respond in English regardless of the devotional language.
 
@@ -539,10 +541,10 @@ Return ONLY valid JSON. No markdown. No preamble.
 
 Schema:
 {{
-  "verdict": "CLEAN" | "FLAG",
-  "issue": "One sentence describing the linguistic problem, or null if CLEAN.",
-  "quoted_problem": "The exact phrase copied verbatim from the text, or null if CLEAN.",
-  "confidence": 0.0 to 1.0
+    "verdict": "CLEAN" | "FLAG",
+    "issue": "One sentence describing the linguistic problem, or null if CLEAN.",
+    "quoted_problem": "The exact phrase copied verbatim from the text, or null if CLEAN.",
+    "confidence": 0.0 to 1.0
 }}
 
 ⚠️  MANDATORY FORMAT RULE:
@@ -560,11 +562,15 @@ def build_phase1_system(lang: str) -> str:
 
 
 def build_phase1_user(entry: DevotionalEntry, lang: str = "es") -> str:
-    """Phase 1 uses the same entry format as Phase 2."""
+    """Phase 1 injects only reflexion + oracion. versiculo excluded from payload."""
+    labels = SECTION_LABELS.get(lang, _DEFAULT_LABELS)
     return (
-        build_user_prompt(entry, lang)
-        + "\n\nRead as a native speaker."
-        + " Output ONLY the JSON object — no 'Final answer:', no prose, no explanation."
+        f"--- {labels['reflection']} ---\n"
+        f"{entry.reflexion}\n\n"
+        f"--- {labels['prayer']} ---\n"
+        f"{entry.oracion}\n\n"
+        "Evaluate only the two fields above as a native speaker. "
+        "Output ONLY the JSON object — no 'Final answer:', no prose, no explanation."
     )
 
 
@@ -671,12 +677,19 @@ Return ONLY valid JSON. No markdown. No preamble.
 
 Schema:
 {{
-  "verdict": "OK" | "PAUSE",
-  "reaction": "One or two sentences: what you felt as a content reader.",
-  "quoted_pause": "The exact phrase that made you pause, or null if OK.",
-  "category": "one of the category values above, or null if OK.",
-  "confidence": 0.0 to 1.0
+    "verdict": "OK" | "PAUSE",
+    "reaction": "One or two sentences: what you felt as a content reader.",
+    "quoted_pause": "The exact phrase that made you pause, or null if OK.",
+    "category": "one of the category values above, or null if OK.",
+    "confidence": 0.0 to 1.0,
+    "suggested_reflexion": "Minimal rewrite of the reflexion fixing only the flagged issue. null if OK or issue is not in reflexion.",
+    "suggested_oracion": "Minimal rewrite of the oracion fixing only the flagged issue. null if OK or issue is not in oracion."
 }}
+
+### Suggested fix rules:
+- Only rewrite the field where the problem lives. Leave the other null.
+- Minimal intervention — fix only what was flagged. Preserve everything else.
+- If verdict is OK, both fields must be null.
 
 ⚠️  MANDATORY FORMAT RULE:
 Your ENTIRE output (outside <think> tags) must be the JSON object above and NOTHING else.

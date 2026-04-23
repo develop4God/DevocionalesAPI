@@ -33,6 +33,8 @@ class ReaderReaction:
     quoted_pause: Optional[str] = None    # exact phrase that caused a pause
     category: Optional[PauseCategory] = None
     confidence: float = 1.0               # 0.0–1.0, populated by validator
+    suggested_reflexion: Optional[str] = None
+    suggested_oracion: Optional[str] = None
 
 
 @dataclass
@@ -77,6 +79,8 @@ class AuditRecord:
     p2_thinking: str | None = None
     p2_verdict_raw: str | None = None
     human_correction: str | None = None
+    suggested_reflexion: str | None = None
+    suggested_oracion: str | None = None
 
 
 
