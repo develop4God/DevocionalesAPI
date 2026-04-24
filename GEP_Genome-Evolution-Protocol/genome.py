@@ -5,7 +5,7 @@ Single responsibility: load, update, and persist the GEP genome.
 
 import json
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 from models import (
@@ -60,7 +60,7 @@ def load_genome(lang: str, version: str, year: int) -> Genome | None:
 
 def save_genome(genome: Genome, year: int):
     path = genome_path(genome.language, genome.version, year)
-    genome.updated_at = datetime.utcnow().isoformat()
+    genome.updated_at = datetime.now(timezone.utc).isoformat()
     data = {
         "language": genome.language,
         "version": genome.version,
@@ -108,7 +108,7 @@ def ensure_genome(lang: str, version: str, year: int) -> Genome:
         fragments=[],
         total_entries_reviewed=0,
         total_pauses=0,
-        updated_at=datetime.utcnow().isoformat(),
+        updated_at=datetime.now(timezone.utc).isoformat(),
     )
 
 
@@ -138,7 +138,7 @@ def absorb_reaction(
     # Try to find an existing fragment in the same category with overlapping quote
     existing = _find_similar_fragment(genome, category, quote)
 
-    now = datetime.utcnow().isoformat()
+    now = datetime.now(timezone.utc).isoformat()
 
     if existing:
         if date not in existing.evidence_dates:
@@ -176,21 +176,27 @@ def _find_similar_fragment(
     category: PauseCategory,
     quote: str,
 ) -> GenomeFragment | None:
-    """Simple overlap check: same category + shared words > 40%."""
+    """Word-overlap check: same category + shared words > 40%.
+
+    Always requires word overlap regardless of fragment confidence.
+    High-confidence fragments do NOT absorb all same-category PAUSEs —
+    distinct quotes create new fragments so the genome keeps learning.
+    Returns the best-matching fragment (highest overlap), or None.
+    """
     quote_words = set(quote.lower().split())
+    best: GenomeFragment | None = None
+    best_overlap = 0.0
     for frag in genome.fragments:
         if frag.category != category:
             continue
-        # High-confidence fragments match on category alone — pattern is established
-        if frag.confidence >= 0.7:
-            return frag
         frag_words = set(frag.example_quote.lower().split())
         if not quote_words or not frag_words:
             continue
         overlap = len(quote_words & frag_words) / min(len(quote_words), len(frag_words))
-        if overlap >= 0.4:
-            return frag
-    return None
+        if overlap >= 0.4 and overlap > best_overlap:
+            best_overlap = overlap
+            best = frag
+    return best
 
 def get_saved_genomes() -> list[str]:
     """Returns list of genome JSON filenames found in the current working directory."""

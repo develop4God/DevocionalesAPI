@@ -24,6 +24,7 @@ Available roles for pt:
 """
 
 import argparse
+import json
 import sys
 
 from audit import audit_path, print_summary
@@ -34,6 +35,32 @@ run_overnight = None
 get_model_for_key = None
 call_ollama = None
 from source import extract_entries, fetch_remote, list_known_files, load_local
+
+
+def cmd_requeue_errors(lang: str, version: str, year: int):
+    """Remove error_parse / error_tech entries so they are re-processed on next run."""
+    log_path = audit_path(lang, version, year)
+    if not log_path.exists():
+        print(f"  No audit log at {log_path}")
+        return
+    lines = log_path.read_text(encoding="utf-8").splitlines()
+    kept: list[str] = []
+    removed = 0
+    for line in lines:
+        line = line.rstrip()
+        if not line:
+            continue
+        try:
+            rec = json.loads(line)
+            if rec.get("action") in ("error_parse", "error_tech"):
+                removed += 1
+            else:
+                kept.append(line)
+        except json.JSONDecodeError:
+            kept.append(line)
+    log_path.write_text("\n".join(kept) + ("\n" if kept else ""), encoding="utf-8")
+    print(f"  ✅ Removed {removed} error entries from {log_path.name}")
+    print(f"     They will be re-processed on the next run.")
 
 
 def cmd_genome(lang: str, version: str, year: int):
@@ -64,6 +91,7 @@ def main():
             "  python critic_v3.py --lang es --version NVI --year 2025\n"
             "  python critic_v3.py --lang pt --version ARC --year 2025 --local ./file.json\n"
             "  python critic_v3.py --genome pt ARC 2025\n"
+            "  python critic_v3.py --lang pt --version ARC --year 2025 --requeue-errors\n"
             "  python critic_v3.py --list-files\n"
         ),
     )
@@ -80,6 +108,8 @@ def main():
     parser.add_argument("--report",     action="store_true", help="Print audit report and exit")
     parser.add_argument("--genome",     nargs=3, metavar=("LANG", "VERSION", "YEAR"), help="Print genome and exit")
     parser.add_argument("--list-files", action="store_true", help="List known lang/version combinations and exit")
+    parser.add_argument("--requeue-errors", action="store_true",
+                        help="Remove error_parse/error_tech entries from audit log so they are re-processed")
     parser.add_argument("--provider", choices=["cloud", "local", "auto"], default="auto", help="Which LLM client to use: cloud, local (Ollama), or auto (default)")
     # Dynamic import/alias for LLM client
 
@@ -131,6 +161,10 @@ def main():
                                ("--year", args.year)] if not v]
     if missing:
         parser.error(f"Required: {', '.join(missing)}")
+
+    if args.requeue_errors:
+        cmd_requeue_errors(args.lang, args.version, args.year)
+        return
 
     if args.report:
         print_summary(audit_path(args.lang, args.version, args.year, role=args.role))

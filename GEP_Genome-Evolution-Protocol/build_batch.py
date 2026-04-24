@@ -66,12 +66,33 @@ GITHUB_URL = (
     "/refs/heads/main/Devocional_year_{year}_{lang}_{version}.json"
 )
 
-# Default model — Fireworks thinking model for batch phase2
-DEFAULT_MODEL = "accounts/fireworks/models/qwen3-vl-30b-a3b-thinking"
+# Hardcoded fallbacks — only used when providers.yml cannot be read.
+_FALLBACK_FIREWORKS = "accounts/fireworks/models/qwen3-vl-30b-a3b-thinking"
+_FALLBACK_DASHSCOPE_P2 = "qwen-plus"
+_FALLBACK_DASHSCOPE_P1 = "qwen-flash"
 
-# DashScope batch models (OpenAI-compatible, 50% off real-time pricing)
-DASHSCOPE_MODEL_PHASE2 = "qwen-plus"
-DASHSCOPE_MODEL_PHASE1 = "qwen-flash"
+# Sentinel — argparse default; replaced at runtime via providers.yml lookup.
+_AUTO = "__auto__"
+
+
+def _model_for_provider(provider: str, phases: list[int]) -> str:
+    """Derive model from providers.yml so it stays in sync with config.
+
+    Falls back to hardcoded strings only if providers.yml is unavailable.
+    """
+    phase_key = f"phase{2 if 2 in phases else 1}"
+    id_hint = provider.lower()  # e.g. "fireworks" or "dashscope"
+    try:
+        from cloud_client import _load_config
+        for p in _load_config().get("providers", []):
+            if p.get("phase") == phase_key and id_hint in p.get("id", "").lower():
+                return p["model"]
+    except Exception:
+        pass
+    # Static fallbacks
+    if provider == "dashscope":
+        return _FALLBACK_DASHSCOPE_P2 if 2 in phases else _FALLBACK_DASHSCOPE_P1
+    return _FALLBACK_FIREWORKS
 
 
 # ── Entry loading ─────────────────────────────────────────────────────────────
@@ -257,7 +278,7 @@ def main():
     parser.add_argument("--year",     required=True, type=int, help="Year (2025, 2026, ...)")
     parser.add_argument("--phase",    default="2",
                         help="Phases to include: 1, 2, or comma-separated e.g. 1,2 (default: 2)")
-    parser.add_argument("--model",    default=DEFAULT_MODEL, help="Model ID (Fireworks or DashScope)")
+    parser.add_argument("--model",    default=_AUTO, help="Model ID override (default: read from providers.yml)")
     parser.add_argument("--provider", default="fireworks",
                         choices=["fireworks", "dashscope"],
                         help="Batch provider: fireworks (default) or dashscope")
@@ -279,10 +300,8 @@ def main():
     print(f"\n{'═'*60}")
     print(f"  🏗️  GEP Batch Builder")
     print(f"  Lang: {args.lang} | Version: {args.version} | Year: {args.year}")
-    # Apply provider-specific model defaults
-    model = args.model
-    if model == DEFAULT_MODEL and args.provider == "dashscope":
-        model = DASHSCOPE_MODEL_PHASE2 if 2 in phases else DASHSCOPE_MODEL_PHASE1
+    # Resolve model: providers.yml is the SOT; --model overrides when supplied explicitly
+    model = args.model if args.model != _AUTO else _model_for_provider(args.provider, phases)
     print(f"  Provider: {args.provider}")
     print(f"  Phases: {phases}")
     print(f"  Model: {model}")

@@ -18,6 +18,7 @@ Output:
 
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -54,14 +55,16 @@ def load_input_index(input_path: Path) -> dict[str, dict]:
                 custom_id = rec.get("custom_id", "")
                 if not custom_id:
                     continue
-                # Extract date from user prompt content
+                # Extract date from user prompt content using regex
                 messages = rec.get("body", {}).get("messages", [])
                 date = ""
                 for msg in messages:
                     if msg.get("role") == "user":
                         content = msg.get("content", "")
-                        if isinstance(content, str) and content.startswith("Date:"):
-                            date = content.split("\n")[0].replace("Date:", "").strip()
+                        if isinstance(content, str):
+                            m = re.search(r"Date:\s*(\d{4}-\d{2}-\d{2})", content)
+                            if m:
+                                date = m.group(1)
                         break
                 index[custom_id] = {
                     "id": custom_id,

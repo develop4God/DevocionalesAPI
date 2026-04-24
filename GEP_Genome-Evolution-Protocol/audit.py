@@ -5,7 +5,7 @@ Single responsibility: read and write the JSONL audit log.
 
 import hashlib
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 from models import AuditRecord, ReaderReaction, Verdict
@@ -41,7 +41,7 @@ def load_reviewed_dates(log_path: Path) -> set[str]:
                 continue
             try:
                 rec = json.loads(line)
-                if rec.get("action") == "reviewed":
+                if rec.get("action") in ("reviewed", "flagged"):
                     reviewed.add(rec["date"])
             except (json.JSONDecodeError, KeyError):
                 pass
@@ -107,7 +107,7 @@ def build_record(
         id=entry_id,
         language=lang,
         version=version,
-        reviewed_at=datetime.utcnow().isoformat(),
+        reviewed_at=datetime.now(timezone.utc).isoformat(),
         action=action,
         verdict=reaction.verdict,
         reaction=reaction.reaction,
@@ -147,16 +147,28 @@ def print_summary(log_path: Path):
             try:
                 rec = json.loads(line)
                 total += 1
-                v = rec.get("verdict")
-                if v == "OK":
+                action = rec.get("action")
+                if action == "reviewed":
                     ok += 1
-                elif v == "PAUSE":
+                elif action == "flagged":
                     pauses += 1
                     cat = rec.get("category") or "other"
                     by_category[cat] = by_category.get(cat, 0) + 1
                     pause_dates.append((rec["date"], cat, rec.get("quoted_pause", "")[:60]))
-                else:
+                elif action in ("error_tech", "error_parse"):
                     errors += 1
+                else:
+                    # Legacy record without action field — fall back to verdict
+                    v = rec.get("verdict")
+                    if v == "OK":
+                        ok += 1
+                    elif v == "PAUSE":
+                        pauses += 1
+                        cat = rec.get("category") or "other"
+                        by_category[cat] = by_category.get(cat, 0) + 1
+                        pause_dates.append((rec["date"], cat, rec.get("quoted_pause", "")[:60]))
+                    else:
+                        errors += 1
             except (json.JSONDecodeError, KeyError):
                 errors += 1
 

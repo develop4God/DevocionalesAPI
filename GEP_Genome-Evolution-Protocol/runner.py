@@ -37,6 +37,28 @@ def _safe_parse_json(raw: str) -> dict | None:
 PHASE1_MODEL = "qwen3:4b"
 
 
+def _resolve_p2_model(model_key: str) -> str:
+    """Resolve the Phase 2 model: providers.yml is the SOT when backend=local."""
+    from cloud_client import providers_for_phase, settings as _settings
+    model = get_model_for_key(model_key)
+    if _settings().get("default_backend") == "local":
+        _p2 = providers_for_phase(2)
+        if _p2:
+            model = _p2[0]["model"]
+    return model
+
+
+def _log_model_debug(model: str) -> None:
+    """Print which model is active for each phase (DEBUG header)."""
+    from cloud_client import providers_for_phase
+    _p1_dbg = providers_for_phase(1)
+    _p2_dbg = providers_for_phase(2)
+    _p1_think = _p1_dbg[0].get("thinking_mode", {}).get("supported", False) if _p1_dbg else "?"
+    _p2_think = _p2_dbg[0].get("thinking_mode", {}).get("supported", False) if _p2_dbg else "?"
+    print(f"  [DEBUG] P1 -> {_p1_dbg[0]['model']} | think={_p1_think}")
+    print(f"  [DEBUG] P2 -> {model} | think={_p2_think}")
+
+
 def _run_log_path(lang: str, version: str, year: int) -> Path:
     _paths.ensure_dirs()
     return _paths.LOGS_DIR / f"run_log_{lang}_{version}_{year}.log"
@@ -241,20 +263,8 @@ def run_interactive(
     start_date: str | None,
     phase: int = 0,
 ):
-    model    = get_model_for_key(model_key)
-    # When local backend is active, providers.yml is the SOT for model selection
-    from cloud_client import providers_for_phase, settings as _settings
-    if _settings().get("default_backend") == "local":
-        _p2 = providers_for_phase(2)
-        if _p2:
-            model = _p2[0]["model"]
-    # DEBUG — confirm model SOT
-    _p1_dbg = providers_for_phase(1)
-    _p2_dbg = providers_for_phase(2)
-    _p1_think = _p1_dbg[0].get("thinking_mode", {}).get("supported", False) if _p1_dbg else "?"
-    _p2_think = _p2_dbg[0].get("thinking_mode", {}).get("supported", False) if _p2_dbg else "?"
-    print(f"  [DEBUG] P1 -> {_p1_dbg[0]['model']} | think={_p1_think}")
-    print(f"  [DEBUG] P2 -> {model} | think={_p2_think}")
+    model = _resolve_p2_model(model_key)
+    _log_model_debug(model)
     log_path = audit_path(lang, version, year)
     genome   = ensure_genome(lang, version, year)
     reviewed = load_reviewed_dates(log_path)
@@ -339,20 +349,8 @@ def run_overnight(
     start_date: str | None,
     phase: int = 0,
 ):
-    model    = get_model_for_key(model_key)
-    # When local backend is active, providers.yml is the SOT for model selection
-    from cloud_client import providers_for_phase, settings as _settings
-    if _settings().get("default_backend") == "local":
-        _p2 = providers_for_phase(2)
-        if _p2:
-            model = _p2[0]["model"]
-    # DEBUG — confirm model SOT
-    _p1_dbg = providers_for_phase(1)
-    _p2_dbg = providers_for_phase(2)
-    _p1_think = _p1_dbg[0].get("thinking_mode", {}).get("supported", False) if _p1_dbg else "?"
-    _p2_think = _p2_dbg[0].get("thinking_mode", {}).get("supported", False) if _p2_dbg else "?"
-    print(f"  [DEBUG] P1 -> {_p1_dbg[0]['model']} | think={_p1_think}")
-    print(f"  [DEBUG] P2 -> {model} | think={_p2_think}")
+    model = _resolve_p2_model(model_key)
+    _log_model_debug(model)
     log_path = audit_path(lang, version, year)
     run_log  = _run_log_path(lang, version, year)
     genome   = ensure_genome(lang, version, year)

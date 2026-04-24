@@ -589,18 +589,34 @@ PHASE2_CATEGORY_HINTS = """\
     - other"""
 
 PHASE2_THINKING_PREAMBLE = """\
-Before you respond, think through the entry carefully:
+Before you respond, complete each check below in order:
 
-1. Read the reflection. Is it SPECIFIC to this verse, or could it have been written
-    about any verse on a similar topic? If generic, flag it as "other".
-2. Read the prayer. Does it actually continue the theme of the reflection and verse?
-   A prayer that shifts topic is prayer_drift.
-3. Check register. Does any sentence feel copied from a theology textbook?
-4. Check for hallucinated quotes — "As [person] once said..." — are you confident
-   that attribution is real?
-5. Check the genome patterns below. Do any appear in today's entry?
+1. SPECIFICITY TEST — Read the reflection. Ask yourself:
+   "Could this exact reflection have been written about a DIFFERENT verse on the same theme?"
+   If yes, the reflection is generic — flag it as "other".
+   A specific reflection names or develops something unique to THIS verse.
 
-Only after this review, form your verdict.
+2. PRAYER-DRIFT TEST — Identify the 2-3 main themes of the reflection.
+   Does the prayer address at least one of those themes?
+   If the prayer introduces a completely unrelated topic, that is prayer_drift.
+
+3. REGISTER TEST — Scan each sentence. Would a non-theologian understand it immediately?
+   Academic jargon, Latin phrases, or seminary-level language in a morning devotional
+   breaks the intimate tone — flag it as register_drift.
+
+4. ATTRIBUTION TEST — If any quote is attributed to a named person ("As [X] once said…"),
+   are you confident that exact quote and attribution are historically accurate?
+   Any doubt → flag as hallucination.
+
+5. GENOME TEST — Review the known patterns listed below.
+   Has any of those specific patterns appeared again in today's entry?
+
+6. FALSE-POSITIVE GUARD — Before marking PAUSE, ask:
+   "Would a real reader actually stop here, or am I over-analyzing as a critic?"
+   Style differences and personal preferences are NOT pauses.
+   Only flag genuine errors or disconnections a typical reader would notice.
+
+Only after completing all 6 checks, form your final verdict.
 """
 
 PHASE2_SUSPICION_STEP = """\
