@@ -1,4 +1,4 @@
-# GEP Critic v3 — Simulated Reader
+# GEP — Genome Evolution Protocol
 
 ## Philosophy
 Not an editor. Not a theologian. A faithful reader who opens the app every morning.
@@ -6,28 +6,180 @@ If something feels wrong, they notice it. That reaction is the gold.
 
 ---
 
-## Architecture (SOLID)
+## Project Structure
 
 ```
-critic_v3.py       ← entry point, CLI only
-runner.py          ← orchestrates interactive / overnight modes
-prompts.py         ← builds LLM prompts (simulated reader persona)
-ollama_client.py   ← Ollama API calls, retry logic, think=True streaming
-source.py          ← fetches and parses devotional JSON
-audit.py           ← reads/writes JSONL audit log
-genome.py          ← GEP genome: load, absorb, persist, promote
-models.py          ← all data structures (single source of truth)
+GEP_Genome-Evolution-Protocol/
+├── config/
+│   └── providers.yml          ← all LLM provider definitions (API keys, models, limits)
+├── data/
+│   ├── audit/                 ← critic_audit_{lang}_{version}_{year}.jsonl
+│   ├── batch_input/           ← batch_input_{lang}_{version}_{year}_p{N}.jsonl
+│   ├── batch_output/          ← BIJOutputSet_{lang}_{version}_{year}_results.jsonl
+│   ├── genomes/               ← genome_{lang}_{version}_{year}.json
+│   ├── logs/                  ← run_log_{lang}_{version}_{year}.log
+│   └── source/                ← Devocional_year_{year}_{lang}_{version}.json
+├── backup-logs/               ← historical backups and deprecated files
+├── Phase1_critic/             ← Phase 1 output samples
+│
+├── paths.py           ← SINGLE SOURCE OF TRUTH for all directory paths
+├── audit.py           ← read/write JSONL audit log
+├── batch_client.py    ← OpenAI-compatible batch API (upload/submit/poll/download)
+├── batch_pipeline.py  ← full pipeline orchestrator (one command end-to-end)
+├── build_batch.py     ← build JSONL batch file from devotional JSON
+├── cloud_client.py    ← provider-agnostic API call routing (providers.yml driven)
+├── collect_batch.py   ← parse batch results → write audit log
+├── critic_v3.py       ← interactive/overnight CLI entry point
+├── genome.py          ← GEP genome: load, absorb, persist, promote
+├── models.py          ← all data structures (single source of truth)
+├── models_helper.py   ← model utilities
+├── ollama_client.py   ← local Ollama routing
+├── prompts.py         ← LLM prompt builders (simulated reader persona)
+├── runner.py          ← orchestrates interactive / overnight modes
+├── seed_tl_genome.py  ← one-time genome seeding utility
+├── source.py          ← fetch and parse devotional source JSON
+└── test_pipeline.py   ← pipeline tests
 ```
 
 ---
 
-## Two-Phase Flow
+## SOLID Architecture
 
-Each entry is processed in two independent phases:
+| Principle | Applied |
+|---|---|
+| **S** — Single Responsibility | Each module has one job. `audit.py` only reads/writes logs. `batch_client.py` only talks to the batch API. |
+| **O** — Open/Closed | Add providers in `config/providers.yml` — no code changes. |
+| **L** — Liskov | `batch_pipeline.py` calls `process_results()` the same way `collect_batch` CLI does. |
+| **I** — Interface Segregation | `BatchClient` exposes only `upload/submit/poll/download`. Orchestration is in `batch_pipeline.py`. |
+| **D** — Dependency Inversion | All paths come from `paths.py`. All providers come from `providers.yml`. Nothing is hardcoded. |
 
+---
+
+## Workflow
+
+### Option A — Full automated pipeline (recommended)
+
+```bash
+python3 batch_pipeline.py \
+  --lang es --version RVR1960 --year 2025 \
+  --phase 1 --provider dashscope \
+  --local Devocional_year_2025_es_RVR1960.json
 ```
-Entry
-  │
+
+This single command:
+1. **Builds** the JSONL from the source file
+2. **Uploads** to DashScope
+3. **Submits** the batch job
+4. **Polls** until completion (every 30s by default)
+5. **Downloads** results → `data/batch_output/`
+6. **Collects** results → `data/audit/critic_audit_{lang}_{version}_{year}.jsonl`
+
+### Option B — Step by step
+
+```bash
+# 1. Build JSONL only
+python3 build_batch.py \
+  --lang es --version RVR1960 --year 2025 \
+  --phase 1 --provider dashscope \
+  --local data/source/Devocional_year_2025_es_RVR1960.json
+# Output: data/batch_input/batch_input_es_RVR1960_2025_p1.jsonl
+
+# 2. Upload + submit + poll + download + collect
+python3 batch_pipeline.py \
+  --lang es --version RVR1960 --year 2025 \
+  --phase 1 --provider dashscope \
+  --input batch_input_es_RVR1960_2025_p1.jsonl
+```
+
+### Option C — Resume from existing files
+
+```bash
+# Resume from already-downloaded results (skip upload/submit/poll)
+python3 batch_pipeline.py \
+  --lang es --version RVR1960 --year 2025 \
+  --phase 1 --provider dashscope \
+  --input batch_input_es_RVR1960_2025_p1.jsonl \
+  --results BIJOutputSet_es_RVR1960_2025_p1_results.jsonl
+```
+
+---
+
+## Phases
+
+| Phase | Model (DashScope) | Purpose |
+|---|---|---|
+| `--phase 1` | `qwen-flash` | Linguistic scan — grammar, clarity, fidelity |
+| `--phase 2` | `qwen-plus` | Theological content check — PAUSE detection |
+| `--phase 1,2` | Both | Combined in one request |
+
+---
+
+## Providers
+
+All providers are defined in `config/providers.yml`. Add a new provider there — no code changes required.
+
+```bash
+# List providers and check API key status
+python3 cloud_client.py --list
+
+# Check today's token usage
+python3 cloud_client.py --usage
+
+# Test a provider (phase 1 or 2)
+python3 cloud_client.py --test --phase 1
+```
+
+---
+
+## Dry Run
+
+Always preview before submitting:
+
+```bash
+python3 batch_pipeline.py \
+  --lang es --version RVR1960 --year 2025 \
+  --phase 1 --provider dashscope \
+  --local Devocional_year_2025_es_RVR1960.json \
+  --dry-run
+```
+
+---
+
+## Interactive / Overnight Mode
+
+For real-time provider routing (Groq → Cerebras → local fallback):
+
+```bash
+python3 critic_v3.py --lang tl --version ASND --year 2026
+python3 critic_v3.py --lang tl --version ASND --year 2026 --overnight
+```
+
+---
+
+## Environment Setup
+
+```bash
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+
+# Set API keys
+export DASHSCOPE_API_KEY=sk-...
+export GROQ_API_KEY=gsk_...
+export FIREWORKS_API_KEY=fw_...
+```
+
+---
+
+## Output Files
+
+| Pattern | Location | Description |
+|---|---|---|
+| `batch_input_{lang}_{version}_{year}_p{N}.jsonl` | `data/batch_input/` | Batch request file sent to provider |
+| `BIJOutputSet_{lang}_{version}_{year}_results.jsonl` | `data/batch_output/` | Raw provider responses |
+| `critic_audit_{lang}_{version}_{year}.jsonl` | `data/audit/` | Final audit log (verdicts + reactions) |
+| `genome_{lang}_{version}_{year}.json` | `data/genomes/` | Evolved pattern genome |
+| `run_log_{lang}_{version}_{year}.log` | `data/logs/` | Interactive run logs |
+
   ├─ Phase 1 — Linguistic (qwen3:4b, ~15-20s)
   │    Native speaker scan: typos, grammar, repeated phrases, unnatural phrasing.
   │    Returns: CLEAN | FLAG

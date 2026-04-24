@@ -18,8 +18,12 @@ CONFIDENCE_BOOST   = 0.15  # each additional evidence date
 CONFIDENCE_MAX     = 0.95
 
 
+import paths as _paths
+
+
 def genome_path(lang: str, version: str, year: int) -> Path:
-    return Path(f"genome_{lang}_{version}_{year}.json")
+    _paths.ensure_dirs()
+    return _paths.GENOMES_DIR / f"genome_{lang}_{version}_{year}.json"
 
 
 def load_genome(lang: str, version: str, year: int) -> Genome | None:

@@ -9,11 +9,13 @@ from datetime import datetime
 from pathlib import Path
 
 from models import AuditRecord, ReaderReaction, Verdict
+import paths as _paths
 
 
 def audit_path(lang: str, version: str, year: int, role: str = "default") -> Path:
+    _paths.ensure_dirs()
     suffix = f"_{role}" if role != "default" else ""
-    return Path(f"critic_audit_{lang}_{version}_{year}{suffix}.jsonl")
+    return _paths.AUDIT_DIR / f"critic_audit_{lang}_{version}_{year}{suffix}.jsonl"
 
 
 def _split_thinking(raw: str | None) -> tuple[str | None, str | None]:

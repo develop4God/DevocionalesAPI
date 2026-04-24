@@ -89,7 +89,7 @@ except ImportError:
 
 # ── Config loading ────────────────────────────────────────────────────────────
 
-_PROVIDERS_YML = Path(__file__).parent / "providers.yml"
+from paths import PROVIDERS_YML as _PROVIDERS_YML
 _config: dict | None = None
 
 

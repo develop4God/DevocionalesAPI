@@ -53,6 +53,7 @@ from build_batch import (
 )
 from collect_batch import process_results
 from genome import ensure_genome
+import paths as _paths
 
 
 # ── Provider resolution ────────────────────────────────────────────────────────
@@ -127,7 +128,7 @@ def _build_jsonl(
     out_path = (
         Path(output)
         if output
-        else Path(f"batch_input_{lang}_{version}_{year}{suffix}.jsonl")
+        else _paths.BATCH_INPUT_DIR / f"batch_input_{lang}_{version}_{year}{suffix}.jsonl"
     )
     write_jsonl(records, out_path)
     return out_path
@@ -168,7 +169,7 @@ def run_pipeline(args: argparse.Namespace) -> None:
 
     # ── Step 1: Build or use existing JSONL ───────────────────────────────
     if args.input:
-        batch_path = Path(args.input)
+        batch_path = _paths.resolve_batch_input(args.input)
         print(f"  ♻️  Using existing JSONL: {batch_path}")
     else:
         print(f"\n  🏗️  Building batch JSONL …")
@@ -191,7 +192,7 @@ def run_pipeline(args: argparse.Namespace) -> None:
 
     # ── Steps 2–5: Upload → Submit → Poll → Download ──────────────────────
     if args.results:
-        results_path = Path(args.results)
+        results_path = _paths.resolve_batch_output(args.results)
         print(f"  ♻️  Using existing results: {results_path}")
     else:
         client = BatchClient(provider_id)
@@ -209,7 +210,7 @@ def run_pipeline(args: argparse.Namespace) -> None:
         print(f"  ✅ output_file_id = {output_file_id}")
 
         stem = batch_path.stem.replace("batch_input_", "BIJOutputSet_")
-        results_path = batch_path.with_name(f"{stem}_results.jsonl")
+        results_path = _paths.BATCH_OUTPUT_DIR / f"{stem}_results.jsonl"
         print(f"\n  📥 Downloading → {results_path.name} …")
         client.download(output_file_id, results_path)
         print(f"  ✅ Saved: {results_path}")

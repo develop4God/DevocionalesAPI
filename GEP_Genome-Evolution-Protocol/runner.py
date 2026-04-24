@@ -23,6 +23,7 @@ from prompts import (
     build_phase1_system, build_phase1_user,
     build_phase2_system, build_phase2_user,
 )
+import paths as _paths
 
 
 def _safe_parse_json(raw: str) -> dict | None:
@@ -37,7 +38,8 @@ PHASE1_MODEL = "qwen3:4b"
 
 
 def _run_log_path(lang: str, version: str, year: int) -> Path:
-    return Path(f"run_log_{lang}_{version}_{year}.log")
+    _paths.ensure_dirs()
+    return _paths.LOGS_DIR / f"run_log_{lang}_{version}_{year}.log"
 
 
 def _log(run_log: Path, msg: str, also_print: bool = True):

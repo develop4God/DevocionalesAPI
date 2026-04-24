@@ -57,6 +57,7 @@ from prompts import (
     build_phase1_system, build_phase1_user,
     build_phase2_system, build_phase2_user,
 )
+import paths as _paths
 
 # ── Config ────────────────────────────────────────────────────────────────────
 
@@ -77,8 +78,9 @@ DASHSCOPE_MODEL_PHASE1 = "qwen-flash"
 
 def load_entries(lang: str, version: str, year: int, local: str | None) -> list[DevotionalEntry]:
     if local:
-        print(f"  📂 Loading local: {local}")
-        with open(local, encoding="utf-8") as f:
+        local_path = _paths.resolve_local(local)
+        print(f"  📂 Loading local: {local_path}")
+        with open(local_path, encoding="utf-8") as f:
             raw = json.load(f)
     else:
         url = GITHUB_URL.format(year=year, lang=lang, version=version)
@@ -341,7 +343,7 @@ def main():
     # Write output — filename reflects phases included
     suffix = phase_suffix(phases)
     out_path = Path(args.output) if args.output else \
-               Path(f"batch_input_{args.lang}_{args.version}_{args.year}{suffix}.jsonl")
+               _paths.BATCH_INPUT_DIR / f"batch_input_{args.lang}_{args.version}_{args.year}{suffix}.jsonl"
     write_jsonl(records, out_path)
 
     print(f"\n  Next step:")
