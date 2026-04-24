@@ -52,9 +52,9 @@ providers:
       style: none
     limits:
       tpd: null
-      tpm: 60000
+      tpm: 5000000
       rpd: 500
-      rpm: 30
+      rpm: 600
 
   - id: local_phase1
     name: "Local/qwen3:4b"
@@ -102,6 +102,10 @@ providers:
     thinking_mode:
       supported: false
       style: none
+    batch:
+      supported: true
+      endpoint: "/v1/chat/completions"
+      completion_window: "24h"
     limits:
       tpd: null
       tpm: null
@@ -119,6 +123,10 @@ providers:
     thinking_mode:
       supported: false
       style: none
+    batch:
+      supported: true
+      endpoint: "/v1/chat/completions"
+      completion_window: "24h"
     limits:
       tpd: null
       tpm: null

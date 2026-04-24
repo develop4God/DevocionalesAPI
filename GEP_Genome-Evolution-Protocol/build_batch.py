@@ -336,7 +336,7 @@ def main():
     print(f"  📦 {len(records)} entries → batch")
 
     # Cost estimate
-    estimate_cost(records, args.model)
+    estimate_cost(records, model)
 
     # Write output — filename reflects phases included
     suffix = phase_suffix(phases)
@@ -345,10 +345,10 @@ def main():
     write_jsonl(records, out_path)
 
     print(f"\n  Next step:")
-    provider_hint = "DashScope" if args.provider == "dashscope" else "Fireworks"
-    print(f"    Upload to {provider_hint} and submit batch job.")
-    print(f"    Then run: python3 collect_batch.py --input {out_path} --results <downloaded.jsonl> \\")
-    print(f"              --lang {args.lang} --version {args.version} --year {args.year}")
+    print(f"    Run the full pipeline (upload → submit → poll → download → collect):")
+    print(f"      python3 batch_pipeline.py --lang {args.lang} --version {args.version} --year {args.year} \\")
+    print(f"          --phase {args.phase} --provider {args.provider} \\")
+    print(f"          --input {out_path}")
     print(f"{'═'*60}\n")
 
 
