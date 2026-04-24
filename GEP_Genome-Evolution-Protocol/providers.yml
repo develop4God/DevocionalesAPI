@@ -90,6 +90,39 @@ providers:
       rpd: null
       rpm: null
 
+  - id: dashscope_batch_phase2
+    name: "DashScope/qwen-plus"
+    phase: phase2
+    priority: 3
+    default: false
+    client_type: api
+    base_url: "https://dashscope-intl.aliyuncs.com/compatible-mode/v1"
+    model: "qwen-plus"
+    env_var: DASHSCOPE_API_KEY
+    thinking_mode:
+      supported: false
+      style: none
+    limits:
+      tpd: null
+      tpm: null
+      rpm: null
+
+  - id: dashscope_batch_phase1
+    name: "DashScope/qwen-flash"
+    phase: phase1
+    priority: 3
+    default: false
+    client_type: api
+    base_url: "https://dashscope-intl.aliyuncs.com/compatible-mode/v1"
+    model: "qwen-flash"
+    env_var: DASHSCOPE_API_KEY
+    thinking_mode:
+      supported: false
+      style: none
+    limits:
+      tpd: null
+      tpm: null
+      rpm: null
 settings:
   default_backend: local         #"api" or "local" — switches all phases at once
   daily_token_tracking: true

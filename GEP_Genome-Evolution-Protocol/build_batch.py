@@ -41,6 +41,14 @@ import sys
 import urllib.request
 from pathlib import Path
 
+# Load .env for local development (optional)
+try:
+    from dotenv import load_dotenv
+    from pathlib import Path as _Path
+    load_dotenv(dotenv_path=_Path(__file__).parent / ".env")
+except ImportError:
+    pass
+
 # ── Project imports ───────────────────────────────────────────────────────────
 from audit  import audit_path, load_reviewed_dates
 from genome import ensure_genome
@@ -59,6 +67,10 @@ GITHUB_URL = (
 
 # Default model — Fireworks thinking model for batch phase2
 DEFAULT_MODEL = "accounts/fireworks/models/qwen3-vl-30b-a3b-thinking"
+
+# DashScope batch models (OpenAI-compatible, 50% off real-time pricing)
+DASHSCOPE_MODEL_PHASE2 = "qwen-plus"
+DASHSCOPE_MODEL_PHASE1 = "qwen-flash"
 
 
 # ── Entry loading ─────────────────────────────────────────────────────────────
@@ -209,12 +221,13 @@ def estimate_cost(records: list[dict], model: str):
     user_tokens   = user_chars   // 4
     output_tokens = output_chars // 4
 
-    # Fireworks pricing (approx, May 2025)
-    # qwen2p5-72b: $0.90/1M input, $0.90/1M output (real-time)
-    # Batch: 50% off → $0.45/1M
-    # Cached tokens: 50% off cached → $0.225/1M for system prompt after first hit
+    # Pricing (batch = 50% off real-time)
+    # Fireworks qwen3-vl-30b: ~$0.90/1M → batch ~$0.45/1M
+    # DashScope qwen-plus: ~$0.80/1M input → batch ~$0.40/1M
+    # DashScope qwen-flash: ~$0.14/1M input → batch ~$0.07/1M
+    # Using Fireworks batch rates as conservative estimate
     price_input_per_m  = 0.45   # batch rate
-    price_cached_per_m = 0.225  # cached system prompt
+    price_cached_per_m = 0.225  # cached system prompt (Fireworks)
     price_output_per_m = 0.45
 
     n = len(records)
@@ -242,7 +255,10 @@ def main():
     parser.add_argument("--year",     required=True, type=int, help="Year (2025, 2026, ...)")
     parser.add_argument("--phase",    default="2",
                         help="Phases to include: 1, 2, or comma-separated e.g. 1,2 (default: 2)")
-    parser.add_argument("--model",    default=DEFAULT_MODEL, help="Fireworks model ID")
+    parser.add_argument("--model",    default=DEFAULT_MODEL, help="Model ID (Fireworks or DashScope)")
+    parser.add_argument("--provider", default="fireworks",
+                        choices=["fireworks", "dashscope"],
+                        help="Batch provider: fireworks (default) or dashscope")
     parser.add_argument("--local",    metavar="FILE", help="Use local JSON file instead of GitHub")
     parser.add_argument("--skip-reviewed", action="store_true",
                         help="Skip entries already in the audit log")
@@ -261,8 +277,13 @@ def main():
     print(f"\n{'═'*60}")
     print(f"  🏗️  GEP Batch Builder")
     print(f"  Lang: {args.lang} | Version: {args.version} | Year: {args.year}")
+    # Apply provider-specific model defaults
+    model = args.model
+    if model == DEFAULT_MODEL and args.provider == "dashscope":
+        model = DASHSCOPE_MODEL_PHASE2 if 2 in phases else DASHSCOPE_MODEL_PHASE1
+    print(f"  Provider: {args.provider}")
     print(f"  Phases: {phases}")
-    print(f"  Model: {args.model}")
+    print(f"  Model: {model}")
     print(f"{'═'*60}")
 
     # Load entries
@@ -297,10 +318,16 @@ def main():
         entries        = entries,
         reviewed       = reviewed,
         genome         = genome,
-        model          = args.model,
+        model          = model,
         skip_reviewed  = args.skip_reviewed,
         phases         = phases,
     )
+
+    # DashScope requires method + url fields at record top level
+    if args.provider == "dashscope":
+        for rec in records:
+            rec["method"] = "POST"
+            rec["url"] = "/v1/chat/completions"
 
     if not records:
         print("  ✅ Nothing to build — all entries already reviewed.")
@@ -318,7 +345,8 @@ def main():
     write_jsonl(records, out_path)
 
     print(f"\n  Next step:")
-    print(f"    Upload to Fireworks and submit batch job.")
+    provider_hint = "DashScope" if args.provider == "dashscope" else "Fireworks"
+    print(f"    Upload to {provider_hint} and submit batch job.")
     print(f"    Then run: python3 collect_batch.py --input {out_path} --results <downloaded.jsonl> \\")
     print(f"              --lang {args.lang} --version {args.version} --year {args.year}")
     print(f"{'═'*60}\n")

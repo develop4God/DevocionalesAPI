@@ -27,6 +27,14 @@ import json
 import sys
 from pathlib import Path
 
+# Load .env for local development (optional)
+try:
+    from dotenv import load_dotenv
+    from pathlib import Path as _Path
+    load_dotenv(dotenv_path=_Path(__file__).parent / ".env")
+except ImportError:
+    pass
+
 # ── Project imports ───────────────────────────────────────────────────────────
 from audit import audit_path, append_record, build_record
 from cloud_client import _parse_reaction
@@ -71,11 +79,17 @@ def load_input_index(input_path: Path) -> dict[str, dict]:
 
 
 def extract_content(result_line: dict) -> str | None:
-    """Extract raw model content from Fireworks result line."""
+    """
+    Extract raw model content from batch result line.
+    Handles two response shapes:
+      - Fireworks: response.choices[0].message.content
+      - DashScope:  response.body.choices[0].message.content
+    """
+    resp = result_line.get("response", {})
+    # DashScope wraps content under response.body
+    body = resp.get("body") or resp
     try:
-        return (
-            result_line["response"]["choices"][0]["message"]["content"]
-        )
+        return body["choices"][0]["message"]["content"]
     except (KeyError, IndexError, TypeError):
         return None
 
@@ -170,7 +184,7 @@ def main():
                 if not args.dry_run:
                     err_reaction = ReaderReaction(
                         verdict=Verdict.OK,
-                        reaction="[collect_batch] Empty response from Fireworks.",
+                        reaction="[collect_batch] Empty response from batch provider.",
                         quoted_pause=None,
                         category=None,
                         confidence=0.0,
