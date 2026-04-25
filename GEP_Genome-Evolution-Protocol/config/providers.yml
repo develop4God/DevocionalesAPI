@@ -112,13 +112,13 @@ providers:
       rpm: null
 
   - id: dashscope_batch_phase1
-    name: "DashScope/qwen-turbo"
+    name: "DashScope/qwen-flash"
     phase: phase1
     priority: 3
     default: false
     client_type: api
     base_url: "https://dashscope-intl.aliyuncs.com/compatible-mode/v1"
-    model: "qwen-turbo"
+    model: "qwen-flash"
     env_var: DASHSCOPE_API_KEY
     thinking_mode:
       supported: false
