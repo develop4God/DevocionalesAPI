@@ -216,14 +216,24 @@ def build_report(
             fields  = _extract_fields(input_index.get(cid, ""), phase)
             issue   = parsed.get(issue_key, "") or ""
 
+            quoted_val = parsed.get(quoted_key, "") or ""
+
+            # QA tag — auto-dismiss candidate when model flagged but provided no quoted evidence
+            flag_verdicts = {"FLAG", "PAUSE"}
+            if verdict in flag_verdicts and not quoted_val.strip():
+                qa_tag = "AUTO_DISMISS_CANDIDATE: FLAG with no quoted evidence — model self-corrected or hallucinated flag"
+            else:
+                qa_tag = ""
+
             entries.append({
                 "id":         cid,
                 "verdict":    verdict,
                 "issue":      issue,
                 "issue_type": _classify_issue(issue),
-                "quoted":     parsed.get(quoted_key, "") or "",
+                "quoted":     quoted_val,
                 "conf":       parsed.get("confidence", ""),
                 "category":   parsed.get("category", "") or "",
+                "qa_tag":     qa_tag,
                 **fields,
             })
 
@@ -238,6 +248,7 @@ def build_report(
 
     # Issue type summary for flagged entries
     issue_type_counts = Counter(e["issue_type"] for e in filtered)
+    auto_dismiss_count = sum(1 for e in filtered if e.get("qa_tag"))
 
     # Build report
     ts_now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
@@ -248,6 +259,8 @@ def build_report(
     lines.append(f"input  : {input_path.name}")
     lines.append(f"results: {results_path.name}")
     lines.append(f"total:{total}  {clean_term}:{ok_count}  {flag_term}:{flag_count}  errors:{parse_errors}")
+    if auto_dismiss_count:
+        lines.append(f"qa_warn  AUTO_DISMISS_CANDIDATES:{auto_dismiss_count} — review carefully before patching")
     if issue_type_counts:
         pattern_parts = "  ".join(f"{k}:{v}" for k, v in issue_type_counts.most_common())
         lines.append(f"patterns  {pattern_parts}")
@@ -260,6 +273,8 @@ def build_report(
             lines.append(f"{'═'*64}")
             lines.append(f"[{i}/{len(filtered)}] {e['id']}")
             lines.append(f"VERDICT     {e['verdict']}")
+            if e.get("qa_tag"):
+                lines.append(f"QA_TAG      ⚠️  {e['qa_tag']}")
             if e.get("category"):
                 lines.append(f"CATEGORY    {e['category']}")
             lines.append(f"ISSUE_TYPE  {e['issue_type']}")
