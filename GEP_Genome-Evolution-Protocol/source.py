@@ -39,8 +39,14 @@ KNOWN_FILES = {
     ("zh", "新译本"):        "Devocional_year_{year}_zh_新译本.json",
 }
 
+_MONOLITHIC = {
+    ("es", "RVR1960"),
+    ("es", "NVI"),
+}
 
 def build_url(lang: str, version: str, year: int) -> str:
+    if (lang, version) in _MONOLITHIC:
+        return f"{GITHUB_RAW_BASE}/Devocional_year_{year}.json"
     key = (lang, version)
     filename = KNOWN_FILES.get(key, f"Devocional_year_{{year}}_{lang}_{version}.json")
     return f"{GITHUB_RAW_BASE}/{filename.format(year=year)}"

@@ -62,10 +62,21 @@ import paths as _paths
 
 # ── Config ────────────────────────────────────────────────────────────────────
 
-GITHUB_URL = (
+_GITHUB_BASE = (
     "https://raw.githubusercontent.com/develop4God/devocionales-json"
-    "/refs/heads/main/Devocional_year_{year}_{lang}_{version}.json"
+    "/refs/heads/main"
 )
+
+# SOT exceptions: monolithic files (lang/version combos without split files)
+_MONOLITHIC = {
+    ("es", "RVR1960"),
+    ("es", "NVI"),
+}
+
+def _github_url(lang: str, version: str, year: int) -> str:
+    if (lang, version) in _MONOLITHIC:
+        return f"{_GITHUB_BASE}/Devocional_year_{year}.json"
+    return f"{_GITHUB_BASE}/Devocional_year_{year}_{lang}_{version}.json"
 
 # Hardcoded fallbacks — only used when providers.yml cannot be read.
 _FALLBACK_FIREWORKS = "accounts/fireworks/models/qwen3-vl-30b-a3b-thinking"
@@ -105,7 +116,7 @@ def load_entries(lang: str, version: str, year: int, local: str | None) -> list[
         with open(local_path, encoding="utf-8") as f:
             raw = json.load(f)
     else:
-        url = GITHUB_URL.format(year=year, lang=lang, version=version)
+        url = _github_url(lang, version, year)
         print(f"  📡 Fetching: {url}")
         with urllib.request.urlopen(url, timeout=30) as resp:
             raw = json.load(resp)
