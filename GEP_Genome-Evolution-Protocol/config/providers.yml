@@ -112,13 +112,13 @@ providers:
       rpm: null
 
   - id: dashscope_batch_phase1
-    name: "DashScope/qwen3.5-flash"
+    name: "DashScope/qwen-turbo"
     phase: phase1
     priority: 3
     default: false
     client_type: api
     base_url: "https://dashscope-intl.aliyuncs.com/compatible-mode/v1"
-    model: "qwen3.5-flash"
+    model: "qwen-turbo"
     env_var: DASHSCOPE_API_KEY
     thinking_mode:
       supported: false
@@ -140,3 +140,9 @@ settings:
   swap_on_429: true
   skip_at_percent: 95
   warn_at_percent: 80
+
+#Batch models available in DashScope:
+  #Qwen-Turbo	Basic Qwen-Flash High-Speed/Volume
+  #Qween-Plus	Balanced/Reliable
+  #Qwen-Max	Flagship/Expert	Deepest reasoning 
+  	
