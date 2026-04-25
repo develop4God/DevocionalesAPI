@@ -121,8 +121,8 @@ providers:
     model: "qwen-plus"
     env_var: DASHSCOPE_API_KEY
     thinking_mode:
-      supported: false
-      style: none
+      supported: true
+      style: cot
     batch:
       supported: true
       endpoint: "/v1/chat/completions"
