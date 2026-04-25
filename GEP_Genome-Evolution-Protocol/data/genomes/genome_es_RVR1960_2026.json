@@ -2,9 +2,9 @@
   "language": "es",
   "version": "RVR1960",
   "genome_version": "es-RVR1960-2026-seed-v1",
-  "total_entries_reviewed": 0,
-  "total_pauses": 0,
-  "updated_at": "2026-04-25T16:52:49.474762+00:00",
+  "total_entries_reviewed": 5,
+  "total_pauses": 5,
+  "updated_at": "2026-04-25T19:08:50.259373+00:00",
   "fragments": [
     {
       "id": "seed_es_RVR1960_001",
@@ -80,6 +80,51 @@
       "state": "confirmed",
       "created_at": "2026-04-25T16:52:49.441501+00:00",
       "updated_at": "2026-04-25T16:52:49.441501+00:00"
+    },
+    {
+      "id": "frag_25f27b48",
+      "language": "es",
+      "version": "RVR1960",
+      "category": "other",
+      "pattern": "Repeated meaningful phrase 'animar y edificar a los demás' appears verbatim twice in the Prayer field, constituting repetition of 4 content words.",
+      "example_quote": "animar y edificar a los demás",
+      "evidence_dates": [
+        ""
+      ],
+      "confidence": 0.4,
+      "state": "candidate",
+      "created_at": "2026-04-25T19:08:50.234830+00:00",
+      "updated_at": "2026-04-25T19:08:50.234830+00:00"
+    },
+    {
+      "id": "frag_f54db8f7",
+      "language": "es",
+      "version": "RVR1960",
+      "category": "other",
+      "pattern": "Repeated meaningful phrase 'vivir de acuerdo con' appears twice within the same paragraph.",
+      "example_quote": "a vivir de acuerdo con tu voluntad y a permanecer firme en la verdad del Evangelio. Dame la fuerza para resistir las tentaciones y para caminar en la luz de tu amor. Guíame para que mis acciones reflejen la transformación que has obrado en mi vida. Que mi vida sea un testimonio vivo de tu poder y de tu bondad. Que pueda experimentar la plenitud de la vida que has prometido. Te pido que me ayudes a vivir una vida que te honre y que sea un reflejo de tu amor.",
+      "evidence_dates": [
+        ""
+      ],
+      "confidence": 0.7000000000000001,
+      "state": "confirmed",
+      "created_at": "2026-04-25T19:08:50.242495+00:00",
+      "updated_at": "2026-04-25T19:08:50.249963+00:00"
+    },
+    {
+      "id": "frag_06979bcb",
+      "language": "es",
+      "version": "RVR1960",
+      "category": "other",
+      "pattern": "Repeated meaningful phrase 'la sanidad física' appears three times within the same paragraph, with two instances occurring close together and conveying identical conceptual weight.",
+      "example_quote": "La sanidad física del paralítico es la evidencia visible del poder invisible del perdón. Jesús, al dar la orden de levantarse, tomar su lecho y caminar, demuestra su señorío sobre la enfermedad y, sobre todo, sobre el pecado.",
+      "evidence_dates": [
+        ""
+      ],
+      "confidence": 0.4,
+      "state": "candidate",
+      "created_at": "2026-04-25T19:08:50.253829+00:00",
+      "updated_at": "2026-04-25T19:08:50.253829+00:00"
     }
   ]
 }
