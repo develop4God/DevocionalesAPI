@@ -112,6 +112,7 @@ def _build_jsonl(
         reviewed=reviewed,
         genome=genome,
         model=model,
+        provider=provider_id,
         skip_reviewed=skip_reviewed,
         phases=phases,
         no_genome=no_genome,

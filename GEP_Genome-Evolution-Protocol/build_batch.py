@@ -107,6 +107,23 @@ def _model_for_provider(provider: str, phases: list[int]) -> str:
     return _FALLBACK_FIREWORKS
 
 
+def _thinking_for_provider(provider: str, phases: list[int]) -> bool:
+    """Read thinking_mode from providers.yml for this provider/phase.
+    Returns True if thinking mode is supported with CoT style.
+    """
+    phase_key = f"phase{2 if 2 in phases else 1}"
+    id_hint = provider.lower()
+    try:
+        from cloud_client import _load_config
+        for p in _load_config().get("providers", []):
+            if p.get("phase") == phase_key and id_hint in p.get("id", "").lower():
+                tm = p.get("thinking_mode", {})
+                return tm.get("supported", False) and tm.get("style") == "cot"
+    except Exception:
+        pass
+    return False
+
+
 # ── Entry loading ─────────────────────────────────────────────────────────────
 
 def load_entries(lang: str, version: str, year: int, local: str | None) -> list[DevotionalEntry]:
@@ -166,6 +183,7 @@ def build_batch(
     reviewed: set[str],
     genome,
     model: str,
+    provider: str,
     skip_reviewed: bool,
     phases: list[int],
     no_genome: bool = False,
@@ -209,6 +227,7 @@ def build_batch(
                 messages.append({"role": "system", "content": p2_system})
             messages.append({"role": "user", "content": build_phase2_user(entry, lang)})
 
+        enable_thinking = _thinking_for_provider(provider, phases)
         record = {
             "custom_id": entry.id,
             "body": {
@@ -216,6 +235,7 @@ def build_batch(
                 "max_tokens":  16384,
                 "temperature": 0.1,
                 "messages":    messages,
+                **({"enable_thinking": True} if enable_thinking else {}),
             },
         }
         records.append(record)
@@ -358,6 +378,7 @@ def main():
         reviewed       = reviewed,
         genome         = genome,
         model          = model,
+        provider       = args.provider,
         skip_reviewed  = args.skip_reviewed,
         phases         = phases,
         no_genome      = no_genome,
