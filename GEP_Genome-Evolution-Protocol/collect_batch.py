@@ -9,6 +9,10 @@ Usage:
         --input  batch_input_tl_ASND_2026.jsonl \
         --results output.jsonl \
         --lang tl --version ASND --year 2026
+    python3 collect_batch.py \
+        --input  batch_input_es_RVR1960_2025_p1.jsonl \
+        --results output.jsonl \
+        --lang es --version RVR1960 --year 2025 --phase 1
 
 Callable from batch_pipeline.py via process_results().
 
@@ -33,7 +37,7 @@ except ImportError:
 # ── Project imports ───────────────────────────────────────────────────────────
 from audit import audit_path, append_record, build_record
 from cloud_client import _parse_reaction
-from models import ReaderReaction, Verdict
+from models import PauseCategory, ReaderReaction, Verdict
 from genome import absorb_reaction, ensure_genome, save_genome
 
 
@@ -91,6 +95,55 @@ def extract_content(result_line: dict) -> str | None:
         return None
 
 
+# ── Phase 1 parser ────────────────────────────────────────────────────────────
+
+_P1_CATEGORY_MAP: dict[str, PauseCategory] = {
+    "repetition": PauseCategory.REPETITION,
+    "typo":       PauseCategory.TYPO,
+    "grammar":    PauseCategory.GRAMMAR,
+    "other":      PauseCategory.OTHER,
+}
+
+def _parse_phase1_reaction(raw: str) -> ReaderReaction | None:
+    """
+    Parse a Phase 1 CLEAN/FLAG JSON verdict into a ReaderReaction.
+    P1 schema: {verdict: "CLEAN"|"FLAG", issue: str|null,
+                quoted_problem: str|null, confidence: float,
+                category: str|null}
+    Maps FLAG → Verdict.PAUSE, CLEAN → Verdict.OK.
+    Returns None if JSON is unparseable.
+    """
+    import re as _re
+    text = _re.sub(r"<think>.*?</think>", "", raw, flags=_re.DOTALL).strip()
+    if text.startswith("```"):
+        parts = text.split("```")
+        text = parts[1] if len(parts) > 1 else text
+        if text.startswith("json"):
+            text = text[4:]
+    text = text.strip()
+    try:
+        data = json.loads(text)
+    except json.JSONDecodeError:
+        return None
+
+    verdict_raw = (data.get("verdict") or "").strip().upper()
+    is_flag     = verdict_raw == "FLAG"
+    verdict     = Verdict.PAUSE if is_flag else Verdict.OK
+
+    cat_raw  = (data.get("category") or "").strip().lower()
+    category = _P1_CATEGORY_MAP.get(cat_raw) if is_flag else None
+    if is_flag and category is None:
+        category = PauseCategory.OTHER
+
+    return ReaderReaction(
+        verdict      = verdict,
+        reaction     = (data.get("issue") or "").strip(),
+        quoted_pause = data.get("quoted_problem") or None,
+        category     = category,
+        confidence   = float(data.get("confidence") or 1.0),
+    )
+
+
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def process_results(
@@ -101,10 +154,12 @@ def process_results(
     year: int,
     dry_run: bool = False,
     overwrite: bool = False,
+    phase: int = 2,
 ) -> dict:
     """
     Parse batch results and write AuditRecord JSONL.
     Returns summary dict: {"ok": int, "paused": int, "errors": int, "skipped": int}.
+    phase=1 → expects CLEAN/FLAG schema; phase=2 → expects OK/PAUSE schema (default).
     Callable from batch_pipeline.py or standalone via main().
     """
     log_path = audit_path(lang, version, year)
@@ -137,6 +192,8 @@ def process_results(
     print(f"  Audit  : {log_path}")
     if dry_run:
         print(f"  ⚠️  DRY RUN — nothing will be written")
+    if phase == 1:
+        print(f"  🔬 Phase 1 mode — CLEAN/FLAG schema")
     print(f"{'═'*60}")
 
     print(f"  📋 Loading input index...")
@@ -197,7 +254,11 @@ def process_results(
                 errors += 1
                 continue
 
-            reaction = _parse_reaction(raw_content)
+            if phase == 1:
+                reaction = _parse_phase1_reaction(raw_content)
+            else:
+                reaction = _parse_reaction(raw_content)
+
             if reaction is None:
                 if existing.get(custom_id) == "error_parse":
                     skipped += 1
@@ -302,6 +363,8 @@ def main():
                         help="Parse and report only — do not write audit log")
     parser.add_argument("--overwrite", action="store_true",
                         help="Ignore existing audit entries and re-collect from scratch.")
+    parser.add_argument("--phase", type=int, default=2, choices=[1, 2],
+                        help="Phase whose results are being collected: 1 (CLEAN/FLAG) or 2 (OK/PAUSE). Default: 2")
     args = parser.parse_args()
 
     process_results(
@@ -312,6 +375,7 @@ def main():
         year=args.year,
         dry_run=args.dry_run,
         overwrite=args.overwrite,
+        phase=args.phase,
     )
 
 
