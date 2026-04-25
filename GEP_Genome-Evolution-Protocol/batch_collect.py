@@ -33,9 +33,7 @@ try:
 except ImportError:
     pass
 
-from pipeline_shared import repair_json, build_prompt
-from pipeline_shared import _check_prayer_ending, _load_prayer_endings
-from provider_adapter import load_adapter, BatchRequest, RawResult
+
 
 _SCRIPT_DIR = Path(__file__).parent
 
