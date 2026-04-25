@@ -1,0 +1,20 @@
+GEP·REVIEW  es·RVR1960·2025·p1  FLAG:1  generated:2026-04-25 02:11 UTC
+input  : batch_input_es_RVR1960_2025_p1_qwen-plus_20260425_020709.jsonl
+results: BIJOutputSet_es_RVR1960_2025_p1_qwen-plus_20260425_020709_results.jsonl
+total:365  CLEAN:364  FLAG:1  errors:0
+patterns  repetition:1
+
+════════════════════════════════════════════════════════════════
+[1/1] efesios210RVR1960
+VERDICT     FLAG
+ISSUE_TYPE  repetition
+CONF        0.98
+ISSUE       Repeated meaningful phrase of 3+ content words within the same paragraph: 'para vivir con propósito, para amar y servir a los demás, y para glorificarte en todo lo que hago' appears verbatim in both the Reflection and the Prayer fields.
+QUOTED      para vivir con propósito, para amar y servir a los demás, y para glorificarte en todo lo que hago
+
+REF  El versículo de Efesios 2:10 es una joya de esperanza y propósito. Nos recuerda que no somos el resultado de la casualidad ni producto de la suerte, sino que somos la "hechura" de Dios, su obra maestra. Esta verdad nos confiere una identidad profunda: somos creados en Cristo Jesús. Esto significa que nuestra nueva naturaleza, nuestro propósito y nuestro destino están intrínsecamente ligados a Él. El versículo nos invita a reflexionar sobre las "buenas obras" que Dios ha preparado para nosotros de antemano. No se trata de ganarnos el favor de Dios a través de nuestras acciones, sino de caminar en el propósito que Él ya ha diseñado para nosotros. Estas buenas obras no son una lista de tareas que debemos cumplir, sino una forma de vida, una danza de fe y obediencia en la que colaboramos con Dios para manifestar su reino en la tierra.  Al entender que somos creados para estas buenas obras, la vida adquiere un nuevo significado. Cada día se convierte en una oportunidad para vivir con propósito, para amar y servir a los demás, y para glorificar a Dios en todo lo que hacemos.
+
+ORA  Padre celestial, te doy gracias por crearme y redimirme en Cristo Jesús. Reconozco que soy tu hechura, y que has preparado de antemano buenas obras para que yo las haga. Ayúdame a comprender el propósito que tienes para mi vida y a caminar en ellas con fe y obediencia.  Dame la sabiduría para discernir las oportunidades de servirte y amar a los demás.  Permíteme ser un instrumento de tu paz, un reflejo de tu amor y un testimonio de tu gracia.  Guía mis pasos, fortalece mi corazón y capacítame para vivir una vida que te glorifique. Ayúdame a recordar que cada día es una oportunidad para vivir con propósito, para amar y servir a los demás, y para glorificarte en todo lo que hago.  En el nombre de Jesús, amén.
+
+════════════════════════════════════════════════════════════════
+END·GEP·REVIEW  es·RVR1960·2025·p1
