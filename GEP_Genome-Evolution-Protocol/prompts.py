@@ -389,15 +389,14 @@ def build_genome_block(genome: Genome | None) -> str:
         "After you reach your initial verdict:\n"
         "  - If you said PAUSE: check whether the flagged phrase matches one of these patterns.\n"
         "    A match → keep PAUSE (confirmed pattern). No match → lower confidence; downgrade\n"
-        "    to OK unless you are ≥ 0.90 confident the error is real and obvious.\n"
+        "    to OK unless you are >= 0.90 confident the error is real and obvious.\n"
         "  - If you said OK: genome check not required. Trust your reader instinct.\n"
     ]
     for f in fragments:
         lines.append(
             f"- [{f.category.value}] \"{f.example_quote}\"\n"
             f"  Pattern: {f.pattern}\n"
-            f"  Seen {len(f.evidence_dates)} time(s). "
-            f"  Confidence: {f.confidence:.0%}\n"
+            f"  Seen {len(f.evidence_dates)} time(s).\n"
         )
     return "\n".join(lines) + "\n"
 
@@ -518,51 +517,44 @@ PHASE1_NATIVE_SPEAKERS = {
 PHASE1_SYSTEM_TEMPLATE = """\
 You are a native {language} speaker from {country}.
 Your only job: evaluate the writing quality of the Reflection and Prayer fields.
-The Scripture verse is provided for context only. Do NOT flag it, correct it,
-or comment on it under any circumstance — it is sacred source text, not your concern.
+The Scripture verse is for context only — do NOT flag, correct, or comment on it.
 
-Evaluate in this exact order:
-  STEP A — Read the entry as a native speaker. Form an honest, independent verdict.
-  STEP B — After your verdict, check the genome patterns below (if any) to VALIDATE:
-            If you said FLAG: does it match a known pattern? Yes → keep. No → need ≥ 0.90 confidence.
-            If you said CLEAN: trust your reader instinct. No genome check needed.
-
-Look for:
+What to look for:
 1. Typos or spelling errors
-2. Repeated meaningful phrases (3+ content words) within the same paragraph
+2. Repeated meaningful phrases (3+ content words) within the same field
 3. Grammar errors or broken sentence structure
 4. Unnatural phrasing — sentences that feel machine-translated or awkward to a native ear
 
-### Rules:
-- Do NOT comment on theology, content, or meaning.
-- Do NOT flag style preferences.
-- Do NOT flag anything in the Scripture verse field.
-- Only flag clear linguistic errors a native speaker would notice immediately.
-- If nothing is wrong linguistically → verdict CLEAN.
-- A high CLEAN rate is expected and healthy.
-- NEVER flag repetition of single words or common grammatical particles.
-- ONLY flag repeated phrases of 3 or more meaningful content words.
-- The quoted_problem MUST be copied verbatim from the text. If you cannot find it
-    word-for-word in the entry, verdict CLEAN. Never paraphrase or reconstruct.
+Rules:
+- Flag only linguistic errors. Do NOT flag theology, meaning, or style preferences.
+- Do NOT flag single repeated words or common grammatical particles.
+- quoted_problem MUST be copied verbatim from the text.
+  If you cannot find it word-for-word — verdict CLEAN. Never paraphrase.
 
-Always respond in English regardless of the devotional language.
+How to evaluate:
+  STEP 1 — Read the Reflection and Prayer as a native speaker. Form your verdict.
+  STEP 2 — If you said FLAG: check the genome patterns below.
+            Does your flagged phrase match a known pattern? Yes → keep FLAG, set genome_match true.
+            No match → keep FLAG only if you can quote it verbatim, set genome_match false.
+            If you said CLEAN — stop. No genome check needed.
+{genome_block}
 
-Return ONLY valid JSON. No markdown. No preamble.
+First character must be {{ and last must be }}.
 
 Schema:
 {{
-    "verdict": "CLEAN" | "FLAG",
-    "issue": "One sentence describing the linguistic problem, or null if CLEAN.",
-    "quoted_problem": "The exact phrase copied verbatim from the text, or null if CLEAN.",
-    "confidence": 0.0 to 1.0
+    "flags": [
+        {{
+            "type": "typo" | "repetition" | "grammar" | "unnatural",
+            "quoted_problem": "exact verbatim phrase from the text",
+            "genome_match": true | false,
+            "confidence": 0.0 to 1.0
+        }}
+    ]
 }}
 
-⚠️  MANDATORY FORMAT RULE:
-Your ENTIRE output (outside <think> tags) must be the JSON object above and NOTHING else.
-Do NOT write "Final answer:" before the JSON.
-Do NOT use \\boxed{{}} or any other wrapper.
-Do NOT add prose before or after the JSON.
-The very first character of your visible output must be {{ and the last must be }}."""
+flags is an empty array [] if verdict is CLEAN.
+confidence is required only when genome_match is false — omit it when genome_match is true."""
 
 
 _PHASE1_GENOME_CATEGORIES = {"repetition", "typo", "grammar"}  # PauseCategory values for Phase 1
@@ -584,14 +576,14 @@ def build_phase1_genome_block(genome: "Genome | None") -> str:
     lines = [
         "### Known linguistic patterns — use to VALIDATE after evaluation, not to hunt:\n",
         "After your evaluation: if you said FLAG, check whether it matches one of these patterns.\n"
-        "  A match → keep FLAG. No match → only keep FLAG if confidence ≥ 0.90.\n"
+        "  A match → keep FLAG. No match → only keep FLAG if confidence >= 0.90.\n"
         "  Do NOT scan the entry looking for these patterns — evaluate first, validate after.\n",
     ]
     for f in fragments:
         lines.append(
             f"- [{f.category.value}] \"{f.example_quote}\"\n"
             f"  Pattern: {f.pattern}\n"
-            f"  Seen {len(f.evidence_dates)} time(s). Confidence: {f.confidence:.0%}\n"
+            f"  Seen {len(f.evidence_dates)} time(s).\n"
         )
     return "\n".join(lines) + "\n"
 
@@ -600,12 +592,7 @@ def build_phase1_system(lang: str, genome: "Genome | None" = None) -> str:
     """Returns the Phase 1 system prompt for a given language."""
     language, country = PHASE1_NATIVE_SPEAKERS.get(lang, ("English", "United States"))
     genome_block = build_phase1_genome_block(genome)
-    base = PHASE1_SYSTEM_TEMPLATE.format(language=language, country=country)
-    if genome_block:
-        # Inject genome block just before the return-format instruction
-        marker = "Always respond in English regardless of the devotional language."
-        return base.replace(marker, genome_block + marker)
-    return base
+    return PHASE1_SYSTEM_TEMPLATE.format(language=language, country=country, genome_block=genome_block)
 
 
 def build_phase1_user(entry: DevotionalEntry, lang: str = "es") -> str:
@@ -615,9 +602,7 @@ def build_phase1_user(entry: DevotionalEntry, lang: str = "es") -> str:
         f"--- {labels['reflection']} ---\n"
         f"{entry.reflexion}\n\n"
         f"--- {labels['prayer']} ---\n"
-        f"{entry.oracion}\n\n"
-        "Evaluate only the two fields above as a native speaker. "
-        "Output ONLY the JSON object — no 'Final answer:', no prose, no explanation."
+        f"{entry.oracion}\n"
     )
 
 
