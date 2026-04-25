@@ -100,6 +100,7 @@ def process_results(
     version: str,
     year: int,
     dry_run: bool = False,
+    overwrite: bool = False,
 ) -> dict:
     """
     Parse batch results and write AuditRecord JSONL.
@@ -110,7 +111,7 @@ def process_results(
 
     # Load existing audit into memory for dedup (id → verdict)
     existing: dict[str, str] = {}
-    if log_path.exists():
+    if log_path.exists() and not overwrite:
         with open(log_path, encoding="utf-8") as f:
             for line in f:
                 if line.strip():
@@ -299,6 +300,8 @@ def main():
     parser.add_argument("--year",    required=True, type=int, help="Year (2025, 2026, ...)")
     parser.add_argument("--dry-run", action="store_true",
                         help="Parse and report only — do not write audit log")
+    parser.add_argument("--overwrite", action="store_true",
+                        help="Ignore existing audit entries and re-collect from scratch.")
     args = parser.parse_args()
 
     process_results(
@@ -308,6 +311,7 @@ def main():
         version=args.version,
         year=args.year,
         dry_run=args.dry_run,
+        overwrite=args.overwrite,
     )
 
 
