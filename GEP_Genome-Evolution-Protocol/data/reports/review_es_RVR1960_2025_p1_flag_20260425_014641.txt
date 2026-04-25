@@ -1,0 +1,62 @@
+GEP·REVIEW  es·RVR1960·2025·p1  FLAG:4  generated:2026-04-25 01:46 UTC
+input  : batch_input_es_RVR1960_2025_p1_qwen-flash_20260425_013924.jsonl
+results: BIJOutputSet_es_RVR1960_2025_p1_qwen-flash_20260425_013924_results.jsonl
+total:365  CLEAN:361  FLAG:4  errors:0
+patterns  other:2  repetition:2
+
+════════════════════════════════════════════════════════════════
+[1/4] juan141617RVR1960
+VERDICT     FLAG
+ISSUE_TYPE  other
+CONF        0.95
+ISSUE       Repetition of the phrase 'nos transforme a la imagen de Cristo y nos capacite' within the same paragraph.
+QUOTED      que el Espíritu Santo nos transforme a la imagen de Cristo y nos capacite para ser testigos fieles de tu evangelio. Concédenos la sabiduría para discernir tu voluntad y la valentía para vivir de acuerdo con ella. Te pedimos que nos uses como instrumentos de tu paz y amor en este mundo.
+
+REF  En este pasaje, Jesús, a punto de partir, nos asegura que no nos dejará solos. Nos promete el envío del Espíritu Santo, el Consolador, quien estará con nosotros para siempre. Esta promesa es un faro de esperanza en medio de la incertidumbre y el dolor. El Espíritu Santo es descrito como el "Espíritu de verdad", un recordatorio de que la verdad de Dios habitará en nosotros y nos guiará en todo momento. El mundo, que no puede ver ni conocer al Espíritu, permanece ajeno a esta presencia consoladora. Sin embargo, nosotros, los creyentes, somos llamados a reconocerlo y a acogerlo en nuestros corazones. El Espíritu Santo no solo estará con nosotros, sino que morará en nosotros, transformando nuestras vidas desde adentro. Esta promesa de morada interna es fundamental para nuestra fe, ya que nos asegura una relación íntima y constante con Dios. Debemos abrir nuestros corazones y mentes para recibir la guía, el consuelo y el poder del Espíritu Santo, permitiendo que Él nos transforme a la imagen de Cristo y nos capacite para vivir una vida que honre a Dios.
+
+ORA  Padre celestial, te damos gracias por la promesa del Espíritu Santo, nuestro Consolador y Guía. Reconocemos que sin tu Espíritu, estamos perdidos y vulnerables. Te pedimos que abras nuestros corazones para recibir tu presencia, que nos llenes de tu amor, gozo y paz. Guíanos con tu verdad, fortalécenos en nuestra debilidad y ayúdanos a vivir una vida que te honre. Permítenos ser sensibles a tu voz y obedientes a tus mandamientos. Que el Espíritu Santo nos transforme a la imagen de Cristo y nos capacite para ser testigos fieles de tu evangelio. Concédenos la sabiduría para discernir tu voluntad y la valentía para vivir de acuerdo con ella. Te pedimos que nos uses como instrumentos de tu paz y amor en este mundo. en el nombre de Jesús, amén.
+
+════════════════════════════════════════════════════════════════
+[2/4] colosenses312RVR1960
+VERDICT     FLAG
+ISSUE_TYPE  repetition
+CONF        0.95
+ISSUE       The phrase 'buscar las cosas de arriba' is repeated three times within the same paragraph, using the same meaningful content words consecutively.
+QUOTED      buscar las cosas de arriba
+
+REF  Este pasaje de Colosenses nos invita a una profunda reflexión sobre nuestra vida espiritual. Pablo, inspirado por el Espíritu Santo, nos exhorta a vivir una vida transformada, anclada en la resurrección de Cristo. La clave para esta transformación radica en un cambio de enfoque: debemos "buscar las cosas de arriba" y "poner la mira en las cosas de arriba".
+
+¿Qué significa esto en la práctica? Significa que, como creyentes, ya no estamos definidos por las preocupaciones y las metas de este mundo. Hemos resucitado con Cristo, y nuestra verdadera identidad y ciudadanía están en el cielo. Esto implica un cambio de prioridades, un desapego de las cosas terrenales y una búsqueda constante de la voluntad de Dios. Implica también una renovación de nuestra mente, permitiendo que el Espíritu Santo nos guíe en cada decisión y pensamiento.
+
+Buscar las cosas de arriba no es un escape de la realidad, sino una reorientación de nuestra perspectiva. Es recordar que nuestra vida tiene un propósito eterno y que nuestras acciones tienen consecuencias que trascienden el tiempo. Es vivir con esperanza, con fe, con la certeza de que, a pesar de las dificultades, estamos en las manos de un Dios que nos ama y que tiene un plan perfecto para nosotros.
+
+ORA  Padre celestial, te doy gracias por la promesa de la resurrección y por la oportunidad de vivir una vida nueva en Cristo. Ayúdame a buscar las cosas de arriba, a poner mi mirada en tu reino y en tu voluntad. Perdóname por las veces que he estado enfocado en las cosas terrenales, en las preocupaciones y las metas de este mundo. Renueva mi mente, Señor, y guíame por tu Espíritu Santo. Dame la fortaleza para resistir las tentaciones y para vivir una vida que te honre en todo lo que hago. Que mi corazón esté lleno de esperanza y fe, sabiendo que estás conmigo en cada paso del camino. Que pueda experimentar la paz que sobrepasa todo entendimiento y que pueda reflejar tu amor a los demás. en el nombre de Jesús, amén.
+
+════════════════════════════════════════════════════════════════
+[3/4] galatas516RVR1960
+VERDICT     FLAG
+ISSUE_TYPE  repetition
+CONF        0.95
+ISSUE       Repeated phrase of three or more meaningful content words within the same paragraph.
+QUOTED      andar en el Espíritu, a escuchar tu voz y a someterme a tu voluntad
+
+REF  El versículo de Gálatas 5:16 nos presenta una poderosa invitación a vivir una vida guiada por el Espíritu Santo. Pablo nos exhorta a 'andar' en el Espíritu, lo cual implica una acción constante, un caminar diario en obediencia y comunión con Dios. Este andar contrasta directamente con la satisfacción de los deseos de la carne, que son aquellos impulsos y anhelos que nos alejan de la voluntad de Dios y nos conducen a la iniquidad.  La carne, en este contexto, representa nuestra naturaleza pecaminosa, propensa a la tentación, al egoísmo y a la desobediencia. Andar en el Espíritu es, por tanto, un acto de fe y de renuncia. Es reconocer la guía del Espíritu, escuchar su voz, y permitir que Él transforme nuestros pensamientos, deseos y acciones.  La clave reside en la continua dependencia del Espíritu Santo. No se trata de un esfuerzo humano en vano, sino de una colaboración entre nuestra voluntad y la obra transformadora del Espíritu. Al someternos a Él, somos capacitados para resistir las tentaciones y vivir una vida que glorifica a Dios, una vida de amor, gozo, paz, paciencia, benignidad, bondad, fe, mansedumbre y templanza (Gálatas 5:22-23).  Este versículo nos llama a una reflexión constante, a examinar nuestras motivaciones y a buscar la dirección del Espíritu en cada área de nuestra vida. Es un recordatorio de que la victoria sobre la carne es posible a través del poder del Espíritu Santo que habita en nosotros.
+
+ORA  Padre celestial, te doy gracias por tu Espíritu Santo, quien habita en mí y me guía a toda verdad. Reconozco mi debilidad y mi tendencia a ceder a los deseos de la carne. Te pido que me ayudes a andar en el Espíritu, a escuchar tu voz y a someterme a tu voluntad en todas las áreas de mi vida. Fortaléceme para resistir las tentaciones y para vivir una vida que te honre. Lléname de tu amor, gozo y paz, y capacítame para reflejar tu carácter en cada acción. Ayúdame a buscar tu guía diariamente y a depender completamente de tu Espíritu Santo. Gracias por tu fidelidad y por el poder que me has dado para vencer. Amén. Te pido que me ayudes a ser sensible a tu guía, a buscar tu rostro en oración y a vivir una vida que te agrade. En el nombre de Jesús, amén.
+
+════════════════════════════════════════════════════════════════
+[4/4] romanos1513RVR1960
+VERDICT     FLAG
+ISSUE_TYPE  other
+CONF        0.95
+ISSUE       Repetition of the phrase 'esperanza que sobrepasa todo entendimiento' in the same paragraph, which contains three or more meaningful content words.
+QUOTED      una esperanza que sobrepasa todo entendimiento
+
+REF  Romanos 15:13 es una poderosa promesa y una guía para nuestra vida cristiana. Pablo, al escribir a los Romanos, nos recuerda que el Dios de esperanza es aquel que puede llenarnos de gozo y paz, incluso en medio de las pruebas. La clave para experimentar esta plenitud es 'creer'. Creer en el Señor Jesucristo, en su sacrificio y en sus promesas. Cuando creemos, permitimos que el gozo y la paz de Dios inunden nuestro corazón, transformando nuestra perspectiva y nuestra actitud. 
+
+El versículo también destaca la importancia de la esperanza. No una esperanza vacía, sino una esperanza que abunda, que es generada por el poder del Espíritu Santo. Esta esperanza nos da la fortaleza para perseverar, para enfrentar los desafíos con valentía y para vivir con una fe inquebrantable. Es una esperanza que nos impulsa a mirar hacia el futuro con confianza, sabiendo que Dios tiene un plan perfecto para nosotros. En un mundo lleno de incertidumbre y tribulaciones, aferrémonos a esta promesa divina, permitiendo que el Espíritu Santo obre en nosotros para llenarnos de gozo, paz y una esperanza que sobrepasa todo entendimiento.
+
+ORA  Padre celestial, te doy gracias por la promesa de Romanos 15:13. Te agradezco por ser el Dios de esperanza, y por la oportunidad de experimentar tu gozo y paz en mi vida. Te pido que me llenes de fe para creer en tus promesas, para que pueda superar cualquier dificultad con valentía. Permíteme, Señor, abunda en esperanza por el poder de tu Espíritu Santo. Ayúdame a mantener mis ojos puestos en ti, confiando en tu plan perfecto para mi vida. Que tu paz, que sobrepasa todo entendimiento, guarde mi corazón y mi mente. Guíame en cada paso, y ayúdame a ser un testimonio vivo de tu amor y tu fidelidad. En el nombre de Jesús, amén.
+
+════════════════════════════════════════════════════════════════
+END·GEP·REVIEW  es·RVR1960·2025·p1
