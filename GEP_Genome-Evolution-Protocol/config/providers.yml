@@ -73,6 +73,27 @@ providers:
       rpd: null
       rpm: null
 
+  - id: fireworks_batch_phase1
+    name: "Fireworks/qwen3-vl-30b-a3b-thinking"
+    phase: phase1
+    priority: 2
+    default: false
+    client_type: api
+    base_url: "https://api.fireworks.ai/inference/v1"
+    model: "accounts/fireworks/models/qwen3-vl-30b-a3b-thinking"
+    env_var: FIREWORKS_API_KEY
+    thinking_mode:
+      supported: true
+      style: cot
+    batch:
+      supported: true
+      endpoint: "/v1/chat/completions"
+      completion_window: "24h"
+    limits:
+      tpd: null
+      tpm: null
+      rpm: null
+
   - id: local_phase2
     name: "Local/qwen3:14b"
     phase: phase2
