@@ -1,0 +1,56 @@
+GEP·REVIEW  es·RVR1960·2026·p1  FLAG:4  generated:2026-04-25 02:31 UTC
+input  : batch_input_es_RVR1960_2026_p1_qwen-plus_20260425_022956.jsonl
+results: BIJOutputSet_es_RVR1960_2026_p1_qwen-plus_20260425_022956_results.jsonl
+total:365  CLEAN:360  FLAG:4  errors:1
+patterns  repetition:2  typo:1  grammar:1
+
+════════════════════════════════════════════════════════════════
+[1/4] romanos61718RVR1960
+VERDICT     FLAG
+ISSUE_TYPE  repetition
+CONF        0.95
+ISSUE       Repeated meaningful phrase 'vivir de acuerdo con' appears twice within the same paragraph.
+QUOTED      a vivir de acuerdo con tu voluntad y a permanecer firme en la verdad del Evangelio. Dame la fuerza para resistir las tentaciones y para caminar en la luz de tu amor. Guíame para que mis acciones reflejen la transformación que has obrado en mi vida. Que mi vida sea un testimonio vivo de tu poder y de tu bondad. Que pueda experimentar la plenitud de la vida que has prometido. Te pido que me ayudes a vivir una vida que te honre y que sea un reflejo de tu amor.
+
+REF  El pasaje de Romanos 6:17-18 es una poderosa declaración de transformación y libertad. Pablo nos recuerda que, antes de conocer a Cristo, éramos esclavos del pecado. Estábamos atados a una forma de vida que nos conducía a la muerte espiritual. Sin embargo, la gracia de Dios intervino.  La clave de esta transformación radica en la obediencia "de corazón" a la doctrina que nos fue entregada. No fue una obediencia forzada, sino un cambio interno, una rendición voluntaria a la verdad del Evangelio.  Esta obediencia, motivada por el amor y la gratitud, nos libera del dominio del pecado.  Ser liberados del pecado no significa que dejemos de pecar por completo en esta vida, pero sí que hemos sido trasladados a un nuevo reino: el reino de la justicia. Ahora, somos siervos de la justicia, dedicados a vivir de acuerdo con la voluntad de Dios. Esta nueva servidumbre es una fuente de gozo y propósito, porque nos permite experimentar la vida abundante que Cristo prometió.
+
+ORA  Padre celestial, te doy gracias por tu inmensa misericordia y por la libertad que he recibido en Cristo Jesús. Reconozco que antes era esclavo del pecado, pero hoy, por tu gracia, soy siervo de la justicia. Ayúdame a obedecerte de corazón, a vivir de acuerdo con tu voluntad y a permanecer firme en la verdad del Evangelio. Dame la fuerza para resistir las tentaciones y para caminar en la luz de tu amor. Guíame para que mis acciones reflejen la transformación que has obrado en mi vida. Que mi vida sea un testimonio vivo de tu poder y de tu bondad. Que pueda experimentar la plenitud de la vida que has prometido. Te pido que me ayudes a vivir una vida que te honre y que sea un reflejo de tu amor. en el nombre de Jesús, amén.
+
+════════════════════════════════════════════════════════════════
+[2/4] 1juan41RVR1960
+VERDICT     FLAG
+ISSUE_TYPE  typo
+CONF        0.98
+ISSUE       Typo: 'la discernimiento' should be 'el discernimiento'.
+QUOTED      la discernimiento
+
+REF  la exhortación de 1 Juan 4:1 resuena con particular importancia. El apóstol Juan nos llama a la discernimiento, a no aceptar ciegamente cualquier enseñanza o influencia espiritual. El mundo está lleno de voces, algunas que susurran verdades a medias, otras que distorsionan la Palabra de Dios para satisfacer sus propios propósitos. La este tiempo, con su atmósfera de alegría y celebración, también puede ser un terreno fértil para enseñanzas erróneas. Es crucial, por tanto, examinar cuidadosamente las palabras que escuchamos, las ideas que aceptamos y las influencias que permitimos en nuestras vidas. El verbo 'probar' implica una investigación, un análisis cuidadoso. No basta con oír, sino que debemos comparar lo que se nos presenta con la verdad revelada en las Escrituras. ¿Es coherente con el evangelio de Jesucristo? ¿Glorifica a Dios y exalta a Cristo? ¿Promueve el amor y la unidad entre los creyentes? La proliferación de falsos profetas nos recuerda que la vigilancia es esencial. Debemos ser como los bereanos, que escudriñaban las Escrituras diariamente para verificar si lo que se les predicaba era cierto. fortalecemos nuestra fe, no solo celebrando el nacimiento de Jesús, sino también protegiendo nuestras almas de las influencias engañosas. Busquemos a Dios en oración, leyendo Su Palabra y permitiendo que el Espíritu Santo nos guíe en la verdad.
+
+ORA  Padre celestial, en esta época de celebración, te pedimos discernimiento para distinguir la verdad del error. Ayúdanos a probar los espíritus y a no ser engañados por las falsas doctrinas que puedan surgir. Danos un corazón humilde y dispuesto a escudriñar tu Palabra, buscando siempre tu voluntad. Ilumina nuestro entendimiento para que podamos comprender las verdades eternas y vivir de acuerdo con ellas. Fortalece nuestra fe y aumenta nuestro amor por Ti y por los demás. Guíanos por tu Espíritu Santo, para que caminemos en la luz de tu verdad y glorifiquemos tu nombre en todo lo que hagamos. Te agradecemos por el regalo de tu Hijo Jesucristo y por la promesa de vida eterna. En el nombre de Jesús, amén.
+
+════════════════════════════════════════════════════════════════
+[3/4] 1tesalonicenses522RVR1960
+VERDICT     FLAG
+ISSUE_TYPE  grammar
+CONF        0.98
+ISSUE       Grammatical error: 'abstenerse' is incorrectly used as a finite verb form instead of the infinitive 'abstenerme' after 'te pido que', requiring subject-verb agreement.
+QUOTED      te pido que me ayudes a abstenerse de toda especie de mal
+
+REF  El versículo de hoy, 1 Tesalonicenses 5:22, nos llama a abstenernos de toda especie de mal. Esta exhortación es un llamado a la pureza y a la integridad en todos los aspectos de nuestra vida. No se limita a evitar actos abiertamente pecaminosos, sino que se extiende a la raíz de todo mal: la intención, el pensamiento y la actitud.  Es un recordatorio de que la santidad no es una opción, sino una necesidad para agradar a Dios y experimentar la plenitud de su presencia.  La frase 'toda especie de mal' es amplia y abarcadora. Nos insta a discernir y evitar incluso aquellas cosas que, aunque no sean abiertamente malas, puedan conducirnos al pecado o alejarnos de la voluntad de Dios.  Implica un examen constante de nuestro corazón y de nuestras acciones, buscando la guía del Espíritu Santo para identificar y renunciar a cualquier influencia negativa. Vivir conforme a este versículo requiere vigilancia, disciplina y una dependencia total de Dios. Es un proceso continuo de renovación y transformación, que nos lleva a reflejar cada vez más la imagen de Cristo.
+
+ORA  Padre celestial, te doy gracias por tu Palabra que me guía y me exhorta a vivir una vida de santidad. Reconozco que soy propenso a pecar y necesito tu ayuda para discernir y evitar toda forma de mal. Dame la fuerza para resistir las tentaciones y para mantener mi corazón puro delante de ti. Ayúdame a examinar mis pensamientos, mis palabras y mis acciones, y a renunciar a todo aquello que no te agrada. Lléname de tu Espíritu Santo para que pueda vivir conforme a tu voluntad y reflejar la imagen de Cristo en mi vida. Concédenos la sabiduría para discernir entre el bien y el mal, y la valentía para elegir siempre el camino de la rectitud. Te pido que me ayudes a abstenerse de toda especie de mal, y a vivir una vida que te honre y te glorifique. En el nombre de Jesús, amén.
+
+════════════════════════════════════════════════════════════════
+[4/4] lucas524RVR1960
+VERDICT     FLAG
+ISSUE_TYPE  repetition
+CONF        0.95
+ISSUE       Repeated meaningful phrase 'la sanidad física' appears three times within the same paragraph, with two instances in close proximity and identical wording.
+QUOTED      La sanidad física del paralítico es la evidencia visible del poder invisible del perdón. Jesús, al dar la orden de levantarse, tomar su lecho y caminar, demuestra su señorío sobre la enfermedad y, sobre todo, sobre el pecado.
+
+REF  El pasaje de Lucas 5:24 nos presenta un momento crucial en el ministerio de Jesús. Después de sanar a un paralítico, Jesús declara a la multitud que el Hijo del Hombre tiene autoridad para perdonar pecados. Este acto de sanidad física es una clara manifestación del poder de Dios, pero la declaración de perdón es aún más significativa. Jesús no solo restaura la salud física, sino que también ofrece la sanidad espiritual, algo que solo Dios puede hacer. La sanidad física del paralítico es la evidencia visible del poder invisible del perdón. Jesús, al dar la orden de levantarse, tomar su lecho y caminar, demuestra su señorío sobre la enfermedad y, sobre todo, sobre el pecado. Este versículo nos invita a reflexionar sobre la autoridad de Jesús y la profundidad de su amor y misericordia. Nos recuerda que la fe en Él no solo trae sanidad física, sino también el perdón de nuestros pecados, lo que nos permite experimentar una vida nueva y plena. La sanidad física es una manifestación del poder de Dios, pero la sanidad espiritual es la que nos permite experimentar la vida eterna.
+
+ORA  Amado Padre Celestial, te damos gracias por la autoridad que le diste a tu Hijo, Jesucristo, para perdonar nuestros pecados y sanar nuestras dolencias. Reconocemos que solo Tú tienes el poder de transformar nuestras vidas y darnos una nueva esperanza. Te pedimos que nos ayudes a comprender la profundidad de tu amor y misericordia, y que podamos vivir cada día con la certeza de tu perdón y la promesa de una vida abundante. Ayúdanos a confiar en Jesús en cada momento, sabiendo que Él es nuestro sanador y salvador. Que podamos experimentar la sanidad tanto física como espiritual, y que podamos ser instrumentos de tu gracia para otros. Te pedimos que nos uses para compartir tu mensaje de esperanza y perdón con aquellos que necesitan conocerte. En el nombre de Jesús, amén.
+
+════════════════════════════════════════════════════════════════
+END·GEP·REVIEW  es·RVR1960·2026·p1
