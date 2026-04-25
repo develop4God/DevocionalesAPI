@@ -82,9 +82,6 @@ providers:
     base_url: "https://api.fireworks.ai/inference/v1"
     model: "accounts/fireworks/models/qwen3-vl-30b-a3b-thinking"
     env_var: FIREWORKS_API_KEY
-    thinking_mode:
-      supported: true
-      style: cot
     batch:
       supported: true
       endpoint: "/v1/chat/completions"
