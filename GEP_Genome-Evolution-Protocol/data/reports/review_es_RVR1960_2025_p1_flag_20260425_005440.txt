@@ -1,0 +1,99 @@
+GEP·REVIEW  es·RVR1960·2025·p1  FLAG:6  generated:2026-04-25 00:54 UTC
+input  : batch_input_es_RVR1960_2025_p1.jsonl
+results: BIJOutputSet_es_RVR1960_2025_p1_results.jsonl
+total:365  CLEAN:359  FLAG:6  errors:0
+
+════════════════════════════════════════════════════════════════
+[1/6] colosenses312RVR1960
+VERDICT  FLAG
+CONF     0.95
+ISSUE    Unnatural phrasing and incorrect punctuation in the prayer section.
+QUOTED   en el nombre de Jesús, amén.
+
+REF  Este pasaje de Colosenses nos invita a una profunda reflexión sobre nuestra vida espiritual. Pablo, inspirado por el Espíritu Santo, nos exhorta a vivir una vida transformada, anclada en la resurrección de Cristo. La clave para esta transformación radica en un cambio de enfoque: debemos "buscar las cosas de arriba" y "poner la mira en las cosas de arriba".
+
+¿Qué significa esto en la práctica? Significa que, como creyentes, ya no estamos definidos por las preocupaciones y las metas de este mundo. Hemos resucitado con Cristo, y nuestra verdadera identidad y ciudadanía están en el cielo. Esto implica un cambio de prioridades, un desapego de las cosas terrenales y una búsqueda constante de la voluntad de Dios. Implica también una renovación de nuestra mente, permitiendo que el Espíritu Santo nos guíe en cada decisión y pensamiento.
+
+Buscar las cosas de arriba no es un escape de la realidad, sino una reorientación de nuestra perspectiva. Es recordar que nuestra vida tiene un propósito eterno y que nuestras acciones tienen consecuencias que trascienden el tiempo. Es vivir con esperanza, con fe, con la certeza de que, a pesar de las dificultades, estamos en las manos de un Dios que nos ama y que tiene un plan perfecto para nosotros.
+
+ORA  Padre celestial, te doy gracias por la promesa de la resurrección y por la oportunidad de vivir una vida nueva en Cristo. Ayúdame a buscar las cosas de arriba, a poner mi mirada en tu reino y en tu voluntad. Perdóname por las veces que he estado enfocado en las cosas terrenales, en las preocupaciones y las metas de este mundo. Renueva mi mente, Señor, y guíame por tu Espíritu Santo. Dame la fortaleza para resistir las tentaciones y para vivir una vida que te honre en todo lo que hago. Que mi corazón esté lleno de esperanza y fe, sabiendo que estás conmigo en cada paso del camino. Que pueda experimentar la paz que sobrepasa todo entendimiento y que pueda reflejar tu amor a los demás. en el nombre de Jesús, amén.
+
+VERDICT_HUMAN  ___  [accept|dismiss|fix]
+NOTE           ___
+
+════════════════════════════════════════════════════════════════
+[2/6] 1corintios1614RVR1960
+VERDICT  FLAG
+CONF     0.95
+ISSUE    Repetition of the phrase 'amor' and related concepts in close proximity creates a noticeable linguistic redundancy.
+QUOTED   motivado por el amor. Significa servir a otros con humildad, perdonar las ofensas, buscar el bien del prójimo y actuar con compasión y empatía.
+
+REF  La exhortación de Pablo a los corintios en 1 Corintios 16:14 es un llamado a la transformación radical de nuestras vidas: 'Todas vuestras cosas sean hechas con amor.' Esta no es simplemente una sugerencia; es un mandamiento, un principio fundamental que debe permear cada aspecto de nuestra existencia. El amor, en su esencia, es el amor ágape, el amor incondicional y sacrificial que Dios nos ha demostrado a través de Jesucristo. Aplicar este amor a todas nuestras acciones implica que cada decisión, cada palabra, cada pensamiento, debe ser motivado por el amor. Significa servir a otros con humildad, perdonar las ofensas, buscar el bien del prójimo y actuar con compasión y empatía.
+
+En un mundo a menudo marcado por el egoísmo, la competencia y la indiferencia, este versículo nos desafía a ser diferentes. Nos insta a examinar nuestras motivaciones, a asegurarnos de que el amor sea el combustible que impulsa nuestras vidas. ¿Estamos haciendo las cosas por amor, o por interés propio? ¿Estamos buscando el reconocimiento, o la edificación de los demás? La práctica del amor en todas las cosas requiere una constante autoevaluación y la dependencia del Espíritu Santo para guiarnos y capacitarnos. Que este versículo nos recuerde la importancia de vivir cada día con amor, reflejando la luz de Cristo en todo lo que hacemos.
+
+ORA  Padre celestial, te doy gracias por tu inmenso amor que se derrama sobre nosotros. Reconozco que a menudo me cuesta amar como Tú amas, con paciencia, bondad y entrega. Te pido que me ayudes a comprender la profundidad de tu amor y a reflejarlo en cada aspecto de mi vida.  Guíame para que todas mis acciones, palabras y pensamientos estén motivados por el amor, buscando siempre el bienestar de los demás y honrándote a ti. Rellena mi corazón con tu amor, para que pueda amar a mis prójimos como a mí mismo, y que pueda perdonar y servir con humildad y compasasión.  Ayúdame a ser un instrumento de tu paz, llevando tu amor al mundo. En el nombre de Jesús, amén.
+
+VERDICT_HUMAN  ___  [accept|dismiss|fix]
+NOTE           ___
+
+════════════════════════════════════════════════════════════════
+[3/6] 1juan51415RVR1960
+VERDICT  FLAG
+CONF     0.95
+ISSUE    The phrase 'sabiendo que Él escucha nuestras peticiones' is repeated verbatim in the same paragraph, which constitutes a repetition of three or more meaningful content words.
+QUOTED   sabiendo que Él escucha nuestras peticiones
+
+REF  Este pasaje de 1 Juan 5:14-15 es una joya que nos revela la esencia de la oración efectiva. Juan nos anima a acercarnos a Dios con confianza, sabiendo que Él escucha nuestras peticiones. La clave reside en orar conforme a su voluntad. ¿Qué significa esto? No se trata de recitar una lista de deseos, sino de alinear nuestros anhelos con los propósitos de Dios. Cuando oramos con un corazón que busca su reino y su justicia, con una mente que discierne su voluntad a través de la lectura de la Palabra y la guía del Espíritu Santo, podemos tener la certeza de ser escuchados. La confianza es el cimiento de nuestra oración. No es una esperanza vaga, sino una seguridad basada en el carácter de Dios y sus promesas. Sabemos que Él es fiel y que cumple lo que promete. Esta certeza nos impulsa a persistir en la oración, a no desfallecer, y a esperar pacientemente la respuesta de Dios, que siempre es la mejor para nosotros, aunque no siempre sea lo que esperamos. La oración, entonces, se convierte en una conversación íntima con nuestro Padre celestial, donde expresamos nuestras necesidades, compartimos nuestras cargas y buscamos su dirección en cada aspecto de nuestra vida.
+
+ORA  Padre celestial, te agradezco por la promesa de escuchar nuestras oraciones. Ayúdame a cultivar una relación íntima contigo, buscando siempre tu voluntad en cada área de mi vida. Dame discernimiento para comprender tus propósitos y alinear mis deseos con los tuyos. Fortalece mi fe para confiar en tu fidelidad, sabiendo que tú eres bueno y que tus planes son perfectos. Guíame a orar con perseverancia, sin dudar, y a esperar con paciencia tus respuestas, confiando en que siempre son las mejores para mí. Permíteme experimentar la alegría de la comunión contigo a través de la oración, y que mi vida sea un reflejo de tu amor y tu gracia. Gracias por escuchar mis oraciones, por cuidar de mí y por ser mi refugio seguro. en el nombre de Jesús, amén.
+
+VERDICT_HUMAN  ___  [accept|dismiss|fix]
+NOTE           ___
+
+════════════════════════════════════════════════════════════════
+[4/6] tito345RVR1960
+VERDICT  FLAG
+CONF     0.95
+ISSUE    The phrase 'lavamiento de la regeneración' is repeated verbatim in both the Reflection and Prayer sections, which constitutes a repetition of three or more meaningful content words within the same paragraph (in this case, across different sections but still within the same entry).
+QUOTED   lavamiento de la regeneración
+
+REF  Este pasaje de Tito 3:4-5 es un faro de esperanza y un recordatorio constante de la inmensa gracia de Dios. Nos revela la esencia de su amor: no es un amor condicionado por nuestros méritos, sino un amor incondicional que se manifiesta en la bondad y la misericordia. La Biblia nos dice que Dios, en su infinita bondad, se reveló a la humanidad. Esta revelación culminó en la salvación, que no se basa en nuestras propias obras de justicia, sino en su misericordia. Es crucial entender que no podemos ganar la salvación a través de nuestras acciones. La salvación es un regalo, una dádiva de Dios. El versículo menciona el 'lavamiento de la regeneración', que simboliza el nuevo nacimiento espiritual, la transformación que experimentamos al aceptar a Cristo. El 'Espíritu Santo' es el agente de esta renovación, que nos capacita para vivir una vida nueva, guiada por los principios del Reino de Dios. Este pasaje nos llama a la humildad, reconociendo nuestra necesidad de la gracia divina. Nos impulsa a vivir una vida de gratitud y a compartir el amor y la misericordia que hemos recibido.
+
+ORA  Padre celestial, te damos gracias por la bondad y el amor que has manifestado hacia nosotros. Reconocemos que nuestra salvación no proviene de nuestras propias obras, sino de tu inmensa misericordia. Te agradecemos por el lavamiento de la regeneración y la renovación que experimentamos a través del Espíritu Santo. Ayúdanos a vivir una vida que refleje tu amor y tu gracia, compartiendo tu bondad con los demás. Danos la humildad para reconocer nuestra dependencia de ti y la valentía para vivir una vida transformada por tu Espíritu. Te pedimos que nos guíes en cada paso, que nos fortalezcas en la fe y que nos uses para llevar tu luz al mundo. Que podamos ser instrumentos de tu paz y de tu amor, mostrando al mundo tu gracia salvadora. en el nombre de Jesús, amén.
+
+VERDICT_HUMAN  ___  [accept|dismiss|fix]
+NOTE           ___
+
+════════════════════════════════════════════════════════════════
+[5/6] galatas516RVR1960
+VERDICT  FLAG
+CONF     0.95
+ISSUE    Repeated phrase of three or more meaningful content words within the same paragraph.
+QUOTED   andar en el Espíritu, a escuchar tu voz y a someterme a tu voluntad
+
+REF  El versículo de Gálatas 5:16 nos presenta una poderosa invitación a vivir una vida guiada por el Espíritu Santo. Pablo nos exhorta a 'andar' en el Espíritu, lo cual implica una acción constante, un caminar diario en obediencia y comunión con Dios. Este andar contrasta directamente con la satisfacción de los deseos de la carne, que son aquellos impulsos y anhelos que nos alejan de la voluntad de Dios y nos conducen a la iniquidad.  La carne, en este contexto, representa nuestra naturaleza pecaminosa, propensa a la tentación, al egoísmo y a la desobediencia. Andar en el Espíritu es, por tanto, un acto de fe y de renuncia. Es reconocer la guía del Espíritu, escuchar su voz, y permitir que Él transforme nuestros pensamientos, deseos y acciones.  La clave reside en la continua dependencia del Espíritu Santo. No se trata de un esfuerzo humano en vano, sino de una colaboración entre nuestra voluntad y la obra transformadora del Espíritu. Al someternos a Él, somos capacitados para resistir las tentaciones y vivir una vida que glorifica a Dios, una vida de amor, gozo, paz, paciencia, benignidad, bondad, fe, mansedumbre y templanza (Gálatas 5:22-23).  Este versículo nos llama a una reflexión constante, a examinar nuestras motivaciones y a buscar la dirección del Espíritu en cada área de nuestra vida. Es un recordatorio de que la victoria sobre la carne es posible a través del poder del Espíritu Santo que habita en nosotros.
+
+ORA  Padre celestial, te doy gracias por tu Espíritu Santo, quien habita en mí y me guía a toda verdad. Reconozco mi debilidad y mi tendencia a ceder a los deseos de la carne. Te pido que me ayudes a andar en el Espíritu, a escuchar tu voz y a someterme a tu voluntad en todas las áreas de mi vida. Fortaléceme para resistir las tentaciones y para vivir una vida que te honre. Lléname de tu amor, gozo y paz, y capacítame para reflejar tu carácter en cada acción. Ayúdame a buscar tu guía diariamente y a depender completamente de tu Espíritu Santo. Gracias por tu fidelidad y por el poder que me has dado para vencer. Amén. Te pido que me ayudes a ser sensible a tu guía, a buscar tu rostro en oración y a vivir una vida que te agrade. En el nombre de Jesús, amén.
+
+VERDICT_HUMAN  ___  [accept|dismiss|fix]
+NOTE           ___
+
+════════════════════════════════════════════════════════════════
+[6/6] romanos1513RVR1960
+VERDICT  FLAG
+CONF     0.95
+ISSUE    Repetition of the phrase 'gozo y paz' within the same paragraph, which is a meaningful sequence of three or more content words.
+QUOTED   gozo y paz gozo y paz
+
+REF  Romanos 15:13 es una poderosa promesa y una guía para nuestra vida cristiana. Pablo, al escribir a los Romanos, nos recuerda que el Dios de esperanza es aquel que puede llenarnos de gozo y paz, incluso en medio de las pruebas. La clave para experimentar esta plenitud es 'creer'. Creer en el Señor Jesucristo, en su sacrificio y en sus promesas. Cuando creemos, permitimos que el gozo y la paz de Dios inunden nuestro corazón, transformando nuestra perspectiva y nuestra actitud. 
+
+El versículo también destaca la importancia de la esperanza. No una esperanza vacía, sino una esperanza que abunda, que es generada por el poder del Espíritu Santo. Esta esperanza nos da la fortaleza para perseverar, para enfrentar los desafíos con valentía y para vivir con una fe inquebrantable. Es una esperanza que nos impulsa a mirar hacia el futuro con confianza, sabiendo que Dios tiene un plan perfecto para nosotros. En un mundo lleno de incertidumbre y tribulaciones, aferrémonos a esta promesa divina, permitiendo que el Espíritu Santo obre en nosotros para llenarnos de gozo, paz y una esperanza que sobrepasa todo entendimiento.
+
+ORA  Padre celestial, te doy gracias por la promesa de Romanos 15:13. Te agradezco por ser el Dios de esperanza, y por la oportunidad de experimentar tu gozo y paz en mi vida. Te pido que me llenes de fe para creer en tus promesas, para que pueda superar cualquier dificultad con valentía. Permíteme, Señor, abunda en esperanza por el poder de tu Espíritu Santo. Ayúdame a mantener mis ojos puestos en ti, confiando en tu plan perfecto para mi vida. Que tu paz, que sobrepasa todo entendimiento, guarde mi corazón y mi mente. Guíame en cada paso, y ayúdame a ser un testimonio vivo de tu amor y tu fidelidad. En el nombre de Jesús, amén.
+
+VERDICT_HUMAN  ___  [accept|dismiss|fix]
+NOTE           ___
+
+════════════════════════════════════════════════════════════════
+END·GEP·REVIEW  es·RVR1960·2025·p1
