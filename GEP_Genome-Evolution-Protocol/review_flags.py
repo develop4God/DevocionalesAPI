@@ -25,6 +25,7 @@ import argparse
 import json
 import re
 import sys
+from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -52,6 +53,22 @@ _P2_MARKERS = {
     "reflexion": re.compile(r"--- REFLEXIÓN ---\n(.*?)(?=--- ORACIÓN ---)", re.DOTALL),
     "oracion":   re.compile(r"--- ORACIÓN ---\n(.*?)(?=--- PARA MEDITAR ---|Evaluate only|\Z)", re.DOTALL),
 }
+
+# ── Issue type classifier (heuristic, no model) ───────────────────────────────
+
+_ISSUE_TYPE_RULES: list[tuple[str, re.Pattern]] = [
+    ("structure",    re.compile(r"double|amén.*amén|two clos|duplicate closing|spliced", re.I)),
+    ("punctuation",  re.compile(r"punctuat|lowercase|capitaliz|uppercase|capital", re.I)),
+    ("typo",         re.compile(r"typo|spelling|misspell|orthograph", re.I)),
+    ("grammar",      re.compile(r"grammar|grammat|conjugat|infinitiv|verb form|incorrect form", re.I)),
+    ("repetition",   re.compile(r"repeat|redundan|verbatim|same phrase|reiterat", re.I)),
+]
+
+def _classify_issue(issue: str) -> str:
+    for label, pattern in _ISSUE_TYPE_RULES:
+        if pattern.search(issue):
+            return label
+    return "other"
 
 
 def _extract_fields(prompt: str, phase: int) -> dict[str, str]:
@@ -197,14 +214,16 @@ def build_report(
 
             verdict = parsed.get("verdict", "").upper()
             fields  = _extract_fields(input_index.get(cid, ""), phase)
+            issue   = parsed.get(issue_key, "") or ""
 
             entries.append({
-                "id":       cid,
-                "verdict":  verdict,
-                "issue":    parsed.get(issue_key, "") or "",
-                "quoted":   parsed.get(quoted_key, "") or "",
-                "conf":     parsed.get("confidence", ""),
-                "category": parsed.get("category", "") or "",
+                "id":         cid,
+                "verdict":    verdict,
+                "issue":      issue,
+                "issue_type": _classify_issue(issue),
+                "quoted":     parsed.get(quoted_key, "") or "",
+                "conf":       parsed.get("confidence", ""),
+                "category":   parsed.get("category", "") or "",
                 **fields,
             })
 
@@ -217,6 +236,9 @@ def build_report(
     ok_count   = sum(1 for e in entries if e["verdict"] in (clean_term,))
     flag_count = sum(1 for e in entries if e["verdict"] == flag_term)
 
+    # Issue type summary for flagged entries
+    issue_type_counts = Counter(e["issue_type"] for e in filtered)
+
     # Build report
     ts_now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     lines: list[str] = []
@@ -226,6 +248,9 @@ def build_report(
     lines.append(f"input  : {input_path.name}")
     lines.append(f"results: {results_path.name}")
     lines.append(f"total:{total}  {clean_term}:{ok_count}  {flag_term}:{flag_count}  errors:{parse_errors}")
+    if issue_type_counts:
+        pattern_parts = "  ".join(f"{k}:{v}" for k, v in issue_type_counts.most_common())
+        lines.append(f"patterns  {pattern_parts}")
     lines.append("")
 
     if not filtered:
@@ -234,12 +259,13 @@ def build_report(
         for i, e in enumerate(filtered, 1):
             lines.append(f"{'═'*64}")
             lines.append(f"[{i}/{len(filtered)}] {e['id']}")
-            lines.append(f"VERDICT  {e['verdict']}")
+            lines.append(f"VERDICT     {e['verdict']}")
             if e.get("category"):
-                lines.append(f"CATEGORY {e['category']}")
-            lines.append(f"CONF     {e['conf']}")
-            lines.append(f"ISSUE    {e['issue']}")
-            lines.append(f"QUOTED   {e['quoted']}")
+                lines.append(f"CATEGORY    {e['category']}")
+            lines.append(f"ISSUE_TYPE  {e['issue_type']}")
+            lines.append(f"CONF        {e['conf']}")
+            lines.append(f"ISSUE       {e['issue']}")
+            lines.append(f"QUOTED      {e['quoted']}")
             lines.append("")
             if e.get("versiculo"):
                 lines.append(f"VER  {e['versiculo']}")
@@ -247,9 +273,6 @@ def build_report(
             lines.append(f"REF  {e['reflexion']}")
             lines.append("")
             lines.append(f"ORA  {e['oracion']}")
-            lines.append("")
-            lines.append(f"VERDICT_HUMAN  ___  [accept|dismiss|fix]")
-            lines.append(f"NOTE           ___")
             lines.append("")
 
     lines.append(f"{'═'*64}")
