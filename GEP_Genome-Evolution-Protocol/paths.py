@@ -27,6 +27,7 @@ BATCH_OUTPUT_DIR = DATA_DIR / "batch_output"
 GENOMES_DIR      = DATA_DIR / "genomes"
 LOGS_DIR         = DATA_DIR / "logs"
 SOURCE_DIR       = DATA_DIR / "source"
+REPORTS_DIR      = DATA_DIR / "reports"
 
 
 def ensure_dirs() -> None:
@@ -39,6 +40,7 @@ def ensure_dirs() -> None:
         GENOMES_DIR,
         LOGS_DIR,
         SOURCE_DIR,
+        REPORTS_DIR,
     ):
         d.mkdir(parents=True, exist_ok=True)
 
