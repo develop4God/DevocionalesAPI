@@ -121,8 +121,8 @@ providers:
     model: "qwen-plus"
     env_var: DASHSCOPE_API_KEY
     thinking_mode:
-      supported: true
-      style: cot
+      supported: false  
+      style: none
     batch:
       supported: true
       endpoint: "/v1/chat/completions"
@@ -132,7 +132,7 @@ providers:
       tpm: null
       rpm: null
 settings:
-  default_backend: api         #"api" or "local" — switches all phases at once
+  default_backend: api         #never use think it charge not showing the thinking
   daily_token_tracking: true
   daily_counter_path: ".gep_daily_tokens.json"
   max_retries: 2
