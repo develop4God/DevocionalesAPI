@@ -1,0 +1,85 @@
+{
+  "language": "es",
+  "version": "RVR1960",
+  "genome_version": "es-RVR1960-2025-seed-v1",
+  "total_entries_reviewed": 0,
+  "total_pauses": 0,
+  "updated_at": "2026-04-25T16:52:49.444730+00:00",
+  "fragments": [
+    {
+      "id": "seed_es_RVR1960_001",
+      "language": "es",
+      "version": "RVR1960",
+      "category": "repetition",
+      "pattern": "A key phrase from the closing sentence of the reflexion is copied verbatim into the oracion as its own closing sentence. The duplication is word-for-word and spans 10+ content words, making the repeat immediately noticeable to any native reader.",
+      "example_quote": "para vivir con propósito, para amar y servir a los demás, y para glorificarte en todo lo que hago",
+      "evidence_dates": [
+        "2025 — efesios210RVR1960"
+      ],
+      "confidence": 0.98,
+      "state": "confirmed",
+      "created_at": "2026-04-25T16:52:49.441501+00:00",
+      "updated_at": "2026-04-25T16:52:49.441501+00:00"
+    },
+    {
+      "id": "seed_es_RVR1960_002",
+      "language": "es",
+      "version": "RVR1960",
+      "category": "repetition",
+      "pattern": "A phrase of 4–6 meaningful words is repeated twice within the oracion with minimal variation. Example: 'vivir de acuerdo con [X]' and 'vivir de acuerdo con [Y]' within the same prayer.",
+      "example_quote": "a vivir de acuerdo con tu voluntad",
+      "evidence_dates": [
+        "2026 — romanos61718RVR1960"
+      ],
+      "confidence": 0.95,
+      "state": "confirmed",
+      "created_at": "2026-04-25T16:52:49.441501+00:00",
+      "updated_at": "2026-04-25T16:52:49.441501+00:00"
+    },
+    {
+      "id": "seed_es_RVR1960_003",
+      "language": "es",
+      "version": "RVR1960",
+      "category": "typo",
+      "pattern": "Wrong article gender: 'la' used instead of 'el' before a masculine noun (e.g. 'la discernimiento'). Immediately noticeable to a native Spanish speaker.",
+      "example_quote": "la discernimiento",
+      "evidence_dates": [
+        "2026 — 1juan41RVR1960"
+      ],
+      "confidence": 0.98,
+      "state": "confirmed",
+      "created_at": "2026-04-25T16:52:49.441501+00:00",
+      "updated_at": "2026-04-25T16:52:49.441501+00:00"
+    },
+    {
+      "id": "seed_es_RVR1960_004",
+      "language": "es",
+      "version": "RVR1960",
+      "category": "grammar",
+      "pattern": "Infinitive used where a reflexive infinitive is required after 'te pido que me ayudes a'. Correct form: 'abstenerme', not 'abstenerse'. Subject agreement error.",
+      "example_quote": "te pido que me ayudes a abstenerse de toda especie de mal",
+      "evidence_dates": [
+        "2026 — 1tesalonicenses522RVR1960"
+      ],
+      "confidence": 0.98,
+      "state": "confirmed",
+      "created_at": "2026-04-25T16:52:49.441501+00:00",
+      "updated_at": "2026-04-25T16:52:49.441501+00:00"
+    },
+    {
+      "id": "seed_es_RVR1960_005",
+      "language": "es",
+      "version": "RVR1960",
+      "category": "repetition",
+      "pattern": "A thematic noun phrase is repeated three times in the reflexion within two adjacent paragraphs. Reads as a generation artifact — model loops back to its anchor phrase instead of varying vocabulary.",
+      "example_quote": "La sanidad física del paralítico es la evidencia visible del poder invisible del perdón.",
+      "evidence_dates": [
+        "2026 — lucas524RVR1960"
+      ],
+      "confidence": 0.95,
+      "state": "confirmed",
+      "created_at": "2026-04-25T16:52:49.441501+00:00",
+      "updated_at": "2026-04-25T16:52:49.441501+00:00"
+    }
+  ]
+}

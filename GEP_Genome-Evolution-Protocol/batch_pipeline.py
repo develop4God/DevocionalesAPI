@@ -96,9 +96,9 @@ def _build_jsonl(
     if skip_reviewed:
         print(f"  📋 {len(reviewed)} entries already reviewed — will skip")
 
-    genome = ensure_genome(lang, version, year) if 2 in phases else None
-    if 2 not in phases:
-        print(f"  🧬 Genome: skipped (Phase 1 only)")
+    genome = ensure_genome(lang, version, year)
+    frag_count = len(genome.fragments) if genome else 0
+    print(f"  🧬 Genome: {frag_count} fragments")
 
     records = build_records(
         lang=lang,
