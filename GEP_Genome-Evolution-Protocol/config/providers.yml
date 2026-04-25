@@ -142,7 +142,6 @@ settings:
   warn_at_percent: 80
 
 #Batch models available in DashScope:
-  #Qwen-Turbo	Basic Qwen-Flash High-Speed/Volume
-  #Qween-Plus	Balanced/Reliable
-  #Qwen-Max	Flagship/Expert	Deepest reasoning 
-  	
+  # Qwen-Turbo  Basic / Qwen-Flash  High-Speed/Volume
+  # Qwen-Plus   Balanced/Reliable
+  # Qwen-Max    Flagship/Expert  Deepest reasoning
