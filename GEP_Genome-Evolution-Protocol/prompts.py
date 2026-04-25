@@ -538,11 +538,12 @@ How to evaluate:
             No match → keep FLAG only if you can quote it verbatim, set genome_match false.
             If you said CLEAN — stop. No genome check needed.
 {genome_block}
-
+Return ONLY valid JSON. No markdown. No preamble.
 First character must be {{ and last must be }}.
 
 Schema:
 {{
+    "verdict": "CLEAN" | "FLAG",
     "flags": [
         {{
             "type": "typo" | "repetition" | "grammar" | "unnatural",
@@ -573,12 +574,7 @@ def build_phase1_genome_block(genome: "Genome | None") -> str:
     ][:5]
     if not fragments:
         return ""
-    lines = [
-        "### Known linguistic patterns — use to VALIDATE after evaluation, not to hunt:\n",
-        "After your evaluation: if you said FLAG, check whether it matches one of these patterns.\n"
-        "  A match → keep FLAG. No match → only keep FLAG if confidence >= 0.90.\n"
-        "  Do NOT scan the entry looking for these patterns — evaluate first, validate after.\n",
-    ]
+    lines = ["\n### Known genome patterns (check AFTER forming your verdict):\n"]
     for f in fragments:
         lines.append(
             f"- [{f.category.value}] \"{f.example_quote}\"\n"
