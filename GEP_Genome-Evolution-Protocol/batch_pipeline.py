@@ -31,6 +31,7 @@ Provider short-names accepted for --provider:
 from __future__ import annotations
 
 import argparse
+from datetime import datetime, timezone
 import sys
 from pathlib import Path
 
@@ -125,10 +126,12 @@ def _build_jsonl(
     estimate_cost(records, model)
 
     suffix = phase_suffix(phases)
+    model_slug = model.replace("accounts/fireworks/models/", "").replace("/", "-").replace(":", "-")
+    ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     out_path = (
         Path(output)
         if output
-        else _paths.BATCH_INPUT_DIR / f"batch_input_{lang}_{version}_{year}{suffix}.jsonl"
+        else _paths.BATCH_INPUT_DIR / f"batch_input_{lang}_{version}_{year}{suffix}_{model_slug}_{ts}.jsonl"
     )
     write_jsonl(records, out_path)
     return out_path
@@ -211,6 +214,8 @@ def run_pipeline(args: argparse.Namespace) -> None:
 
         stem = batch_path.stem.replace("batch_input_", "BIJOutputSet_")
         results_path = _paths.BATCH_OUTPUT_DIR / f"{stem}_results.jsonl"
+        # NOTE: stem already contains model_slug + timestamp inherited from batch_path name,
+        # so results filename is unique by construction — no extra suffix needed here.
         print(f"\n  📥 Downloading → {results_path.name} …")
         client.download(output_file_id, results_path)
         print(f"  ✅ Saved: {results_path}")

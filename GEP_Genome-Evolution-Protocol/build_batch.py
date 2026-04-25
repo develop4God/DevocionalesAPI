@@ -38,6 +38,7 @@ Each line is a self-contained request:
 import argparse
 import json
 import sys
+from datetime import datetime, timezone
 import urllib.request
 from pathlib import Path
 
@@ -361,8 +362,10 @@ def main():
 
     # Write output — filename reflects phases included
     suffix = phase_suffix(phases)
+    model_slug = model.replace("accounts/fireworks/models/", "").replace("/", "-").replace(":", "-")
+    ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     out_path = Path(args.output) if args.output else \
-               _paths.BATCH_INPUT_DIR / f"batch_input_{args.lang}_{args.version}_{args.year}{suffix}.jsonl"
+               _paths.BATCH_INPUT_DIR / f"batch_input_{args.lang}_{args.version}_{args.year}{suffix}_{model_slug}_{ts}.jsonl"
     write_jsonl(records, out_path)
 
     print(f"\n  Next step:")
