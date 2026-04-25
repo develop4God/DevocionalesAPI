@@ -181,7 +181,7 @@ def build_batch(
     skipped = 0
 
     # Build system prompts once (static — cache hit on Fireworks)
-    p1_system = build_phase1_system(lang) if 1 in phases else None
+    p1_system = build_phase1_system(lang, genome=genome) if 1 in phases else None
     p2_system = build_phase2_system(
         lang=lang, version=version, genome=genome, phase1_result=None
     ) if 2 in phases else None
@@ -334,14 +334,11 @@ def main():
         entries = [e for e in entries if e.id in id_set]
         print(f"  🎯 --ids filter: {len(entries)} entries matched ({len(id_set)} requested)")
 
-    # Load genome — only needed for Phase 2 (injects confirmed fragments into system prompt)
-    if 2 in phases:
-        genome = ensure_genome(args.lang, args.version, args.year)
-        frag_count = len(genome.fragments) if genome else 0
-        print(f"  🧬 Genome: {frag_count} fragments")
-    else:
-        genome = None
-        print(f"  🧬 Genome: skipped (Phase 1 only)")
+    # Load genome — Phase 1 uses linguistic fragments (repetition/typo/grammar, confirmed only)
+    #              Phase 2 uses full genome (all confirmed fragments)
+    genome = ensure_genome(args.lang, args.version, args.year)
+    frag_count = len(genome.fragments) if genome else 0
+    print(f"  🧬 Genome: {frag_count} fragments")
 
     # Build JSONL records
     records = build_batch(

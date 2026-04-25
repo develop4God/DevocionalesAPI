@@ -15,14 +15,18 @@ class Verdict(str, Enum):
 
 
 class PauseCategory(str, Enum):
+    # Phase 2 — content coherence
     VERSE_MISMATCH   = "verse_mismatch"    # quoted verse doesn't match reference
-    TYPO             = "typo"              # spelling / grammar error
+    TYPO             = "typo"              # shared: caught by both phases
     NAME_ERROR       = "name_error"        # biblical name misspelled or wrong
     PRAYER_DRIFT     = "prayer_drift"      # prayer disconnected from verse/reflection
     HALLUCINATION      = "hallucination"       # invented detail (attribution, citation)
     REGISTER_DRIFT     = "register_drift"      # tone too academic or too casual
     # GENERIC_REFLECTION = "generic_reflection"  # disabled — correct Christian content, not harmful
     OTHER              = "other"
+    # Phase 1 — linguistic
+    REPETITION         = "repetition"      # meaningful phrase repeated verbatim within paragraph
+    GRAMMAR            = "grammar"         # grammar / agreement error
 
 
 @dataclass

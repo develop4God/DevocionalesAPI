@@ -555,10 +555,45 @@ Do NOT add prose before or after the JSON.
 The very first character of your visible output must be {{ and the last must be }}."""
 
 
-def build_phase1_system(lang: str) -> str:
+_PHASE1_GENOME_CATEGORIES = {"repetition", "typo", "grammar"}  # PauseCategory values for Phase 1
+
+def build_phase1_genome_block(genome: "Genome | None") -> str:
+    """
+    Genome injection for Phase 1 — linguistic fragment categories only.
+    Filters to repetition, typo, grammar. Confirmed only (>=0.7). Max 5 fragments.
+    Phase 2 concerns (prayer_drift, register_drift, etc.) are excluded.
+    """
+    if not genome:
+        return ""
+    fragments = [
+        f for f in genome.high_confidence_fragments(threshold=0.7)
+        if f.category.value in _PHASE1_GENOME_CATEGORIES
+    ][:5]
+    if not fragments:
+        return ""
+    lines = [
+        "### Patterns already found in previous entries for this language:\n",
+        "These are confirmed linguistic issues. Watch for them specifically.\n",
+    ]
+    for f in fragments:
+        lines.append(
+            f"- [{f.category.value}] \"{f.example_quote}\"\n"
+            f"  Pattern: {f.pattern}\n"
+            f"  Seen {len(f.evidence_dates)} time(s). Confidence: {f.confidence:.0%}\n"
+        )
+    return "\n".join(lines) + "\n"
+
+
+def build_phase1_system(lang: str, genome: "Genome | None" = None) -> str:
     """Returns the Phase 1 system prompt for a given language."""
     language, country = PHASE1_NATIVE_SPEAKERS.get(lang, ("English", "United States"))
-    return PHASE1_SYSTEM_TEMPLATE.format(language=language, country=country)
+    genome_block = build_phase1_genome_block(genome)
+    base = PHASE1_SYSTEM_TEMPLATE.format(language=language, country=country)
+    if genome_block:
+        # Inject genome block just before the return-format instruction
+        marker = "Always respond in English regardless of the devotional language."
+        return base.replace(marker, genome_block + marker)
+    return base
 
 
 def build_phase1_user(entry: DevotionalEntry, lang: str = "es") -> str:
