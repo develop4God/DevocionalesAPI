@@ -1,0 +1,60 @@
+GEP·REVIEW  es·RVR1960·2026·p1  FLAG:4  generated:2026-04-25 20:23 UTC
+input  : batch_input_es_RVR1960_2026_p1_qwen-plus_20260425_202210.jsonl
+results: BIJOutputSet_es_RVR1960_2026_p1_qwen-plus_20260425_202210_results.jsonl
+total:365  CLEAN:361  FLAG:4  errors:0
+patterns  typo:3  grammar:1
+
+════════════════════════════════════════════════════════════════
+[1/4] 2tes2_1-2RVR1960
+VERDICT     FLAG
+ISSUE_TYPE  typo
+CONF        0.98
+ISSUE       Typo: incorrect article gender — 'la discernimiento' instead of 'el discernimiento'.
+QUOTED      la discernimiento
+
+REF  Este pasaje de 2 Tesalonicenses nos llama a la firmeza y a la discernimiento en tiempos de incertidumbre y confusión. Pablo, preocupado por la creciente especulación sobre la inminente llegada del Señor, insta a los creyentes a no dejarse desviar de la verdad. La exhortación es clara: no permitamos que las falsas enseñanzas, ya sean orales, escritas o supuestamente inspiradas por el Espíritu, nos perturben o nos aparten de la fe. La venida de Cristo es una promesa segura, pero la impaciencia y la credulidad pueden llevarnos a conclusiones erróneas y a una fe debilitada. Debemos mantenernos firmes en la verdad que hemos recibido, fundamentados en la Palabra de Dios y guiados por el Espíritu Santo. La paciencia y la espera activa, combinadas con el discernimiento espiritual, son esenciales para navegar en un mundo lleno de voces contradictorias. Recordemos que el día del Señor vendrá, pero no debemos apresurarnos ni dejarnos engañar por falsas alarmas. Nuestra fe debe ser inquebrantable, anclada en la promesa segura de la salvación y la esperanza de la reunión con Cristo.
+
+ORA  Padre celestial, te agradecemos por la promesa de la venida de nuestro Señor Jesucristo y por la esperanza que tenemos en Él. Te pedimos que nos ayudes a mantenernos firmes en la fe, sin dejarnos mover por las falsas enseñanzas o las especulaciones. Concédenos discernimiento espiritual para identificar la verdad y la sabiduría para resistir la confusión y la incertidumbre. Ayúdanos a esperar con paciencia y a vivir una vida que te agrade, anclada en tu Palabra y guiada por tu Espíritu Santo. Fortalece nuestra fe y aumenta nuestra esperanza en la promesa de la reunión con Cristo. Danos la capacidad de discernir las señales de los tiempos, pero sobre todo, ayúdanos a mantener nuestros corazones enfocados en ti y en tu voluntad para nuestras vidas. Ayúdanos a no ser presa fácil de las falsas doctrinas, que podamos estar siempre preparados, en el nombre de Jesús, amén.
+
+════════════════════════════════════════════════════════════════
+[2/4] romanos1423RVR1960
+VERDICT     FLAG
+ISSUE_TYPE  grammar
+CONF        0.98
+ISSUE       Grammar error: infinitive 'abstenerse' used instead of reflexive infinitive 'abstenerme' after 'Ayúdame a'.
+QUOTED      Ayúdame a discernir entre lo que proviene de la fe y lo que es fruto de la duda. Dame la valentía para abstenerse de acciones que no estén basadas en una fe firme y una conciencia limpia.
+
+REF  Romanos 14:23 nos presenta una profunda reflexión sobre la importancia de la fe y la conciencia en nuestras decisiones. El versículo nos advierte que actuar con duda, especialmente en asuntos que consideramos neutrales, nos condena porque carece de la base fundamental de la fe. La fe, en este contexto, no es solo creer en Dios, sino también confiar en que nuestras acciones son guiadas por Él y son agradables a sus ojos. 
+
+La duda, por otro lado, nos paraliza y nos impide actuar con convicción. Nos lleva a cuestionar nuestras motivaciones y a temer las consecuencias de nuestras decisiones. Cuando actuamos con duda, no estamos completamente entregados a Dios, sino que estamos divididos entre nuestra voluntad y la suya. Esta división, según el versículo, es pecado. No es necesariamente un pecado en el sentido de una transgresión moral, sino en el sentido de que nos separa de la plenitud de la vida en Cristo.  
+
+Debemos examinar cuidadosamente nuestras acciones, asegurándonos de que broten de una fe genuina y de una conciencia limpia.  Si dudamos, es mejor abstenernos hasta que podamos actuar con la certeza de que estamos agradando a Dios.  Esta reflexión nos llama a vivir una vida de integridad, donde cada decisión, por pequeña que sea, sea un acto de fe y obediencia.
+
+ORA  Padre celestial, te doy gracias por la claridad que me brindas a través de tu Palabra. Reconozco la importancia de actuar con fe en todas las áreas de mi vida. Ayúdame a discernir entre lo que proviene de la fe y lo que es fruto de la duda. Dame la valentía para abstenerse de acciones que no estén basadas en una fe firme y una conciencia limpia. Guíame a tomar decisiones que te honren y que reflejen tu amor en cada momento. Lléname de tu Espíritu Santo para que mi vida sea un testimonio de tu fidelidad y que todas mis acciones sean para tu gloria. Fortalece mi fe y ayúdame a vivir una vida que te agrade, en el nombre de Jesús, amén.
+
+════════════════════════════════════════════════════════════════
+[3/4] 1juan41RVR1960
+VERDICT     FLAG
+ISSUE_TYPE  typo
+CONF        0.98
+ISSUE       Typo: incorrect article gender — 'la este tiempo' should be 'este tiempo' or 'en este tiempo'; 'la' is a feminine article incorrectly used before the masculine noun 'tiempo'.
+QUOTED      La este tiempo
+
+REF  la exhortación de 1 Juan 4:1 resuena con particular importancia. El apóstol Juan nos llama al discernimiento, a no aceptar ciegamente cualquier enseñanza o influencia espiritual. El mundo está lleno de voces, algunas que susurran verdades a medias, otras que distorsionan la Palabra de Dios para satisfacer sus propios propósitos. La este tiempo, con su atmósfera de alegría y celebración, también puede ser un terreno fértil para enseñanzas erróneas. Es crucial, por tanto, examinar cuidadosamente las palabras que escuchamos, las ideas que aceptamos y las influencias que permitimos en nuestras vidas. El verbo 'probar' implica una investigación, un análisis cuidadoso. No basta con oír, sino que debemos comparar lo que se nos presenta con la verdad revelada en las Escrituras. ¿Es coherente con el evangelio de Jesucristo? ¿Glorifica a Dios y exalta a Cristo? ¿Promueve el amor y la unidad entre los creyentes? La proliferación de falsos profetas nos recuerda que la vigilancia es esencial. Debemos ser como los bereanos, que escudriñaban las Escrituras diariamente para verificar si lo que se les predicaba era cierto. fortalecemos nuestra fe, no solo celebrando el nacimiento de Jesús, sino también protegiendo nuestras almas de las influencias engañosas. Busquemos a Dios en oración, leyendo Su Palabra y permitiendo que el Espíritu Santo nos guíe en la verdad.
+
+ORA  Padre celestial, en esta época de celebración, te pedimos discernimiento para distinguir la verdad del error. Ayúdanos a probar los espíritus y a no ser engañados por las falsas doctrinas que puedan surgir. Danos un corazón humilde y dispuesto a escudriñar tu Palabra, buscando siempre tu voluntad. Ilumina nuestro entendimiento para que podamos comprender las verdades eternas y vivir de acuerdo con ellas. Fortalece nuestra fe y aumenta nuestro amor por Ti y por los demás. Guíanos por tu Espíritu Santo, para que caminemos en la luz de tu verdad y glorifiquemos tu nombre en todo lo que hagamos. Te agradecemos por el regalo de tu Hijo Jesucristo y por la promesa de vida eterna. En el nombre de Jesús, amén.
+
+════════════════════════════════════════════════════════════════
+[4/4] 2timoteo478RVR196020270314
+VERDICT     FLAG
+ISSUE_TYPE  typo
+CONF        0.99
+ISSUE       Typo: missing space before period after 'fe'.
+QUOTED      he guardado la fe.
+
+REF  Este pasaje, las últimas palabras de Pablo antes de su martirio, es una poderosa declaración de fe y perseverancia. Nos revela la esencia de una vida cristiana vivida con propósito y fidelidad. "He peleado la buena batalla" nos recuerda que la vida cristiana es una lucha constante contra el pecado, el mundo y las asechanzas del diablo. No es un camino fácil, pero es una batalla que vale la pena librar, sabiendo que la victoria ya fue asegurada por Cristo en la cruz. "He acabado la carrera" nos habla de perseverancia y de mantenerse firme hasta el final. Pablo corrió la carrera que Dios le había trazado, sin desmayar, a pesar de las dificultades y el sufrimiento. Finalmente, "he guardado la fe" es un testimonio de lealtad a Dios y a su Palabra. Pablo se mantuvo fiel a la verdad del evangelio, sin comprometer sus convicciones ni ceder a las presiones del mundo. La promesa de la corona de justicia es la recompensa para aquellos que perseveran hasta el final. Es un recordatorio de que nuestras obras, motivadas por el amor a Dios y la obediencia a su Palabra, no son en vano. Que este pasaje nos inspire a vivir una vida de fe, perseverancia y fidelidad, anhelando la venida del Señor y la recompensa que nos espera.
+
+ORA  Padre celestial, te doy gracias por la vida de Pablo y su ejemplo de fe inquebrantable. Ayúdame a pelear la buena batalla, a perseverar en la carrera que me has trazado y a guardar la fe en todo momento. Dame la fortaleza para resistir las tentaciones y las pruebas, y para mantenerme firme en la verdad de tu Palabra. Que mi corazón anhele tu venida y que pueda recibir la corona de justicia que has prometido a los que te aman. Lléname de tu Espíritu Santo para que pueda vivir una vida que te honre y te glorifique en todo lo que haga. Guárdame de todo mal y permíteme ser un testimonio de tu amor y tu gracia. Que pueda decir al final de mi vida, como Pablo, que he acabado la carrera, he guardado la fe. en el nombre de Jesús, amén.
+
+════════════════════════════════════════════════════════════════
+END·GEP·REVIEW  es·RVR1960·2026·p1

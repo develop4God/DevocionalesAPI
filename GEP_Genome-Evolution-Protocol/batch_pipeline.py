@@ -87,6 +87,7 @@ def _build_jsonl(
     skip_reviewed: bool,
     output: str | None,
     provider_id: str,
+    no_genome: bool = False,
 ) -> Path:
     """Build the batch JSONL file. Returns the path to the written file."""
     entries = load_entries(lang, version, year, local)
@@ -98,7 +99,10 @@ def _build_jsonl(
 
     genome = ensure_genome(lang, version, year)
     frag_count = len(genome.fragments) if genome else 0
-    print(f"  🧬 Genome: {frag_count} fragments")
+    if no_genome:
+        print(f"  🧬 Genome: {frag_count} fragments (SUPPRESSED — baseline run)")
+    else:
+        print(f"  🧬 Genome: {frag_count} fragments")
 
     records = build_records(
         lang=lang,
@@ -110,6 +114,7 @@ def _build_jsonl(
         model=model,
         skip_reviewed=skip_reviewed,
         phases=phases,
+        no_genome=no_genome,
     )
 
     if not records:
@@ -168,6 +173,8 @@ def run_pipeline(args: argparse.Namespace) -> None:
     print(f"  Phases: {phases}")
     if args.dry_run:
         print(f"  ⚠️  DRY RUN — build only, no upload/submit")
+    if getattr(args, "no_genome", False):
+        print(f"  ⚠️  --no-genome: genome suppressed (baseline run)")
     print(f"{'═'*60}")
 
     # ── Step 1: Build or use existing JSONL ───────────────────────────────
@@ -186,6 +193,7 @@ def run_pipeline(args: argparse.Namespace) -> None:
             skip_reviewed=args.skip_reviewed,
             output=args.output,
             provider_id=provider_id,
+            no_genome=getattr(args, "no_genome", False),
         )
 
     if args.dry_run:
@@ -278,6 +286,8 @@ def main() -> None:
                         help="Build JSONL only — do not upload or submit")
     parser.add_argument("--poll-interval", type=int, default=30,
                         help="Seconds between status polls (default: 30)")
+    parser.add_argument("--no-genome", action="store_true",
+                        help="Suppress genome injection (baseline run without prior pattern knowledge)")
     args = parser.parse_args()
     run_pipeline(args)
 

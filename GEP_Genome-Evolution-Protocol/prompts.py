@@ -385,8 +385,12 @@ def build_genome_block(genome: Genome | None) -> str:
     if not fragments:
         return ""
     lines = [
-        "### Patterns this reader has already noticed in previous entries:\n",
-        "These are real issues found before. Weight them seriously when reading today.\n"
+        "### Genome patterns — use AFTER your evaluation to VALIDATE, not to hunt:\n",
+        "After you reach your initial verdict:\n"
+        "  - If you said PAUSE: check whether the flagged phrase matches one of these patterns.\n"
+        "    A match → keep PAUSE (confirmed pattern). No match → lower confidence; downgrade\n"
+        "    to OK unless you are ≥ 0.90 confident the error is real and obvious.\n"
+        "  - If you said OK: genome check not required. Trust your reader instinct.\n"
     ]
     for f in fragments:
         lines.append(
@@ -517,6 +521,12 @@ Your only job: evaluate the writing quality of the Reflection and Prayer fields.
 The Scripture verse is provided for context only. Do NOT flag it, correct it,
 or comment on it under any circumstance — it is sacred source text, not your concern.
 
+Evaluate in this exact order:
+  STEP A — Read the entry as a native speaker. Form an honest, independent verdict.
+  STEP B — After your verdict, check the genome patterns below (if any) to VALIDATE:
+            If you said FLAG: does it match a known pattern? Yes → keep. No → need ≥ 0.90 confidence.
+            If you said CLEAN: trust your reader instinct. No genome check needed.
+
 Look for:
 1. Typos or spelling errors
 2. Repeated meaningful phrases (3+ content words) within the same paragraph
@@ -572,8 +582,10 @@ def build_phase1_genome_block(genome: "Genome | None") -> str:
     if not fragments:
         return ""
     lines = [
-        "### Patterns already found in previous entries for this language:\n",
-        "These are confirmed linguistic issues. Watch for them specifically.\n",
+        "### Known linguistic patterns — use to VALIDATE after evaluation, not to hunt:\n",
+        "After your evaluation: if you said FLAG, check whether it matches one of these patterns.\n"
+        "  A match → keep FLAG. No match → only keep FLAG if confidence ≥ 0.90.\n"
+        "  Do NOT scan the entry looking for these patterns — evaluate first, validate after.\n",
     ]
     for f in fragments:
         lines.append(
@@ -643,13 +655,17 @@ Before you respond, complete each check below in order:
    are you confident that exact quote and attribution are historically accurate?
    Any doubt → flag as hallucination.
 
-5. GENOME TEST — Review the known patterns listed below.
-   Has any of those specific patterns appeared again in today's entry?
-
-6. FALSE-POSITIVE GUARD — Before marking PAUSE, ask:
+5. FALSE-POSITIVE GUARD — Before marking PAUSE, ask:
    "Would a real reader actually stop here, or am I over-analyzing as a critic?"
    Style differences and personal preferences are NOT pauses.
    Only flag genuine errors or disconnections a typical reader would notice.
+
+6. GENOME VALIDATION — After your initial verdict, consult the genome patterns below.
+   Read the entry FIRST (steps 1–5) and form your verdict BEFORE checking genome.
+   - If you said PAUSE: does the flagged phrase match one of the genome patterns?
+     YES → keep PAUSE (confirmed recurring error). NO → only keep PAUSE if confidence ≥ 0.90.
+   - If you said OK → no genome check needed. Trust your reader instinct.
+   This step filters false positives — it does NOT generate new flags from genome alone.
 
 Only after completing all 6 checks, form your final verdict.
 """

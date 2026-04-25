@@ -168,6 +168,7 @@ def build_batch(
     model: str,
     skip_reviewed: bool,
     phases: list[int],
+    no_genome: bool = False,
 ) -> list[dict]:
     """
     Builds one JSONL record per entry.
@@ -176,14 +177,16 @@ def build_batch(
       [1]    → Phase 1 only (linguistic scan)
       [1, 2] → Both phases in one request (P1 messages first, then P2)
     System prompt is built once and reused — Fireworks caches it automatically.
+    no_genome: if True, suppress genome injection (baseline / ablation run).
     """
     records = []
     skipped = 0
+    effective_genome = None if no_genome else genome
 
     # Build system prompts once (static — cache hit on Fireworks)
-    p1_system = build_phase1_system(lang, genome=genome) if 1 in phases else None
+    p1_system = build_phase1_system(lang, genome=effective_genome) if 1 in phases else None
     p2_system = build_phase2_system(
-        lang=lang, version=version, genome=genome, phase1_result=None
+        lang=lang, version=version, genome=effective_genome, phase1_result=None
     ) if 2 in phases else None
 
     for entry in entries:
@@ -300,6 +303,8 @@ def main():
     parser.add_argument("--output",   metavar="FILE", help="Output JSONL path (default: auto)")
     parser.add_argument("--ids",      metavar="ID[,ID...]",
                         help="Comma-separated list of entry IDs to include (re-run specific entries)")
+    parser.add_argument("--no-genome", action="store_true",
+                        help="Suppress genome injection (baseline run without prior pattern knowledge)")
     args = parser.parse_args()
 
     # Parse --phase into sorted list of ints, validate
@@ -338,7 +343,11 @@ def main():
     #              Phase 2 uses full genome (all confirmed fragments)
     genome = ensure_genome(args.lang, args.version, args.year)
     frag_count = len(genome.fragments) if genome else 0
-    print(f"  🧬 Genome: {frag_count} fragments")
+    no_genome = getattr(args, "no_genome", False)
+    if no_genome:
+        print(f"  🧬 Genome: {frag_count} fragments (SUPPRESSED — baseline run)")
+    else:
+        print(f"  🧬 Genome: {frag_count} fragments")
 
     # Build JSONL records
     records = build_batch(
@@ -351,6 +360,7 @@ def main():
         model          = model,
         skip_reviewed  = args.skip_reviewed,
         phases         = phases,
+        no_genome      = no_genome,
     )
 
     # DashScope requires method + url fields at record top level
