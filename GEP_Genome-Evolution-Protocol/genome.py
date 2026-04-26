@@ -202,3 +202,165 @@ def get_saved_genomes() -> list[str]:
     """Returns list of genome JSON filenames found in the current working directory."""
     from pathlib import Path
     return [str(p) for p in Path(".").glob("genome_*.json")]
+
+
+def corpus_scan(
+    genome: Genome,
+    source_paths: list[Path],
+    categories: list[str] | None = None,
+) -> dict[str, list[dict]]:
+    """
+    Scan source devotional files for known genome patterns.
+    Returns: {fragment_id: [{entry_id, date, field, context}]}
+
+    Args:
+        genome:       The genome to scan with.
+        source_paths: List of source JSON files to scan.
+        categories:   Filter to specific categories (e.g. ["grammar", "typo"]).
+                      None = scan all fragments.
+    """
+    fragments = genome.fragments
+    if categories:
+        fragments = [f for f in fragments if f.category.value in categories]
+
+    results: dict[str, list[dict]] = {f.id: [] for f in fragments}
+
+    for source_path in source_paths:
+        with open(source_path, encoding="utf-8") as fp:
+            data = json.load(fp)
+
+        lang_data = data.get("data", {})
+        first_val = next(iter(lang_data.values()), {})
+        date_map = first_val if isinstance(first_val, dict) else lang_data
+
+        for date_key, entries in date_map.items():
+            for entry in entries:
+                eid = entry.get("id", "")
+                date = entry.get("date", date_key)
+                for field in ("reflexion", "oracion"):
+                    text = entry.get(field, "") or ""
+                    for fragment in fragments:
+                        pattern = fragment.example_quote
+                        if pattern in text:
+                            idx = text.find(pattern)
+                            context = text[max(0, idx - 40): idx + len(pattern) + 60]
+                            results[fragment.id].append({
+                                "entry_id": eid,
+                                "date": date,
+                                "field": field,
+                                "context": f"...{context}...",
+                            })
+
+    return results
+
+
+def _scan_data_for_quotes(
+    data: dict,
+    confirmed: list[GenomeFragment],
+    found_ids: set[str],
+) -> None:
+    """
+    Scan a parsed source JSON dict for confirmed fragment quotes.
+    Mutates found_ids in place. Shared by local and remote paths.
+    """
+    lang_data = data.get("data", {})
+    first_val = next(iter(lang_data.values()), {})
+    date_map = first_val if isinstance(first_val, dict) else lang_data
+
+    for _date_key, entries in date_map.items():
+        if isinstance(entries, dict):
+            entries = [entries]
+        for entry in entries:
+            for field in ("reflexion", "oracion"):
+                text = entry.get(field, "") or ""
+                for frag in confirmed:
+                    if frag.id not in found_ids and frag.example_quote in text:
+                        found_ids.add(frag.id)
+
+
+def verify_fragments_against_source(
+    genome: Genome,
+    source_paths: list[Path] | None = None,
+    year: int | None = None,
+    local: bool = False,
+) -> tuple[list[GenomeFragment], list[GenomeFragment]]:
+    """
+    Pre-injection gate: verify every CONFIRMED fragment's example_quote
+    exists verbatim in at least one source entry before it enters a prompt.
+
+    SOT priority:
+    - local=False (default): fetch the current file from the remote GitHub repo
+      (devocionales-json/refs/heads/main) — always the authoritative version.
+    - local=True + source_paths provided: scan local files only — use when offline
+      or when you explicitly want to validate against a specific local snapshot.
+
+    Returns (verified, unverified).
+    - verified:   quotes found in the corpus → safe to inject into prompts
+    - unverified: quotes NOT found → excluded from injection (stale or hallucinated)
+
+    Only checks CONFIRMED fragments (confidence >= 0.7). CANDIDATE fragments
+    are never injected anyway so they are excluded from both lists.
+
+    Design contract:
+    - No fragment is mutated. This is a read-only check.
+    - Caller decides what to do with unverified (warn, skip, quarantine).
+    """
+    confirmed = [f for f in genome.fragments if f.state == GeneState.CONFIRMED]
+    if not confirmed:
+        return [], []
+
+    found_ids: set[str] = set()
+
+    if not local:
+        # ── Remote SOT fetch ────────────────────────────────────────────────
+        # Import here to avoid circular import — source.py is a peer module.
+        from source import fetch_remote
+        if year is None:
+            raise ValueError("year is required when local=False (remote fetch)")
+        try:
+            data = fetch_remote(genome.language, genome.version, year)
+            _scan_data_for_quotes(data, confirmed, found_ids)
+        except SystemExit:
+            # fetch_remote calls sys.exit on HTTP/network error.
+            # Treat as unverified-all rather than crashing the pipeline.
+            print(
+                f"  ⚠️  Remote fetch failed for {genome.language}/{genome.version}/{year}"
+                f" — all fragments treated as unverified (safe default)"
+            )
+    else:
+        # ── Local file scan ─────────────────────────────────────────────────
+        for source_path in (source_paths or []):
+            if not Path(source_path).exists():
+                print(f"  ⚠️  Source file not found: {source_path} — skipped")
+                continue
+            with open(source_path, encoding="utf-8") as fp:
+                data = json.load(fp)
+            _scan_data_for_quotes(data, confirmed, found_ids)
+            if len(found_ids) == len(confirmed):
+                break  # early exit: all accounted for
+
+    verified   = [f for f in confirmed if f.id in found_ids]
+    unverified = [f for f in confirmed if f.id not in found_ids]
+    return verified, unverified
+
+
+def print_corpus_scan_report(scan_results: dict, genome: Genome) -> None:
+    """Pretty-print corpus_scan() results."""
+    fragment_map = {f.id: f for f in genome.fragments}
+    total_hits = sum(len(v) for v in scan_results.values())
+    print(f"\n{'═'*60}")
+    print(f"  🧬 Genome Corpus Scan — {total_hits} total hits")
+    print(f"{'═'*60}")
+    for fid, hits in scan_results.items():
+        if not hits:
+            continue
+        fr = fragment_map.get(fid)
+        if not fr:
+            continue
+        print(f"\n  [{fr.category.value}] \"{fr.example_quote}\"")
+        print(f"  Pattern: {fr.pattern[:80]}")
+        print(f"  Hits: {len(hits)}")
+        for hit in hits:
+            print(f"    • {hit['date']} [{hit['field']}] {hit['entry_id']}")
+            print(f"      {hit['context']}")
+    print(f"\n{'═'*60}\n")

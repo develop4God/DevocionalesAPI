@@ -378,12 +378,42 @@ pero ang panalangin ay nagbago ng paksa. Parang nakalimutan ng may-akda ang kani
 # No fragment limit — local, zero cost. Send everything with high confidence.
 # The richer the genome context, the better the reader's calibration.
 
-def build_genome_block(genome: Genome | None) -> str:
+def build_genome_block(
+    genome: "Genome | None",
+    verified_ids: "set[str] | None" = None,
+) -> str:
+    """
+    Build the genome context block injected into Phase 2 prompts.
+
+    Args:
+        genome:       The loaded genome for this lang/version/year.
+        verified_ids: Optional set of fragment IDs confirmed to exist verbatim
+                      in the source corpus (from verify_fragments_against_source).
+                      When provided, any fragment NOT in this set is silently
+                      excluded — prevents stale or hallucinated quotes entering
+                      the prompt. When None, all high-confidence fragments are
+                      injected (legacy behaviour, no source check).
+    """
     if not genome:
         return ""
     fragments = genome.high_confidence_fragments(threshold=0.6)
     if not fragments:
         return ""
+
+    # Apply pre-injection gate if caller provided verified IDs
+    if verified_ids is not None:
+        excluded = [f for f in fragments if f.id not in verified_ids]
+        fragments = [f for f in fragments if f.id in verified_ids]
+        for f in excluded:
+            print(
+                f"  ⚠️  Genome injection gate: fragment {f.id} "
+                f"[{f.category.value}] \"{f.example_quote[:50]}\" "
+                f"not found in source — excluded from prompt"
+            )
+
+    if not fragments:
+        return ""
+
     lines = [
         "### Genome patterns — use AFTER your evaluation to VALIDATE, not to hunt:\n",
         "After you reach your initial verdict:\n"
@@ -532,12 +562,10 @@ Rules:
   If you cannot find it word-for-word — verdict CLEAN. Never paraphrase.
 
 How to evaluate:
-  STEP 1 — Read the Reflection and Prayer as a native speaker. Form your verdict.
-  STEP 2 — If you said FLAG: check the genome patterns below.
-            Does your flagged phrase match a known pattern? Yes → keep FLAG, set genome_match true.
-            No match → keep FLAG only if you can quote it verbatim, set genome_match false.
-            If you said CLEAN — stop. No genome check needed.
-{genome_block}
+  Read the Reflection and Prayer as a native speaker and form your verdict.
+  If you find a linguistic error that you can quote verbatim, set verdict FLAG.
+  Otherwise, verdict CLEAN.
+
 Return ONLY valid JSON. No markdown. No preamble.
 First character must be {{ and last must be }}.
 
@@ -548,14 +576,12 @@ Schema:
         {{
             "type": "typo" | "repetition" | "grammar" | "unnatural",
             "quoted_problem": "exact verbatim phrase from the text",
-            "genome_match": true | false,
             "confidence": 0.0 to 1.0
         }}
     ]
 }}
 
-flags is an empty array [] if verdict is CLEAN.
-confidence is required only when genome_match is false — omit it when genome_match is true."""
+flags is an empty array [] if verdict is CLEAN."""
 
 
 _PHASE1_GENOME_CATEGORIES = {"repetition", "typo", "grammar"}  # PauseCategory values for Phase 1
@@ -585,10 +611,12 @@ def build_phase1_genome_block(genome: "Genome | None") -> str:
 
 
 def build_phase1_system(lang: str, genome: "Genome | None" = None) -> str:
-    """Returns the Phase 1 system prompt for a given language."""
+    """Returns the Phase 1 system prompt for a given language.
+    genome param kept for signature compatibility but intentionally ignored.
+    Phase 1 reads text fresh — genome search is a separate Python pass.
+    """
     language, country = PHASE1_NATIVE_SPEAKERS.get(lang, ("English", "United States"))
-    genome_block = build_phase1_genome_block(genome)
-    return PHASE1_SYSTEM_TEMPLATE.format(language=language, country=country, genome_block=genome_block)
+    return PHASE1_SYSTEM_TEMPLATE.format(language=language, country=country)
 
 
 def build_phase1_user(entry: DevotionalEntry, lang: str = "es") -> str:
