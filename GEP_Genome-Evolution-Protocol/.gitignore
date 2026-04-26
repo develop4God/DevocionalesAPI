@@ -9,3 +9,7 @@ venv/
 # Ignore token and credential files
 .gep_daily_tokens.json
 .venv/
+# Ignore test artifacts and data directories
+data/audit/*.jsonl
+data/logs/*.log
+data/genomes/*.json
