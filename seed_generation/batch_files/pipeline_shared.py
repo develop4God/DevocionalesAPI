@@ -98,7 +98,7 @@ def build_prompt(verse_cita: str, lang: str, topic: str | None = None) -> str:
         f"Return ONLY a valid JSON object with these two exact keys:\n\n"
 
         f"- `reflexion`: Deep contextualized reflection on the verse "
-        f"(minimum 900 characters, approximately 300 words, in {lang}). "
+        f"(minimum 800 characters, approximately 300 words, in {lang}). "
         f"Each paragraph must develop a distinct aspect of the verse.\n"
         f"  Do NOT repeat any word consecutively, even when separated by punctuation marks — "
         f"never write patterns like 'word, word' or 'word. Word'.\n"
