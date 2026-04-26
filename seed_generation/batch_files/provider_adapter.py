@@ -104,6 +104,10 @@ class BaseAdapter(ABC):
         return self._model_cfg.get("quality", "unknown")
 
     @property
+    def max_tokens(self) -> int:
+        return self._max_tokens
+
+    @property
     def batch_strategy(self) -> str:
         return self._cfg.get("batch_strategy", "unknown")
 

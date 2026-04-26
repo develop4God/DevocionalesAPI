@@ -154,15 +154,17 @@ def dry_run_full(
         custom_id=_safe_custom_id(first_date),
         prompt=build_prompt(cita, master_lang, topic),
         model_id=adapter.model_id,
+        max_tokens=adapter.max_tokens,
     )
 
     print("\n" + SEP)
     print("DRY RUN FULL — exact wire payload (1 sample entry)")
     print(SEP)
-    print(f"  Provider : {provider}")
-    print(f"  Model    : {adapter.model_id}  (quality={adapter.quality})")
-    print(f"  Seed     : {seed_path}")
-    print(f"  Entry    : {first_date}  |  Verse: {cita}")
+    print(f"  Provider   : {provider}")
+    print(f"  Model      : {adapter.model_id}  (quality={adapter.quality})")
+    print(f"  Max tokens : {adapter.max_tokens}  ← sent as maxOutputTokens in every request")
+    print(f"  Seed       : {seed_path}")
+    print(f"  Entry      : {first_date}  |  Verse: {cita}")
     print(SEP)
 
     if hasattr(adapter, "_to_jsonl_line"):
@@ -216,6 +218,7 @@ def submit_batch(
     print(SEP)
     print(f"  Provider   : {provider}")
     print(f"  Model      : {adapter.model_id}  (quality={adapter.quality})")
+    print(f"  Max tokens : {adapter.max_tokens}  ← sent as maxOutputTokens in every request")
     print(f"  Seed       : {seed_path}")
     print(f"  Lang       : {master_lang}  Version: {master_version}")
     print(f"  Entries    : {total}")
@@ -238,6 +241,7 @@ def submit_batch(
             custom_id=_safe_custom_id(date_key),
             prompt=build_prompt(cita, master_lang, topic),
             model_id=adapter.model_id,
+            max_tokens=adapter.max_tokens,
         ))
 
     # ── Submit ─────────────────────────────────────────────────────────────
