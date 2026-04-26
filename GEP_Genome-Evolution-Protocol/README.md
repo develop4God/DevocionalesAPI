@@ -106,11 +106,34 @@ python3 batch_pipeline.py \
 
 ## Phases
 
-| Phase | Model (DashScope) | Purpose |
-|---|---|---|
-| `--phase 1` | `qwen-flash` | Linguistic scan — grammar, clarity, fidelity |
-| `--phase 2` | `qwen-plus` | Theological content check — PAUSE detection |
-| `--phase 1,2` | Both | Combined in one request |
+| Phase | Model (DashScope) | Purpose | Genome Usage |
+|---|---|---|---|
+| `--phase 1` | `qwen-flash` | Linguistic scan — grammar, clarity, fidelity | ❌ No genome injection (clean signal) |
+| `--phase 2` | `qwen-plus` | Theological content check — PAUSE detection | ✅ Genome-seeded prompts |
+| `--phase 1,2` | Both | Combined in one request | ✅ Phase 2 only |
+
+### Phase 1 Improvements (Recent)
+
+**Key changes implemented:**
+1. **No genome injection** — Phase 1 reads text fresh to avoid model confabulation
+2. **Verbatim gate** — Filters hallucinated flags before they reach the audit log
+3. **Fixed parser** — Handles Fireworks responses that start mid-`<think>` tag
+4. **Source index** — Required for verbatim validation against original text
+
+**Usage with verbatim gate:**
+```bash
+python3 collect_batch.py \
+    --input  data/batch_input/batch_input_es_RVR1960_2025_p1.jsonl \
+    --results Phase1_critic/p1_critic_es_RVR1960.jsonl \
+    --lang es --version RVR1960 --year 2025 \
+    --phase 1 \
+    --source data/source/Devocional_year_2025_es_RVR1960.json
+```
+
+**Why these changes:**
+- **Parser fix**: Fireworks responses often start mid-think, closing `</think>` only. Old regex `<think>.*?</think>` stripped nothing. New: split on `</think>` works correctly.
+- **Verbatim gate**: Phase 1 models sometimes hallucinate quoted problems that don't exist in the source. Gate checks if `quoted_problem` exists verbatim in the source text before writing FLAG to audit.
+- **No genome in Phase 1**: Genome patterns prime the model to find similar issues, increasing false positives. Phase 1 should provide clean, unbiased linguistic signals.
 
 ---
 
@@ -238,7 +261,58 @@ One unit of accumulated reader knowledge.
 
 **Promotion rule:** `candidate` → `confirmed` at `confidence >= 0.7`
 (approximately 3 independent evidence dates).
-Only `confirmed` fragments appear in future prompts.
+Only `confirmed` fragments appear in **Phase 2** prompts (Phase 1 runs genome-free).
+
+### Genome Corpus Scanner
+
+The genome can now be used as a **deterministic Python search tool** across the full devotional corpus:
+
+```python
+from genome import ensure_genome, corpus_scan, print_corpus_scan_report
+from pathlib import Path
+
+# Load genome
+genome = ensure_genome("es", "RVR1960", 2025)
+
+# Scan source files for known genome patterns
+hits = corpus_scan(
+    genome=genome,
+    source_paths=[
+        Path("data/source/Devocional_year_2025_es_RVR1960.json"),
+        Path("data/source/Devocional_year_2026_es_RVR1960.json"),
+    ],
+    categories=["grammar", "typo"],  # or None for all categories
+)
+
+# Print formatted report
+print_corpus_scan_report(hits, genome)
+```
+
+**Output example:**
+```
+════════════════════════════════════════════════════════
+  🧬 Genome Corpus Scan — 12 total hits
+════════════════════════════════════════════════════════
+
+  [typo] "compromizo"
+  Pattern: Spanish typo - should be "compromiso"
+  Hits: 3
+    • 2025-03-15 [reflexion] es_RVR1960_2025-03-15
+      ...de nuestro compromizo con Dios y con...
+    • 2025-07-22 [oracion] es_RVR1960_2025-07-22
+      ...renueva mi compromizo diario contigo...
+
+  [grammar] "ha sido bendecidos"
+  Pattern: Agreement error - "ha sido" (singular) + "bendecidos" (plural)
+  Hits: 2
+    • 2025-05-10 [reflexion] es_RVR1960_2025-05-10
+      ...pueblo ha sido bendecidos por el Señor...
+```
+
+This replaces the old role of genome as a "hint" to the model in Phase 1. Now:
+- **Phase 1**: No genome injection → clean linguistic signal
+- **Phase 2**: Genome-seeded prompts → content coherence
+- **Python scan**: Deterministic search across corpus → discover patterns at scale
 
 ### Capsule
 A bundled, language-ready critic configuration.
