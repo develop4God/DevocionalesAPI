@@ -202,3 +202,75 @@ def get_saved_genomes() -> list[str]:
     """Returns list of genome JSON filenames found in the current working directory."""
     from pathlib import Path
     return [str(p) for p in Path(".").glob("genome_*.json")]
+
+
+def corpus_scan(
+    genome: Genome,
+    source_paths: list[Path],
+    categories: list[str] | None = None,
+) -> dict[str, list[dict]]:
+    """
+    Scan source devotional files for known genome patterns.
+    Returns: {fragment_id: [{entry_id, date, field, context}]}
+
+    Args:
+        genome:       The genome to scan with.
+        source_paths: List of source JSON files to scan.
+        categories:   Filter to specific categories (e.g. ["grammar", "typo"]).
+                      None = scan all fragments.
+    """
+    fragments = genome.fragments
+    if categories:
+        fragments = [f for f in fragments if f.category.value in categories]
+
+    results: dict[str, list[dict]] = {f.id: [] for f in fragments}
+
+    for source_path in source_paths:
+        with open(source_path, encoding="utf-8") as fp:
+            data = json.load(fp)
+
+        lang_data = data.get("data", {})
+        first_val = next(iter(lang_data.values()), {})
+        date_map = first_val if isinstance(first_val, dict) else lang_data
+
+        for date_key, entries in date_map.items():
+            for entry in entries:
+                eid = entry.get("id", "")
+                date = entry.get("date", date_key)
+                for field in ("reflexion", "oracion"):
+                    text = entry.get(field, "") or ""
+                    for fragment in fragments:
+                        pattern = fragment.example_quote
+                        if pattern in text:
+                            idx = text.find(pattern)
+                            context = text[max(0, idx - 40): idx + len(pattern) + 60]
+                            results[fragment.id].append({
+                                "entry_id": eid,
+                                "date": date,
+                                "field": field,
+                                "context": f"...{context}...",
+                            })
+
+    return results
+
+
+def print_corpus_scan_report(scan_results: dict, genome: Genome) -> None:
+    """Pretty-print corpus_scan() results."""
+    fragment_map = {f.id: f for f in genome.fragments}
+    total_hits = sum(len(v) for v in scan_results.values())
+    print(f"\n{'═'*60}")
+    print(f"  🧬 Genome Corpus Scan — {total_hits} total hits")
+    print(f"{'═'*60}")
+    for fid, hits in scan_results.items():
+        if not hits:
+            continue
+        fr = fragment_map.get(fid)
+        if not fr:
+            continue
+        print(f"\n  [{fr.category.value}] \"{fr.example_quote}\"")
+        print(f"  Pattern: {fr.pattern[:80]}")
+        print(f"  Hits: {len(hits)}")
+        for hit in hits:
+            print(f"    • {hit['date']} [{hit['field']}] {hit['entry_id']}")
+            print(f"      {hit['context']}")
+    print(f"\n{'═'*60}\n")

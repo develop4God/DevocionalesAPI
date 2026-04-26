@@ -585,10 +585,12 @@ def build_phase1_genome_block(genome: "Genome | None") -> str:
 
 
 def build_phase1_system(lang: str, genome: "Genome | None" = None) -> str:
-    """Returns the Phase 1 system prompt for a given language."""
+    """Returns the Phase 1 system prompt for a given language.
+    genome param kept for signature compatibility but intentionally ignored.
+    Phase 1 reads text fresh — genome search is a separate Python pass.
+    """
     language, country = PHASE1_NATIVE_SPEAKERS.get(lang, ("English", "United States"))
-    genome_block = build_phase1_genome_block(genome)
-    return PHASE1_SYSTEM_TEMPLATE.format(language=language, country=country, genome_block=genome_block)
+    return PHASE1_SYSTEM_TEMPLATE.format(language=language, country=country, genome_block="")
 
 
 def build_phase1_user(entry: DevotionalEntry, lang: str = "es") -> str:
