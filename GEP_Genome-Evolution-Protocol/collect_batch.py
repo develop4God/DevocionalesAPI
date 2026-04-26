@@ -79,6 +79,30 @@ def load_input_index(input_path: Path) -> dict[str, dict]:
     return index
 
 
+def load_source_index(source_path: Path) -> dict[str, str]:
+    """
+    Build index: entry_id → full_text (reflexion + oracion) from source JSON.
+    Used as verbatim gate before any FLAG is written to audit log.
+    """
+    if not source_path or not source_path.exists():
+        return {}
+    with open(source_path, encoding="utf-8") as f:
+        data = json.load(f)
+    index: dict[str, str] = {}
+    lang_data = data.get("data", {})
+    # data.data is {lang: {date: [entries]}} or {date: [entries]}
+    if lang_data:
+        first_val = next(iter(lang_data.values()))
+        date_map = first_val if isinstance(first_val, dict) else lang_data
+        for date_entries in date_map.values():
+            for entry in date_entries:
+                eid = entry.get("id", "")
+                if eid:
+                    full = (entry.get("reflexion") or "") + " " + (entry.get("oracion") or "")
+                    index[eid] = full
+    return index
+
+
 def extract_content(result_line: dict) -> str | None:
     """
     Extract raw model content from batch result line.
@@ -113,8 +137,13 @@ def _parse_phase1_reaction(raw: str) -> ReaderReaction | None:
     Maps FLAG → Verdict.PAUSE, CLEAN → Verdict.OK.
     Returns None if JSON is unparseable.
     """
-    import re as _re
-    text = _re.sub(r"<think>.*?</think>", "", raw, flags=_re.DOTALL).strip()
+    # Fireworks returns content starting mid-think, closing </think> only.
+    # re.sub() strips nothing — must split on </think>.
+    if "</think>" in raw:
+        text = raw.split("</think>")[-1].strip()
+    else:
+        # Truncated — model hit token limit before producing JSON
+        return None
     if text.startswith("```"):
         parts = text.split("```")
         text = parts[1] if len(parts) > 1 else text
@@ -155,6 +184,7 @@ def process_results(
     dry_run: bool = False,
     overwrite: bool = False,
     phase: int = 2,
+    source_path: Path | None = None,
 ) -> dict:
     """
     Parse batch results and write AuditRecord JSONL.
@@ -183,6 +213,11 @@ def process_results(
     # Load genome for PAUSE absorption
     genome = ensure_genome(lang, version, year)
     genome_dirty = False
+
+    # Load source index for verbatim gate (Phase 1 only)
+    source_index = load_source_index(source_path) if source_path else {}
+    if phase == 1 and not source_index:
+        print("  ⚠️  No --source provided for Phase 1 — verbatim gate disabled. Hallucinated flags will not be filtered.")
 
     print(f"\n{'═'*60}")
     print(f"  📥  GEP Batch Collector")
@@ -285,6 +320,28 @@ def process_results(
                 errors += 1
                 continue
 
+            # ── Verbatim gate (Phase 1 only) ─────────────────────────────
+            # Discard any flags whose quoted_problem is not found verbatim
+            # in the source entry. These are model hallucinations.
+            if phase == 1 and source_index and reaction and reaction.verdict == Verdict.PAUSE:
+                source_text = source_index.get(custom_id, "")
+                if source_text:
+                    original_pause = reaction.quoted_pause or ""
+                    if original_pause and original_pause not in source_text:
+                        print(
+                            f"  🚫  {custom_id}: quoted_problem not in source "
+                            f"(hallucinated) — downgraded to CLEAN"
+                        )
+                        # Downgrade to CLEAN — do not write as flagged
+                        reaction = ReaderReaction(
+                            verdict=Verdict.OK,
+                            reaction=f"[gate] Hallucinated flag discarded: \"{original_pause[:60]}\"",
+                            quoted_pause=None,
+                            category=None,
+                            confidence=0.0,
+                        )
+            # ─────────────────────────────────────────────────────────────
+
             action = "flagged" if reaction.verdict.value == "PAUSE" else "reviewed"
 
             prior = existing.get(custom_id)
@@ -365,6 +422,8 @@ def main():
                         help="Ignore existing audit entries and re-collect from scratch.")
     parser.add_argument("--phase", type=int, default=2, choices=[1, 2],
                         help="Phase whose results are being collected: 1 (CLEAN/FLAG) or 2 (OK/PAUSE). Default: 2")
+    parser.add_argument("--source", metavar="FILE", default=None,
+                        help="Source devotional JSON (required for Phase 1 verbatim gate).")
     args = parser.parse_args()
 
     process_results(
@@ -376,6 +435,7 @@ def main():
         dry_run=args.dry_run,
         overwrite=args.overwrite,
         phase=args.phase,
+        source_path=Path(args.source) if args.source else None,
     )
 
 
