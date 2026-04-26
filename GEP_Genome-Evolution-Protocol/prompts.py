@@ -532,12 +532,10 @@ Rules:
   If you cannot find it word-for-word — verdict CLEAN. Never paraphrase.
 
 How to evaluate:
-  STEP 1 — Read the Reflection and Prayer as a native speaker. Form your verdict.
-  STEP 2 — If you said FLAG: check the genome patterns below.
-            Does your flagged phrase match a known pattern? Yes → keep FLAG, set genome_match true.
-            No match → keep FLAG only if you can quote it verbatim, set genome_match false.
-            If you said CLEAN — stop. No genome check needed.
-{genome_block}
+  Read the Reflection and Prayer as a native speaker and form your verdict.
+  If you find a linguistic error that you can quote verbatim, set verdict FLAG.
+  Otherwise, verdict CLEAN.
+
 Return ONLY valid JSON. No markdown. No preamble.
 First character must be {{ and last must be }}.
 
@@ -548,14 +546,12 @@ Schema:
         {{
             "type": "typo" | "repetition" | "grammar" | "unnatural",
             "quoted_problem": "exact verbatim phrase from the text",
-            "genome_match": true | false,
             "confidence": 0.0 to 1.0
         }}
     ]
 }}
 
-flags is an empty array [] if verdict is CLEAN.
-confidence is required only when genome_match is false — omit it when genome_match is true."""
+flags is an empty array [] if verdict is CLEAN."""
 
 
 _PHASE1_GENOME_CATEGORIES = {"repetition", "typo", "grammar"}  # PauseCategory values for Phase 1
@@ -590,7 +586,7 @@ def build_phase1_system(lang: str, genome: "Genome | None" = None) -> str:
     Phase 1 reads text fresh — genome search is a separate Python pass.
     """
     language, country = PHASE1_NATIVE_SPEAKERS.get(lang, ("English", "United States"))
-    return PHASE1_SYSTEM_TEMPLATE.format(language=language, country=country, genome_block="")
+    return PHASE1_SYSTEM_TEMPLATE.format(language=language, country=country)
 
 
 def build_phase1_user(entry: DevotionalEntry, lang: str = "es") -> str:
