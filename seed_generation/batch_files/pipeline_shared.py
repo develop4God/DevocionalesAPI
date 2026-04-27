@@ -100,22 +100,17 @@ def build_prompt(verse_cita: str, lang: str, topic: str | None = None) -> str:
         f"- `reflexion`: Deep contextualized reflection on the verse "
         f"(minimum 800 characters, approximately 300 words, in {lang}). "
         f"Each paragraph must develop a distinct aspect of the verse.\n"
-        f"  Do NOT repeat any word consecutively, even when separated by punctuation marks — "
-        f"never write patterns like 'word, word' or 'word. Word'.\n"
-        f"  Do NOT repeat the same sentence, phrase, or idea in different words.\n\n"
 
         f"- `oracion`: Prayer on the devotional theme (minimum 150 words, 100% in {lang}). "
         f"MUST end with 'in the name of Jesus, amen' correctly translated to {lang}. "
         f"The correct closing word in {lang} is \"{canonical_amen}\" — "
-        f"use it exactly once at the very end, never twice.\n"
-        f"  Do NOT repeat any word consecutively, even when separated by punctuation marks — "
-        f"never write patterns like 'word, word' or 'word. Word'.\n"
-        f"  Do NOT repeat the same sentence, phrase, or idea in different words.\n\n"
+        f"use it exactly once at the very end\n"
+
 
         f"RULES:\n"
         f"- ALL text MUST be 100% in {lang} — no language mixing.\n"
         f"- Do NOT include transliterations, romanizations, or text in parentheses.\n"
-        f"- Do NOT repeat any word consecutively.\n"
+        f"- Do NOT repeat any word consecutively, or close in the same sentence.\n"
         f"- Every sentence must introduce new content or a new perspective.{topic_line}\n\n"
 
         f"Return ONLY the JSON object — no markdown, no preamble, no explanation."
