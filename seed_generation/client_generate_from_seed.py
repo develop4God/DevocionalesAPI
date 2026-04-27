@@ -11,7 +11,7 @@ import json, os, re, signal, sys, time, requests
 from datetime import datetime
 from tkinter import Tk, filedialog, messagebox, simpledialog
 
-API_URL             = "http://127.0.0.1:50002/generate_creative"
+API_URL             = "http://127.0.0.1:50003/generate_creative"
 REQUEST_TIMEOUT     = 300
 DELAY_BETWEEN       = 10
 CHECKPOINT_INTERVAL = 1
