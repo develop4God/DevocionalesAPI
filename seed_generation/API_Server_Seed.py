@@ -34,7 +34,7 @@ from seed_content_validator import validate_and_fix, run_phase1_checks
 # =============================================================================
 # STARTUP
 # =============================================================================
-load_dotenv()
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env"))
 
 try:
     _GEMINI_API_KEY = os.environ["GOOGLE_API_KEY"]
