@@ -176,11 +176,12 @@ def repair(
                 continue
 
             cita  = seed_entry.get("versiculo", {}).get("cita", "")
+            texto = seed_entry.get("versiculo", {}).get("texto", "")
             topic = seed_entry.get("topic")
             request = BatchRequest(
                 date_key=date_key,
                 custom_id=_safe_custom_id(date_key),
-                prompt=build_prompt(cita, master_lang, topic),
+                prompt=build_prompt(cita, master_lang, topic, texto),
                 model_id=adapter.model_id,
             )
 

@@ -388,11 +388,12 @@ def collect(state_path: str, results_file: Optional[str] = None) -> None:
     for date_key in state.get("dates", []):
         seed_entry = seed.get(date_key, {})
         cita  = seed_entry.get("versiculo", {}).get("cita", "")
+        texto = seed_entry.get("versiculo", {}).get("texto", "")
         topic = seed_entry.get("topic")
         requests.append(BatchRequest(
             date_key=date_key,
             custom_id=_safe_custom_id(date_key),
-            prompt=build_prompt(cita, master_lang, topic),
+            prompt=build_prompt(cita, master_lang, topic, texto),
             model_id=state.get("model_id", ""),
         ))
 

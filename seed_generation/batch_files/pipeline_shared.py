@@ -86,31 +86,36 @@ def repair_json(raw_text: str) -> Optional[dict]:
     return None
 
 # --- Prompt Builder ---
-def build_prompt(verse_cita: str, lang: str, topic: str | None = None) -> str:
+def build_prompt(verse_cita: str, lang: str, topic: str | None = None, verse_texto: str | None = None) -> str:
     # Resolve canonical Amen for this language so the model never has to guess
     canonical_amen = _load_prayer_endings().get(lang, ["Amen"])[0]
     topic_line = f"\n- Suggested theme: {topic}." if topic else ""
 
+    lang_label = f"Filipino (ISO 639-2 code: fil)" if lang == "fil" else lang.upper()
+
+    verse_block = f"{verse_cita}"
+    if verse_texto:
+        verse_block += f"\n\"{verse_texto}\""
+
     return (
         f"You are a devoted biblical devotional writer. "
-        f"Write a devotional in {lang.upper()} based on the key verse: \"{verse_cita}\".\n\n"
+        f"Write a devotional in {lang_label} based on the key verse:\n{verse_block}\n\n"
 
         f"Return ONLY a valid JSON object with these two exact keys:\n\n"
 
         f"- `reflexion`: Deep contextualized reflection on the verse "
-        f"(minimum 800 characters, approximately 300 words, in {lang}). "
+        f"(minimum 800 characters, approximately 300 words, in {lang_label}). "
         f"Each paragraph must develop a distinct aspect of the verse.\n"
 
-        f"- `oracion`: Prayer on the devotional theme (minimum 150 words, 100% in {lang}). "
-        f"MUST end with 'in the name of Jesus, amen' correctly translated to {lang}. "
-        f"The correct closing word in {lang} is \"{canonical_amen}\" — "
-        f"use it exactly once at the very end\n"
-
+        f"- `oracion`: Prayer on the devotional theme (minimum 150 words, 100% in {lang_label}). "
+        f"MUST end with 'in the name of Jesus, amen' correctly translated to {lang_label}. "
+        f"The correct closing word is \"{canonical_amen}\" — "
+        f"use it exactly once at the very end.\n"
 
         f"RULES:\n"
-        f"- ALL text MUST be 100% in {lang} — no language mixing.\n"
+        f"- ALL text MUST be 100% in {lang_label} — no language mixing.\n"
         f"- Do NOT include transliterations, romanizations, or text in parentheses.\n"
-        f"- Do NOT repeat any word consecutively, or close in the same sentence.\n"
+        f"- Do NOT use the same word twice in a row or in close proximity within the same sentence.\n"
         f"- Every sentence must introduce new content or a new perspective.{topic_line}\n\n"
 
         f"Return ONLY the JSON object — no markdown, no preamble, no explanation."
@@ -120,6 +125,9 @@ def build_prompt(verse_cita: str, lang: str, topic: str | None = None) -> str:
 def _load_prayer_endings() -> dict:
     import os
     path = os.path.join(os.path.dirname(__file__), "prayer_endings.json")
+    # Fallback: if not found locally, check parent directory (one level up)
+    if not os.path.exists(path):
+        path = os.path.join(os.path.dirname(__file__), "..", "prayer_endings.json")
     try:
         with open(path, encoding="utf-8") as f:
             data = json.load(f)

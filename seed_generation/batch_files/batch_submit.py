@@ -101,6 +101,7 @@ def dry_run(
         for date_key in all_dates:
             entry = seed[date_key]
             cita  = entry["versiculo"]["cita"]
+            texto = entry["versiculo"].get("texto", "")
             topic = entry.get("topic")
             record = {
                 "custom_id": _safe_custom_id(date_key),
@@ -108,7 +109,7 @@ def dry_run(
                 "lang":      master_lang,
                 "version":   master_version,
                 "verse":     cita,
-                "prompt":    build_prompt(cita, master_lang, topic),
+                "prompt":    build_prompt(cita, master_lang, topic, texto),
             }
             f.write(json.dumps(record, ensure_ascii=False) + "\n")
 
@@ -147,12 +148,13 @@ def dry_run_full(
     first_date = sorted(seed.keys())[0]
     entry = seed[first_date]
     cita  = entry["versiculo"]["cita"]
+    texto = entry["versiculo"].get("texto", "")
     topic = entry.get("topic")
 
     req = BatchRequest(
         date_key=first_date,
         custom_id=_safe_custom_id(first_date),
-        prompt=build_prompt(cita, master_lang, topic),
+        prompt=build_prompt(cita, master_lang, topic, texto),
         model_id=adapter.model_id,
         max_tokens=adapter.max_tokens,
     )
@@ -174,11 +176,12 @@ def dry_run_full(
     else:
         print(f"\n⚠️  Adapter '{provider}' has no _to_jsonl_line().")
         print("   Inspect its submit() method manually.")
-        print(f"\n--- PROMPT CONTENT (agnostic) ---")
-        print(req.prompt[:500] + ("..." if len(req.prompt) > 500 else ""))
+        print(f"\n--- PROMPT CONTENT (agnostic, full) ---")
+        print(req.prompt)
 
-    print("\n--- PROMPT TEXT (truncated to 300 chars) ---")
-    print(req.prompt[:300] + ("..." if len(req.prompt) > 300 else ""))
+    # Show the complete prompt text for the sample entry (not truncated)
+    print("\n--- PROMPT TEXT (full) ---")
+    print(req.prompt)
     print(SEP + "\n")
 
 
@@ -235,11 +238,12 @@ def submit_batch(
     for date_key in all_dates:
         seed_entry = seed[date_key]
         cita  = seed_entry["versiculo"]["cita"]
+        texto = seed_entry["versiculo"].get("texto", "")
         topic = seed_entry.get("topic")
         requests.append(BatchRequest(
             date_key=date_key,
             custom_id=_safe_custom_id(date_key),
-            prompt=build_prompt(cita, master_lang, topic),
+            prompt=build_prompt(cita, master_lang, topic, texto),
             model_id=adapter.model_id,
             max_tokens=adapter.max_tokens,
         ))
