@@ -2,10 +2,10 @@
   "_comment": "Known Amen closing variants by language code. First entry = canonical preferred form used in fix prompts.",
   "de": ["Amen"],
   "en": ["Amen"],
-  "es": ["Amén", "Amen"],
+  "es": ["Amén"],
   "hi": ["आमेन"],
   "fr": ["Amen"],
-  "pt": ["Amém", "Amen"],
+  "pt": ["Amém"],
   "ru": ["Аминь"],
   "zh": ["阿门"],
   "ar": ["آمين", "أمين"],
@@ -20,5 +20,5 @@
   "ro": ["Amin", "Amen"],
   "uk": ["Амінь"],
   "la": ["Amen"],
-  "tl": ["Amen", "amen", "amin", "Amin", "Amín", "Siya nawa", "Hesus", "Hesukristo"]
+  "fil": ["Amen"]
 }
