@@ -80,7 +80,7 @@ except ImportError as _err:
 
 # Matches both partial ("163-Devocional_year_...") and full ("Devocional_year_...")
 FILENAME_PATTERN = re.compile(
-    r"(?:(?P<count>\d+)-)?Devocional_year_(?P<year>\d{4})_(?P<lang>[a-z]{2,3})_(?P<version>[^\.]+)\.json$"
+    r"(?:(?P<count>\d+)-)?Devocional_year_(?P<year>\d{4})_(?P<lang>[a-z]{2})_(?P<version>[^\.]+)\.json$"
 )
 
 # ─────────────────────────── PartialFile model ──────────────────────────────
@@ -175,17 +175,6 @@ COLOR_ISSUES  = "#fff176"
 COLOR_EMPTY   = "#e0e0e0"
 COLOR_DISABLED= "#cccccc"
 
-# Dracula palette adjustments
-# background: #282a36, foreground: #f8f8f2, cyan: #8be9fd, green: #50fa7b,
-# orange: #ffb86c, pink: #ff79c6, purple: #bd93f9, yellow: #f1fa8c
-
-COLOR_OK      = "#50fa7b"  # green
-COLOR_MISSING = "#ff6e6e"  # red
-COLOR_OVERLAP = "#ffb86c"  # orange
-COLOR_ISSUES  = "#f1fa8c"  # yellow
-COLOR_EMPTY   = "#44475a"  # entry / current-line
-COLOR_DISABLED= "#6272a4"  # muted purple for disabled
-
 
 class MergeApp(tk.Tk):
     def __init__(self):
@@ -193,10 +182,6 @@ class MergeApp(tk.Tk):
         self.title("Devocional Partial Merge Tool v1.0")
         self.resizable(True, True)
         self.minsize(1100, 760)
-
-        # UI theme / dark mode
-        self.style = ttk.Style()
-        self.dark_var = tk.BooleanVar(value=True)
 
         self.partial_files: list[PartialFile] = []
         self._cov_date_rects = {}   # rect_id → date_str (kept for legacy compat)
@@ -218,15 +203,11 @@ class MergeApp(tk.Tk):
         ttk.Button(tb, text="🗑 Clear All",   command=self._clear_all).pack(side="left", padx=3, pady=3)
         ttk.Separator(tb, orient="vertical").pack(side="left", fill="y", padx=4)
         ttk.Button(tb, text="🔄 Refresh",     command=self._refresh_all).pack(side="left", padx=3, pady=3)
-        # Dark mode toggle
-        ttk.Checkbutton(tb, text="🌙 Dark mode", variable=self.dark_var,
-                command=self._on_toggle_dark).pack(side="left", padx=6)
 
         ttk.Button(tb, text="⚡ Merge & Export", command=self._do_merge).pack(side="right", padx=6, pady=3)
 
         self.status_var = tk.StringVar(value="Ready — scan a folder or add files to begin")
-        self.status_label = tk.Label(tb, textvariable=self.status_var, anchor="w", fg="black")
-        self.status_label.pack(side="left", padx=6)
+        tk.Label(tb, textvariable=self.status_var, anchor="w", fg="#555").pack(side="left", padx=6)
 
         # ── Notebook ─────────────────────────────────────────────────────────
         self.nb = ttk.Notebook(self)
@@ -247,23 +228,20 @@ class MergeApp(tk.Tk):
         self._build_review_tab()
         self._build_lint_tab()
 
-        # Apply initial theme
-        self._apply_theme(dark=self.dark_var.get())
-
     # ── Tab 1 : Files ────────────────────────────────────────────────────────
 
     def _build_files_tab(self):
         # Group header
         gf = ttk.LabelFrame(self.tab_files, text="Detected Groups  (Year / Language / Version)", padding=6)
         gf.pack(fill="x", padx=6, pady=(6, 2))
-        self.group_label = tk.Label(gf, text="No files loaded", anchor="w", wraplength=900, fg="black")
+        self.group_label = tk.Label(gf, text="No files loaded", anchor="w", wraplength=900)
         self.group_label.pack(fill="x")
 
         # Instruction label
         hint = tk.Label(
             self.tab_files,
             text="Click the ✓ column to enable/disable a file. Disabled files are excluded from merge.",
-            anchor="w", fg="black", font=("Helvetica", 9, "italic"),
+            anchor="w", fg="#555", font=("Helvetica", 9, "italic"),
         )
         hint.pack(fill="x", padx=8)
 
@@ -291,120 +269,10 @@ class MergeApp(tk.Tk):
         self.file_tree.pack(fill="both", expand=True)
         self.file_tree.bind("<ButtonRelease-1>", self._on_file_tree_click)
 
-        self.file_tree.tag_configure("ok",       background="#e8f5e9", foreground="black")
-        self.file_tree.tag_configure("warn",     background="#fff8e1", foreground="black")
-        self.file_tree.tag_configure("error",    background="#ffebee", foreground="black")
-        self.file_tree.tag_configure("disabled", background="#2b2b3a", foreground="#888")
-
-    def _on_toggle_dark(self):
-        self._apply_theme(dark=self.dark_var.get())
-
-    def _on_toggle_dark(self):
-        self._apply_theme(dark=self.dark_var.get())
-
-    def _apply_theme(self, dark: bool = False):
-        """Apply a simple dark/light theme to relevant widgets."""
-        if dark:
-            bg = "#2b2b2b"
-            frame_bg = "#2b2b2b"
-            fg = "#e6e6e6"
-            entry_bg = "#3c3f41"
-            text_bg = "#1e1e1e"
-            select_bg = "#4b6eaf"
-        else:
-            bg = None
-            frame_bg = None
-            fg = None
-            entry_bg = None
-            text_bg = None
-            select_bg = None
-
-        # Root
-        try:
-            if bg:
-                self.configure(background=bg)
-            else:
-                self.configure(background=None)
-        except Exception:
-            pass
-
-        # Ttk style adjustments (best-effort)
-        try:
-            s = self.style
-            if dark:
-                s.theme_use(s.theme_use())
-                s.configure('.', background=frame_bg, foreground=fg)
-                s.configure('TLabelFrame', background=frame_bg)
-                s.configure('TLabel', background=frame_bg, foreground=fg)
-                s.configure('TButton', background=frame_bg, foreground=fg)
-                s.configure('TEntry', fieldbackground=entry_bg, background=entry_bg, foreground=fg)
-                s.configure('Treeview', background=entry_bg, fieldbackground=entry_bg, foreground=fg)
-                s.map('Treeview', background=[('selected', select_bg)])
-                s.configure('Treeview.Heading', background=frame_bg, foreground=fg)
-            else:
-                s.theme_use(s.theme_use())
-        except Exception:
-            pass
-
-        # Non-ttk widgets
-        try:
-            if hasattr(self, 'cov_canvas'):
-                if dark:
-                    self.cov_canvas.config(bg=text_bg)
-                else:
-                    self.cov_canvas.config(bg='white')
-        except Exception:
-            pass
-
-        try:
-            if hasattr(self, 'cov_tooltip'):
-                # keep tooltip text black regardless of theme per user request
-                if dark:
-                    self.cov_tooltip.config(bg='#333', fg='black')
-                else:
-                    self.cov_tooltip.config(bg='lightyellow', fg='black')
-        except Exception:
-            pass
-
-        try:
-            if hasattr(self, 'detail_text'):
-                # always use black text as requested
-                if dark:
-                    self.detail_text.config(background=text_bg, foreground='black', insertbackground='black')
-                else:
-                    self.detail_text.config(background='white', foreground='black', insertbackground='black')
-        except Exception:
-            pass
-
-        try:
-            if hasattr(self, 'lint_text'):
-                # always use black text as requested
-                if dark:
-                    self.lint_text.config(background=text_bg, foreground='black', insertbackground='black')
-                else:
-                    self.lint_text.config(background='white', foreground='black', insertbackground='black')
-        except Exception:
-            pass
-
-        try:
-            if hasattr(self, 'group_label'):
-                # group label text should be black per request
-                if dark:
-                    self.group_label.config(bg=frame_bg, fg='black')
-                else:
-                    self.group_label.config(bg=None, fg='black')
-        except Exception:
-            pass
-
-        try:
-            # status_label stored as self.status_label — ensure black text
-            if hasattr(self, 'status_label'):
-                if dark:
-                    self.status_label.config(bg=frame_bg, fg='black')
-                else:
-                    self.status_label.config(bg=None, fg='black')
-        except Exception:
-            pass
+        self.file_tree.tag_configure("ok",       background="#e8f5e9")
+        self.file_tree.tag_configure("warn",     background="#fff8e1")
+        self.file_tree.tag_configure("error",    background="#ffebee")
+        self.file_tree.tag_configure("disabled", background="#eeeeee", foreground="#999")
 
     # ── Tab 2 : Coverage Map ─────────────────────────────────────────────────
 
@@ -420,9 +288,9 @@ class MergeApp(tk.Tk):
             ("Issues ⚠",  COLOR_ISSUES),
         ]:
             tk.Frame(lf, bg=color, width=16, height=16).pack(side="left", padx=(2, 0))
-            tk.Label(lf, text=label, fg="black").pack(side="left", padx=(2, 14))
+            tk.Label(lf, text=label).pack(side="left", padx=(2, 14))
 
-        self.cov_status_label = tk.Label(lf, text="", anchor="e", fg="black")
+        self.cov_status_label = tk.Label(lf, text="", anchor="e")
         self.cov_status_label.pack(side="right", padx=8)
 
         # Canvas
@@ -442,7 +310,7 @@ class MergeApp(tk.Tk):
 
         # Tooltip label
         self.cov_tooltip = tk.Label(self.tab_coverage, text="",
-                        anchor="w", relief="solid", bg="lightyellow", fg="black")
+                                    anchor="w", relief="solid", bg="lightyellow")
         self.cov_canvas.bind("<Motion>",     self._on_cov_motion)
         self.cov_canvas.bind("<Leave>",      lambda e: self.cov_tooltip.place_forget())
         self.cov_canvas.bind("<Button-1>",   self._on_cov_click)
@@ -454,7 +322,7 @@ class MergeApp(tk.Tk):
         fb = tk.Frame(self.tab_review)
         fb.pack(fill="x", padx=6, pady=(6, 2))
 
-        tk.Label(fb, text="Filter:", fg="black").pack(side="left")
+        tk.Label(fb, text="Filter:").pack(side="left")
         self.filter_var = tk.StringVar()
         self.filter_var.trace_add("write", lambda *_: self._refresh_review())
         ttk.Entry(fb, textvariable=self.filter_var, width=22).pack(side="left", padx=4)
@@ -469,7 +337,7 @@ class MergeApp(tk.Tk):
                         command=self._refresh_review).pack(side="left")
 
         self.review_count = tk.StringVar(value="")
-        tk.Label(fb, textvariable=self.review_count, anchor="e", fg="black").pack(side="right", padx=6)
+        tk.Label(fb, textvariable=self.review_count, anchor="e").pack(side="right", padx=6)
 
         # Entry table
         COLS   = ("#", "Date", "Source File", "ID", "Versiculo (preview)", "Len(R)", "Issues")
@@ -499,10 +367,10 @@ class MergeApp(tk.Tk):
         self.review_tree.pack(fill="both", expand=True)
         self.review_tree.bind("<<TreeviewSelect>>", self._on_review_select)
 
-        self.review_tree.tag_configure("ok",      background="#e8f5e9", foreground="black")
-        self.review_tree.tag_configure("warn",     background="#fff8e1", foreground="black")
-        self.review_tree.tag_configure("missing",  background="#ffebee", foreground="black")
-        self.review_tree.tag_configure("overlap",  background="#fff3e0", foreground="black")
+        self.review_tree.tag_configure("ok",      background="#e8f5e9")
+        self.review_tree.tag_configure("warn",     background="#fff8e1")
+        self.review_tree.tag_configure("missing",  background="#ffebee")
+        self.review_tree.tag_configure("overlap",  background="#fff3e0")
 
         # Detail panel
         df = ttk.LabelFrame(self.tab_review, text="Entry Detail", padding=4)
@@ -510,7 +378,7 @@ class MergeApp(tk.Tk):
 
         self.detail_text = scrolledtext.ScrolledText(
             df, height=7, wrap="word",
-            font=("Courier", 9), state="disabled", foreground="black",
+            font=("Courier", 9), state="disabled",
         )
         self.detail_text.pack(fill="x")
 
@@ -522,13 +390,13 @@ class MergeApp(tk.Tk):
         ttk.Button(bf, text="🔄 Re-run Lint", command=self._run_lint).pack(side="left", padx=4)
 
         self.lint_summary_var = tk.StringVar(value="")
-        tk.Label(bf, textvariable=self.lint_summary_var, anchor="w", fg="black").pack(side="left", padx=8)
+        tk.Label(bf, textvariable=self.lint_summary_var, anchor="w", fg="#444").pack(side="left", padx=8)
 
         lf = ttk.LabelFrame(self.tab_lint, text="Lint Report", padding=6)
         lf.pack(fill="both", expand=True, padx=6, pady=4)
 
         self.lint_text = scrolledtext.ScrolledText(
-            lf, wrap="word", font=("Courier", 9), state="disabled", foreground="black",
+            lf, wrap="word", font=("Courier", 9), state="disabled",
         )
         self.lint_text.pack(fill="both", expand=True)
 
@@ -760,14 +628,14 @@ class MergeApp(tk.Tk):
         for day_n in range(1, 32):
             x = LEFT + (day_n - 1) * CELL + CELL // 2
             self.cov_canvas.create_text(x, TOP - 10, text=str(day_n),
-                                        font=("Helvetica", 7), fill="black")
+                                        font=("Helvetica", 7), fill="#333")
 
         row_y = TOP
         for row_i, (yr_m, mo_m) in enumerate(sorted_months):
             month_name = date(yr_m, mo_m, 1).strftime("%b %Y")
             self.cov_canvas.create_text(LEFT - 4, row_y + CELL // 2, text=month_name,
                                         font=("Helvetica", 8, "bold"), anchor="e",
-                                        fill="black")
+                                        fill="#333")
 
             for ds in sorted(month_groups[(yr_m, mo_m)]):
                 d_obj  = date.fromisoformat(ds)
@@ -788,7 +656,7 @@ class MergeApp(tk.Tk):
                 )
                 self.cov_canvas.create_text(
                     x1 + CELL // 2, y1 + CELL // 2,
-                    text=str(d_obj.day), font=("Helvetica", 7), fill="black",
+                    text=str(d_obj.day), font=("Helvetica", 7),
                 )
                 self._cov_date_rects[rect_id] = ds
                 self._cov_coord_map[(col_i, row_i)] = ds  # O(1) reverse lookup
