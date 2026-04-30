@@ -183,6 +183,11 @@ class MergeApp(tk.Tk):
         self.resizable(True, True)
         self.minsize(1100, 760)
 
+        # Theme/style
+        self.style = ttk.Style()
+        # Dark mode state (default enabled)
+        self.dark_var = tk.BooleanVar(value=True)
+
         self.partial_files: list[PartialFile] = []
         self._cov_date_rects = {}   # rect_id → date_str (kept for legacy compat)
         self._cov_coord_map  = {}   # (col_i, row_i) → date_str  (O(1) lookup)
@@ -190,6 +195,11 @@ class MergeApp(tk.Tk):
         self._cov_issues     = {}             # issues snapshot
 
         self._build()
+        # Apply initial theme (best-effort; widgets may not exist yet)
+        try:
+            self._apply_theme(dark=self.dark_var.get())
+        except Exception:
+            pass
 
     # ══════════════════════════════════════════ UI Construction ══════════════
 
@@ -205,6 +215,13 @@ class MergeApp(tk.Tk):
         ttk.Button(tb, text="🔄 Refresh",     command=self._refresh_all).pack(side="left", padx=3, pady=3)
 
         ttk.Button(tb, text="⚡ Merge & Export", command=self._do_merge).pack(side="right", padx=6, pady=3)
+
+        # Dark mode toggle
+        try:
+            ttk.Checkbutton(tb, text="🌙 Dark mode", variable=self.dark_var,
+                            command=self._on_toggle_dark).pack(side="left", padx=6)
+        except Exception:
+            pass
 
         self.status_var = tk.StringVar(value="Ready — scan a folder or add files to begin")
         tk.Label(tb, textvariable=self.status_var, anchor="w", fg="#555").pack(side="left", padx=6)
@@ -399,6 +416,37 @@ class MergeApp(tk.Tk):
             lf, wrap="word", font=("Courier", 9), state="disabled",
         )
         self.lint_text.pack(fill="both", expand=True)
+
+    def _on_toggle_dark(self):
+        self._apply_theme(dark=self.dark_var.get())
+
+    def _apply_theme(self, dark: bool = False):
+        """Apply shared theme helper to this app.
+
+        Calls the shared `apply_theme` from `seed_generation.theme` (or local
+        `theme` module) and applies it to both lint and detail text widgets
+        where present.
+        """
+        try:
+            import theme as theme_mod
+            apply_theme = theme_mod.apply_theme
+        except Exception:
+            try:
+                from seed_generation.theme import apply_theme
+            except Exception:
+                return
+
+        # Apply to lint_text and detail_text if available
+        try:
+            if hasattr(self, 'lint_text'):
+                apply_theme(self, self.style, self.lint_text, dark)
+        except Exception:
+            pass
+        try:
+            if hasattr(self, 'detail_text'):
+                apply_theme(self, self.style, self.detail_text, dark)
+        except Exception:
+            pass
 
     # ══════════════════════════════════════════ File loading ═════════════════
 

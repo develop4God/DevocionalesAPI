@@ -498,62 +498,18 @@ class App(tk.Tk):
 
     def _on_toggle_dark(self):
         self._apply_theme(dark=self.dark_var.get())
-
     def _apply_theme(self, dark: bool = False):
-        """Apply light or dark color scheme to widgets."""
-        # Dracula theme
-        if dark:
-            bg = "#282a36"        # background
-            frame_bg = "#282a36"
-            fg = "#f8f8f2"        # foreground
-            entry_bg = "#44475a"  # current line / fields
-            text_bg = "#282a36"   # editor background
-            select_bg = "#6272a4" # selection / accent (purple)
-        else:
-            bg = None
-            frame_bg = None
-            fg = None
-            entry_bg = None
-            text_bg = None
-            select_bg = None
-
-        # Root/background
-        if bg:
-            try:
-                self.configure(background=bg)
-            except Exception:
-                pass
-        else:
-            try:
-                self.configure(background=None)
-            except Exception:
-                pass
-
-        # Ttk styles
-        if dark:
-            s = self.style
-            s.theme_use(s.theme_use())
-            s.configure('.', background=frame_bg, foreground=fg)
-            s.configure('TLabelFrame', background=frame_bg)
-            s.configure('TLabel', background=frame_bg, foreground=fg)
-            s.configure('TButton', background=frame_bg, foreground=fg)
-            s.configure('TEntry', fieldbackground=entry_bg, background=entry_bg, foreground=fg)
-            s.configure('Treeview', background=entry_bg, fieldbackground=entry_bg, foreground=fg)
-            s.map('Treeview', background=[('selected', select_bg)])
-            s.configure('Treeview.Heading', background=frame_bg, foreground=fg)
-        else:
-            # Reset to default theme settings by reloading default theme
-            try:
-                self.style.theme_use(self.style.theme_use())
-            except Exception:
-                pass
-
-        # Non-ttk widgets (Text)
+        # Defer to shared theme helper so other modules can reuse the same
+        # dark/light styling. Support both running as a script (local import)
+        # and as a package (seed_generation.theme).
         try:
-            if dark:
-                self.output.config(background=text_bg, foreground=fg, insertbackground=fg)
-            else:
-                self.output.config(background='white', foreground='black', insertbackground='black')
+            import theme as theme_mod
+            apply_theme = theme_mod.apply_theme
+        except Exception:
+            from seed_generation.theme import apply_theme
+
+        try:
+            apply_theme(self, self.style, self.output, dark)
         except Exception:
             pass
 
