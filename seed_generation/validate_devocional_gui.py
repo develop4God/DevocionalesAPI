@@ -501,13 +501,14 @@ class App(tk.Tk):
 
     def _apply_theme(self, dark: bool = False):
         """Apply light or dark color scheme to widgets."""
+        # Dracula theme
         if dark:
-            bg = "#2b2b2b"
-            frame_bg = "#2b2b2b"
-            fg = "#e6e6e6"
-            entry_bg = "#3c3f41"
-            text_bg = "#1e1e1e"
-            select_bg = "#4b6eaf"
+            bg = "#282a36"        # background
+            frame_bg = "#282a36"
+            fg = "#f8f8f2"        # foreground
+            entry_bg = "#44475a"  # current line / fields
+            text_bg = "#282a36"   # editor background
+            select_bg = "#6272a4" # selection / accent (purple)
         else:
             bg = None
             frame_bg = None
@@ -533,7 +534,7 @@ class App(tk.Tk):
             s = self.style
             s.theme_use(s.theme_use())
             s.configure('.', background=frame_bg, foreground=fg)
-            s.configure('TLabelFrame', background=frame_bg, bordercolor=frame_bg)
+            s.configure('TLabelFrame', background=frame_bg)
             s.configure('TLabel', background=frame_bg, foreground=fg)
             s.configure('TButton', background=frame_bg, foreground=fg)
             s.configure('TEntry', fieldbackground=entry_bg, background=entry_bg, foreground=fg)
