@@ -80,7 +80,8 @@ except ImportError as _err:
 
 # Matches both partial ("163-Devocional_year_...") and full ("Devocional_year_...")
 FILENAME_PATTERN = re.compile(
-    r"(?:(?P<count>\d+)-)?Devocional_year_(?P<year>\d{4})_(?P<lang>[a-z]{2})_(?P<version>[^\.]+)\.json$"
+    # Accept language codes of 2 or 3 letters (e.g. en, pt, fr, fil, hin)
+    r"(?:(?P<count>\d+)-)?Devocional_year_(?P<year>\d{4})_(?P<lang>[a-z]{2,3})_(?P<version>[^\.]+)\.json$"
 )
 
 # ─────────────────────────── PartialFile model ──────────────────────────────
