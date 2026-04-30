@@ -21,7 +21,7 @@ REQUIRED_FIELDS = ["id", "date", "language", "version", "versiculo",
 PARA_MEDITAR_FIELDS = ["cita", "texto"]
 EXPECTED_MIN_ENTRIES = 365
 FILENAME_PATTERN = re.compile(
-    r"Devocional_year_(?P<year>\d{4})_(?P<lang>[a-z]{2})_(?P<version>.+)\.json$"
+    r"Devocional_year_(?P<year>\d{4})_(?P<lang>[a-z]{2,3})_(?P<version>.+)\.json$"
 )
 
 NON_LATIN_LANGS = {"ar", "hi", "ja", "zh"}
@@ -441,6 +441,9 @@ class App(tk.Tk):
         self.title("Devocional JSON Validator v5")
         self.resizable(True, True)
         self.minsize(820, 640)
+        self.style = ttk.Style()
+        # Dark mode state (default enabled)
+        self.dark_var = tk.BooleanVar(value=True)
         self._last_result = ""
         self._build()
 
@@ -457,7 +460,7 @@ class App(tk.Tk):
         ttk.Label(mf, text="Language:").grid(row=0, column=0, sticky="w")
         self.lang_var = tk.StringVar()
         ttk.Entry(mf, textvariable=self.lang_var, width=8).grid(row=0, column=1, sticky="w", padx=(4,0))
-        ttk.Label(mf, text="(hi, es, en, ja, zh…)").grid(row=0, column=2, sticky="w", padx=(8,0))
+        ttk.Label(mf, text="(hi, fil, es, en, ja, zh…)").grid(row=0, column=2, sticky="w", padx=(8,0))
         ttk.Label(mf, text="Version:").grid(row=1, column=0, sticky="w", pady=(6,0))
         self.version_var = tk.StringVar()
         ttk.Entry(mf, textvariable=self.version_var, width=18).grid(row=1, column=1, sticky="w", padx=(4,0), pady=(6,0))
@@ -467,6 +470,9 @@ class App(tk.Tk):
         ttk.Button(bf, text="▶  Validate",     command=self._run).pack(side="left", padx=4)
         ttk.Button(bf, text="🗑  Clear Table",  command=self._clear).pack(side="left", padx=4)
         ttk.Button(bf, text="💾  Save Report",  command=self._save_report).pack(side="left", padx=4)
+        # Dark mode toggle
+        ttk.Checkbutton(bf, text="🌙 Dark mode", variable=self.dark_var,
+                command=self._on_toggle_dark).pack(side="left", padx=(12,4))
 
         tf = ttk.LabelFrame(self, text="Validation Summary Table", padding=8)
         tf.pack(fill="x", **pad)
@@ -486,6 +492,69 @@ class App(tk.Tk):
         self.status_var = tk.StringVar(value="Ready")
         ttk.Label(self, textvariable=self.status_var, relief="sunken", anchor="w").pack(
             fill="x", side="bottom", padx=10, pady=(0,6))
+
+        # Apply initial theme (light)
+        self._apply_theme(dark=self.dark_var.get())
+
+    def _on_toggle_dark(self):
+        self._apply_theme(dark=self.dark_var.get())
+
+    def _apply_theme(self, dark: bool = False):
+        """Apply light or dark color scheme to widgets."""
+        if dark:
+            bg = "#2b2b2b"
+            frame_bg = "#2b2b2b"
+            fg = "#e6e6e6"
+            entry_bg = "#3c3f41"
+            text_bg = "#1e1e1e"
+            select_bg = "#4b6eaf"
+        else:
+            bg = None
+            frame_bg = None
+            fg = None
+            entry_bg = None
+            text_bg = None
+            select_bg = None
+
+        # Root/background
+        if bg:
+            try:
+                self.configure(background=bg)
+            except Exception:
+                pass
+        else:
+            try:
+                self.configure(background=None)
+            except Exception:
+                pass
+
+        # Ttk styles
+        if dark:
+            s = self.style
+            s.theme_use(s.theme_use())
+            s.configure('.', background=frame_bg, foreground=fg)
+            s.configure('TLabelFrame', background=frame_bg, bordercolor=frame_bg)
+            s.configure('TLabel', background=frame_bg, foreground=fg)
+            s.configure('TButton', background=frame_bg, foreground=fg)
+            s.configure('TEntry', fieldbackground=entry_bg, background=entry_bg, foreground=fg)
+            s.configure('Treeview', background=entry_bg, fieldbackground=entry_bg, foreground=fg)
+            s.map('Treeview', background=[('selected', select_bg)])
+            s.configure('Treeview.Heading', background=frame_bg, foreground=fg)
+        else:
+            # Reset to default theme settings by reloading default theme
+            try:
+                self.style.theme_use(self.style.theme_use())
+            except Exception:
+                pass
+
+        # Non-ttk widgets (Text)
+        try:
+            if dark:
+                self.output.config(background=text_bg, foreground=fg, insertbackground=fg)
+            else:
+                self.output.config(background='white', foreground='black', insertbackground='black')
+        except Exception:
+            pass
 
     def _browse(self):
         p = filedialog.askopenfilename(title="Select devotional JSON",
@@ -550,7 +619,7 @@ if __name__ == "__main__":
             formatter_class=argparse.RawDescriptionHelpFormatter,
         )
         parser.add_argument("--file",    required=True, help="Path to devotional JSON file")
-        parser.add_argument("--lang",    default="",    help="Language code (e.g. de, hi, es, en)")
+        parser.add_argument("--lang",    default="",    help="Language code (e.g. de, hi, fil, es, en) — 2–3 letters")
         parser.add_argument("--version", default="",    help="Bible version code (e.g. LU17, HIOV, RVR1960)")
         parser.add_argument("--expected", type=int, default=0,
                             help="Expected minimum entry count (0 = auto-detect from date range)")
