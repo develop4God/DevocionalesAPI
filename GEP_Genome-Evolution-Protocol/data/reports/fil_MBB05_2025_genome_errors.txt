@@ -1,0 +1,145 @@
+════════════════════════════════════════════════════════════════════════
+GEP GENOME ERROR REPORT — Filipino (fil) MBB05 2025
+Source: deepseek-v3p2 critic pass 1 | 365 devotionals reviewed
+Total flags: 1688  |  by type: unnatural:1541  repetition:79  typo:63  grammar:5
+════════════════════════════════════════════════════════════════════════
+
+PURPOSE: Use grep patterns below to locate same errors across ALL fil MBB 2025 JSON files.
+NOTE:    This corpus is Filipino (Pilipino), NOT Tagalog — flag foreign/register issues accordingly.
+
+────────────────────────────────────────────────────────────────────────
+▶▶ TYPO CORRECTIONS (exact find→replace, safe to auto-patch)
+────────────────────────────────────────────────────────────────────────
+  grep  : 'HesuKristo'
+  fix   : 'Hesukristo'  # Inconsistent Christonym spacing
+
+  grep  : 'Hesu-Kristo'
+  fix   : 'Hesukristo'  # Inconsistent Christonym spacing
+
+  grep  : 'Hesu Kristo'
+  fix   : 'Hesukristo'  # Inconsistent Christonym spacing
+
+  grep  : 'reconciliasyon'
+  fix   : 'rekonsilyasyon'  # Spanish-borrowed misspelling
+
+  grep  : 'transpornasyong'
+  fix   : 'transpormasyong'  # Metathesis typo
+
+  grep  : "S'ya"
+  fix   : 'Siya'  # Unnecessary apostrophe contraction
+
+  grep  : 'pagkakalingap'
+  fix   : 'pagkakalinga'  # Erroneous suffix
+
+  grep  : 'pagkadyos'
+  fix   : 'pagka-Diyos'  # Missing hyphen + capitalisation
+
+  grep  : 'minalas'
+  fix   : 'minsan'  # Wrong word (looks like a confusion with 'minalas'=unlucky)
+
+  grep  : 'tigsasandaang'
+  fix   : 'tig-sasandaang'  # Missing hyphen
+
+  grep  : 'transforming power'
+  fix   : 'nagbabagong kapangyarihan'  # English phrase in Filipino text
+
+────────────────────────────────────────────────────────────────────────
+▶▶ REPETITION PATTERNS (verify context before patching)
+────────────────────────────────────────────────────────────────────────
+  grep  : 'tiwala at pagtitiwala'
+  fix   : 'tiwala'  # Redundant near-synonyms
+
+  grep  : 'pusong nagpapakumbaba at buong pagpapakumbaba'
+  fix   : 'pusong nagpapakumbaba'  # Same root repeated
+
+  grep  : 'makapangyarihang kapangyarihan'
+  fix   : 'kapangyarihan'  # Root-form redundancy
+
+  grep  : 'pag-asa at pag-asa'
+  fix   : 'pag-asa at pagtitiwala'  # Direct word duplicate
+
+  grep  : 'lubos na lampas sa aming pang-unawa'
+  fix   : 'lampas sa aming pang-unawa'  # 'lubos na' redundant with 'lampas'
+
+────────────────────────────────────────────────────────────────────────
+▶▶ UNNATURAL PHRASING — TOP RECURRING PATTERNS (manual review)
+────────────────────────────────────────────────────────────────────────
+  grep  : 'luklukan ng biyaya'
+  fix   : 'trono ng biyaya'
+  note  : Calque of 'throne of grace'; 'trono' more natural in fil
+
+  grep  : 'lumalapit po kami sa Iyong luklukan ng biyaya'
+  fix   : 'lumalapit po kami sa Iyong trono ng biyaya'
+  note  : Full phrase variant
+
+  grep  : 'ang Kanyang di-nagbabagong pag-ibig'
+  fix   : 'ang Kanyang pag-ibig na hindi nagbabago'
+  note  : Awkward prenominal negation
+
+  grep  : 'nagbibigay-buhay at pag-asa'
+  fix   : 'nagbibigay-buhay at nagbibigay-pag-asa'
+  note  : Parallel structure break
+
+  grep  : 'Pinupuspos po kami ng pag-asa'
+  fix   : 'Punuin po Ninyo kami ng pag-asa'
+  note  : Passive-voice awkwardness
+
+  grep  : 'nagiging Iyong mga instrumento ng pagpapala'
+  fix   : 'nagiging mga instrumento ng Iyong pagpapala'
+  note  : Possessive word-order
+
+  grep  : 'sukdulan at di-kanais-nais na pagmamahal'
+  fix   : 'sukdulan at di-malirip na pagmamahal'
+  note  : 'di-kanais-nais'=undesirable, wrong register
+
+  grep  : 'sa kakayahan naming manampalataya'
+  fix   : 'sa kakayahan naming sumampalataya'
+  note  : Verb-form register mismatch
+
+  grep  : 'kagalakang di masayod'
+  fix   : 'kagalakang di masukat'
+  note  : Rare/archaic 'masayod'
+
+  grep  : 'mga tagapagpakalat'
+  fix   : 'mga tagapagdala'
+  note  : Unnatural agent nominalisation
+
+  grep  : 'sa pagtakwil sa lahat ng uri ng kapagmataasan'
+  fix   : 'sa pagtakwil sa lahat ng anyo ng kapalaluan'
+  note  : Mixed register
+
+  grep  : 'nais naming'
+  fix   : 'gusto naming'
+  note  : 'nais' is formal/literary; 'gusto' more natural
+
+────────────────────────────────────────────────────────────────────────
+▶▶ GRAMMAR ISSUES (5 total — low volume, manual fix)
+────────────────────────────────────────────────────────────────────────
+  grep  : 'aming kaharapin'
+  fix   : 'aming haharapin'
+  note  : Past-tense verb in future context
+
+  grep  : 'nagbibigay ng pagkakataon para sa atin upang maranasan'
+  fix   : 'nagbibigay sa atin ng pagkakataong maranasan'
+  note  : Restructure indirect object
+
+────────────────────────────────────────────────────────────────────────
+▶▶ GREP SHELL COMMANDS — run from seed_generation/2025/ or genome dir
+────────────────────────────────────────────────────────────────────────
+  grep -rn "HesuKristo" --include="*.json" .
+  grep -rn "Hesu-Kristo" --include="*.json" .
+  grep -rn "Hesu Kristo" --include="*.json" .
+  grep -rn "reconciliasyon" --include="*.json" .
+  grep -rn "transpornasyong" --include="*.json" .
+  grep -rn "S'ya" --include="*.json" .
+  grep -rn "pagkakalingap" --include="*.json" .
+  grep -rn "pagkadyos" --include="*.json" .
+  grep -rn "luklukan ng biyaya" --include="*.json" .
+  grep -rn "tiwala at pagtitiwala" --include="*.json" .
+  grep -rn "makapangyarihang kapangyarihan" --include="*.json" .
+  grep -rn "di-nagbabagong pag-ibig" --include="*.json" .
+  grep -rn "mga tagapagpakalat" --include="*.json" .
+  grep -rn "kagalakang di masayod" --include="*.json" .
+
+════════════════════════════════════════════════════════════════════════
+END GENOME ERROR REPORT — fil MBB05 2025
