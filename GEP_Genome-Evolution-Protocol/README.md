@@ -62,11 +62,19 @@ Run the interactive menu system for guided pipeline execution:
 python3 main.py
 ```
 
-Features:
-- **Overnight Mode** — Process full year with genome learning
-- **Batch Mode** — Build OpenAI batch files
-- **Genome Management** — View, validate, and analyze patterns
-- **Language Validation** — Hard-fail on invalid --lang or --version
+**Three-stage pipeline:**
+1. **PREPARE** — Set language, version, year, and optional local source file
+2. **CRITIQUE** — Run AI critic (cloud batch, dry run, or local overnight)
+3. **REVIEW** — View flags report, full report, or genome status
+
+**Features:**
+- **Session persistence** — Remembers your last dataset (.gep_session.json)
+- **Language validation** — Hard-fail on invalid --lang or --version (via lang_registry)
+- **Provider selection** — Automatically loads from config/providers.yml
+- **Box-drawing UI** — ANSI colors and visual menus for better UX
+- **File picker** — Browse and select local source files interactively
+- **Dry run mode** — Build JSONL only for cost estimation
+- **Genome status** — Inline genome viewer with fragment analysis
 
 ### Genome Validator (NEW)
 Validate devotional entries against known genome patterns:

@@ -22,6 +22,14 @@ Comprehensive test suite for the Genome Evolution Protocol.
   - File validation
   - Edge cases and multiple categories
 
+- **test_main.py** — Interactive menu system (NEW)
+  - Session management (load, save, defaults)
+  - Menu navigation and input handling
+  - Command building for all pipeline stages
+  - Integration with lang_registry
+  - Provider loading from providers.yml
+  - Edge cases and error handling
+
 ## Running Tests
 
 ### Run all tests
@@ -29,6 +37,8 @@ Comprehensive test suite for the Genome Evolution Protocol.
 python3 tests/test_lang_registry.py
 python3 tests/test_pipeline.py
 python3 tests/test_genome_validator.py
+# Note: test_main.py requires pytest
+python3 -m pytest tests/test_main.py -v
 ```
 
 ### Run specific test
