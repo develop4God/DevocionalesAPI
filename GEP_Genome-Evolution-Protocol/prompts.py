@@ -19,143 +19,18 @@ Two-phase validation:
 """
 
 from models import DevotionalEntry, Genome, PauseCategory
+from lang_registry import get_persona, get_section_labels, get_native_speaker_info
 
 # ── Language persona labels ────────────────────────────────────────────────────
 # Each persona is a real person, not a label.
 # Cultural specificity is intentional — it activates the right model intuitions.
 # The reader notices what a person from that culture would notice.
-
-READER_PERSONAS = {
-    "es": (
-        "a 38-year-old Colombian Christian woman named Valentina. "
-        "You live in Medellín, wake up at 6am, and read your devotional before your children wake up. "
-        "You grew up with the Reina-Valera 1960 and now mostly use the NVI. "
-        "You have been a Christian for 20 years. You are not a theologian — you are a mother, "
-        "a wife, and someone who takes her faith seriously in daily life. "
-        "Warm, accessible Spanish feels like home to you. "
-        "Academic or overly formal language makes you feel like you are reading a textbook, not a letter from God. "
-        "When the prayer feels disconnected from the verse, you notice it immediately — "
-        "it feels like the author stopped listening to what they just wrote."
-    ),
-    "pt": (
-        "a 42-year-old Brazilian Christian man named Carlos. "
-        "You live in São Paulo, commute by metro, and read your devotional on your phone on the train. "
-        "You grew up in a Baptist church and are familiar with the Almeida Revista e Corrigida (ARC) "
-        "and the Nova Versão Internacional (NVI). "
-        "You have been reading devotionals for 15 years. "
-        "You notice immediately when Portuguese sounds like it was translated from Spanish — "
-        "certain words feel slightly off, like wearing someone else's shoes. "
-        "You also notice when a reflection feels generic, like it could have been written about any verse. "
-        "The prayer is the most personal moment for you — when it feels copied or disconnected, "
-        "you feel cheated out of that moment with God."
-    ),
-    "en": (
-        "a 35-year-old English-speaking Christian named Sarah. "
-        "You live in Atlanta, Georgia. You read your devotional every morning with your coffee "
-        "before the rest of the house wakes up. "
-        "You grew up with the NIV and occasionally read the ESV. "
-        "You have been a Christian for 18 years and have read hundreds of devotionals. "
-        "You notice when a verse quote doesn't sound like the translation you know — "
-        "even a small word difference catches your attention. "
-        "You also notice when a reflection feels like a seminary lecture rather than a conversation. "
-        "The prayer matters most to you — you actually pray it out loud, so awkward phrasing "
-        "breaks your concentration."
-    ),
-    "fr": (
-        "a 45-year-old French-speaking Christian named Marie. "
-        "You live in Lyon, France. You come from a Catholic background but attend an evangelical church now. "
-        "You read your devotional every morning before work. "
-        "You are familiar with the Louis Segond (LSG) and the Nouvelle Édition de Genève (NEG). "
-        "You are sensitive to register — French has a wide spectrum from formal to familiar, "
-        "and a devotional should feel warm and intimate, not like a theology lecture or a legal document. "
-        "When a phrase sounds machine-translated or unnatural in French, you feel it immediately. "
-        "You are also attentive to whether the prayer actually matches what the reflection said — "
-        "an inconsistency there breaks the spiritual thread for you."
-    ),
-    "de": (
-        "a 50-year-old German Christian named Thomas. "
-        "You live in Stuttgart and have been reading the Bible since childhood. "
-        "You are deeply familiar with the Lutherbibel 2017 and the Schlachter 2000. "
-        "You are precise by nature — when a verse reference is cited, you mentally check it. "
-        "You notice immediately when a sentence structure feels unnatural in German, "
-        "or when a word is used in a slightly wrong sense. "
-        "You are not looking for perfection — you are looking for authenticity. "
-        "A devotional that feels carefully written earns your trust. "
-        "One that feels rushed or generic loses it."
-    ),
-    "ar": (
-        "a 40-year-old Arabic-speaking Christian named Miriam. "
-        "You live in Beirut, Lebanon. You have been reading the Bible in Arabic since childhood. "
-        "You are deeply familiar with the Van Dyke Arabic Bible (فان دايك) "
-        "and the NAV (كتاب الحياة). "
-        "You are accustomed to the rhythm and cadence of classical Arabic devotional prayer. "
-        "Diacritical marks matter to you — آمِين with full tashkeel feels reverent; "
-        "a stripped version feels careless. "
-        "You notice immediately when Arabic sounds like it was generated by a machine — "
-        "certain preposition choices, certain verb forms, certain prayer endings feel foreign "
-        "to a native Arabic Christian ear. "
-        "The closing of a prayer is sacred to you — it must end with proper reverence."
-    ),
-    "zh": (
-        "a 33-year-old Chinese Christian named Wei. "
-        "You live in Kuala Lumpur, Malaysia. You read simplified Chinese. "
-        "You grew up in a Chinese evangelical church and are familiar with "
-        "the Chinese Union Version (和合本, CUV) which you have memorized extensively. "
-        "When a verse is quoted, you often know it by heart — a single wrong character "
-        "or a paraphrase presented as a direct quote catches your attention immediately. "
-        "You also notice when Chinese reads like a direct translation from English — "
-        "certain sentence structures feel inverted, certain expressions feel imported. "
-        "Natural Chinese devotional writing has a particular warmth and rhythm you have internalized."
-    ),
-    "ja": (
-        "a 48-year-old Japanese Christian named Keiko. "
-        "You live in Osaka and have attended a Presbyterian church for 25 years. "
-        "You are familiar with the 新共同訳 (New Common Translation) and the 口語訳. "
-        "You are deeply sensitive to register in Japanese — the difference between "
-        "casual, polite, and formal speech is not stylistic for you, it is spiritual. "
-        "A devotional addressed to God should use appropriate honorific forms. "
-        "A devotional addressed to the reader should feel warm and respectful, not distant. "
-        "You notice when Japanese reads like it was translated from English — "
-        "the sentence order, the verb endings, the way thoughts connect — "
-        "a native Japanese ear hears it immediately."
-    ),
-    "tl": (
-        "a Filipino Christian reading a morning devotional in Tagalog. "
-        "You are not a theologian. "
-        "You notice immediately when the prayer feels disconnected from the reflection. "
-        "You notice when language feels academic or cold rather than personal and warm."
-    ),
-    "hi": (
-        "a 36-year-old Hindi-speaking Christian named Priya. "
-        "You live in Delhi and come from a background where Christianity is a minority faith. "
-        "Your faith is personal and deeply felt. "
-        "You read your devotional every morning as a private moment with God. "
-        "You notice when Hindi feels translated from English rather than naturally written — "
-        "certain word choices, certain grammatical constructions feel foreign to a native speaker. "
-        "You are also sensitive to how biblical names are rendered — "
-        "an unfamiliar transliteration of a well-known name feels like a stumble."
-    ),
-}
-
-# ── Localized section labels for user prompt ──────────────────────────────────
-# These are what the reader sees — they must match the reader's language.
-# NOTE: JSON schema field names (versiculo, reflexion, oracion, para_meditar)
-# are Spanish by design and must NEVER be renamed. These labels are display-only.
-
-SECTION_LABELS = {
-    "es": {"verse": "VERSÍCULO", "reflection": "REFLEXIÓN",  "prayer": "ORACIÓN",    "meditate": "PARA MEDITAR"},
-    "pt": {"verse": "VERSÍCULO", "reflection": "REFLEXÃO",   "prayer": "ORAÇÃO",     "meditate": "PARA MEDITAR"},
-    "en": {"verse": "VERSE",     "reflection": "REFLECTION", "prayer": "PRAYER",     "meditate": "FOR MEDITATION"},
-    "fr": {"verse": "VERSET",    "reflection": "RÉFLEXION",  "prayer": "PRIÈRE",     "meditate": "POUR MÉDITER"},
-    "de": {"verse": "VERS",      "reflection": "BETRACHTUNG","prayer": "GEBET",      "meditate": "ZUM NACHDENKEN"},
-    "ar": {"verse": "الآية",     "reflection": "التأمل",     "prayer": "الصلاة",     "meditate": "للتأمل"},
-    "zh": {"verse": "经文",      "reflection": "默想",        "prayer": "祷告",       "meditate": "思考"},
-    "ja": {"verse": "聖句",      "reflection": "黙想",        "prayer": "祈り",       "meditate": "瞑想のために"},
-    "tl": {"verse": "TALATA",    "reflection": "PAGMUMUNI",  "prayer": "PANALANGIN", "meditate": "PARA SA PAGNINILAY"},
-    "hi": {"verse": "पद",        "reflection": "चिंतन",      "prayer": "प्रार्थना", "meditate": "मनन के लिए"},
-}
-
-_DEFAULT_LABELS = {"verse": "VERSE", "reflection": "REFLECTION", "prayer": "PRAYER", "meditate": "FOR MEDITATION"}
+#
+# NOTE: READER_PERSONAS, SECTION_LABELS, and PHASE1_NATIVE_SPEAKERS have been
+# moved to lang_registry.py for centralized management. Use the helper functions:
+#   - get_persona(lang) for reader personas
+#   - get_section_labels(lang) for localized field labels
+#   - get_native_speaker_info(lang) for Phase 1 native speaker metadata
 
 # ── Pause categories ───────────────────────────────────────────────────────────
 
@@ -355,6 +230,25 @@ pero ang panalangin ay nagbago ng paksa. Parang nakalimutan ng may-akda ang kani
 → {"verdict": "PAUSE", "reaction": "Ang panalangin ay walang kaugnayan sa pagpapatawad — humingi ito ng tagumpay sa karera, na pakiramdam ay ganap na naputol mula sa talata at pagmumuni.", "quoted_pause": "tagumpay sa isang job interview", "category": "prayer_drift", "confidence": 0.97}
 """,
 
+    "fil": """
+### Mga halimbawa ng kalibrasyon — matuto mula rito bago basahin ang entry ngayon:
+
+HALIMBAWA 1 — hatol: OK
+Entry: talata tungkol sa kapayapaan ng Diyos (Filipos 4:7), pagmumuni tungkol sa pagtitiwala
+sa Diyos sa panahon ng pagkabalisa, panalangin para sa kapayapaan sa mga alalahanin ngayon.
+Iyong reaksyon: "Lahat ay magkakaugnay. Ang talata ay nagsalita ng kapayapaan,
+ang pagmumuni ay nagpaliwanag nito sa simpleng salita, at ang panalangin ay
+parang natural na pagpapatuloy — maaari ko ring ipanalangin ito."
+→ {"verdict": "OK", "reaction": "Lahat ay natural at magkakaugnay sa espirituwal. Ang talata, pagmumuni, at panalangin ay bumuo ng isang malinaw na pinto.", "quoted_pause": null, "category": null, "confidence": 0.95}
+
+HALIMBAWA 2 — hatol: PAUSE (prayer_drift)
+Entry: talata tungkol sa pagpapatawad (Mateo 18:21-22), pagmumuni tungkol sa pagpapatawad,
+panalangin para sa tagumpay sa isang job interview.
+Iyong reaksyon: "Hintay — ang buong pagmumuni ay tungkol sa pagpapatawad,
+pero ang panalangin ay nagbago ng paksa. Parang nakalimutan ng may-akda ang kanilang sinulat."
+→ {"verdict": "PAUSE", "reaction": "Ang panalangin ay walang kaugnayan sa pagpapatawad — humingi ito ng tagumpay sa karera, na pakiramdam ay ganap na naputol mula sa talata at pagmumuni.", "quoted_pause": "tagumpay sa isang job interview", "category": "prayer_drift", "confidence": 0.97}
+""",
+
     "hi": """
 ### अंशांकन उदाहरण — आज की प्रविष्टि पढ़ने से पहले इनसे सीखें:
 
@@ -453,7 +347,7 @@ Only after this internal review, form your verdict.
 # ── Main prompt builders ───────────────────────────────────────────────────────
 
 def build_system_prompt(lang: str, version: str, genome: Genome | None = None) -> str:
-    persona = READER_PERSONAS.get(lang, "a Christian who reads one devotional every morning on their phone")
+    persona = get_persona(lang)
     genome_block = build_genome_block(genome)
     few_shot = FEW_SHOT_EXAMPLES.get(lang, FEW_SHOT_EXAMPLES.get("en", ""))
 
@@ -500,7 +394,7 @@ Schema:
 
 
 def build_user_prompt(entry: DevotionalEntry, lang: str = "es") -> str:
-    labels = SECTION_LABELS.get(lang, _DEFAULT_LABELS)
+    labels = get_section_labels(lang)
 
     meditar_block = ""
     if entry.para_meditar:
@@ -530,19 +424,6 @@ Now think carefully. Output ONLY the JSON object — no 'Final answer:', no pros
 # Native speaker: typos, repeated words, grammar, unnatural phrasing.
 # No theology. No Bible knowledge. Always responds in English.
 # ══════════════════════════════════════════════════════════════════════════════
-
-PHASE1_NATIVE_SPEAKERS = {
-    "pt": ("Brazilian Portuguese", "Brazil"),
-    "es": ("Spanish",             "Colombia"),
-    "en": ("English",             "United States"),
-    "fr": ("French",              "France"),
-    "de": ("German",              "Germany"),
-    "ar": ("Arabic",              "Lebanon"),
-    "zh": ("Mandarin Chinese",    "Malaysia"),
-    "ja": ("Japanese",            "Japan"),
-    "tl": ("Tagalog",             "Philippines"),
-    "hi": ("Hindi",               "India"),
-}
 
 PHASE1_SYSTEM_TEMPLATE = """\
 You are a native {language} speaker from {country}.
@@ -615,13 +496,13 @@ def build_phase1_system(lang: str, genome: "Genome | None" = None) -> str:
     genome param kept for signature compatibility but intentionally ignored.
     Phase 1 reads text fresh — genome search is a separate Python pass.
     """
-    language, country = PHASE1_NATIVE_SPEAKERS.get(lang, ("English", "United States"))
+    language, country = get_native_speaker_info(lang)
     return PHASE1_SYSTEM_TEMPLATE.format(language=language, country=country)
 
 
 def build_phase1_user(entry: DevotionalEntry, lang: str = "es") -> str:
     """Phase 1 injects only reflexion + oracion. versiculo excluded from payload."""
-    labels = SECTION_LABELS.get(lang, _DEFAULT_LABELS)
+    labels = get_section_labels(lang)
     return (
         f"--- {labels['reflection']} ---\n"
         f"{entry.reflexion}\n\n"
@@ -697,12 +578,12 @@ def build_phase2_system(
     Phase 2 system prompt — content coherence.
     Extends original build_system_prompt() with:
       - Phase 1 result injected (model skips linguistic work)
-      
+
       - Mandatory suspicion step
       - verse_mismatch removed
       - Always responds in English
     """
-    persona      = READER_PERSONAS.get(lang, "a Christian who reads one devotional every morning on their phone")
+    persona      = get_persona(lang)
     genome_block = build_genome_block(genome)
     few_shot     = FEW_SHOT_EXAMPLES.get(lang, FEW_SHOT_EXAMPLES.get("en", ""))
 
