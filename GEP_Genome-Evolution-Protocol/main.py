@@ -127,7 +127,7 @@ def _collect_lang_version_year(defaults: dict | None = None) -> tuple[str, str, 
         ("es", "es — Spanish"),
         ("pt", "pt — Portuguese"),
         ("en", "en — English"),
-        ("tl", "tl — Tagalog"),
+        ("fil", "fil — Filipino/Tagalog"),
         ("ar", "ar — Arabic"),
         ("de", "de — German"),
         ("fr", "fr — French"),
@@ -378,10 +378,11 @@ def flow_genome():
     _clear()
     _banner()
     genome_options = [
-        ("view",    "View genome fragments"),
-        ("report",  "Print audit report"),
-        ("requeue", "Re-queue error entries"),
-        ("list",    "List known source files"),
+        ("view",     "View genome fragments"),
+        ("validate", "Validate entries against genome patterns"),
+        ("report",   "Print audit report"),
+        ("requeue",  "Re-queue error entries"),
+        ("list",     "List known source files"),
     ]
     choice = _menu("Genome & Audit", genome_options)
     if choice == "0":
@@ -395,6 +396,30 @@ def flow_genome():
 
     if choice == "view":
         _run([sys.executable, "critic_v3.py", "--genome", lang, version, str(year)])
+    elif choice == "validate":
+        # Run genome validator
+        _section("Genome Pattern Validation")
+        file_path = _ask("Path to devotional JSON file", "")
+        if not file_path:
+            print("  ❌  File path required")
+            _ask("\n  Press Enter to continue", "")
+            return
+
+        threshold = _ask("Confidence threshold (0.0-1.0)", "0.6")
+        export_path = _ask("Export report to file (leave blank to skip)", "")
+
+        cmd = [
+            sys.executable, "genome_validator.py",
+            "--file", file_path,
+            "--lang", lang,
+            "--version", version,
+            "--year", str(year),
+            "--threshold", threshold,
+        ]
+        if export_path:
+            cmd += ["--export", export_path]
+
+        _run(cmd)
     elif choice == "report":
         _run([sys.executable, "critic_v3.py",
               "--lang", lang, "--version", version, "--year", str(year), "--report"])

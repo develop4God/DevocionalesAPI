@@ -347,12 +347,12 @@ Only after this internal review, form your verdict.
 # ── Main prompt builders ───────────────────────────────────────────────────────
 
 def build_system_prompt(lang: str, version: str, genome: Genome | None = None) -> str:
-    persona = get_persona(lang)
+    language_name, country = get_native_speaker_info(lang)
     genome_block = build_genome_block(genome)
     few_shot = FEW_SHOT_EXAMPLES.get(lang, FEW_SHOT_EXAMPLES.get("en", ""))
 
     return f"""\
-You are {persona}
+You are a native {language_name} speaker from {country}.
 
 You just finished reading today's devotional from the {version} Bible.
 Your only job: react honestly as a reader — not as a theologian, not as an editor.
@@ -583,7 +583,7 @@ def build_phase2_system(
       - verse_mismatch removed
       - Always responds in English
     """
-    persona      = get_persona(lang)
+    language_name, country = get_native_speaker_info(lang)
     genome_block = build_genome_block(genome)
     few_shot     = FEW_SHOT_EXAMPLES.get(lang, FEW_SHOT_EXAMPLES.get("en", ""))
 
@@ -600,7 +600,7 @@ def build_phase2_system(
         phase1_block = ""
 
     return f"""\
-You are {persona}
+You are a native {language_name} speaker from {country}.
 
 You just finished reading today's devotional from the {version} Bible.
 Your only job: react honestly as a CONTENT reader — not a linguist, not a theologian.
