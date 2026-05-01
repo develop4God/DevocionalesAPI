@@ -19,17 +19,16 @@ Two-phase validation:
 """
 
 from models import DevotionalEntry, Genome, PauseCategory
-from lang_registry import get_persona, get_section_labels, get_native_speaker_info
+from lang_registry import get_persona, get_native_speaker_info
 
 # ── Language persona labels ────────────────────────────────────────────────────
 # Each persona is a real person, not a label.
 # Cultural specificity is intentional — it activates the right model intuitions.
 # The reader notices what a person from that culture would notice.
 #
-# NOTE: READER_PERSONAS, SECTION_LABELS, and PHASE1_NATIVE_SPEAKERS have been
+# NOTE: READER_PERSONAS and PHASE1_NATIVE_SPEAKERS have been
 # moved to lang_registry.py for centralized management. Use the helper functions:
 #   - get_persona(lang) for reader personas
-#   - get_section_labels(lang) for localized field labels
 #   - get_native_speaker_info(lang) for Phase 1 native speaker metadata
 
 # ── Pause categories ───────────────────────────────────────────────────────────
@@ -394,11 +393,9 @@ Schema:
 
 
 def build_user_prompt(entry: DevotionalEntry, lang: str = "es") -> str:
-    labels = get_section_labels(lang)
-
     meditar_block = ""
     if entry.para_meditar:
-        lines = [f"\n--- {labels['meditate']} ---"]
+        lines = ["\n--- FOR MEDITATION ---"]
         for ref in entry.para_meditar:
             lines.append(f"{ref.get('cita','')}: {ref.get('texto','')}")
         meditar_block = "\n".join(lines)
@@ -406,14 +403,14 @@ def build_user_prompt(entry: DevotionalEntry, lang: str = "es") -> str:
     return f"""\
 Date: {entry.date}
 
---- {labels['verse']} ---
+--- VERSE ---
 {entry.versiculo}
 
---- {labels['reflection']} ---
+--- REFLECTION ---
 {entry.reflexion}
 {meditar_block}
 
---- {labels['prayer']} ---
+--- PRAYER ---
 {entry.oracion}
 
 Now think carefully. Output ONLY the JSON object — no 'Final answer:', no prose, no explanation."""
@@ -502,11 +499,10 @@ def build_phase1_system(lang: str, genome: "Genome | None" = None) -> str:
 
 def build_phase1_user(entry: DevotionalEntry, lang: str = "es") -> str:
     """Phase 1 injects only reflexion + oracion. versiculo excluded from payload."""
-    labels = get_section_labels(lang)
     return (
-        f"--- {labels['reflection']} ---\n"
+        f"--- REFLECTION ---\n"
         f"{entry.reflexion}\n\n"
-        f"--- {labels['prayer']} ---\n"
+        f"--- PRAYER ---\n"
         f"{entry.oracion}\n"
     )
 

@@ -29,7 +29,6 @@ class LangConfig:
         language_name: Full language name for Phase 1 prompts (e.g., 'Spanish')
         country: Country for native speaker persona (e.g., 'Colombia')
         known_versions: Tuple of Bible version codes supported for this language
-        labels: Dictionary mapping field names to localized labels
         filename_pattern: Template for source JSON files from GitHub
         persona: Reader persona description for Phase 2 prompts
     """
@@ -37,7 +36,6 @@ class LangConfig:
     language_name: str
     country: str
     known_versions: Tuple[str, ...]
-    labels: Dict[str, str]
     filename_pattern: str
     persona: str
 
@@ -52,12 +50,6 @@ _REGISTRY: Dict[str, LangConfig] = {
         language_name="Spanish",
         country="Colombia",
         known_versions=("RVR1960", "NVI"),
-        labels={
-            "verse": "VERSÍCULO",
-            "reflection": "REFLEXIÓN",
-            "prayer": "ORACIÓN",
-            "meditate": "PARA MEDITAR"
-        },
         filename_pattern="Devocional_year_{year}_es_{version}.json",
         persona=(
             "a 38-year-old Colombian Christian woman named Valentina. "
@@ -77,12 +69,6 @@ _REGISTRY: Dict[str, LangConfig] = {
         language_name="Brazilian Portuguese",
         country="Brazil",
         known_versions=("NVI", "ARC"),
-        labels={
-            "verse": "VERSÍCULO",
-            "reflection": "REFLEXÃO",
-            "prayer": "ORAÇÃO",
-            "meditate": "PARA MEDITAR"
-        },
         filename_pattern="Devocional_year_{year}_pt_{version}.json",
         persona=(
             "a 42-year-old Brazilian Christian man named Carlos. "
@@ -103,12 +89,6 @@ _REGISTRY: Dict[str, LangConfig] = {
         language_name="English",
         country="United States",
         known_versions=("KJV", "NIV"),
-        labels={
-            "verse": "VERSE",
-            "reflection": "REFLECTION",
-            "prayer": "PRAYER",
-            "meditate": "FOR MEDITATION"
-        },
         filename_pattern="Devocional_year_{year}_en_{version}.json",
         persona=(
             "a 35-year-old English-speaking Christian named Sarah. "
@@ -129,12 +109,6 @@ _REGISTRY: Dict[str, LangConfig] = {
         language_name="French",
         country="France",
         known_versions=("LSG1910", "TOB"),
-        labels={
-            "verse": "VERSET",
-            "reflection": "RÉFLEXION",
-            "prayer": "PRIÈRE",
-            "meditate": "POUR MÉDITER"
-        },
         filename_pattern="Devocional_year_{year}_fr_{version}.json",
         persona=(
             "a 45-year-old French-speaking Christian named Marie. "
@@ -154,12 +128,6 @@ _REGISTRY: Dict[str, LangConfig] = {
         language_name="German",
         country="Germany",
         known_versions=("LU17", "SCH2000"),
-        labels={
-            "verse": "VERS",
-            "reflection": "BETRACHTUNG",
-            "prayer": "GEBET",
-            "meditate": "ZUM NACHDENKEN"
-        },
         filename_pattern="Devocional_year_{year}_de_{version}.json",
         persona=(
             "a 50-year-old German Christian named Thomas. "
@@ -179,12 +147,6 @@ _REGISTRY: Dict[str, LangConfig] = {
         language_name="Arabic",
         country="Lebanon",
         known_versions=("NAV", "SVDA"),
-        labels={
-            "verse": "الآية",
-            "reflection": "التأمل",
-            "prayer": "الصلاة",
-            "meditate": "للتأمل"
-        },
         filename_pattern="Devocional_year_{year}_ar_{version}.json",
         persona=(
             "a 40-year-old Arabic-speaking Christian named Miriam. "
@@ -206,12 +168,6 @@ _REGISTRY: Dict[str, LangConfig] = {
         language_name="Mandarin Chinese",
         country="Malaysia",
         known_versions=("和合本1919", "新译本"),
-        labels={
-            "verse": "经文",
-            "reflection": "默想",
-            "prayer": "祷告",
-            "meditate": "思考"
-        },
         filename_pattern="Devocional_year_{year}_zh_{version}.json",
         persona=(
             "a 33-year-old Chinese Christian named Wei. "
@@ -231,12 +187,6 @@ _REGISTRY: Dict[str, LangConfig] = {
         language_name="Japanese",
         country="Japan",
         known_versions=("リビングバイブル", "新改訳2003"),
-        labels={
-            "verse": "聖句",
-            "reflection": "黙想",
-            "prayer": "祈り",
-            "meditate": "瞑想のために"
-        },
         filename_pattern="Devocional_year_{year}_ja_{version}.json",
         persona=(
             "a 48-year-old Japanese Christian named Keiko. "
@@ -257,12 +207,6 @@ _REGISTRY: Dict[str, LangConfig] = {
         language_name="Filipino",
         country="Philippines",
         known_versions=("ASND", "MBB05"),
-        labels={
-            "verse": "TALATA",
-            "reflection": "PAGMUMUNI",
-            "prayer": "PANALANGIN",
-            "meditate": "PARA SA PAGNINILAY"
-        },
         filename_pattern="Devocional_year_{year}_fil_{version}.json",
         persona=(
             "a Filipino Christian reading a morning devotional in Filipino. "
@@ -277,12 +221,6 @@ _REGISTRY: Dict[str, LangConfig] = {
         language_name="Hindi",
         country="India",
         known_versions=("HERV", "HIOV"),
-        labels={
-            "verse": "पद",
-            "reflection": "चिंतन",
-            "prayer": "प्रार्थना",
-            "meditate": "मनन के लिए"
-        },
         filename_pattern="Devocional_year_{year}_hi_{version}.json",
         persona=(
             "a 36-year-old Hindi-speaking Christian named Priya. "
@@ -380,23 +318,6 @@ def get_native_speaker_info(lang: str) -> Tuple[str, str]:
     """
     cfg = get(lang)
     return (cfg.language_name, cfg.country)
-
-
-def get_section_labels(lang: str) -> Dict[str, str]:
-    """
-    Get localized section labels for a language.
-
-    Args:
-        lang: Language code
-
-    Returns:
-        Dictionary mapping field names to localized labels
-
-    Raises:
-        ValueError: If language is not registered
-    """
-    cfg = get(lang)
-    return cfg.labels
 
 
 def get_persona(lang: str) -> str:
