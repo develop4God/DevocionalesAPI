@@ -11,45 +11,42 @@ import urllib.error
 from pathlib import Path
 
 from models import DevotionalEntry
+from lang_registry import get as get_lang
 
 GITHUB_RAW_BASE = (
     "https://raw.githubusercontent.com/develop4God/devocionales-json"
     "/refs/heads/main"
 )
 
-KNOWN_FILES = {
-    ("pt", "NVI"):       "Devocional_year_{year}_pt_NVI.json",
-    ("pt", "ARC"):       "Devocional_year_{year}_pt_ARC.json",
-    ("en", "KJV"):       "Devocional_year_{year}_en_KJV.json",
-    ("en", "NIV"):       "Devocional_year_{year}_en_NIV.json",
-    ("es", "NVI"):       "Devocional_year_{year}_es_NVI.json",
-    ("fr", "LSG1910"):   "Devocional_year_{year}_fr_LSG1910.json",
-    ("fr", "TOB"):       "Devocional_year_{year}_fr_TOB.json",
-    ("de", "LU17"):      "Devocional_year_{year}_de_LU17.json",
-    ("de", "SCH2000"):   "Devocional_year_{year}_de_SCH2000.json",
-    ("hi", "HERV"):      "Devocional_year_{year}_hi_HERV.json",
-    ("hi", "HIOV"):      "Devocional_year_{year}_hi_HIOV.json",
-    ("ar", "NAV"):       "Devocional_year_{year}_ar_NAV.json",
-    ("ar", "SVDA"):      "Devocional_year_{year}_ar_SVDA.json",
-    ("tl", "ADB"):       "Devocional_year_{year}_tl_ADB.json",
-    ("tl", "ASND"):      "Devocional_year_{year}_tl_ASND.json",
-    ("ja", "リビングバイブル"): "Devocional_year_{year}_ja_リビングバイブル.json",
-    ("ja", "新改訳2003"):    "Devocional_year_{year}_ja_新改訳2003.json",
-    ("zh", "和合本1919"):    "Devocional_year_{year}_zh_和合本1919.json",
-    ("zh", "新译本"):        "Devocional_year_{year}_zh_新译本.json",
-}
-
+# Special-case monolithic files (lang/version combos without split files)
+# These use a generic filename pattern without language/version in the name
 _MONOLITHIC = {
     ("es", "RVR1960"),
     ("es", "NVI"),
 }
 
 def build_url(lang: str, version: str, year: int) -> str:
+    """Build GitHub URL for devotional source file.
+
+    Args:
+        lang: Language code (e.g., 'es', 'pt', 'fil')
+        version: Bible version code (e.g., 'RVR1960', 'NVI')
+        year: Year of the devotional file
+
+    Returns:
+        Complete GitHub raw URL for the file
+
+    Note:
+        Uses lang_registry for filename patterns. Monolithic files
+        (es/RVR1960, es/NVI) use a special generic filename.
+    """
     if (lang, version) in _MONOLITHIC:
         return f"{GITHUB_RAW_BASE}/Devocional_year_{year}.json"
-    key = (lang, version)
-    filename = KNOWN_FILES.get(key, f"Devocional_year_{{year}}_{lang}_{version}.json")
-    return f"{GITHUB_RAW_BASE}/{filename.format(year=year)}"
+
+    # Get filename pattern from registry
+    cfg = get_lang(lang)
+    filename = cfg.filename_pattern.format(year=year, version=version, code=lang)
+    return f"{GITHUB_RAW_BASE}/{filename}"
 
 
 def fetch_remote(lang: str, version: str, year: int) -> dict:
@@ -102,11 +99,18 @@ def extract_entries(data: dict, lang: str) -> list[DevotionalEntry]:
 
 
 def list_known_files():
+    """Display all registered language/version combinations from lang_registry."""
+    from lang_registry import list_languages, list_versions
+
     print("\n  Available lang/version combinations:\n")
     print(f"  {'LANG':<6} {'VERSION':<18} FILENAME PATTERN")
     print(f"  {'─'*6} {'─'*18} {'─'*40}")
-    for (lang, version), pattern in sorted(KNOWN_FILES.items()):
-        print(f"  {lang:<6} {version:<18} {pattern}")
+
+    for lang in sorted(list_languages()):
+        cfg = get_lang(lang)
+        for version in cfg.known_versions:
+            pattern = cfg.filename_pattern
+            print(f"  {lang:<6} {version:<18} {pattern}")
     print()
 
 def get_sample_entries():

@@ -19,10 +19,22 @@ GEP_Genome-Evolution-Protocol/
 │   ├── genomes/               ← genome_{lang}_{version}_{year}.json
 │   ├── logs/                  ← run_log_{lang}_{version}_{year}.log
 │   └── source/                ← Devocional_year_{year}_{lang}_{version}.json
+├── tests/                     ← comprehensive test suite
+│   ├── test_lang_registry.py  ← language registry tests (202 tests)
+│   ├── test_pipeline.py       ← full pipeline integration test
+│   ├── test_genome_validator.py ← genome pattern validation tests (18 tests)
+│   └── README.md              ← test documentation
+├── dry_run/                   ← dry run files and validation reports
+│   ├── batch_input/           ← dry run batch files
+│   ├── validation_reports/    ← genome validation reports
+│   └── test_outputs/          ← test run outputs
 ├── backup-logs/               ← historical backups and deprecated files
 ├── Phase1_critic/             ← Phase 1 output samples
 │
+├── main.py            ← 🎯 INTERACTIVE MENU (recommended entry point)
 ├── paths.py           ← SINGLE SOURCE OF TRUTH for all directory paths
+├── lang_registry.py   ← 🆕 centralized language configuration registry
+├── genome_validator.py← 🆕 validate entries against genome patterns (SOLID)
 ├── audit.py           ← read/write JSONL audit log
 ├── batch_client.py    ← OpenAI-compatible batch API (upload/submit/poll/download)
 ├── batch_pipeline.py  ← full pipeline orchestrator (one command end-to-end)
@@ -34,12 +46,55 @@ GEP_Genome-Evolution-Protocol/
 ├── models.py          ← all data structures (single source of truth)
 ├── models_helper.py   ← model utilities
 ├── ollama_client.py   ← local Ollama routing
-├── prompts.py         ← LLM prompt builders (simulated reader persona)
+├── prompts.py         ← LLM prompt builders (native speaker, no personas)
 ├── runner.py          ← orchestrates interactive / overnight modes
 ├── seed_tl_genome.py  ← one-time genome seeding utility
-├── source.py          ← fetch and parse devotional source JSON
-└── test_pipeline.py   ← pipeline tests
+└── source.py          ← fetch and parse devotional source JSON
 ```
+
+---
+
+## Quick Start (NEW)
+
+### Interactive Menu (Recommended)
+Run the interactive menu system for guided pipeline execution:
+```bash
+python3 main.py
+```
+
+**Three-stage pipeline:**
+1. **PREPARE** — Set language, version, year, and optional local source file
+2. **CRITIQUE** — Run AI critic (cloud batch, dry run, or local overnight)
+3. **REVIEW** — View flags report, full report, or genome status
+
+**Features:**
+- **Session persistence** — Remembers your last dataset (.gep_session.json)
+- **Language validation** — Hard-fail on invalid --lang or --version (via lang_registry)
+- **Provider selection** — Automatically loads from config/providers.yml
+- **Box-drawing UI** — ANSI colors and visual menus for better UX
+- **File picker** — Browse and select local source files interactively
+- **Dry run mode** — Build JSONL only for cost estimation
+- **Genome status** — Inline genome viewer with fragment analysis
+
+### Genome Validator (NEW)
+Validate devotional entries against known genome patterns:
+```bash
+# Validate a source file
+python3 genome_validator.py \
+  --file data/source/Devocional_year_2025_es_RVR1960.json \
+  --lang es --version RVR1960 --year 2025
+
+# Export validation report
+python3 genome_validator.py \
+  --file data/source/Devocional_year_2025_es_RVR1960.json \
+  --lang es --version RVR1960 --year 2025 \
+  --export dry_run/validation_reports/es_RVR1960_2025_validation.json
+```
+
+### Language Registry (NEW)
+All language codes are now validated using ISO 639-3 standards. See `lang_registry.py` for supported languages and Bible versions.
+
+**Breaking change**: Filipino language code changed from `tl` → `fil`
 
 ---
 
