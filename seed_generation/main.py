@@ -43,29 +43,30 @@ import requests
 # 1. CONFIG
 # =============================================================================
 
-SERVER_URL        = "http://127.0.0.1:50002"
-SERVER_MODULE     = "API_Server_Seed:app"
-SERVER_PORT       = 50002
-SERVER_BOOT_SECS  = 30       # max seconds to wait for server health
-HEALTH_ENDPOINT   = f"{SERVER_URL}/docs"
+SERVER_URL = "http://127.0.0.1:50002"
+SERVER_MODULE = "API_Server_Seed:app"
+SERVER_PORT = 50002
+SERVER_BOOT_SECS = 30  # max seconds to wait for server health
+HEALTH_ENDPOINT = f"{SERVER_URL}/docs"
 
-TAG_MISS_WARN_PCT  = 5.0     # warn if miss% below this
-TAG_MISS_FATAL_PCT = 20.0    # exit if miss% above this
+TAG_MISS_WARN_PCT = 5.0  # warn if miss% below this
+TAG_MISS_FATAL_PCT = 20.0  # exit if miss% above this
 
-_SCRIPT_DIR       = os.path.dirname(os.path.abspath(__file__))
-TAGS_MASTER_PATH  = os.path.join(_SCRIPT_DIR, "tags_master.json")
-BOOK_MAP_PATH     = os.path.join(_SCRIPT_DIR, "book_map.json")
+_SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+TAGS_MASTER_PATH = os.path.join(_SCRIPT_DIR, "tags_master.json")
+BOOK_MAP_PATH = os.path.join(_SCRIPT_DIR, "book_map.json")
 
-SEP  = "=" * 60
+SEP = "=" * 60
 SEP2 = "-" * 60
 
 # =============================================================================
 # 2. PHASE REPORTER
 # =============================================================================
 
+
 class PhaseResult:
-    OK    = "OK"
-    WARN  = "WARN"
+    OK = "OK"
+    WARN = "WARN"
     ERROR = "ERROR"
     FATAL = "FATAL"
 
@@ -76,10 +77,20 @@ def phase_header(n: int, name: str) -> None:
     print(SEP)
 
 
-def ok(msg: str)    -> None: print(f"  ✅  {msg}")
-def warn(msg: str)  -> None: print(f"  ⚠️   {msg}")
-def error(msg: str) -> None: print(f"  ❌  {msg}")
-def info(msg: str)  -> None: print(f"  ·   {msg}")
+def ok(msg: str) -> None:
+    print(f"  ✅  {msg}")
+
+
+def warn(msg: str) -> None:
+    print(f"  ⚠️   {msg}")
+
+
+def error(msg: str) -> None:
+    print(f"  ❌  {msg}")
+
+
+def info(msg: str) -> None:
+    print(f"  ·   {msg}")
 
 
 # =============================================================================
@@ -95,8 +106,16 @@ def start_server() -> bool:
 
     info(f"Starting {SERVER_MODULE} on port {SERVER_PORT}...")
     _server_proc = subprocess.Popen(
-        [sys.executable, "-m", "uvicorn", SERVER_MODULE,
-         "--host", "0.0.0.0", "--port", str(SERVER_PORT)],
+        [
+            sys.executable,
+            "-m",
+            "uvicorn",
+            SERVER_MODULE,
+            "--host",
+            "0.0.0.0",
+            "--port",
+            str(SERVER_PORT),
+        ],
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
     )
@@ -106,7 +125,7 @@ def start_server() -> bool:
         try:
             r = requests.get(HEALTH_ENDPOINT, timeout=2)
             if r.status_code < 500:
-                ok(f"Server ready — {HEALTH_ENDPOINT} ({i+1}s)")
+                ok(f"Server ready — {HEALTH_ENDPOINT} ({i + 1}s)")
                 return True
         except Exception:
             pass
@@ -139,13 +158,15 @@ def _sig_handler(sig, frame):
     stop_server()
     sys.exit(1)
 
-signal.signal(signal.SIGINT,  _sig_handler)
+
+signal.signal(signal.SIGINT, _sig_handler)
 signal.signal(signal.SIGTERM, _sig_handler)
 
 
 # =============================================================================
 # 4. PREFLIGHT
 # =============================================================================
+
 
 def phase_preflight(target_lang: str) -> tuple[str, dict]:
     """
@@ -154,17 +175,19 @@ def phase_preflight(target_lang: str) -> tuple[str, dict]:
     context_dict contains loaded data needed by later phases.
     """
     phase_header(1, "PREFLIGHT")
-    ctx    = {}
-    fatal  = False
-    warns  = 0
+    ctx = {}
+    fatal = False
+    warns = 0
 
     # Required files
     for label, path in [
         ("tags_master.json", TAGS_MASTER_PATH),
-        ("book_map.json",    BOOK_MAP_PATH),
+        ("book_map.json", BOOK_MAP_PATH),
         ("API_Server_Seed.py", os.path.join(_SCRIPT_DIR, "API_Server_Seed.py")),
-        ("client_generate_from_seed.py",
-         os.path.join(_SCRIPT_DIR, "client_generate_from_seed.py")),
+        (
+            "client_generate_from_seed.py",
+            os.path.join(_SCRIPT_DIR, "client_generate_from_seed.py"),
+        ),
     ]:
         if os.path.exists(path):
             ok(f"{label} found")
@@ -178,10 +201,10 @@ def phase_preflight(target_lang: str) -> tuple[str, dict]:
     # Load tags master
     with open(TAGS_MASTER_PATH, encoding="utf-8") as f:
         master = json.load(f)
-    tags_map    = master["tags"]
-    merge_map   = master.get("merge_map", {})
-    ctx["tags_map"]   = tags_map
-    ctx["merge_map"]  = merge_map
+    tags_map = master["tags"]
+    merge_map = master.get("merge_map", {})
+    ctx["tags_map"] = tags_map
+    ctx["merge_map"] = merge_map
     ok(f"tags_master loaded — {len(tags_map)} keys, {len(merge_map)} merge rules")
 
     # Language coverage check
@@ -191,16 +214,22 @@ def phase_preflight(target_lang: str) -> tuple[str, dict]:
     if miss_pct == 0:
         ok(f"Tag coverage for '{target_lang}': 100%")
     elif miss_pct <= TAG_MISS_WARN_PCT:
-        warn(f"Tag coverage for '{target_lang}': {100-miss_pct:.1f}% "
-             f"({len(missing_lang)} missing) — continuing")
+        warn(
+            f"Tag coverage for '{target_lang}': {100 - miss_pct:.1f}% "
+            f"({len(missing_lang)} missing) — continuing"
+        )
         warns += 1
     elif miss_pct <= TAG_MISS_FATAL_PCT:
-        warn(f"Tag coverage for '{target_lang}': {100-miss_pct:.1f}% "
-             f"({len(missing_lang)} missing) — review tags_master before production")
+        warn(
+            f"Tag coverage for '{target_lang}': {100 - miss_pct:.1f}% "
+            f"({len(missing_lang)} missing) — review tags_master before production"
+        )
         warns += 1
     else:
-        error(f"Tag coverage for '{target_lang}': {100-miss_pct:.1f}% — "
-              f"too many missing ({len(missing_lang)}), add translations first")
+        error(
+            f"Tag coverage for '{target_lang}': {100 - miss_pct:.1f}% — "
+            f"too many missing ({len(missing_lang)}), add translations first"
+        )
         return PhaseResult.FATAL, ctx
 
     # .env / API key
@@ -220,6 +249,7 @@ def phase_preflight(target_lang: str) -> tuple[str, dict]:
 # 5. SEED PHASE
 # =============================================================================
 
+
 def phase_seed(
     ctx: dict,
     kjv_path: str,
@@ -235,7 +265,7 @@ def phase_seed(
 
     # Validate DB connection
     try:
-        conn   = sqlite3.connect(sqlite_path)
+        conn = sqlite3.connect(sqlite_path)
         cursor = conn.cursor()
         cursor.execute("SELECT COUNT(*) FROM verses")
         verse_count = cursor.fetchone()[0]
@@ -251,8 +281,11 @@ def phase_seed(
 
     try:
         seed_path = extract_seed(
-            kjv_path, sqlite_path, output_dir,
-            target_lang, target_version,
+            kjv_path,
+            sqlite_path,
+            output_dir,
+            target_lang,
+            target_version,
         )
     except SystemExit:
         error("extract_seed exited unexpectedly")
@@ -276,22 +309,34 @@ def phase_seed(
     ok(f"Seed ready — {entry_count} entries → {os.path.basename(seed_path)}")
 
     # Check for violation report
-    ts_part      = os.path.basename(seed_path).replace(f"seed_{target_lang}_{target_version}_","").replace(".json","")
-    viol_path    = os.path.join(output_dir, f"seed_violations_{target_lang}_{target_version}_{ts_part}.json")
-    miss_path    = os.path.join(output_dir, f"seed_tag_misses_{target_lang}_{target_version}_{ts_part}.json")
+    ts_part = (
+        os.path.basename(seed_path)
+        .replace(f"seed_{target_lang}_{target_version}_", "")
+        .replace(".json", "")
+    )
+    viol_path = os.path.join(
+        output_dir, f"seed_violations_{target_lang}_{target_version}_{ts_part}.json"
+    )
+    miss_path = os.path.join(
+        output_dir, f"seed_tag_misses_{target_lang}_{target_version}_{ts_part}.json"
+    )
 
     result = PhaseResult.OK
     if os.path.exists(viol_path):
         with open(viol_path) as f:
             viols = json.load(f)
-        warn(f"{len(viols)} reverse validation violation(s) — review {os.path.basename(viol_path)}")
+        warn(
+            f"{len(viols)} reverse validation violation(s) — review {os.path.basename(viol_path)}"
+        )
         result = PhaseResult.WARN
 
     if os.path.exists(miss_path):
         with open(miss_path) as f:
             misses = json.load(f)
         unique = len({m["en_tag"] for m in misses})
-        warn(f"{unique} unique tag miss(es) — EN fallback used, review {os.path.basename(miss_path)}")
+        warn(
+            f"{unique} unique tag miss(es) — EN fallback used, review {os.path.basename(miss_path)}"
+        )
         result = PhaseResult.WARN
 
     print(f"\n  → Seed: {result}")
@@ -301,6 +346,7 @@ def phase_seed(
 # =============================================================================
 # 6. GENERATION PHASE
 # =============================================================================
+
 
 def phase_generation(
     seed_path: str,
@@ -323,6 +369,7 @@ def phase_generation(
 
     # Capture raw output path — monkey-patch save_output to intercept
     import client_generate_from_seed as cgfs
+
     _raw_path = []
     _orig_save = cgfs.save_output
 
@@ -358,6 +405,7 @@ def phase_generation(
 # 7. VALIDATION PHASE
 # =============================================================================
 
+
 def phase_validation(raw_path: str, target_lang: str) -> str:
     """
     Run basic quality validation on the raw output.
@@ -366,36 +414,60 @@ def phase_validation(raw_path: str, target_lang: str) -> str:
     phase_header(5, "VALIDATION")
 
     def has_devanagari(text):
-        return bool(re.search(r'[\u0900-\u097F]', text))
+        return bool(re.search(r"[\u0900-\u097F]", text))
 
     try:
         with open(raw_path, encoding="utf-8") as f:
             data = json.load(f)
 
         lang_data = data.get("data", {}).get(target_lang, {})
-        entries   = {date: items[0] for date, items in lang_data.items() if items}
-        total     = len(entries)
+        entries = {date: items[0] for date, items in lang_data.items() if items}
+        total = len(entries)
 
         if total == 0:
             error("No entries found in output")
             return PhaseResult.ERROR
 
-        issues        = []
-        script_fails  = []
-        no_amen       = []
+        issues = []
+        script_fails = []
+        no_amen = []
         reflexion_lens = []
 
         for date, entry in entries.items():
             r = entry.get("reflexion", "")
-            o = entry.get("oracion",   "")
+            o = entry.get("oracion", "")
             reflexion_lens.append(len(r))
 
             if target_lang == "hi":
-                if not has_devanagari(r): script_fails.append((date, "reflexion"))
-                if not has_devanagari(o): script_fails.append((date, "oracion"))
-            if not any(e in o for e in ["آمین", "आमीन", "अमीन", "Amén", "Amen", "アーメン", "阿门", "아멘"]):
+                if not has_devanagari(r):
+                    script_fails.append((date, "reflexion"))
+                if not has_devanagari(o):
+                    script_fails.append((date, "oracion"))
+            if not any(
+                e in o
+                for e in [
+                    "آمین",
+                    "आमीन",
+                    "अमीन",
+                    "Amén",
+                    "Amen",
+                    "アーメン",
+                    "阿门",
+                    "아멘",
+                ]
+            ):
                 no_amen.append(date)
-            for key in ("id","date","language","version","versiculo","reflexion","para_meditar","oracion","tags"):
+            for key in (
+                "id",
+                "date",
+                "language",
+                "version",
+                "versiculo",
+                "reflexion",
+                "para_meditar",
+                "oracion",
+                "tags",
+            ):
                 if key not in entry:
                     issues.append(f"[{date}] missing: {key}")
 
@@ -420,7 +492,9 @@ def phase_validation(raw_path: str, target_lang: str) -> str:
         else:
             ok("Structure: all keys present")
 
-        result = PhaseResult.WARN if (script_fails or no_amen or issues) else PhaseResult.OK
+        result = (
+            PhaseResult.WARN if (script_fails or no_amen or issues) else PhaseResult.OK
+        )
         print(f"\n  → Validation: {result}")
         return result
 
@@ -432,6 +506,7 @@ def phase_validation(raw_path: str, target_lang: str) -> str:
 # =============================================================================
 # 8. TKINTER UI
 # =============================================================================
+
 
 def collect_inputs() -> dict | None:
     """
@@ -445,7 +520,7 @@ def collect_inputs() -> dict | None:
     messagebox.showinfo(
         "Devotional Pipeline — Step 1 of 5",
         "Select the KJV devotional JSON file.\n\n"
-        "Skip this step if you already have a seed file."
+        "Skip this step if you already have a seed file.",
     )
 
     kjv_path = filedialog.askopenfilename(
@@ -458,8 +533,7 @@ def collect_inputs() -> dict | None:
 
     if not kjv_path:
         messagebox.showinfo(
-            "Devotional Pipeline — Step 1b of 5",
-            "Select an existing seed JSON file."
+            "Devotional Pipeline — Step 1b of 5", "Select an existing seed JSON file."
         )
         seed_path = filedialog.askopenfilename(
             title="Select existing seed JSON",
@@ -471,12 +545,14 @@ def collect_inputs() -> dict | None:
             return None
     else:
         messagebox.showinfo(
-            "Devotional Pipeline — Step 2 of 5",
-            "Select the SQLite Bible database."
+            "Devotional Pipeline — Step 2 of 5", "Select the SQLite Bible database."
         )
         sqlite_path = filedialog.askopenfilename(
             title="Select SQLite Bible DB",
-            filetypes=[("SQLite files", "*.SQLite3 *.db *.sqlite"), ("All files", "*.*")],
+            filetypes=[
+                ("SQLite files", "*.SQLite3 *.db *.sqlite"),
+                ("All files", "*.*"),
+            ],
         )
         if not sqlite_path:
             root.destroy()
@@ -501,8 +577,7 @@ def collect_inputs() -> dict | None:
         return None
 
     messagebox.showinfo(
-        "Devotional Pipeline — Step 5 of 5",
-        "Select the output folder."
+        "Devotional Pipeline — Step 5 of 5", "Select the output folder."
     )
     output_dir = filedialog.askdirectory(title="Select output folder")
     if not output_dir:
@@ -512,18 +587,19 @@ def collect_inputs() -> dict | None:
     root.destroy()
 
     return {
-        "kjv_path":       kjv_path or None,
-        "seed_path":      seed_path,
-        "sqlite_path":    sqlite_path,
-        "target_lang":    target_lang.strip().lower(),
+        "kjv_path": kjv_path or None,
+        "seed_path": seed_path,
+        "sqlite_path": sqlite_path,
+        "target_lang": target_lang.strip().lower(),
         "target_version": target_version.strip().upper(),
-        "output_dir":     output_dir,
+        "output_dir": output_dir,
     }
 
 
 # =============================================================================
 # 9. SUMMARY
 # =============================================================================
+
 
 def print_summary(phases: dict, start_time: float) -> None:
     elapsed = time.time() - start_time
@@ -533,7 +609,13 @@ def print_summary(phases: dict, start_time: float) -> None:
     print("PIPELINE SUMMARY")
     print(SEP)
     for name, result in phases.items():
-        icon = {"OK":"✅","WARN":"⚠️ ","ERROR":"❌","FATAL":"🚫","SKIP":"⏭️ "}.get(result,"·")
+        icon = {
+            "OK": "✅",
+            "WARN": "⚠️ ",
+            "ERROR": "❌",
+            "FATAL": "🚫",
+            "SKIP": "⏭️ ",
+        }.get(result, "·")
         print(f"  {icon}  {name:<20} {result}")
     print(f"\n  Elapsed: {mins}m {secs}s")
     print(SEP)
@@ -543,9 +625,10 @@ def print_summary(phases: dict, start_time: float) -> None:
 # 10. MAIN
 # =============================================================================
 
+
 def main() -> None:
     start_time = time.time()
-    phases     = {}
+    phases = {}
 
     print(f"\n{SEP}")
     print("DEVOTIONAL GENERATION PIPELINE")
@@ -558,7 +641,7 @@ def main() -> None:
         print("Cancelled.")
         sys.exit(0)
 
-    lang    = inputs["target_lang"]
+    lang = inputs["target_lang"]
     version = inputs["target_version"]
     info(f"Lang: {lang} | Version: {version}")
     info(f"Output: {inputs['output_dir']}")
@@ -602,7 +685,7 @@ def main() -> None:
         lang,
         version,
     )
-    phases["Server"]     = PhaseResult.OK if _server_proc else PhaseResult.ERROR
+    phases["Server"] = PhaseResult.OK if _server_proc else PhaseResult.ERROR
     phases["Generation"] = gen_result
 
     if gen_result in (PhaseResult.FATAL, PhaseResult.ERROR):
@@ -619,9 +702,13 @@ def main() -> None:
     print_summary(phases, start_time)
 
     if val_result == PhaseResult.OK:
-        print(f"\n  🎉  Pipeline complete — {os.path.basename(raw_path)} ready for patch + validate\n")
+        print(
+            f"\n  🎉  Pipeline complete — {os.path.basename(raw_path)} ready for patch + validate\n"
+        )
     else:
-        print(f"\n  ⚠️   Pipeline complete with warnings — review reports before promoting\n")
+        print(
+            "\n  ⚠️   Pipeline complete with warnings — review reports before promoting\n"
+        )
 
 
 if __name__ == "__main__":

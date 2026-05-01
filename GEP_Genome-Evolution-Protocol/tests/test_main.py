@@ -13,10 +13,9 @@ Tests cover:
 
 import json
 import sys
-import tempfile
 from dataclasses import asdict
 from pathlib import Path
-from unittest.mock import MagicMock, patch, call
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -40,7 +39,9 @@ class TestSession:
 
     def test_session_custom_values(self):
         """Test Session with custom values."""
-        s = Session(lang="pt", version="NVI", year=2024, local_file="/path/to/file.json")
+        s = Session(
+            lang="pt", version="NVI", year=2024, local_file="/path/to/file.json"
+        )
         assert s.lang == "pt"
         assert s.version == "NVI"
         assert s.year == 2024
@@ -55,7 +56,7 @@ class TestSession:
         session_file.write_text(json.dumps(asdict(s1), indent=2), encoding="utf-8")
 
         # Load session
-        with patch.object(main, '_SESSION_FILE', session_file):
+        with patch.object(main, "_SESSION_FILE", session_file):
             s2 = main._load_session()
 
         assert s2.lang == "en"
@@ -67,7 +68,7 @@ class TestSession:
         """Test loading session when file doesn't exist returns defaults."""
         session_file = tmp_path / ".gep_session_nonexistent.json"
 
-        with patch.object(main, '_SESSION_FILE', session_file):
+        with patch.object(main, "_SESSION_FILE", session_file):
             s = main._load_session()
 
         assert s.lang == "es"
@@ -79,7 +80,7 @@ class TestSession:
         session_file = tmp_path / ".gep_session.json"
         session_file.write_text("{ invalid json", encoding="utf-8")
 
-        with patch.object(main, '_SESSION_FILE', session_file):
+        with patch.object(main, "_SESSION_FILE", session_file):
             s = main._load_session()
 
         assert s.lang == "es"
@@ -90,7 +91,7 @@ class TestSession:
         session_file = tmp_path / ".gep_session.json"
         s = Session(lang="fil", version="ASND", year=2026, local_file="")
 
-        with patch.object(main, '_SESSION_FILE', session_file):
+        with patch.object(main, "_SESSION_FILE", session_file):
             main._save_session(s)
 
         assert session_file.exists()
@@ -156,49 +157,49 @@ class TestBoxDrawing:
 class TestInputHelpers:
     """Test user input helper functions."""
 
-    @patch('builtins.input', return_value='test_value')
+    @patch("builtins.input", return_value="test_value")
     def test_ask_with_input(self, mock_input):
         """Test _ask() returns user input."""
         result = main._ask("Enter value", "default")
         assert result == "test_value"
 
-    @patch('builtins.input', return_value='')
+    @patch("builtins.input", return_value="")
     def test_ask_returns_default(self, mock_input):
         """Test _ask() returns default when user presses Enter."""
         result = main._ask("Enter value", "default_value")
         assert result == "default_value"
 
-    @patch('builtins.input', side_effect=KeyboardInterrupt)
+    @patch("builtins.input", side_effect=KeyboardInterrupt)
     def test_ask_keyboard_interrupt(self, mock_input):
         """Test _ask() handles KeyboardInterrupt gracefully."""
         result = main._ask("Enter value", "default")
         assert result == "default"
 
-    @patch('builtins.input', return_value='y')
+    @patch("builtins.input", return_value="y")
     def test_confirm_yes(self, mock_input):
         """Test _confirm() returns True for 'y'."""
         result = main._confirm("Confirm?")
         assert result is True
 
-    @patch('builtins.input', return_value='n')
+    @patch("builtins.input", return_value="n")
     def test_confirm_no(self, mock_input):
         """Test _confirm() returns False for 'n'."""
         result = main._confirm("Confirm?")
         assert result is False
 
-    @patch('builtins.input', return_value='')
+    @patch("builtins.input", return_value="")
     def test_confirm_default_true(self, mock_input):
         """Test _confirm() returns default True when pressing Enter."""
         result = main._confirm("Confirm?", default=True)
         assert result is True
 
-    @patch('builtins.input', return_value='')
+    @patch("builtins.input", return_value="")
     def test_confirm_default_false(self, mock_input):
         """Test _confirm() returns default False when pressing Enter."""
         result = main._confirm("Confirm?", default=False)
         assert result is False
 
-    @patch('builtins.input', side_effect=KeyboardInterrupt)
+    @patch("builtins.input", side_effect=KeyboardInterrupt)
     def test_confirm_keyboard_interrupt(self, mock_input):
         """Test _confirm() handles KeyboardInterrupt."""
         result = main._confirm("Confirm?", default=True)
@@ -208,35 +209,35 @@ class TestInputHelpers:
 class TestNumberedMenu:
     """Test _numbered_menu() function."""
 
-    @patch('builtins.input', return_value='1')
+    @patch("builtins.input", return_value="1")
     def test_numbered_menu_first_option(self, mock_input):
         """Test selecting first option."""
         options = [("opt1", "Option 1"), ("opt2", "Option 2")]
         result = main._numbered_menu("Test Menu", options)
         assert result == "opt1"
 
-    @patch('builtins.input', return_value='2')
+    @patch("builtins.input", return_value="2")
     def test_numbered_menu_second_option(self, mock_input):
         """Test selecting second option."""
         options = [("opt1", "Option 1"), ("opt2", "Option 2")]
         result = main._numbered_menu("Test Menu", options)
         assert result == "opt2"
 
-    @patch('builtins.input', return_value='0')
+    @patch("builtins.input", return_value="0")
     def test_numbered_menu_back(self, mock_input):
         """Test selecting back/exit (0)."""
         options = [("opt1", "Option 1")]
         result = main._numbered_menu("Test Menu", options)
         assert result == "0"
 
-    @patch('builtins.input', side_effect=['99', '1'])
+    @patch("builtins.input", side_effect=["99", "1"])
     def test_numbered_menu_invalid_then_valid(self, mock_input):
         """Test invalid input followed by valid input."""
         options = [("opt1", "Option 1")]
         result = main._numbered_menu("Test Menu", options)
         assert result == "opt1"
 
-    @patch('builtins.input', side_effect=KeyboardInterrupt)
+    @patch("builtins.input", side_effect=KeyboardInterrupt)
     def test_numbered_menu_keyboard_interrupt(self, mock_input):
         """Test KeyboardInterrupt returns '0'."""
         options = [("opt1", "Option 1")]
@@ -249,20 +250,30 @@ class TestProviderLoading:
 
     def test_load_providers_for_phase_fallback(self):
         """Test fallback when providers.yml cannot be loaded."""
-        with patch('main._load_config', side_effect=Exception("File not found")):
+        with patch("main._load_config", side_effect=Exception("File not found")):
             providers = main._load_providers_for_phase(1)
 
         assert len(providers) >= 2
         assert any("Fireworks" in p[1] for p in providers)
         assert any("DashScope" in p[1] for p in providers)
 
-    @patch('main._load_config')
+    @patch("main._load_config")
     def test_load_providers_from_yml(self, mock_config):
         """Test loading providers from providers.yml."""
         mock_config.return_value = {
             "providers": [
-                {"id": "test_provider", "phase": "phase1", "name": "Test", "model": "test-model"},
-                {"id": "other_provider", "phase": "phase2", "name": "Other", "model": "other-model"},
+                {
+                    "id": "test_provider",
+                    "phase": "phase1",
+                    "name": "Test",
+                    "model": "test-model",
+                },
+                {
+                    "id": "other_provider",
+                    "phase": "phase2",
+                    "name": "Other",
+                    "model": "other-model",
+                },
             ]
         }
 
@@ -277,14 +288,17 @@ class TestProviderLoading:
 class TestStagePrepare:
     """Test _stage_prepare() function."""
 
-    @patch('builtins.input', side_effect=['1', '1', '2025', 'n', 'y'])
-    @patch('os.system')
-    @patch('main.list_languages', return_value=['es', 'pt', 'en'])
-    @patch('main.get')
-    @patch('main.list_versions', return_value=['RVR1960', 'NVI'])
-    def test_stage_prepare_basic_flow(self, mock_list_vers, mock_get, mock_list_langs, mock_sys, mock_input):
+    @patch("builtins.input", side_effect=["1", "1", "2025", "n", "y"])
+    @patch("os.system")
+    @patch("main.list_languages", return_value=["es", "pt", "en"])
+    @patch("main.get")
+    @patch("main.list_versions", return_value=["RVR1960", "NVI"])
+    def test_stage_prepare_basic_flow(
+        self, mock_list_vers, mock_get, mock_list_langs, mock_sys, mock_input
+    ):
         """Test basic PREPARE flow."""
         from lang_registry import LangConfig
+
         mock_get.return_value = LangConfig(
             code="es",
             language_name="Spanish",
@@ -292,7 +306,7 @@ class TestStagePrepare:
             known_versions=("RVR1960", "NVI"),
             labels={},
             filename_pattern="test.json",
-            persona=""
+            persona="",
         )
 
         session = Session()
@@ -306,10 +320,12 @@ class TestStagePrepare:
 class TestStageCritique:
     """Test _stage_critique() function."""
 
-    @patch('main._run_cmd')
-    @patch('builtins.input', side_effect=['1', '1', '1'])  # batch, phase1, provider1
-    @patch('os.system')
-    @patch('main._load_providers_for_phase', return_value=[("test_prov", "Test Provider")])
+    @patch("main._run_cmd")
+    @patch("builtins.input", side_effect=["1", "1", "1"])  # batch, phase1, provider1
+    @patch("os.system")
+    @patch(
+        "main._load_providers_for_phase", return_value=[("test_prov", "Test Provider")]
+    )
     def test_critique_batch_mode(self, mock_prov, mock_sys, mock_input, mock_run):
         """Test CRITIQUE in batch mode."""
         session = Session(lang="es", version="RVR1960", year=2025)
@@ -323,10 +339,12 @@ class TestStageCritique:
         assert "--version" in cmd and "RVR1960" in cmd
         assert "--phase" in cmd
 
-    @patch('main._run_cmd')
-    @patch('builtins.input', side_effect=['2', '1', '1'])  # dry, phase1, provider1
-    @patch('os.system')
-    @patch('main._load_providers_for_phase', return_value=[("test_prov", "Test Provider")])
+    @patch("main._run_cmd")
+    @patch("builtins.input", side_effect=["2", "1", "1"])  # dry, phase1, provider1
+    @patch("os.system")
+    @patch(
+        "main._load_providers_for_phase", return_value=[("test_prov", "Test Provider")]
+    )
     def test_critique_dry_run_mode(self, mock_prov, mock_sys, mock_input, mock_run):
         """Test CRITIQUE in dry-run mode."""
         session = Session(lang="pt", version="NVI", year=2024)
@@ -336,9 +354,9 @@ class TestStageCritique:
         cmd = mock_run.call_args[0][0]
         assert "--dry-run" in cmd
 
-    @patch('main._run_cmd')
-    @patch('builtins.input', side_effect=['3', '1'])  # overnight, phase1
-    @patch('os.system')
+    @patch("main._run_cmd")
+    @patch("builtins.input", side_effect=["3", "1"])  # overnight, phase1
+    @patch("os.system")
     def test_critique_overnight_mode(self, mock_sys, mock_input, mock_run):
         """Test CRITIQUE in overnight mode."""
         session = Session(lang="en", version="KJV", year=2025)
@@ -353,9 +371,11 @@ class TestStageCritique:
 class TestStageReview:
     """Test _stage_review() function."""
 
-    @patch('main._run_cmd')
-    @patch('builtins.input', side_effect=['1', '1', 'n'])  # flags report, phase1, no specific files
-    @patch('os.system')
+    @patch("main._run_cmd")
+    @patch(
+        "builtins.input", side_effect=["1", "1", "n"]
+    )  # flags report, phase1, no specific files
+    @patch("os.system")
     def test_review_flags_report(self, mock_sys, mock_input, mock_run):
         """Test REVIEW flags report."""
         session = Session(lang="es", version="RVR1960", year=2025)
@@ -365,9 +385,11 @@ class TestStageReview:
         assert "review_flags.py" in cmd
         assert "--verdict" in cmd and "FLAG" in cmd
 
-    @patch('main._run_cmd')
-    @patch('builtins.input', side_effect=['2', '1', 'n'])  # all report, phase1, no specific files
-    @patch('os.system')
+    @patch("main._run_cmd")
+    @patch(
+        "builtins.input", side_effect=["2", "1", "n"]
+    )  # all report, phase1, no specific files
+    @patch("os.system")
     def test_review_all_report(self, mock_sys, mock_input, mock_run):
         """Test REVIEW all verdicts report."""
         session = Session(lang="pt", version="NVI", year=2024)
@@ -380,8 +402,10 @@ class TestStageReview:
 class TestCommandRunner:
     """Test _run_cmd() function."""
 
-    @patch('subprocess.run', return_value=MagicMock(returncode=0))
-    @patch('builtins.input', side_effect=['y', ''])  # confirm run, press enter after completion
+    @patch("subprocess.run", return_value=MagicMock(returncode=0))
+    @patch(
+        "builtins.input", side_effect=["y", ""]
+    )  # confirm run, press enter after completion
     def test_run_cmd_success(self, mock_input, mock_subprocess):
         """Test running command successfully."""
         cmd = [sys.executable, "test_script.py", "--arg", "value"]
@@ -390,8 +414,8 @@ class TestCommandRunner:
         assert mock_subprocess.called
         assert mock_subprocess.call_args[0][0] == cmd
 
-    @patch('subprocess.run', return_value=MagicMock(returncode=1))
-    @patch('builtins.input', side_effect=['y', ''])
+    @patch("subprocess.run", return_value=MagicMock(returncode=1))
+    @patch("builtins.input", side_effect=["y", ""])
     def test_run_cmd_failure(self, mock_input, mock_subprocess):
         """Test running command that fails."""
         cmd = [sys.executable, "test_script.py"]
@@ -399,11 +423,11 @@ class TestCommandRunner:
 
         assert mock_subprocess.called
 
-    @patch('builtins.input', side_effect=['n'])
+    @patch("builtins.input", side_effect=["n"])
     def test_run_cmd_cancel(self, mock_input):
         """Test canceling command execution."""
         cmd = [sys.executable, "test_script.py"]
-        with patch('subprocess.run') as mock_subprocess:
+        with patch("subprocess.run") as mock_subprocess:
             main._run_cmd(cmd)
             assert not mock_subprocess.called
 
@@ -411,9 +435,9 @@ class TestCommandRunner:
 class TestGenomeStatus:
     """Test _show_genome_status() function."""
 
-    @patch('builtins.input', return_value='')  # press enter to continue
-    @patch('os.system')
-    @patch('main.load_genome', return_value=None)
+    @patch("builtins.input", return_value="")  # press enter to continue
+    @patch("os.system")
+    @patch("main.load_genome", return_value=None)
     def test_genome_status_no_genome(self, mock_load, mock_sys, mock_input):
         """Test genome status when no genome exists."""
         session = Session(lang="es", version="RVR1960", year=2025)
@@ -426,10 +450,11 @@ class TestGenomeStatus:
 class TestPrintSessionRow:
     """Test _print_session_row() function."""
 
-    @patch('main.get')
+    @patch("main.get")
     def test_print_session_row_valid_lang(self, mock_get):
         """Test printing session row with valid language."""
         from lang_registry import LangConfig
+
         mock_get.return_value = LangConfig(
             code="es",
             language_name="Spanish",
@@ -437,14 +462,14 @@ class TestPrintSessionRow:
             known_versions=("RVR1960",),
             labels={},
             filename_pattern="test.json",
-            persona=""
+            persona="",
         )
 
         session = Session(lang="es", version="RVR1960", year=2025)
         # Should not raise any exceptions
         main._print_session_row(session)
 
-    @patch('main.get', side_effect=ValueError("Unknown language"))
+    @patch("main.get", side_effect=ValueError("Unknown language"))
     def test_print_session_row_invalid_lang(self, mock_get):
         """Test printing session row with invalid language (fallback to code)."""
         session = Session(lang="invalid", version="RVR1960", year=2025)
@@ -479,8 +504,8 @@ class TestEdgeCases:
 class TestIntegration:
     """Integration tests for main.py."""
 
-    @patch('builtins.input', side_effect=['0'])  # Exit immediately
-    @patch('os.system')
+    @patch("builtins.input", side_effect=["0"])  # Exit immediately
+    @patch("os.system")
     def test_main_exit_immediately(self, mock_sys, mock_input):
         """Test main() can exit cleanly."""
         main.main()
@@ -489,11 +514,12 @@ class TestIntegration:
     def test_main_imports_successfully(self):
         """Test that main.py imports without errors."""
         import main
-        assert hasattr(main, 'main')
-        assert hasattr(main, 'Session')
-        assert hasattr(main, '_stage_prepare')
-        assert hasattr(main, '_stage_critique')
-        assert hasattr(main, '_stage_review')
+
+        assert hasattr(main, "main")
+        assert hasattr(main, "Session")
+        assert hasattr(main, "_stage_prepare")
+        assert hasattr(main, "_stage_critique")
+        assert hasattr(main, "_stage_review")
 
 
 if __name__ == "__main__":

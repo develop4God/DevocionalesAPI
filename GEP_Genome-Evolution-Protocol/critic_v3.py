@@ -25,10 +25,10 @@ Available roles for pt:
 
 import argparse
 import json
-import sys
 
 from audit import audit_path, print_summary
 from genome import ensure_genome
+
 MODEL_KEYS = ["auto", "fast", "best"]
 run_interactive = None
 run_overnight = None
@@ -60,20 +60,24 @@ def cmd_requeue_errors(lang: str, version: str, year: int):
             kept.append(line)
     log_path.write_text("\n".join(kept) + ("\n" if kept else ""), encoding="utf-8")
     print(f"  ✅ Removed {removed} error entries from {log_path.name}")
-    print(f"     They will be re-processed on the next run.")
+    print("     They will be re-processed on the next run.")
 
 
 def cmd_genome(lang: str, version: str, year: int):
     """Print current genome for a lang/version."""
     genome = ensure_genome(lang, version, year)
     if not genome.fragments:
-        print(f"\n  Genome for {lang}/{version}/{year}: empty (no pauses recorded yet)\n")
+        print(
+            f"\n  Genome for {lang}/{version}/{year}: empty (no pauses recorded yet)\n"
+        )
         return
     print(f"\n  🧬 Genome: {genome.genome_version}")
-    print(f"  Entries reviewed: {genome.total_entries_reviewed} | Pauses: {genome.total_pauses}")
+    print(
+        f"  Entries reviewed: {genome.total_entries_reviewed} | Pauses: {genome.total_pauses}"
+    )
     print(f"  Fragments: {len(genome.fragments)}\n")
     for f in sorted(genome.fragments, key=lambda x: -x.confidence):
-        print(f"  [{f.confidence:.2f}] {f.category.value:<20} \"{f.example_quote[:60]}\"")
+        print(f'  [{f.confidence:.2f}] {f.category.value:<20} "{f.example_quote[:60]}"')
         print(f"         {f.pattern[:80]}")
         print(f"         Evidence: {', '.join(f.evidence_dates)}\n")
 
@@ -96,21 +100,56 @@ def main():
         ),
     )
 
-    parser.add_argument("--lang",       help="Language code (pt, es, en, ...)")
-    parser.add_argument("--version",    help="Bible version (ARC, NVI, KJV, ...)")
-    parser.add_argument("--year",       type=int, help="Year (2025, 2026, ...)")
-    parser.add_argument("--mode",       choices=["interactive", "overnight"], default="overnight")
-    parser.add_argument("--role",       default="default", help="Reader role: default, elder, charismatic, new_believer (pt only for now)")
-    parser.add_argument("--model", default="auto", help="Model key: auto (default), fast, best, or any Ollama tag e.g. qwen2.5:7b")
-    parser.add_argument("--phase", type=int, default=0, help="Run only phase 1 or 2. Default 0 = both.")
-    parser.add_argument("--start-date", dest="start_date", help="Skip entries before YYYY-MM-DD")
-    parser.add_argument("--local",      metavar="FILE", help="Use local JSON file instead of GitHub fetch")
-    parser.add_argument("--report",     action="store_true", help="Print audit report and exit")
-    parser.add_argument("--genome",     nargs=3, metavar=("LANG", "VERSION", "YEAR"), help="Print genome and exit")
-    parser.add_argument("--list-files", action="store_true", help="List known lang/version combinations and exit")
-    parser.add_argument("--requeue-errors", action="store_true",
-                        help="Remove error_parse/error_tech entries from audit log so they are re-processed")
-    parser.add_argument("--provider", choices=["cloud", "local", "auto"], default="auto", help="Which LLM client to use: cloud, local (Ollama), or auto (default)")
+    parser.add_argument("--lang", help="Language code (pt, es, en, ...)")
+    parser.add_argument("--version", help="Bible version (ARC, NVI, KJV, ...)")
+    parser.add_argument("--year", type=int, help="Year (2025, 2026, ...)")
+    parser.add_argument(
+        "--mode", choices=["interactive", "overnight"], default="overnight"
+    )
+    parser.add_argument(
+        "--role",
+        default="default",
+        help="Reader role: default, elder, charismatic, new_believer (pt only for now)",
+    )
+    parser.add_argument(
+        "--model",
+        default="auto",
+        help="Model key: auto (default), fast, best, or any Ollama tag e.g. qwen2.5:7b",
+    )
+    parser.add_argument(
+        "--phase", type=int, default=0, help="Run only phase 1 or 2. Default 0 = both."
+    )
+    parser.add_argument(
+        "--start-date", dest="start_date", help="Skip entries before YYYY-MM-DD"
+    )
+    parser.add_argument(
+        "--local", metavar="FILE", help="Use local JSON file instead of GitHub fetch"
+    )
+    parser.add_argument(
+        "--report", action="store_true", help="Print audit report and exit"
+    )
+    parser.add_argument(
+        "--genome",
+        nargs=3,
+        metavar=("LANG", "VERSION", "YEAR"),
+        help="Print genome and exit",
+    )
+    parser.add_argument(
+        "--list-files",
+        action="store_true",
+        help="List known lang/version combinations and exit",
+    )
+    parser.add_argument(
+        "--requeue-errors",
+        action="store_true",
+        help="Remove error_parse/error_tech entries from audit log so they are re-processed",
+    )
+    parser.add_argument(
+        "--provider",
+        choices=["cloud", "local", "auto"],
+        default="auto",
+        help="Which LLM client to use: cloud, local (Ollama), or auto (default)",
+    )
     # Dynamic import/alias for LLM client
 
     global run_interactive, run_overnight, get_model_for_key, call_ollama
@@ -119,32 +158,41 @@ def main():
     if args.provider == "local":
         from ollama_client import call_ollama, get_model_for_key as _get_model_for_key
         from runner import run_interactive, run_overnight
+
         get_model_for_key = lambda key: _get_model_for_key(key)
         prefer_local = True
         print("[INFO] Using local Ollama client.")
     elif args.provider == "cloud":
         from cloud_client import call_ollama, get_model_for_key as _get_model_for_key
         from runner import run_interactive, run_overnight
+
         get_model_for_key = lambda key: _get_model_for_key(key)
         print("[INFO] Using cloud client.")
     else:  # auto
         from cloud_client import call_ollama, get_model_for_key as _get_model_for_key
         from runner import run_interactive, run_overnight
+
         def get_model_for_key(key):
             # Auto: prefer provider with default: true, fallback to priority
-            from cloud_client import providers_for_phase, _load_config
+            from cloud_client import _load_config
+
             phase = 1 if key == "fast" else 2
             cfg = _load_config()
             phase_key = f"phase{phase}"
-            candidates = [p for p in cfg["providers"] if p.get("phase") in (phase_key, "both", phase)]
+            candidates = [
+                p
+                for p in cfg["providers"]
+                if p.get("phase") in (phase_key, "both", phase)
+            ]
             default_providers = [p for p in candidates if p.get("default", False)]
             if default_providers:
                 p = default_providers[0]
-                return f"{p['name']}/{p['model']} ({p.get('client_type','api')})"
+                return f"{p['name']}/{p['model']} ({p.get('client_type', 'api')})"
             if candidates:
                 p = sorted(candidates, key=lambda p: p.get("priority", 99))[0]
-                return f"{p['name']}/{p['model']} ({p.get('client_type','api')})"
+                return f"{p['name']}/{p['model']} ({p.get('client_type', 'api')})"
             return "cloud/auto"
+
         print("[INFO] Using auto provider selection.")
 
     # ── Special commands ───────────────────────────────────────────────────────
@@ -157,8 +205,15 @@ def main():
         return
 
     # ── Require lang/version/year for review commands ──────────────────────────
-    missing = [n for n, v in [("--lang", args.lang), ("--version", args.version),
-                               ("--year", args.year)] if not v]
+    missing = [
+        n
+        for n, v in [
+            ("--lang", args.lang),
+            ("--version", args.version),
+            ("--year", args.year),
+        ]
+        if not v
+    ]
     if missing:
         parser.error(f"Required: {', '.join(missing)}")
 
@@ -171,12 +226,14 @@ def main():
         return
 
     # ── Load source data ───────────────────────────────────────────────────────
-    print(f"\n{'═'*60}")
-    print(f"  📖 GEP Critic v3 — Simulated Reader")
+    print(f"\n{'═' * 60}")
+    print("  📖 GEP Critic v3 — Simulated Reader")
     print(f"  Lang: {args.lang} | Version: {args.version} | Year: {args.year}")
     print(f"  Role: {args.role}")
-    print(f"  Mode: {args.mode} | Model: {get_model_for_key(args.model)} | Provider: {args.provider}")
-    print(f"{'═'*60}")
+    print(
+        f"  Mode: {args.mode} | Model: {get_model_for_key(args.model)} | Provider: {args.provider}"
+    )
+    print(f"{'═' * 60}")
 
     if args.local:
         data = load_local(args.local)

@@ -30,8 +30,9 @@ from tkinter import Tk, filedialog, messagebox, simpledialog
 # ID BUILDER  (mirrors DevotionalBuilder._build_id logic)
 # ─────────────────────────────────────────────────────────────────────────────
 
+
 def build_id(cita: str, version: str, date: str) -> str:
-    id_part      = re.sub(r"\s+", "", cita).replace(":", "")
+    id_part = re.sub(r"\s+", "", cita).replace(":", "")
     date_compact = date.replace("-", "")
     return id_part + version + date_compact
 
@@ -40,6 +41,7 @@ def build_id(cita: str, version: str, date: str) -> str:
 # VERSICULO STRING BUILDER
 # ─────────────────────────────────────────────────────────────────────────────
 
+
 def build_versiculo(cita: str, texto: str, version: str) -> str:
     return f'{cita} {version}: "{texto}"'
 
@@ -47,6 +49,7 @@ def build_versiculo(cita: str, texto: str, version: str) -> str:
 # ─────────────────────────────────────────────────────────────────────────────
 # CORE INJECTION
 # ─────────────────────────────────────────────────────────────────────────────
+
 
 def inject(source_path: str, seed_path: str, new_version: str, output_dir: str) -> str:
     """
@@ -71,12 +74,16 @@ def inject(source_path: str, seed_path: str, new_version: str, output_dir: str) 
     # Source must have structure: {"data": {"<lang>": {"date": [devotional]}}}
     source_data = source_root.get("data", {})
     if not source_data:
-        raise ValueError("Source file has no 'data' key — expected complete devotional format.")
+        raise ValueError(
+            "Source file has no 'data' key — expected complete devotional format."
+        )
 
     # Determine language from the one key inside data
     lang_keys = list(source_data.keys())
     if len(lang_keys) != 1:
-        raise ValueError(f"Expected exactly one language key in source, found: {lang_keys}")
+        raise ValueError(
+            f"Expected exactly one language key in source, found: {lang_keys}"
+        )
     lang = lang_keys[0]
     source_by_date = source_data[lang]  # {"date": [devotional, ...]}
 
@@ -85,14 +92,16 @@ def inject(source_path: str, seed_path: str, new_version: str, output_dir: str) 
         seed = json.load(f)
 
     seed_dates = sorted(seed.keys())
-    total      = len(seed_dates)
-    print(f"INFO: {total} seed entries  |  language: {lang}  |  version → {new_version}\n")
+    total = len(seed_dates)
+    print(
+        f"INFO: {total} seed entries  |  language: {lang}  |  version → {new_version}\n"
+    )
     print("-" * 60)
 
     # ── Process ──────────────────────────────────────────────────────────────
-    results     = {}
-    skipped     = []
-    ok_count    = 0
+    results = {}
+    skipped = []
+    ok_count = 0
 
     for i, date in enumerate(seed_dates, 1):
         seed_entry = seed[date]
@@ -104,21 +113,21 @@ def inject(source_path: str, seed_path: str, new_version: str, output_dir: str) 
             skipped.append({"date": date, "reason": "date not found in source"})
             continue
 
-        source_devo = source_entries[0]   # take first entry (always one)
+        source_devo = source_entries[0]  # take first entry (always one)
 
-        cita  = seed_entry["versiculo"]["cita"]
+        cita = seed_entry["versiculo"]["cita"]
         texto = seed_entry["versiculo"]["texto"]
 
         new_devo = {
-            "id":           build_id(cita, new_version, date),
-            "date":         date,
-            "language":     lang,
-            "version":      new_version,
-            "versiculo":    build_versiculo(cita, texto, new_version),
-            "reflexion":    source_devo["reflexion"],
+            "id": build_id(cita, new_version, date),
+            "date": date,
+            "language": lang,
+            "version": new_version,
+            "versiculo": build_versiculo(cita, texto, new_version),
+            "reflexion": source_devo["reflexion"],
             "para_meditar": seed_entry["para_meditar"],
-            "oracion":      source_devo["oracion"],
-            "tags":         seed_entry.get("tags") or source_devo.get("tags", []),
+            "oracion": source_devo["oracion"],
+            "tags": seed_entry.get("tags") or source_devo.get("tags", []),
         }
 
         results[date] = new_devo
@@ -134,19 +143,15 @@ def inject(source_path: str, seed_path: str, new_version: str, output_dir: str) 
 
     # Determine year range for filename
     first_year = seed_dates[0][:4]
-    last_year  = seed_dates[-1][:4]
+    last_year = seed_dates[-1][:4]
     year_label = first_year if first_year == last_year else f"{first_year}-{last_year}"
 
-    ts       = datetime.now().strftime("%Y%m%d_%H%M%S")
+    ts = datetime.now().strftime("%Y%m%d_%H%M%S")
     filename = f"Devocional_year_{year_label}_{lang}_{new_version}.json"
     out_path = os.path.join(output_dir, filename)
 
     nested_output = {
-        "data": {
-            lang: {
-                date: [devo] for date, devo in sorted(results.items())
-            }
-        }
+        "data": {lang: {date: [devo] for date, devo in sorted(results.items())}}
     }
 
     with open(out_path, "w", encoding="utf-8") as f:
@@ -156,7 +161,9 @@ def inject(source_path: str, seed_path: str, new_version: str, output_dir: str) 
     print(f"\nOutput  → {out_path}")
 
     if skipped:
-        skip_path = os.path.join(output_dir, f"inject_skipped_{lang}_{new_version}_{ts}.json")
+        skip_path = os.path.join(
+            output_dir, f"inject_skipped_{lang}_{new_version}_{ts}.json"
+        )
         with open(skip_path, "w", encoding="utf-8") as f:
             json.dump(skipped, f, ensure_ascii=False, indent=2)
         print(f"Skipped → {skip_path}")
@@ -175,6 +182,7 @@ def inject(source_path: str, seed_path: str, new_version: str, output_dir: str) 
 # ENTRY POINT
 # ─────────────────────────────────────────────────────────────────────────────
 
+
 def main():
     root = Tk()
     root.withdraw()
@@ -183,7 +191,7 @@ def main():
     messagebox.showinfo(
         "Version Injector  1/4",
         "Select the SOURCE complete devotional file\n"
-        "(e.g. Devocional_year_2025_de_LU17.json)"
+        "(e.g. Devocional_year_2025_de_LU17.json)",
     )
     source_path = filedialog.askopenfilename(
         title="Select source devotional JSON",
@@ -196,7 +204,7 @@ def main():
     messagebox.showinfo(
         "Version Injector  2/4",
         "Select the SEED file for the new Bible version\n"
-        "(e.g. seed_de_SCH2000_for_2025.json)"
+        "(e.g. seed_de_SCH2000_for_2025.json)",
     )
     seed_path = filedialog.askopenfilename(
         title="Select seed JSON for new version",
@@ -219,7 +227,7 @@ def main():
     # 4 ── Output directory ────────────────────────────────────────────────────
     messagebox.showinfo(
         "Version Injector  4/4",
-        "Select the OUTPUT folder where the new file will be saved."
+        "Select the OUTPUT folder where the new file will be saved.",
     )
     output_dir = filedialog.askdirectory(title="Select output folder")
     if not output_dir:

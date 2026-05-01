@@ -43,13 +43,13 @@ logger = logging.getLogger(__name__)
 
 # ── Constants ─────────────────────────────────────────────────────────────────
 
-QWEN_MODEL    = "qwen-flash"
+QWEN_MODEL = "qwen-flash"
 QWEN_BASE_URL = "https://dashscope-intl.aliyuncs.com/compatible-mode/v1"
 
-MAX_RETRIES    = 3
-BACKOFF_BASE   = 2.0    # seconds
-BACKOFF_MAX    = 60.0   # seconds cap
-BACKOFF_JITTER = 0.5    # ± fraction
+MAX_RETRIES = 3
+BACKOFF_BASE = 2.0  # seconds
+BACKOFF_MAX = 60.0  # seconds cap
+BACKOFF_JITTER = 0.5  # ± fraction
 
 RETRYABLE_STATUS = {429, 500, 502, 503, 504}
 
@@ -61,6 +61,7 @@ class QwenGenerationError(Exception):
 
 
 # ── Client ────────────────────────────────────────────────────────────────────
+
 
 def _make_client() -> OpenAI:
     api_key = os.environ.get("DASHSCOPE_API_KEY")
@@ -74,6 +75,7 @@ def _make_client() -> OpenAI:
 
 # ── Retry backoff ─────────────────────────────────────────────────────────────
 
+
 def _backoff_delay(attempt: int) -> None:
     delay = min(BACKOFF_BASE ** (attempt + 1), BACKOFF_MAX)
     jitter = delay * BACKOFF_JITTER * (random.random() * 2 - 1)
@@ -83,6 +85,7 @@ def _backoff_delay(attempt: int) -> None:
 
 
 # ── API call ──────────────────────────────────────────────────────────────────
+
 
 def _call_qwen(
     client: OpenAI,
@@ -113,10 +116,10 @@ def _call_qwen(
         model=QWEN_MODEL,
         messages=[
             {"role": "system", "content": system_msg},
-            {"role": "user",   "content": prompt},
+            {"role": "user", "content": prompt},
         ],
         temperature=0.6,
-        max_tokens=4096,   # reflexion ≥900 chars + oracion ≥150 words needs room
+        max_tokens=4096,  # reflexion ≥900 chars + oracion ≥150 words needs room
         **extra,
     )
     return response.choices[0].message.content or ""
@@ -124,12 +127,13 @@ def _call_qwen(
 
 # ── Response parsing ──────────────────────────────────────────────────────────
 
+
 def _parse_response(raw: str) -> dict[str, Any]:
     """
     Parse model output → dict with at least {reflexion, oracion}.
     Falls back to pipeline_shared.repair_json() on decode failure.
     """
-    data = repair_json(raw)   # handles markdown fences + 6-strategy recovery
+    data = repair_json(raw)  # handles markdown fences + 6-strategy recovery
     if data is None:
         raise QwenGenerationError(
             f"repair_json() could not recover output. "
@@ -143,6 +147,7 @@ def _parse_response(raw: str) -> dict[str, Any]:
 
 
 # ── Public API ────────────────────────────────────────────────────────────────
+
 
 def generate_devotional_qwen(
     verse_cita: str,
@@ -183,10 +188,10 @@ def generate_devotional_qwen(
 
     for attempt in range(MAX_RETRIES + 1):
         try:
-            raw    = _call_qwen(client, prompt, enable_thinking=enable_thinking)
+            raw = _call_qwen(client, prompt, enable_thinking=enable_thinking)
             result = _parse_response(raw)
             result["_source"] = "qwen"
-            result["_model"]  = QWEN_MODEL
+            result["_model"] = QWEN_MODEL
             logger.info("[qwen] ✅ %s / %s (attempt %d)", lang, verse_cita, attempt + 1)
             return result
 
@@ -218,9 +223,7 @@ def generate_devotional_qwen(
                 f"Unexpected error for {verse_cita}: {exc}"
             ) from exc
 
-    raise QwenGenerationError(
-        f"Exhausted retries for {verse_cita}"
-    ) from last_error
+    raise QwenGenerationError(f"Exhausted retries for {verse_cita}") from last_error
 
 
 def generate_batch_qwen(
@@ -248,19 +251,20 @@ def generate_batch_qwen(
     """
     client = _make_client()
     successes: list[dict[str, Any]] = []
-    failures:  list[dict[str, Any]] = []
+    failures: list[dict[str, Any]] = []
 
     for i, entry in enumerate(entries):
-        cita  = entry["versiculo"]["cita"]
+        cita = entry["versiculo"]["cita"]
         topic = entry.get("topic")
         try:
             result = generate_devotional_qwen(
-                cita, lang,
+                cita,
+                lang,
                 topic=topic,
                 enable_thinking=enable_thinking,
                 client=client,
             )
-            result["_cita"]  = cita
+            result["_cita"] = cita
             result["_topic"] = topic
             successes.append(result)
         except QwenGenerationError as exc:
@@ -272,7 +276,9 @@ def generate_batch_qwen(
 
     logger.info(
         "[qwen] Batch done: %d ok / %d failed / %d total",
-        len(successes), len(failures), len(entries),
+        len(successes),
+        len(failures),
+        len(entries),
     )
     return successes, failures
 
@@ -290,15 +296,17 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Test Qwen devotional generation — one real API call."
     )
-    parser.add_argument("--lang",     default="es",        help="Language code (default: es)")
-    parser.add_argument("--verse",    default="Juan 3:16", help="Verse citation")
-    parser.add_argument("--topic",    default=None,        help="Optional theme hint")
-    parser.add_argument("--thinking", action="store_true", help="Enable chain-of-thought")
+    parser.add_argument("--lang", default="es", help="Language code (default: es)")
+    parser.add_argument("--verse", default="Juan 3:16", help="Verse citation")
+    parser.add_argument("--topic", default=None, help="Optional theme hint")
+    parser.add_argument(
+        "--thinking", action="store_true", help="Enable chain-of-thought"
+    )
     args = parser.parse_args()
 
     SEP = "─" * 52
     print(f"\n{SEP}")
-    print(f"  Qwen smoke test")
+    print("  Qwen smoke test")
     print(f"  Model   : {QWEN_MODEL}")
     print(f"  Lang    : {args.lang}")
     print(f"  Verse   : {args.verse}")
@@ -309,14 +317,15 @@ if __name__ == "__main__":
 
     try:
         result = generate_devotional_qwen(
-            args.verse, args.lang,
+            args.verse,
+            args.lang,
             topic=args.topic,
             enable_thinking=args.thinking,
         )
         print(json.dumps(result, ensure_ascii=False, indent=2))
         print(f"\n{SEP}")
-        print(f"  reflexion : {len(result.get('reflexion',''))} chars")
-        print(f"  oracion   : {len(result.get('oracion',''))} chars")
+        print(f"  reflexion : {len(result.get('reflexion', ''))} chars")
+        print(f"  oracion   : {len(result.get('oracion', ''))} chars")
         print(f"{SEP}\n")
         sys.exit(0)
     except (QwenGenerationError, EnvironmentError) as e:

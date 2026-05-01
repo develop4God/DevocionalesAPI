@@ -21,15 +21,14 @@ CLI:
 
 import argparse
 import json
-import os
 import re
-import sys
 import time
 from datetime import datetime
 from pathlib import Path
 
 try:
     from dotenv import load_dotenv
+
     load_dotenv()
 except ImportError:
     pass
@@ -53,36 +52,34 @@ def _load_existing_devotionals(path: str, lang: str) -> dict[str, dict]:
 
 
 def _save_merged(merged: dict, lang: str, output_path: str) -> None:
-    out_data = {
-        "data": {
-            lang: {date: [devo] for date, devo in sorted(merged.items())}
-        }
-    }
+    out_data = {"data": {lang: {date: [devo] for date, devo in sorted(merged.items())}}}
     Path(output_path).parent.mkdir(parents=True, exist_ok=True)
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(out_data, f, ensure_ascii=False, indent=2)
 
 
 def repair(
-    state_path:     str,
-    errors_path:    str,
-    existing_path:  str,
-    output_path:    str,
+    state_path: str,
+    errors_path: str,
+    existing_path: str,
+    output_path: str,
     provider_override: str | None = None,
-    model_alias:       str | None = None,
-    max_retries:       int = 3,
+    model_alias: str | None = None,
+    max_retries: int = 3,
 ) -> None:
     SEP = "=" * 60
 
     # ── Load inputs ────────────────────────────────────────────────────────
-    with open(state_path,  encoding="utf-8") as f: state    = json.load(f)
-    with open(errors_path, encoding="utf-8") as f: err_list = json.load(f)
+    with open(state_path, encoding="utf-8") as f:
+        state = json.load(f)
+    with open(errors_path, encoding="utf-8") as f:
+        err_list = json.load(f)
 
     original_provider = state["provider"]
-    provider          = provider_override or original_provider
-    master_lang       = state["master_lang"]
-    master_version    = state["master_version"]
-    seed_path         = state["seed_path"]
+    provider = provider_override or original_provider
+    master_lang = state["master_lang"]
+    master_version = state["master_version"]
+    seed_path = state["seed_path"]
     original_model_id = state.get("model_id", "")
 
     with open(seed_path, encoding="utf-8") as f:
@@ -91,9 +88,9 @@ def repair(
     completed = _load_existing_devotionals(existing_path, master_lang)
 
     # Dates that need repair
-    failed_dates  = {e["date"] for e in err_list}
-    build_errors  = {e["date"] for e in err_list if e.get("reason") == "build_error"}
-    repair_dates  = sorted(failed_dates - build_errors)
+    failed_dates = {e["date"] for e in err_list}
+    build_errors = {e["date"] for e in err_list if e.get("reason") == "build_error"}
+    repair_dates = sorted(failed_dates - build_errors)
 
     print(SEP)
     print("BATCH REPAIR")
@@ -118,21 +115,23 @@ def repair(
 
     # ── Anthropic: try re-fetching original batch first ────────────────────
     repaired: dict[str, dict] = {}
-    still_failed: list[str]   = list(repair_dates)
+    still_failed: list[str] = list(repair_dates)
 
     if original_provider == "anthropic" and provider == "anthropic":
-        job_id   = state["job_id"]
-        cid_map  = {_safe_custom_id(d): d for d in repair_dates}
+        job_id = state["job_id"]
+        cid_map = {_safe_custom_id(d): d for d in repair_dates}
         requests_for_collect = [
             BatchRequest(
                 date_key=d,
                 custom_id=_safe_custom_id(d),
-                prompt="",        # not needed for re-fetch
+                prompt="",  # not needed for re-fetch
                 model_id=original_model_id,
             )
             for d in repair_dates
         ]
-        print(f"INFO: Re-fetching Anthropic batch {job_id} for {len(repair_dates)} dates...")
+        print(
+            f"INFO: Re-fetching Anthropic batch {job_id} for {len(repair_dates)} dates..."
+        )
         raw_results = adapter.collect(job_id, requests_for_collect)
         still_failed = []
         for result in raw_results:
@@ -145,7 +144,7 @@ def repair(
                 still_failed.append(date_key)
                 continue
             reflexion = data.get("reflexion", "").strip()
-            oracion   = data.get("oracion",   "").strip()
+            oracion = data.get("oracion", "").strip()
             if not reflexion or not oracion:
                 still_failed.append(date_key)
                 continue
@@ -154,8 +153,14 @@ def repair(
                 still_failed.append(date_key)
                 continue
             try:
-                devo = build_devotional(date_key, seed_entry, master_lang, master_version,
-                                        reflexion, oracion)
+                devo = build_devotional(
+                    date_key,
+                    seed_entry,
+                    master_lang,
+                    master_version,
+                    reflexion,
+                    oracion,
+                )
                 repaired[date_key] = devo
                 print(f"  REPAIRED ✅ {date_key}")
             except Exception as e:
@@ -168,14 +173,16 @@ def repair(
     # ── Direct API fallback for all remaining ─────────────────────────────
     api_generated: dict[str, dict] = {}
     if still_failed:
-        print(f"\nRegenerating {len(still_failed)} dates via direct API ({provider})...")
+        print(
+            f"\nRegenerating {len(still_failed)} dates via direct API ({provider})..."
+        )
         for date_key in still_failed:
             seed_entry = seed.get(date_key, {})
             if not seed_entry:
                 print(f"  [SKIP] {date_key} — no seed")
                 continue
 
-            cita  = seed_entry.get("versiculo", {}).get("cita", "")
+            cita = seed_entry.get("versiculo", {}).get("cita", "")
             texto = seed_entry.get("versiculo", {}).get("texto", "")
             topic = seed_entry.get("topic")
             request = BatchRequest(
@@ -200,7 +207,7 @@ def repair(
                     continue
 
                 reflexion = data.get("reflexion", "").strip()
-                oracion   = data.get("oracion",   "").strip()
+                oracion = data.get("oracion", "").strip()
                 if not reflexion or not oracion:
                     print(f"    [RETRY {attempt}] {date_key} — empty fields")
                     time.sleep(2)
@@ -211,8 +218,14 @@ def repair(
                     print(f"    ⚠ {date_key} — Phase1: {p1_issues}")
 
                 try:
-                    devo = build_devotional(date_key, seed_entry, master_lang, master_version,
-                                            reflexion, oracion)
+                    devo = build_devotional(
+                        date_key,
+                        seed_entry,
+                        master_lang,
+                        master_version,
+                        reflexion,
+                        oracion,
+                    )
                     print(f"  API ✅ {date_key} (attempt {attempt})")
                     break
                 except Exception as e:
@@ -244,10 +257,17 @@ def repair(
 
     if still_missing:
         ts = datetime.now().strftime("%Y%m%d_%H%M%S")
-        err_out = Path(output_path).parent / f"remaining_errors_{master_lang}_{master_version}_{ts}.json"
+        err_out = (
+            Path(output_path).parent
+            / f"remaining_errors_{master_lang}_{master_version}_{ts}.json"
+        )
         with open(err_out, "w", encoding="utf-8") as f:
-            json.dump([{"date": d, "reason": "unrepairable"} for d in still_missing],
-                      f, ensure_ascii=False, indent=2)
+            json.dump(
+                [{"date": d, "reason": "unrepairable"} for d in still_missing],
+                f,
+                ensure_ascii=False,
+                indent=2,
+            )
         print(f"⚠️  {len(still_missing)} dates still missing → {err_out}")
     else:
         print("🎉 All failed dates successfully repaired!")
@@ -259,25 +279,31 @@ def main():
     parser = argparse.ArgumentParser(
         description="Repair failed devotional dates using any provider."
     )
-    parser.add_argument("--state",    required=True, help="batch_state_*.json")
-    parser.add_argument("--errors",   required=True, help="batch_errors_*.json")
+    parser.add_argument("--state", required=True, help="batch_state_*.json")
+    parser.add_argument("--errors", required=True, help="batch_errors_*.json")
     parser.add_argument("--existing", required=True, help="existing raw_*.json output")
-    parser.add_argument("--output",   required=True, help="final merged output path")
-    parser.add_argument("--provider", default=None,
-                        help="Override provider for repair (default: same as original)")
-    parser.add_argument("--model",    default=None,
-                        help="Model alias for repair (default: provider default)")
+    parser.add_argument("--output", required=True, help="final merged output path")
+    parser.add_argument(
+        "--provider",
+        default=None,
+        help="Override provider for repair (default: same as original)",
+    )
+    parser.add_argument(
+        "--model",
+        default=None,
+        help="Model alias for repair (default: provider default)",
+    )
     parser.add_argument("--max-retries", type=int, default=3)
     args = parser.parse_args()
 
     repair(
-        state_path        = args.state,
-        errors_path       = args.errors,
-        existing_path     = args.existing,
-        output_path       = args.output,
-        provider_override = args.provider,
-        model_alias       = args.model,
-        max_retries       = args.max_retries,
+        state_path=args.state,
+        errors_path=args.errors,
+        existing_path=args.existing,
+        output_path=args.output,
+        provider_override=args.provider,
+        model_alias=args.model,
+        max_retries=args.max_retries,
     )
 
 

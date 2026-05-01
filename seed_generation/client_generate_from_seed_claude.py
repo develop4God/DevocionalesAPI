@@ -36,18 +36,18 @@ from datetime import datetime
 try:
     import anthropic
 except ImportError:
-    raise ImportError(
-        "anthropic package not installed.  Run: pip install anthropic"
-    )
+    raise ImportError("anthropic package not installed.  Run: pip install anthropic")
 
 try:
     from dotenv import load_dotenv
+
     load_dotenv()
 except ImportError:
-    pass   # dotenv optional
+    pass  # dotenv optional
 
 try:
     from tkinter import Tk, filedialog, messagebox, simpledialog
+
     _HAS_TKINTER = True
 except ImportError:
     _HAS_TKINTER = False
@@ -56,13 +56,13 @@ except ImportError:
 # CONFIG
 # =============================================================================
 
-CLAUDE_MODEL        = "claude-opus-4-5"   # change to claude-sonnet-4-5 for faster/cheaper
-MAX_TOKENS          = 4096
-MAX_RETRIES         = 3           # full regeneration attempts per date
-DELAY_BETWEEN       = 3           # seconds between API calls
-CHECKPOINT_INTERVAL = 1           # save checkpoint after every N successes
+CLAUDE_MODEL = "claude-opus-4-5"  # change to claude-sonnet-4-5 for faster/cheaper
+MAX_TOKENS = 4096
+MAX_RETRIES = 3  # full regeneration attempts per date
+DELAY_BETWEEN = 3  # seconds between API calls
+CHECKPOINT_INTERVAL = 1  # save checkpoint after every N successes
 
-_SCRIPT_DIR     = os.path.dirname(os.path.abspath(__file__))
+_SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 CHECKPOINT_FILE = os.path.join(_SCRIPT_DIR, "generate_seed_claude_checkpoint.json")
 
 
@@ -70,33 +70,33 @@ CHECKPOINT_FILE = os.path.join(_SCRIPT_DIR, "generate_seed_claude_checkpoint.jso
 # DEVOTIONAL BUILDER  (identical to client_generate_from_seed.py)
 # =============================================================================
 
+
 class DevotionalValidationError(ValueError):
     pass
 
 
 class DevotionalBuilder:
-
     def __init__(self, date_key, seed_entry, master_lang, master_version):
-        self._date    = date_key
-        self._seed    = seed_entry
-        self._lang    = master_lang
+        self._date = date_key
+        self._seed = seed_entry
+        self._lang = master_lang
         self._version = master_version
         self._reflexion = ""
-        self._oracion   = ""
+        self._oracion = ""
 
     def merge(self, reflexion, oracion):
         self._reflexion = reflexion.strip()
-        self._oracion   = oracion.strip()
+        self._oracion = oracion.strip()
         return self
 
     def _build_versiculo(self):
-        cita  = self._seed["versiculo"]["cita"]
+        cita = self._seed["versiculo"]["cita"]
         texto = self._seed["versiculo"]["texto"]
         return cita + " " + self._version + ': "' + texto + '"'
 
     def _build_id(self):
-        cita         = self._seed["versiculo"]["cita"]
-        id_part      = re.sub(r"\s+", "", cita).replace(":", "")
+        cita = self._seed["versiculo"]["cita"]
+        id_part = re.sub(r"\s+", "", cita).replace(":", "")
         date_compact = self._date.replace("-", "")
         return id_part + self._version + date_compact
 
@@ -108,26 +108,31 @@ class DevotionalBuilder:
 
     def validate(self):
         errors = []
-        if not self._reflexion:                           errors.append("reflexion empty")
-        if not self._oracion:                             errors.append("oracion empty")
-        if not self._seed.get("versiculo", {}).get("cita"):  errors.append("cita missing")
-        if not self._seed.get("versiculo", {}).get("texto"): errors.append("texto missing")
-        if not self._seed.get("para_meditar"):            errors.append("para_meditar empty")
+        if not self._reflexion:
+            errors.append("reflexion empty")
+        if not self._oracion:
+            errors.append("oracion empty")
+        if not self._seed.get("versiculo", {}).get("cita"):
+            errors.append("cita missing")
+        if not self._seed.get("versiculo", {}).get("texto"):
+            errors.append("texto missing")
+        if not self._seed.get("para_meditar"):
+            errors.append("para_meditar empty")
         if errors:
             raise DevotionalValidationError("[" + self._date + "] " + "; ".join(errors))
 
     def build(self):
         self.validate()
         return {
-            "id":           self._build_id(),
-            "date":         self._date,
-            "language":     self._lang,
-            "version":      self._version,
-            "versiculo":    self._build_versiculo(),
-            "reflexion":    self._reflexion,
+            "id": self._build_id(),
+            "date": self._date,
+            "language": self._lang,
+            "version": self._version,
+            "versiculo": self._build_versiculo(),
+            "reflexion": self._reflexion,
             "para_meditar": self._seed["para_meditar"],
-            "oracion":      self._oracion,
-            "tags":         self._extract_tags(),
+            "oracion": self._oracion,
+            "tags": self._extract_tags(),
         }
 
 
@@ -135,12 +140,17 @@ class DevotionalBuilder:
 # CHECKPOINT
 # =============================================================================
 
+
 def load_checkpoint():
     if os.path.exists(CHECKPOINT_FILE):
         try:
             with open(CHECKPOINT_FILE, encoding="utf-8") as f:
                 data = json.load(f)
-            print("INFO: Checkpoint found — " + str(data["completed_count"]) + " dates done")
+            print(
+                "INFO: Checkpoint found — "
+                + str(data["completed_count"])
+                + " dates done"
+            )
             return data
         except Exception as e:
             print("WARNING: Could not load checkpoint: " + str(e))
@@ -149,13 +159,13 @@ def load_checkpoint():
 
 def save_checkpoint(completed, count, seed_path, lang, version, output_dir):
     data = {
-        "completed":       completed,
+        "completed": completed,
         "completed_count": count,
-        "seed_path":       seed_path,
-        "master_lang":     lang,
-        "master_version":  version,
-        "output_dir":      output_dir,
-        "timestamp":       datetime.now().isoformat(),
+        "seed_path": seed_path,
+        "master_lang": lang,
+        "master_version": version,
+        "output_dir": output_dir,
+        "timestamp": datetime.now().isoformat(),
     }
     with open(CHECKPOINT_FILE, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
@@ -174,11 +184,12 @@ def delete_checkpoint():
 # OUTPUT
 # =============================================================================
 
+
 def save_output(completed, lang, version, output_dir):
-    ts       = datetime.now().strftime("%Y%m%d_%H%M%S")
+    ts = datetime.now().strftime("%Y%m%d_%H%M%S")
     filename = "raw_" + lang + "_" + version + "_claude_" + ts + ".json"
-    path     = os.path.join(output_dir, filename)
-    nested   = {lang: {date: [devo] for date, devo in completed.items()}}
+    path = os.path.join(output_dir, filename)
+    nested = {lang: {date: [devo] for date, devo in completed.items()}}
     with open(path, "w", encoding="utf-8") as f:
         json.dump({"data": nested}, f, ensure_ascii=False, indent=2)
     return path
@@ -188,11 +199,12 @@ def save_output(completed, lang, version, output_dir):
 # CLAUDE GENERATION  (replaces the HTTP call to API_Server_Seed.py)
 # =============================================================================
 
+
 def _build_prompt(verse_cita: str, lang: str, topic: str | None = None) -> str:
     topic_line = f"\n- Suggested theme: {topic}." if topic else ""
     return (
         f"You are a devoted biblical devotional writer. "
-        f"Write a devotional in {lang.upper()} based on the key verse: \"{verse_cita}\".\n\n"
+        f'Write a devotional in {lang.upper()} based on the key verse: "{verse_cita}".\n\n'
         f"Return ONLY a valid JSON object with these exact keys:\n\n"
         f"- `reflexion`: Deep contextualized reflection on the verse "
         f"(minimum 900 characters, approximately 300 words, in {lang}). "
@@ -218,7 +230,7 @@ def _parse_claude_response(raw: str) -> tuple[str, str]:
     raw = raw.strip()
     # Strip markdown code fences if present
     raw = re.sub(r"^```(?:json)?\s*", "", raw)
-    raw = re.sub(r"\s*```$",          "", raw)
+    raw = re.sub(r"\s*```$", "", raw)
     raw = raw.strip()
 
     # Robustly extract the first JSON object (handles preamble from verbose models)
@@ -228,7 +240,7 @@ def _parse_claude_response(raw: str) -> tuple[str, str]:
 
     data = json.loads(match.group())
     reflexion = data.get("reflexion", "").strip()
-    oracion   = data.get("oracion",   "").strip()
+    oracion = data.get("oracion", "").strip()
 
     if not reflexion or not oracion:
         raise ValueError("Claude returned empty reflexion or oracion")
@@ -237,10 +249,10 @@ def _parse_claude_response(raw: str) -> tuple[str, str]:
 
 
 def generate_reflexion_oracion(
-    client:     "anthropic.Anthropic",
+    client: "anthropic.Anthropic",
     verse_cita: str,
-    lang:       str,
-    topic:      str | None = None,
+    lang: str,
+    topic: str | None = None,
 ) -> tuple[str, str]:
     """
     Call Claude directly to get reflexion + oracion for one devotional.
@@ -261,13 +273,17 @@ def generate_reflexion_oracion(
 
         except anthropic.RateLimitError as e:
             wait = 60
-            print(f"  Rate limit (attempt {attempt}/{MAX_RETRIES}) — sleeping {wait}s...")
+            print(
+                f"  Rate limit (attempt {attempt}/{MAX_RETRIES}) — sleeping {wait}s..."
+            )
             time.sleep(wait)
             last_err = e
 
         except anthropic.APIStatusError as e:
             wait = 15 * attempt
-            print(f"  API error {e.status_code} (attempt {attempt}/{MAX_RETRIES}) — sleeping {wait}s: {e.message}")
+            print(
+                f"  API error {e.status_code} (attempt {attempt}/{MAX_RETRIES}) — sleeping {wait}s: {e.message}"
+            )
             time.sleep(wait)
             last_err = e
 
@@ -277,21 +293,24 @@ def generate_reflexion_oracion(
             if attempt < MAX_RETRIES:
                 time.sleep(5)
 
-    raise ValueError(f"Claude generation failed after {MAX_RETRIES} attempts: {last_err}")
+    raise ValueError(
+        f"Claude generation failed after {MAX_RETRIES} attempts: {last_err}"
+    )
 
 
 # =============================================================================
 # MAIN GENERATION LOOP
 # =============================================================================
 
+
 def generate_from_seed(
-    client:         "anthropic.Anthropic",
-    seed_path:      str,
-    master_lang:    str,
+    client: "anthropic.Anthropic",
+    seed_path: str,
+    master_lang: str,
     master_version: str,
-    output_dir:     str,
-    start_date:     str | None = None,
-    limit:          int | None = None,
+    output_dir: str,
+    start_date: str | None = None,
+    limit: int | None = None,
 ) -> None:
     SEP = "=" * 60
     print("\n" + SEP)
@@ -307,7 +326,7 @@ def generate_from_seed(
         seed = json.load(f)
 
     all_dates = sorted(seed.keys())
-    total     = len(all_dates)
+    total = len(all_dates)
     print("INFO: " + str(total) + " seed entries\n")
 
     # ── Partial generation mode ───────────────────────────────────────────────
@@ -316,26 +335,43 @@ def generate_from_seed(
         if limit:
             all_dates = all_dates[:limit]
         total = len(all_dates)
-        print("INFO: Partial mode — " + str(total) + " dates | "
-              + all_dates[0] + " → " + all_dates[-1])
-        completed   = {}
+        print(
+            "INFO: Partial mode — "
+            + str(total)
+            + " dates | "
+            + all_dates[0]
+            + " → "
+            + all_dates[-1]
+        )
+        completed = {}
         start_index = 0
 
     else:
-    # ── Full / checkpoint mode ────────────────────────────────────────────────
-        completed   = {}
+        # ── Full / checkpoint mode ────────────────────────────────────────────────
+        completed = {}
         start_index = 0
-        checkpoint  = load_checkpoint()
+        checkpoint = load_checkpoint()
 
         if checkpoint and checkpoint.get("seed_path") == seed_path:
-            ans = input(
-                "\nCheckpoint — " + str(checkpoint["completed_count"]) +
-                " done. Resume? (y/n): "
-            ).strip().lower()
+            ans = (
+                input(
+                    "\nCheckpoint — "
+                    + str(checkpoint["completed_count"])
+                    + " done. Resume? (y/n): "
+                )
+                .strip()
+                .lower()
+            )
             if ans == "y":
-                completed   = checkpoint["completed"]
+                completed = checkpoint["completed"]
                 start_index = checkpoint["completed_count"]
-                print("INFO: Resuming from " + str(start_index + 1) + "/" + str(total) + "\n")
+                print(
+                    "INFO: Resuming from "
+                    + str(start_index + 1)
+                    + "/"
+                    + str(total)
+                    + "\n"
+                )
 
     interrupted = False
 
@@ -347,8 +383,8 @@ def generate_from_seed(
     signal.signal(signal.SIGINT, _sig)
 
     success_count = start_index
-    error_count   = 0
-    error_dates   = []
+    error_count = 0
+    error_dates = []
 
     print("INFO: Checkpoint every " + str(CHECKPOINT_INTERVAL) + " successes")
     print("-" * 60)
@@ -357,25 +393,36 @@ def generate_from_seed(
         if interrupted:
             break
 
-        date_key   = all_dates[i]
+        date_key = all_dates[i]
         seed_entry = seed[date_key]
-        cita       = seed_entry["versiculo"]["cita"]
+        cita = seed_entry["versiculo"]["cita"]
 
         print("\n[" + str(i + 1) + "/" + str(total) + "] " + date_key + " — " + cita)
 
         try:
             reflexion, oracion = generate_reflexion_oracion(client, cita, master_lang)
 
-            builder    = DevotionalBuilder(date_key, seed_entry, master_lang, master_version)
+            builder = DevotionalBuilder(
+                date_key, seed_entry, master_lang, master_version
+            )
             devotional = builder.merge(reflexion, oracion).build()
             completed[date_key] = devotional
             success_count += 1
-            print("  OK — " + str(len(reflexion)) + " chars | tags: " + str(devotional["tags"]))
+            print(
+                "  OK — "
+                + str(len(reflexion))
+                + " chars | tags: "
+                + str(devotional["tags"])
+            )
 
             if success_count % CHECKPOINT_INTERVAL == 0:
                 save_checkpoint(
-                    completed, success_count, seed_path,
-                    master_lang, master_version, output_dir,
+                    completed,
+                    success_count,
+                    seed_path,
+                    master_lang,
+                    master_version,
+                    output_dir,
                 )
 
         except DevotionalValidationError as e:
@@ -393,7 +440,9 @@ def generate_from_seed(
 
     # ── Interrupted → save checkpoint ─────────────────────────────────────────
     if interrupted and completed:
-        save_checkpoint(completed, success_count, seed_path, master_lang, master_version, output_dir)
+        save_checkpoint(
+            completed, success_count, seed_path, master_lang, master_version, output_dir
+        )
         print("\nProgress saved. Run again to resume.")
         sys.exit(0)
 
@@ -407,7 +456,13 @@ def generate_from_seed(
             ts = datetime.now().strftime("%Y%m%d_%H%M%S")
             ep = os.path.join(
                 output_dir,
-                "generation_errors_" + master_lang + "_" + master_version + "_claude_" + ts + ".json",
+                "generation_errors_"
+                + master_lang
+                + "_"
+                + master_version
+                + "_claude_"
+                + ts
+                + ".json",
             )
             with open(ep, "w", encoding="utf-8") as f:
                 json.dump(error_dates, f, ensure_ascii=False, indent=2)
@@ -427,17 +482,24 @@ def generate_from_seed(
 # ENTRY POINT
 # =============================================================================
 
+
 def _parse_cli() -> argparse.Namespace | None:
     parser = argparse.ArgumentParser(
         description="Claude-direct seed generator — no Gemini / FastAPI server needed",
         add_help=True,
     )
-    parser.add_argument("--seed",       type=str, help="Path to seed JSON file")
-    parser.add_argument("--lang",       type=str, help="Language code (e.g. ar, hi, de)")
-    parser.add_argument("--version",    type=str, help="Bible version code (e.g. NAV, HERV)")
-    parser.add_argument("--output",     type=str, help="Output folder path")
-    parser.add_argument("--start-date", type=str, default=None, help="Start date YYYY-MM-DD (optional)")
-    parser.add_argument("--limit",      type=int, default=None, help="Max dates to generate (optional)")
+    parser.add_argument("--seed", type=str, help="Path to seed JSON file")
+    parser.add_argument("--lang", type=str, help="Language code (e.g. ar, hi, de)")
+    parser.add_argument(
+        "--version", type=str, help="Bible version code (e.g. NAV, HERV)"
+    )
+    parser.add_argument("--output", type=str, help="Output folder path")
+    parser.add_argument(
+        "--start-date", type=str, default=None, help="Start date YYYY-MM-DD (optional)"
+    )
+    parser.add_argument(
+        "--limit", type=int, default=None, help="Max dates to generate (optional)"
+    )
 
     args, _ = parser.parse_known_args()
     if args.seed and args.lang and args.version and args.output:
@@ -456,15 +518,17 @@ def main():
 
     cli = _parse_cli()
     if cli:
-        seed_path      = cli.seed
-        master_lang    = cli.lang.lower()
+        seed_path = cli.seed
+        master_lang = cli.lang.lower()
         master_version = cli.version.upper()
-        output_dir     = cli.output
-        start_date     = cli.start_date
-        limit          = cli.limit
+        output_dir = cli.output
+        start_date = cli.start_date
+        limit = cli.limit
     else:
         if not _HAS_TKINTER:
-            print("ERROR: tkinter not available. Use CLI args: --seed --lang --version --output")
+            print(
+                "ERROR: tkinter not available. Use CLI args: --seed --lang --version --output"
+            )
             sys.exit(1)
 
         root = Tk()
@@ -472,11 +536,19 @@ def main():
 
         checkpoint = load_checkpoint()
         if checkpoint and "output_dir" in checkpoint:
-            ans = input(
-                "\nCheckpoint found — " + str(checkpoint["completed_count"]) +
-                " done (" + checkpoint["master_lang"] + " " + checkpoint["master_version"] +
-                "). Resume? (y/n): "
-            ).strip().lower()
+            ans = (
+                input(
+                    "\nCheckpoint found — "
+                    + str(checkpoint["completed_count"])
+                    + " done ("
+                    + checkpoint["master_lang"]
+                    + " "
+                    + checkpoint["master_version"]
+                    + "). Resume? (y/n): "
+                )
+                .strip()
+                .lower()
+            )
             if ans == "y":
                 root.destroy()
                 generate_from_seed(
@@ -491,7 +563,7 @@ def main():
         messagebox.showinfo("Claude Seed Generator 1/4", "Select the seed JSON file.")
         seed_path = filedialog.askopenfilename(
             title="Select seed JSON",
-            filetypes=[("JSON files", "*.json"), ("All files", "*.*")]
+            filetypes=[("JSON files", "*.json"), ("All files", "*.*")],
         )
         if not seed_path:
             sys.exit(0)
@@ -500,11 +572,15 @@ def main():
             _seed_preview = json.load(f)
         _first_seed_date = sorted(_seed_preview.keys())[0]
 
-        master_lang = simpledialog.askstring("Language", "Language code (e.g. ar, hi):", initialvalue="ar")
+        master_lang = simpledialog.askstring(
+            "Language", "Language code (e.g. ar, hi):", initialvalue="ar"
+        )
         if not master_lang:
             sys.exit(0)
 
-        master_version = simpledialog.askstring("Version", "Version code (e.g. NAV, HERV):", initialvalue="NAV")
+        master_version = simpledialog.askstring(
+            "Version", "Version code (e.g. NAV, HERV):", initialvalue="NAV"
+        )
         if not master_version:
             sys.exit(0)
 
@@ -518,14 +594,22 @@ def main():
             "Start date YYYY-MM-DD — leave blank for full/checkpoint run:",
             initialvalue=_first_seed_date,
         )
-        start_date = start_date_raw.strip() if start_date_raw and start_date_raw.strip() else None
+        start_date = (
+            start_date_raw.strip()
+            if start_date_raw and start_date_raw.strip()
+            else None
+        )
 
         limit_raw = simpledialog.askstring(
             "Limit (optional)",
             "Max devotionals to generate — leave blank for all:",
             initialvalue="",
         )
-        limit = int(limit_raw.strip()) if limit_raw and limit_raw.strip().isdigit() else None
+        limit = (
+            int(limit_raw.strip())
+            if limit_raw and limit_raw.strip().isdigit()
+            else None
+        )
 
         root.destroy()
 

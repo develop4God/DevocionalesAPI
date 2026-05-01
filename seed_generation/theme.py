@@ -5,6 +5,7 @@ Provides a reusable `apply_theme(root, style, output, dark: bool)` function
 that applies the same light/dark theme logic taken from
 `validate_devocional_gui.py` so other GUIs can reuse it.
 """
+
 from typing import Any
 
 
@@ -47,14 +48,18 @@ def apply_theme(root: Any, style: Any, output: Any, dark: bool = False) -> None:
         if dark:
             s = style
             s.theme_use(s.theme_use())
-            s.configure('.', background=frame_bg, foreground=fg)
-            s.configure('TLabelFrame', background=frame_bg)
-            s.configure('TLabel', background=frame_bg, foreground=fg)
-            s.configure('TButton', background=frame_bg, foreground=fg)
-            s.configure('TEntry', fieldbackground=entry_bg, background=entry_bg, foreground=fg)
-            s.configure('Treeview', background=entry_bg, fieldbackground=entry_bg, foreground=fg)
-            s.map('Treeview', background=[('selected', select_bg)])
-            s.configure('Treeview.Heading', background=frame_bg, foreground=fg)
+            s.configure(".", background=frame_bg, foreground=fg)
+            s.configure("TLabelFrame", background=frame_bg)
+            s.configure("TLabel", background=frame_bg, foreground=fg)
+            s.configure("TButton", background=frame_bg, foreground=fg)
+            s.configure(
+                "TEntry", fieldbackground=entry_bg, background=entry_bg, foreground=fg
+            )
+            s.configure(
+                "Treeview", background=entry_bg, fieldbackground=entry_bg, foreground=fg
+            )
+            s.map("Treeview", background=[("selected", select_bg)])
+            s.configure("Treeview.Heading", background=frame_bg, foreground=fg)
         else:
             try:
                 style.theme_use(style.theme_use())
@@ -68,6 +73,8 @@ def apply_theme(root: Any, style: Any, output: Any, dark: bool = False) -> None:
         if dark:
             output.config(background=text_bg, foreground=fg, insertbackground=fg)
         else:
-            output.config(background='white', foreground='black', insertbackground='black')
+            output.config(
+                background="white", foreground="black", insertbackground="black"
+            )
     except Exception:
         pass

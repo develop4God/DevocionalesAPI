@@ -25,7 +25,7 @@ import os
 import re
 import time
 from abc import ABC, abstractmethod
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
 
@@ -37,6 +37,7 @@ import yaml
 
 _PROVIDERS_YML = Path(__file__).parent / "providers.yml"
 
+
 def _load_providers_config() -> dict:
     with open(_PROVIDERS_YML, encoding="utf-8") as f:
         return yaml.safe_load(f)["providers"]
@@ -46,22 +47,25 @@ def _load_providers_config() -> dict:
 # Data types
 # ─────────────────────────────────────────────────────────────────────────────
 
+
 @dataclass
 class BatchRequest:
     """One generation request: a single seed entry."""
-    date_key:    str
-    custom_id:   str       # safe slug derived from date_key
-    prompt:      str
-    model_id:    str
-    max_tokens:  int = 4096
+
+    date_key: str
+    custom_id: str  # safe slug derived from date_key
+    prompt: str
+    model_id: str
+    max_tokens: int = 4096
 
 
 @dataclass
 class RawResult:
     """Raw result from the provider — before JSON parsing."""
-    date_key:  str
-    raw_text:  Optional[str] = None   # None when error
-    error:     Optional[str] = None   # None when success
+
+    date_key: str
+    raw_text: Optional[str] = None  # None when error
+    error: Optional[str] = None  # None when success
 
     @property
     def succeeded(self) -> bool:
@@ -72,20 +76,19 @@ class RawResult:
 # Abstract base
 # ─────────────────────────────────────────────────────────────────────────────
 
+
 class BaseAdapter(ABC):
     """All adapters must implement submit + collect."""
 
     def __init__(self, provider_cfg: dict, model_alias: str):
-        self._cfg        = provider_cfg
-        self._model_cfg  = provider_cfg["models"][model_alias]
-        self._model_id   = self._model_cfg["model_id"]
+        self._cfg = provider_cfg
+        self._model_cfg = provider_cfg["models"][model_alias]
+        self._model_id = self._model_cfg["model_id"]
         self._max_tokens = self._model_cfg.get("max_tokens", 4096)
-        api_key_env      = provider_cfg["api_key_env"]
-        self._api_key    = os.environ.get(api_key_env, "")
+        api_key_env = provider_cfg["api_key_env"]
+        self._api_key = os.environ.get(api_key_env, "")
         if not self._api_key:
-            raise ValueError(
-                f"API key not set. Add {api_key_env!r} to your .env file."
-            )
+            raise ValueError(f"API key not set. Add {api_key_env!r} to your .env file.")
 
     @abstractmethod
     def submit(self, requests: list[BatchRequest]) -> str:
@@ -116,6 +119,7 @@ class BaseAdapter(ABC):
 # Anthropic adapter  (native batch API)
 # ─────────────────────────────────────────────────────────────────────────────
 
+
 class AnthropicAdapter(BaseAdapter):
     """
     Uses Anthropic Message Batches API.
@@ -137,9 +141,9 @@ class AnthropicAdapter(BaseAdapter):
             {
                 "custom_id": r.custom_id,
                 "params": {
-                    "model":      r.model_id,
+                    "model": r.model_id,
                     "max_tokens": r.max_tokens,
-                    "messages":   [{"role": "user", "content": r.prompt}],
+                    "messages": [{"role": "user", "content": r.prompt}],
                 },
             }
             for r in requests
@@ -180,10 +184,12 @@ class AnthropicAdapter(BaseAdapter):
                 text = item.result.message.content[0].text.strip()
                 results.append(RawResult(date_key=date_key, raw_text=text))
             else:
-                results.append(RawResult(
-                    date_key=date_key,
-                    error=f"batch_result_{item.result.type}: {str(item.result)[:120]}",
-                ))
+                results.append(
+                    RawResult(
+                        date_key=date_key,
+                        error=f"batch_result_{item.result.type}: {str(item.result)[:120]}",
+                    )
+                )
         return results
 
     def generate_one(self, request: BatchRequest) -> RawResult:
@@ -206,6 +212,7 @@ class AnthropicAdapter(BaseAdapter):
 # Gemini adapter  (native Batch API)
 # ─────────────────────────────────────────────────────────────────────────────
 
+
 class GeminiBatchAdapter(BaseAdapter):
     """
     Uses Gemini Batch API via google-genai SDK.
@@ -223,9 +230,9 @@ class GeminiBatchAdapter(BaseAdapter):
             from google.genai import types as _types
         except ImportError:
             raise ImportError("Run: pip install google-genai")
-        self._genai        = _genai
-        self._types        = _types
-        self._client       = _genai.Client(api_key=self._api_key)
+        self._genai = _genai
+        self._types = _types
+        self._client = _genai.Client(api_key=self._api_key)
         self._poll_interval = provider_cfg["defaults"].get("poll_interval_seconds", 120)
 
     # ── JSONL builder ─────────────────────────────────────────────────────
@@ -259,8 +266,11 @@ class GeminiBatchAdapter(BaseAdapter):
 
         # 1. Write JSONL to temp file
         with tempfile.NamedTemporaryFile(
-            mode="w", suffix=".jsonl", delete=False,
-            encoding="utf-8", prefix="gemini_batch_"
+            mode="w",
+            suffix=".jsonl",
+            delete=False,
+            encoding="utf-8",
+            prefix="gemini_batch_",
         ) as tmp:
             for r in requests:
                 tmp.write(self._to_jsonl_line(r) + "\n")
@@ -274,7 +284,9 @@ class GeminiBatchAdapter(BaseAdapter):
             file=tmp_path,
             config=self._types.UploadFileConfig(mime_type="application/jsonl"),
         )
-        print(f"INFO: File uploaded — URI: {uploaded_file.uri}  name: {uploaded_file.name}")
+        print(
+            f"INFO: File uploaded — URI: {uploaded_file.uri}  name: {uploaded_file.name}"
+        )
 
         # 3. Create batch job — src must be the file name ("files/<id>"), not the URI
         job = self._client.batches.create(
@@ -286,7 +298,7 @@ class GeminiBatchAdapter(BaseAdapter):
         )
         print(f"INFO: Gemini batch submitted — job name: {job.name}")
         print(f"INFO: State: {job.state}")
-        return job.name   # job_id = job.name (e.g. "batches/123456789")
+        return job.name  # job_id = job.name (e.g. "batches/123456789")
 
     # ── collect ───────────────────────────────────────────────────────────
 
@@ -297,12 +309,16 @@ class GeminiBatchAdapter(BaseAdapter):
         # Poll until terminal state.
         # IMPORTANT: job.state is a JobState enum — use .name to get the string,
         # not str() which produces "JobState.JOB_STATE_SUCCEEDED" (never matches).
-        TERMINAL = {"JOB_STATE_SUCCEEDED", "JOB_STATE_FAILED",
-                    "JOB_STATE_CANCELLED", "JOB_STATE_EXPIRED"}
+        TERMINAL = {
+            "JOB_STATE_SUCCEEDED",
+            "JOB_STATE_FAILED",
+            "JOB_STATE_CANCELLED",
+            "JOB_STATE_EXPIRED",
+        }
         print(f"INFO: Polling Gemini batch {job_id} every {self._poll_interval}s...")
         while True:
             job = self._client.batches.get(name=job_id)
-            state = job.state.name          # ← .name, not str()
+            state = job.state.name  # ← .name, not str()
             counts = getattr(job, "request_counts", None)
             count_str = ""
             if counts:
@@ -317,19 +333,26 @@ class GeminiBatchAdapter(BaseAdapter):
             time.sleep(self._poll_interval)
 
         if job.state.name != "JOB_STATE_SUCCEEDED":
-            print(f"WARNING: Batch ended with state {job.state.name} — results may be partial")
+            print(
+                f"WARNING: Batch ended with state {job.state.name} — results may be partial"
+            )
 
         # Per official docs: dest.file_name holds the result file name (e.g. "files/abc123").
         # client.files.download(file=<name_string>) returns raw bytes directly.
         dest = getattr(job, "dest", None)
         if dest is None:
             print("ERROR: No dest field on completed job — cannot retrieve results")
-            return [RawResult(date_key=r.date_key, error="no_output_dest") for r in requests]
+            return [
+                RawResult(date_key=r.date_key, error="no_output_dest") for r in requests
+            ]
 
         result_file_name = getattr(dest, "file_name", None)
         if not result_file_name:
             print(f"ERROR: dest.file_name is empty — dest={dest!r}")
-            return [RawResult(date_key=r.date_key, error="no_output_file_name") for r in requests]
+            return [
+                RawResult(date_key=r.date_key, error="no_output_file_name")
+                for r in requests
+            ]
 
         print(f"INFO: Downloading output from {result_file_name}...")
 
@@ -366,28 +389,32 @@ class GeminiBatchAdapter(BaseAdapter):
 
                 # Check for API-level error in this line
                 response_obj = obj.get("response", {})
-                error_obj    = obj.get("error")
+                error_obj = obj.get("error")
                 if error_obj:
-                    results.append(RawResult(
-                        date_key=date_key,
-                        error=f"gemini_error: {error_obj}",
-                    ))
+                    results.append(
+                        RawResult(
+                            date_key=date_key,
+                            error=f"gemini_error: {error_obj}",
+                        )
+                    )
                     continue
 
                 # Extract text from response
                 try:
-                    text = (
-                        response_obj["candidates"][0]["content"]["parts"][0]["text"].strip()
-                    )
+                    text = response_obj["candidates"][0]["content"]["parts"][0][
+                        "text"
+                    ].strip()
                     if not text:
                         results.append(RawResult(date_key=date_key, error="empty_text"))
                     else:
                         results.append(RawResult(date_key=date_key, raw_text=text))
                 except (KeyError, IndexError, TypeError) as e:
-                    results.append(RawResult(
-                        date_key=date_key,
-                        error=f"parse_response_error: {e} | raw: {str(obj)[:120]}",
-                    ))
+                    results.append(
+                        RawResult(
+                            date_key=date_key,
+                            error=f"parse_response_error: {e} | raw: {str(obj)[:120]}",
+                        )
+                    )
 
         # Any keys not present in output file
         for missing_key in missing_keys:
@@ -422,6 +449,7 @@ class GeminiBatchAdapter(BaseAdapter):
 # Fireworks adapter  (async parallel, OpenAI-compatible endpoint)
 # ─────────────────────────────────────────────────────────────────────────────
 
+
 class FireworksAdapter(BaseAdapter):
     """
     Uses openai SDK pointed at Fireworks base_url.
@@ -434,7 +462,9 @@ class FireworksAdapter(BaseAdapter):
             import openai as _openai
         except ImportError:
             raise ImportError("Run: pip install openai")
-        base_url = provider_cfg.get("base_url") or "https://api.fireworks.ai/inference/v1"
+        base_url = (
+            provider_cfg.get("base_url") or "https://api.fireworks.ai/inference/v1"
+        )
         self._client = _openai.AsyncOpenAI(
             api_key=self._api_key,
             base_url=base_url,
@@ -448,18 +478,29 @@ class FireworksAdapter(BaseAdapter):
     def submit(self, requests: list[BatchRequest]) -> str:
         """Serialize requests to temp file — same pattern as Gemini."""
         import tempfile
+
         payload = [
-            {"date_key": r.date_key, "custom_id": r.custom_id,
-             "prompt": r.prompt, "model_id": r.model_id, "max_tokens": r.max_tokens}
+            {
+                "date_key": r.date_key,
+                "custom_id": r.custom_id,
+                "prompt": r.prompt,
+                "model_id": r.model_id,
+                "max_tokens": r.max_tokens,
+            }
             for r in requests
         ]
         tmp = tempfile.NamedTemporaryFile(
-            mode="w", suffix=".json", delete=False, encoding="utf-8",
-            prefix="fireworks_job_"
+            mode="w",
+            suffix=".json",
+            delete=False,
+            encoding="utf-8",
+            prefix="fireworks_job_",
         )
         json.dump(payload, tmp, ensure_ascii=False)
         tmp.close()
-        print(f"INFO: Fireworks async job queued — {len(requests)} requests → {tmp.name}")
+        print(
+            f"INFO: Fireworks async job queued — {len(requests)} requests → {tmp.name}"
+        )
         return tmp.name
 
     def collect(self, job_id: str, requests: list[BatchRequest]) -> list[RawResult]:
@@ -516,6 +557,7 @@ class FireworksAdapter(BaseAdapter):
 # Fireworks adapter — OpenAI batch file generator  (openai_batch_file strategy)
 # ─────────────────────────────────────────────────────────────────────────────
 
+
 class FireworksBatchFileAdapter(BaseAdapter):
     """
     Generates an OpenAI-format batch JSONL file for manual upload to Fireworks AI.
@@ -543,25 +585,28 @@ class FireworksBatchFileAdapter(BaseAdapter):
 
     def __init__(self, provider_cfg: dict, model_alias: str):
         # Do NOT call super().__init__() — API key is not required for file generation.
-        self._cfg          = provider_cfg
-        self._model_cfg    = provider_cfg["models"][model_alias]
-        self._model_id     = self._model_cfg["model_id"]
-        self._max_tokens   = self._model_cfg.get("max_tokens", 4096)
-        self._batch_endpoint = provider_cfg.get("batch_endpoint", "/v1/chat/completions")
+        self._cfg = provider_cfg
+        self._model_cfg = provider_cfg["models"][model_alias]
+        self._model_id = self._model_cfg["model_id"]
+        self._max_tokens = self._model_cfg.get("max_tokens", 4096)
+        self._batch_endpoint = provider_cfg.get(
+            "batch_endpoint", "/v1/chat/completions"
+        )
         # API key loaded but not validated — only needed if collect() is used.
         self._api_key = os.environ.get(provider_cfg.get("api_key_env", ""), "")
 
     @staticmethod
-    def _to_jsonl_line(request: BatchRequest, model_id: str, max_tokens: int,
-                        batch_endpoint: str) -> str:
+    def _to_jsonl_line(
+        request: BatchRequest, model_id: str, max_tokens: int, batch_endpoint: str
+    ) -> str:
         """Produce one OpenAI batch-format JSONL line."""
         record = {
             "custom_id": request.custom_id,
-            "method":    "POST",
-            "url":       batch_endpoint,
+            "method": "POST",
+            "url": batch_endpoint,
             "body": {
-                "model":     model_id,
-                "messages":  [{"role": "user", "content": request.prompt}],
+                "model": model_id,
+                "messages": [{"role": "user", "content": request.prompt}],
                 "max_tokens": max_tokens,
             },
         }
@@ -573,12 +618,12 @@ class FireworksBatchFileAdapter(BaseAdapter):
         Returns the file path (used as job_id in the state file).
         No API calls are made.
         """
-        ts        = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-        out_dir   = Path(__file__).parent
+        ts = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        out_dir = Path(__file__).parent
         # Derive a human-readable name from the first request's date_key
-        first_dk  = requests[0].date_key if requests else "batch"
-        slug      = re.sub(r"[^a-zA-Z0-9_-]", "_", first_dk)[:20]
-        out_path  = out_dir / f"batch_input_{slug}_{ts}.jsonl"
+        first_dk = requests[0].date_key if requests else "batch"
+        slug = re.sub(r"[^a-zA-Z0-9_-]", "_", first_dk)[:20]
+        out_path = out_dir / f"batch_input_{slug}_{ts}.jsonl"
 
         with open(out_path, "w", encoding="utf-8") as f:
             for r in requests:
@@ -592,10 +637,12 @@ class FireworksBatchFileAdapter(BaseAdapter):
         print()
         print("Next steps:")
         print(f"  1. Upload {out_path.name} to Fireworks AI batch endpoint.")
-        print(f"     https://fireworks.ai  (Batch > Upload file)")
-        print(f"  2. Wait for batch to complete and download results JSONL.")
-        print(f"  3. Collect with:")
-        print(f"       python batch_collect.py --state <state_file> --results <results.jsonl>")
+        print("     https://fireworks.ai  (Batch > Upload file)")
+        print("  2. Wait for batch to complete and download results JSONL.")
+        print("  3. Collect with:")
+        print(
+            "       python batch_collect.py --state <state_file> --results <results.jsonl>"
+        )
         return str(out_path)
 
     def collect(self, job_id: str, requests: list[BatchRequest]) -> list[RawResult]:
@@ -607,7 +654,7 @@ class FireworksBatchFileAdapter(BaseAdapter):
           {"custom_id": "...", "response": {"status_code": 200,
            "body": {"choices": [{"message": {"content": "..."}}]}}, "error": null}
         """
-        results_path = job_id   # job_id holds the results file path
+        results_path = job_id  # job_id holds the results file path
 
         if not Path(results_path).is_file():
             raise FileNotFoundError(
@@ -617,7 +664,7 @@ class FireworksBatchFileAdapter(BaseAdapter):
 
         cid_map = {r.custom_id: r.date_key for r in requests}
         results: list[RawResult] = []
-        missing  = set(cid_map.keys())
+        missing = set(cid_map.keys())
 
         with open(results_path, encoding="utf-8") as f:
             for lineno, line in enumerate(f, 1):
@@ -631,44 +678,52 @@ class FireworksBatchFileAdapter(BaseAdapter):
                     continue
 
                 custom_id = obj.get("custom_id", "")
-                date_key  = cid_map.get(custom_id, custom_id)
+                date_key = cid_map.get(custom_id, custom_id)
                 missing.discard(custom_id)
 
                 # API-level error
                 error_obj = obj.get("error")
                 if error_obj:
-                    results.append(RawResult(
-                        date_key=date_key,
-                        error=f"fireworks_batch_error: {error_obj}",
-                    ))
+                    results.append(
+                        RawResult(
+                            date_key=date_key,
+                            error=f"fireworks_batch_error: {error_obj}",
+                        )
+                    )
                     continue
 
                 response = obj.get("response", {})
-                status   = response.get("status_code", 0)
+                status = response.get("status_code", 0)
 
                 # Two supported formats:
                 #   OpenAI batch wrapper : response = {status_code, body: {choices}}
                 #   Fireworks direct     : response = {id, object, choices, ...}
                 has_choices = "choices" in response or "body" in response
                 if not has_choices and status != 200:
-                    results.append(RawResult(
-                        date_key=date_key,
-                        error=f"http_error: status_code={status}",
-                    ))
+                    results.append(
+                        RawResult(
+                            date_key=date_key,
+                            error=f"http_error: status_code={status}",
+                        )
+                    )
                     continue
 
                 try:
                     body = response.get("body", response)
                     text = body["choices"][0]["message"]["content"].strip()
                     if not text:
-                        results.append(RawResult(date_key=date_key, error="empty_content"))
+                        results.append(
+                            RawResult(date_key=date_key, error="empty_content")
+                        )
                     else:
                         results.append(RawResult(date_key=date_key, raw_text=text))
                 except (KeyError, IndexError, TypeError) as e:
-                    results.append(RawResult(
-                        date_key=date_key,
-                        error=f"parse_error: {e} | raw: {str(obj)[:120]}",
-                    ))
+                    results.append(
+                        RawResult(
+                            date_key=date_key,
+                            error=f"parse_error: {e} | raw: {str(obj)[:120]}",
+                        )
+                    )
 
         for missing_cid in missing:
             date_key = cid_map.get(missing_cid, missing_cid)
@@ -690,9 +745,9 @@ class FireworksBatchFileAdapter(BaseAdapter):
 # ─────────────────────────────────────────────────────────────────────────────
 
 _ADAPTER_MAP: dict[str, type[BaseAdapter]] = {
-    "anthropic":      AnthropicAdapter,
-    "gemini":         GeminiBatchAdapter,
-    "fireworks":      FireworksAdapter,
+    "anthropic": AnthropicAdapter,
+    "gemini": GeminiBatchAdapter,
+    "fireworks": FireworksAdapter,
     "fireworks_batch": FireworksBatchFileAdapter,
 }
 

@@ -16,6 +16,7 @@ Properties:
     client.model        → model name from providers.yml
     client.provider_id  → provider id string
 """
+
 from __future__ import annotations
 
 import json
@@ -30,11 +31,13 @@ from cloud_client import _load_config  # single config source of truth
 
 # ── Exceptions ────────────────────────────────────────────────────────────────
 
+
 class BatchAPIError(RuntimeError):
     """Raised on non-retryable batch API failures."""
 
 
 # ── Config helpers ────────────────────────────────────────────────────────────
+
 
 def _provider_cfg(provider_id: str) -> dict:
     """Look up a provider by id and verify it supports batch."""
@@ -62,6 +65,7 @@ def _api_key(provider: dict) -> str:
 
 # ── Client ────────────────────────────────────────────────────────────────────
 
+
 class BatchClient:
     """
     OpenAI-compatible batch client.
@@ -70,9 +74,9 @@ class BatchClient:
     """
 
     def __init__(self, provider_id: str) -> None:
-        self._cfg   = _provider_cfg(provider_id)
-        self._key   = _api_key(self._cfg)
-        self._base  = self._cfg["base_url"].rstrip("/")
+        self._cfg = _provider_cfg(provider_id)
+        self._key = _api_key(self._cfg)
+        self._base = self._cfg["base_url"].rstrip("/")
         self._batch = self._cfg["batch"]
 
     # ── Public properties ─────────────────────────────────────────────────
@@ -96,13 +100,17 @@ class BatchClient:
         boundary = "GEPBatch01"
         file_bytes = file_path.read_bytes()
         body = (
-            f"--{boundary}\r\n"
-            f'Content-Disposition: form-data; name="purpose"\r\n\r\n'
-            f"batch\r\n"
-            f"--{boundary}\r\n"
-            f'Content-Disposition: form-data; name="file"; filename="{file_path.name}"\r\n'
-            f"Content-Type: application/jsonl\r\n\r\n"
-        ).encode() + file_bytes + f"\r\n--{boundary}--\r\n".encode()
+            (
+                f"--{boundary}\r\n"
+                f'Content-Disposition: form-data; name="purpose"\r\n\r\n'
+                f"batch\r\n"
+                f"--{boundary}\r\n"
+                f'Content-Disposition: form-data; name="file"; filename="{file_path.name}"\r\n'
+                f"Content-Type: application/jsonl\r\n\r\n"
+            ).encode()
+            + file_bytes
+            + f"\r\n--{boundary}--\r\n".encode()
+        )
 
         req = urllib.request.Request(
             f"{self._base}/files",
@@ -154,8 +162,8 @@ class BatchClient:
             data = self._get_json(url)
             status = data.get("status", "unknown")
             counts = data.get("request_counts", {})
-            total  = counts.get("total", "?")
-            done   = counts.get("completed", "?")
+            total = counts.get("total", "?")
+            done = counts.get("completed", "?")
             print(f"    [{status}]  {done}/{total} completed", flush=True)
 
             if status == "completed":
@@ -167,9 +175,7 @@ class BatchClient:
                 return fid
 
             if status in terminal:
-                raise BatchAPIError(
-                    f"Batch ended with status='{status}': {data}"
-                )
+                raise BatchAPIError(f"Batch ended with status='{status}': {data}")
 
             time.sleep(interval)
 

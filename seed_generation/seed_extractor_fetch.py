@@ -33,8 +33,10 @@ import sqlite3
 import sys
 import urllib.request
 from datetime import datetime
+
 try:
     from tkinter import Tk, filedialog
+
     _HAS_TKINTER = True
 except ImportError:
     _HAS_TKINTER = False
@@ -45,7 +47,7 @@ except ImportError:
 
 _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
-BOOKS_SOT_URL      = (
+BOOKS_SOT_URL = (
     "https://raw.githubusercontent.com/develop4god/bible_versions"
     "/refs/heads/main/bible_books.json"
 )
@@ -70,18 +72,18 @@ _LOCAL_KJV = {
     2026: os.path.join(_SCRIPT_DIR, "BASE2-Devocional_year_2026_en_KJV.json"),
 }
 
-DB_DIR           = os.path.join(_SCRIPT_DIR, "Bibles")
+DB_DIR = os.path.join(_SCRIPT_DIR, "Bibles")
 TAGS_MASTER_PATH = os.path.join(_SCRIPT_DIR, "tags_master.json")
 
 # Normalized key → canonical key (applied before tags_master lookup)
 MERGE_MAP: dict[str, str] = {
-    "armorofgod":  "armor",
+    "armorofgod": "armor",
     "jesuschrist": "jesus",
-    "newlife":     "newbirth",
-    "wordofgod":   "word",
-    "liberation":  "deliverance",
-    "blessings":   "blessing",
-    "miracles":    "miracle",
+    "newlife": "newbirth",
+    "wordofgod": "word",
+    "liberation": "deliverance",
+    "blessings": "blessing",
+    "miracles": "miracle",
 }
 
 # Script ranges for reverse validation
@@ -93,7 +95,7 @@ SCRIPT_RANGES: dict[str, tuple[int, int]] = {
     "ru": (0x0400, 0x04FF),
 }
 SCRIPT_THRESHOLD = 0.5
-LATIN_LANGS      = {"en", "es", "pt", "fr", "de"}
+LATIN_LANGS = {"en", "es", "pt", "fr", "de"}
 
 # Devanagari digit → ASCII digit
 _DEVA = str.maketrans("०१२३४५६७८९", "0123456789")
@@ -101,7 +103,7 @@ _DEVA = str.maketrans("०१२३४५६७८९", "0123456789")
 SEP = "=" * 62
 
 # Module-level caches — fetched once per run
-_books_sot_cache:      dict | None = None
+_books_sot_cache: dict | None = None
 _versions_index_cache: dict | None = None
 
 
@@ -109,18 +111,20 @@ _versions_index_cache: dict | None = None
 # 2.  VERSE TEXT NORMALIZER
 # ─────────────────────────────────────────────────────────────────────────────
 
+
 def normalize_verse_text(text: str) -> str:
     """Strip inline footnote markers like [1], [२] from verse text."""
-    text = re.sub(r' \[\d+\] ', ' ', text)
-    text = re.sub(r'\[\d+\]',   '',  text)
-    text = re.sub(r'  +',       ' ', text)
-    text = re.sub(r' ([,;।.])', r'\1', text)
+    text = re.sub(r" \[\d+\] ", " ", text)
+    text = re.sub(r"\[\d+\]", "", text)
+    text = re.sub(r"  +", " ", text)
+    text = re.sub(r" ([,;।.])", r"\1", text)
     return text.strip()
 
 
 # ─────────────────────────────────────────────────────────────────────────────
 # 3.  REMOTE FETCHERS
 # ─────────────────────────────────────────────────────────────────────────────
+
 
 def load_books_sot() -> dict:
     """
@@ -130,13 +134,12 @@ def load_books_sot() -> dict:
     global _books_sot_cache
     if _books_sot_cache is not None:
         return _books_sot_cache
-    print(f"  Fetching bible_books.json SOT...")
+    print("  Fetching bible_books.json SOT...")
     with urllib.request.urlopen(BOOKS_SOT_URL) as resp:
         data = json.loads(resp.read())
     # Strip whitespace from keys — the SOT JSON has some keys like "Lamentations\n"
     _books_sot_cache = {
-        name.strip(): entry["book_number"]
-        for name, entry in data["books"].items()
+        name.strip(): entry["book_number"] for name, entry in data["books"].items()
     }
     print(f"      ✅ {len(_books_sot_cache)} books\n")
     return _books_sot_cache
@@ -150,8 +153,8 @@ def fetch_versions_index() -> dict:
     print("  Fetching bible versions index...")
     with urllib.request.urlopen(VERSIONS_INDEX_URL) as resp:
         _versions_index_cache = json.loads(resp.read())
-    langs     = _versions_index_cache["languages"]
-    n_langs   = len(langs)
+    langs = _versions_index_cache["languages"]
+    n_langs = len(langs)
     n_versions = sum(len(v["versions"]) for v in langs.values())
     print(f"      ✅ {n_langs} languages, {n_versions} versions\n")
     return _versions_index_cache
@@ -176,7 +179,7 @@ def fetch_kjv(year: int) -> tuple[str, dict]:
         with urllib.request.urlopen(url) as resp:
             data = json.loads(resp.read())
 
-    lang  = list(data["data"].keys())[0]
+    lang = list(data["data"].keys())[0]
     dates = data["data"][lang]
     print(f"      ✅ {len(dates)} dates  ({src})\n")
     return lang, dates
@@ -186,8 +189,10 @@ def fetch_kjv(year: int) -> tuple[str, dict]:
 # 4.  DB MANAGEMENT
 # ─────────────────────────────────────────────────────────────────────────────
 
+
 def _make_progress_hook():
     """Return a urllib reporthook that prints a simple progress bar."""
+
     def hook(block_count: int, block_size: int, total_size: int) -> None:
         downloaded = block_count * block_size
         if total_size > 0:
@@ -196,10 +201,16 @@ def _make_progress_hook():
             print(
                 f"\r      [{bar}] {pct:3d}%  "
                 f"({downloaded / 1_048_576:.1f} / {total_size / 1_048_576:.1f} MB)",
-                end="", flush=True,
+                end="",
+                flush=True,
             )
         else:
-            print(f"\r      {downloaded / 1_048_576:.1f} MB downloaded", end="", flush=True)
+            print(
+                f"\r      {downloaded / 1_048_576:.1f} MB downloaded",
+                end="",
+                flush=True,
+            )
+
     return hook
 
 
@@ -216,11 +227,11 @@ def find_or_download_db(version_entry: dict, lang_code: str) -> str:
 
     Returns the path to the ready-to-use .SQLite3 file.
     """
-    remote_file = version_entry["file"]              # e.g. "LU17_de.SQLite3.gz"
-    db_filename = remote_file.replace(".gz", "")     # e.g. "LU17_de.SQLite3"
+    remote_file = version_entry["file"]  # e.g. "LU17_de.SQLite3.gz"
+    db_filename = remote_file.replace(".gz", "")  # e.g. "LU17_de.SQLite3"
 
     flat_path = os.path.join(DB_DIR, db_filename)
-    sub_path  = os.path.join(DB_DIR, lang_code.upper(), db_filename)
+    sub_path = os.path.join(DB_DIR, lang_code.upper(), db_filename)
 
     if os.path.exists(flat_path):
         print(f"      ✅ Using cached  {flat_path}")
@@ -236,7 +247,7 @@ def find_or_download_db(version_entry: dict, lang_code: str) -> str:
     if not os.path.exists(gz_path):
         print(f"      ⬇  Downloading {remote_file}...")
         urllib.request.urlretrieve(version_entry["url"], gz_path, _make_progress_hook())
-        print()   # newline after progress bar
+        print()  # newline after progress bar
 
     # ── Decompress ────────────────────────────────────────────────────────────
     print(f"      🗜  Decompressing {remote_file}...")
@@ -250,6 +261,7 @@ def find_or_download_db(version_entry: dict, lang_code: str) -> str:
 # ─────────────────────────────────────────────────────────────────────────────
 # 5.  REFERENCE RESOLVER
 # ─────────────────────────────────────────────────────────────────────────────
+
 
 def _native_book_name(cursor: sqlite3.Cursor, book_number: int, fallback: str) -> str:
     """
@@ -265,7 +277,7 @@ def _native_book_name(cursor: sqlite3.Cursor, book_number: int, fallback: str) -
         if row and row[0]:
             return row[0]
     except sqlite3.OperationalError:
-        pass   # `books` table absent in minimal DB builds
+        pass  # `books` table absent in minimal DB builds
     return fallback
 
 
@@ -276,9 +288,9 @@ def parse_en_ref(cita: str) -> tuple[str, int, int, int] | None:
     Returns (book_name, chapter, verse_start, verse_end) or None.
     """
     cita = cita.strip().translate(_DEVA)
-    cita = re.sub(r'\s+[A-Z0-9]{2,6}$', '', cita).strip()
+    cita = re.sub(r"\s+[A-Z0-9]{2,6}$", "", cita).strip()
     m = re.match(
-        r'^((?:\d\s+)?[A-Za-z]+(?:\s+[A-Za-z]+)*)\s+(\d+):(\d+)(?:-(\d+))?$',
+        r"^((?:\d\s+)?[A-Za-z]+(?:\s+[A-Za-z]+)*)\s+(\d+):(\d+)(?:-(\d+))?$",
         cita,
     )
     if not m:
@@ -309,9 +321,9 @@ def fetch_text(
     if not rows:
         return None
     combined = " ".join(r[0] for r in rows)
-    combined = re.sub(r"<[^>]+>",        "",  combined)
-    combined = re.sub(r"[\u2460-\u24FF]", "",  combined)
-    combined = re.sub(r"\s+",            " ", combined)
+    combined = re.sub(r"<[^>]+>", "", combined)
+    combined = re.sub(r"[\u2460-\u24FF]", "", combined)
+    combined = re.sub(r"\s+", " ", combined)
     return combined.strip()
 
 
@@ -342,12 +354,16 @@ def resolve_reference(
             "SELECT MAX(verse) FROM verses WHERE book_number=? AND chapter=?",
             (book_number, chapter),
         )
-        row       = cursor.fetchone()
+        row = cursor.fetchone()
         max_verse = row[0] if row and row[0] else "unknown"
         range_str = f"{v_start}-{v_end}" if v_start != v_end else str(v_start)
-        return None, None, (
-            f"verse not found: '{cita}' → {local_name} {chapter}:{range_str} "
-            f"(chapter has {max_verse} verses)"
+        return (
+            None,
+            None,
+            (
+                f"verse not found: '{cita}' → {local_name} {chapter}:{range_str} "
+                f"(chapter has {max_verse} verses)"
+            ),
         )
 
     range_suffix = f"{v_start}-{v_end}" if v_start != v_end else str(v_start)
@@ -363,6 +379,7 @@ def extract_ref_from_versiculo(versiculo: str) -> str:
 # 6.  TAG SERVICE
 # ─────────────────────────────────────────────────────────────────────────────
 
+
 def normalize_tag(tag: str) -> str:
     return re.sub(r"[\s\-\']+", "", tag).lower()
 
@@ -376,8 +393,8 @@ def load_tags_master() -> tuple[dict, dict]:
         )
     with open(TAGS_MASTER_PATH, encoding="utf-8") as f:
         data = json.load(f)
-    file_merge  = data.get("merge_map", {})
-    merged_map  = {**MERGE_MAP, **file_merge}
+    file_merge = data.get("merge_map", {})
+    merged_map = {**MERGE_MAP, **file_merge}
     return data["tags"], merged_map
 
 
@@ -388,7 +405,7 @@ def preflight_coverage(
     target_lang: str,
 ) -> list[dict]:
     """Scan all KJV entries before extraction; report tag coverage. Does not block."""
-    misses    = []
+    misses = []
     seen_norms: set[str] = set()
 
     for date_key, entries in kjv_dates.items():
@@ -398,36 +415,49 @@ def preflight_coverage(
             continue
 
         for tag in en_tags:
-            norm      = normalize_tag(tag)
+            norm = normalize_tag(tag)
             canonical = effective_merge.get(norm, norm)
             if canonical in seen_norms:
                 continue
             seen_norms.add(canonical)
 
             if canonical not in tags_map:
-                misses.append({
-                    "date": date_key, "en_tag": tag,
-                    "normalized": norm, "canonical": canonical,
-                    "reason": "key not in tags_master",
-                })
-            elif target_lang not in tags_map[canonical] or not tags_map[canonical][target_lang]:
-                misses.append({
-                    "date": date_key, "en_tag": tag,
-                    "normalized": norm, "canonical": canonical,
-                    "reason": f"no '{target_lang}' translation for key",
-                })
+                misses.append(
+                    {
+                        "date": date_key,
+                        "en_tag": tag,
+                        "normalized": norm,
+                        "canonical": canonical,
+                        "reason": "key not in tags_master",
+                    }
+                )
+            elif (
+                target_lang not in tags_map[canonical]
+                or not tags_map[canonical][target_lang]
+            ):
+                misses.append(
+                    {
+                        "date": date_key,
+                        "en_tag": tag,
+                        "normalized": norm,
+                        "canonical": canonical,
+                        "reason": f"no '{target_lang}' translation for key",
+                    }
+                )
 
     print(f"\n{SEP}")
     print(f"TAG PREFLIGHT — {target_lang.upper()}")
     print(SEP)
     unique = len(seen_norms)
-    pct    = ((unique - len(misses)) / unique * 100) if unique else 100.0
+    pct = ((unique - len(misses)) / unique * 100) if unique else 100.0
     print(f"  Unique canonical tags : {unique}")
     print(f"  Coverage              : {pct:.1f}%")
     if misses:
         print(f"  MISSES ({len(misses)}) — EN tag used as fallback:")
         for m in misses:
-            print(f"    [{m['date']}] '{m['en_tag']}' → '{m['canonical']}' — {m['reason']}")
+            print(
+                f"    [{m['date']}] '{m['en_tag']}' → '{m['canonical']}' — {m['reason']}"
+            )
     else:
         print("  ✅ 100% coverage — all tags translate cleanly")
     print(SEP + "\n")
@@ -444,17 +474,20 @@ def translate_tags(
     """Translate EN tags → target_lang via tags_master. Every miss is logged."""
     result = []
     for tag in en_tags:
-        norm      = normalize_tag(tag)
+        norm = normalize_tag(tag)
         canonical = effective_merge.get(norm, norm)
         translated = tags_map.get(canonical, {}).get(target_lang)
         if translated:
             result.append(translated)
         else:
-            miss_log.append({
-                "en_tag": tag, "canonical": canonical,
-                "lang":   target_lang,
-                "reason": "not in tags_master — EN fallback used",
-            })
+            miss_log.append(
+                {
+                    "en_tag": tag,
+                    "canonical": canonical,
+                    "lang": target_lang,
+                    "reason": "not in tags_master — EN fallback used",
+                }
+            )
             result.append(tag)
     return list(dict.fromkeys(result))
 
@@ -465,10 +498,10 @@ def _has_target_script(text: str, lang: str) -> bool:
     if lang not in SCRIPT_RANGES:
         return True
     lo, hi = SCRIPT_RANGES[lang]
-    alpha  = [c for c in text if c.isalpha()]
+    alpha = [c for c in text if c.isalpha()]
     if not alpha:
         return False
-    ratio  = sum(1 for c in alpha if lo <= ord(c) <= hi) / len(alpha)
+    ratio = sum(1 for c in alpha if lo <= ord(c) <= hi) / len(alpha)
     return ratio >= SCRIPT_THRESHOLD
 
 
@@ -486,7 +519,7 @@ def reverse_validate_seed(
             reverse_map[val] = key
 
     valid_values = set(reverse_map)
-    violations   = []
+    violations = []
 
     for date_key, entry in seed.items():
         for tag in entry.get("tags", []):
@@ -495,12 +528,23 @@ def reverse_validate_seed(
             if not _has_target_script(tag, target_lang):
                 checks.append("script_fail: expected target script, got latin/other")
             if tag not in valid_values:
-                checks.append(f"vocab_fail: '{tag}' not a known {target_lang} translation")
+                checks.append(
+                    f"vocab_fail: '{tag}' not a known {target_lang} translation"
+                )
             if tag in reverse_map and reverse_map[tag] not in tags_map:
-                checks.append(f"roundtrip_fail: reverse maps to unknown key '{reverse_map[tag]}'")
+                checks.append(
+                    f"roundtrip_fail: reverse maps to unknown key '{reverse_map[tag]}'"
+                )
 
             if checks:
-                violations.append({"date": date_key, "tag": tag, "lang": target_lang, "checks": checks})
+                violations.append(
+                    {
+                        "date": date_key,
+                        "tag": tag,
+                        "lang": target_lang,
+                        "checks": checks,
+                    }
+                )
 
     print(f"\n{SEP}")
     print(f"REVERSE VALIDATION — {target_lang.upper()}")
@@ -519,6 +563,7 @@ def reverse_validate_seed(
 # 7.  OUTPUT
 # ─────────────────────────────────────────────────────────────────────────────
 
+
 def _ts() -> str:
     return datetime.now().strftime("%Y%m%d_%H%M%S")
 
@@ -531,7 +576,12 @@ def save_seed(seed: dict, output_dir: str, lang: str, version: str, year: int) -
 
 
 def save_report(
-    data: list, output_dir: str, prefix: str, lang: str, version: str, year: int,
+    data: list,
+    output_dir: str,
+    prefix: str,
+    lang: str,
+    version: str,
+    year: int,
 ) -> str:
     path = os.path.join(output_dir, f"{prefix}_{lang}_{version}_{year}_{_ts()}.json")
     with open(path, "w", encoding="utf-8") as f:
@@ -542,6 +592,7 @@ def save_report(
 # ─────────────────────────────────────────────────────────────────────────────
 # 8.  INTERACTIVE UI
 # ─────────────────────────────────────────────────────────────────────────────
+
 
 def select_year() -> int:
     """Terminal prompt — returns 2025 or 2026."""
@@ -568,10 +619,12 @@ def select_language_version(
 
     print("Select target language:")
     for i, (code, entry) in enumerate(languages, 1):
-        primary  = entry["primary_version"]
+        primary = entry["primary_version"]
         fallback = entry["fallback_version"]
-        print(f"  {i:2d}.  {code:<4}  {entry['name']:<16}  "
-              f"primary={primary}  fallback={fallback}")
+        print(
+            f"  {i:2d}.  {code:<4}  {entry['name']:<16}  "
+            f"primary={primary}  fallback={fallback}"
+        )
     while True:
         try:
             n = int(input("  > ").strip())
@@ -584,10 +637,14 @@ def select_language_version(
 
     print(f"\nSelect version for language '{lang_code}':")
     versions = list(lang_entry["versions"].items())
-    primary  = lang_entry["primary_version"]
+    primary = lang_entry["primary_version"]
     fallback = lang_entry["fallback_version"]
     for i, (code, ventry) in enumerate(versions, 1):
-        label = " ← primary" if code == primary else (" ← fallback" if code == fallback else "")
+        label = (
+            " ← primary"
+            if code == primary
+            else (" ← fallback" if code == fallback else "")
+        )
         print(f"  {i}.  {code:<12}  {ventry['name']}{label}")
     while True:
         try:
@@ -603,7 +660,9 @@ def select_language_version(
 def pick_output_folder() -> str:
     """Minimal tkinter dialog to choose an output folder."""
     if not _HAS_TKINTER:
-        print("ERROR: tkinter is not available. Use --output <folder> to specify output folder.")
+        print(
+            "ERROR: tkinter is not available. Use --output <folder> to specify output folder."
+        )
         sys.exit(1)
     root = Tk()
     root.withdraw()
@@ -619,18 +678,19 @@ def pick_output_folder() -> str:
 # 9.  ORCHESTRATOR
 # ─────────────────────────────────────────────────────────────────────────────
 
+
 def run(
-    year:          int,
-    lang_code:     str,
-    version_code:  str,
+    year: int,
+    lang_code: str,
+    version_code: str,
     version_entry: dict,
-    output_dir:    str,
-    lang_entry:    dict | None = None,
+    output_dir: str,
+    lang_entry: dict | None = None,
 ) -> None:
     display_name = version_entry["name"]
 
     print(f"\n{SEP}")
-    print(f"  SEED EXTRACTOR FETCH  —  SOT Edition")
+    print("  SEED EXTRACTOR FETCH  —  SOT Edition")
     print(SEP)
     print(f"  Year        : {year}")
     print(f"  Target      : {lang_code}  /  {version_code}  ({display_name})")
@@ -655,7 +715,7 @@ def run(
     print("[4/7] Bible SQLite DB...")
     local_db = find_or_download_db(version_entry, lang_code)
 
-    conn   = sqlite3.connect(local_db)
+    conn = sqlite3.connect(local_db)
     cursor = conn.cursor()
     cursor.execute("SELECT COUNT(*) FROM verses")
     verse_count = cursor.fetchone()[0]
@@ -663,8 +723,8 @@ def run(
 
     # Try to open a fallback DB when the primary is missing verses
     fallback_cursor = None
-    fallback_conn   = None
-    fallback_code   = None
+    fallback_conn = None
+    fallback_code = None
     if lang_entry is not None:
         fallback_code = lang_entry.get("fallback_version")
         if fallback_code and fallback_code != version_code:
@@ -673,27 +733,31 @@ def run(
                 try:
                     print(f"      ℹ️  Fallback DB: {fallback_code} ({fb_entry['name']})")
                     fb_local = find_or_download_db(fb_entry, lang_code)
-                    fallback_conn   = sqlite3.connect(fb_local)
+                    fallback_conn = sqlite3.connect(fb_local)
                     fallback_cursor = fallback_conn.cursor()
                     fallback_cursor.execute("SELECT COUNT(*) FROM verses")
                     fb_count = fallback_cursor.fetchone()[0]
-                    print(f"      ✅ Fallback {fallback_code}: {fb_count:,} verses loaded\n")
+                    print(
+                        f"      ✅ Fallback {fallback_code}: {fb_count:,} verses loaded\n"
+                    )
                 except Exception as fb_err:
                     print(f"      ⚠️  Could not load fallback DB: {fb_err}\n")
                     fallback_cursor = None
-                    fallback_conn   = None
+                    fallback_conn = None
 
     # ── Step 5: Preflight tag coverage ──────────────────────────────────────
     print("[5/7] Tag preflight coverage check...")
-    _preflight_misses = preflight_coverage(kjv_dates, tags_map, effective_merge, lang_code)
+    _preflight_misses = preflight_coverage(
+        kjv_dates, tags_map, effective_merge, lang_code
+    )
 
     # ── Step 6: Extraction ───────────────────────────────────────────────────
     print("[6/7] Extracting verses...\n")
 
-    seed       = {}
-    errors     = []
+    seed = {}
+    errors = []
     tag_misses: list[dict] = []
-    ok_count   = 0
+    ok_count = 0
     skip_count = 0
 
     try:
@@ -701,7 +765,9 @@ def run(
             try:
                 entry = kjv_dates[date_key][0]
             except (KeyError, IndexError):
-                errors.append({"date": date_key, "reason": "entry not accessible in KJV JSON"})
+                errors.append(
+                    {"date": date_key, "reason": "entry not accessible in KJV JSON"}
+                )
                 skip_count += 1
                 continue
 
@@ -710,36 +776,50 @@ def run(
 
             # Main verse — try primary, then fallback
             main_ref_en = extract_ref_from_versiculo(entry.get("versiculo", ""))
-            main_cita, main_texto, main_err = resolve_reference(main_ref_en, books_sot, cursor)
+            main_cita, main_texto, main_err = resolve_reference(
+                main_ref_en, books_sot, cursor
+            )
             if main_err and fallback_cursor is not None:
-                fb_cita, fb_texto, fb_err = resolve_reference(main_ref_en, books_sot, fallback_cursor)
+                fb_cita, fb_texto, fb_err = resolve_reference(
+                    main_ref_en, books_sot, fallback_cursor
+                )
                 if not fb_err:
                     main_cita, main_texto, main_err = fb_cita, fb_texto, fb_err
                     fallback_used.append(f"versiculo:{main_ref_en}")
             if main_err:
-                date_errors.append({"field": "versiculo", "reference": main_ref_en, "reason": main_err})
+                date_errors.append(
+                    {"field": "versiculo", "reference": main_ref_en, "reason": main_err}
+                )
 
             # Para meditar verses — try primary, then fallback per verse
             pm_results: list[dict] = []
             for idx, pm in enumerate(entry.get("para_meditar", [])):
                 cita_en = pm.get("cita", "").strip()
-                pm_cita, pm_texto, pm_err = resolve_reference(cita_en, books_sot, cursor)
+                pm_cita, pm_texto, pm_err = resolve_reference(
+                    cita_en, books_sot, cursor
+                )
                 if pm_err and fallback_cursor is not None:
-                    fb_cita, fb_texto, fb_err = resolve_reference(cita_en, books_sot, fallback_cursor)
+                    fb_cita, fb_texto, fb_err = resolve_reference(
+                        cita_en, books_sot, fallback_cursor
+                    )
                     if not fb_err:
                         pm_cita, pm_texto, pm_err = fb_cita, fb_texto, fb_err
                         fallback_used.append(f"para_meditar[{idx}]:{cita_en}")
                 if pm_err:
-                    date_errors.append({
-                        "field":     f"para_meditar[{idx}]",
-                        "reference": cita_en,
-                        "reason":    pm_err,
-                    })
+                    date_errors.append(
+                        {
+                            "field": f"para_meditar[{idx}]",
+                            "reference": cita_en,
+                            "reason": pm_err,
+                        }
+                    )
                 else:
-                    pm_results.append({
-                        "cita":  pm_cita,
-                        "texto": normalize_verse_text(pm_texto),
-                    })
+                    pm_results.append(
+                        {
+                            "cita": pm_cita,
+                            "texto": normalize_verse_text(pm_texto),
+                        }
+                    )
 
             if date_errors:
                 errors.append({"date": date_key, "errors": date_errors})
@@ -750,13 +830,18 @@ def run(
                 continue
 
             # Translate tags
-            en_tags     = entry.get("tags") or []
-            target_tags = translate_tags(en_tags, tags_map, effective_merge, lang_code, tag_misses)
+            en_tags = entry.get("tags") or []
+            target_tags = translate_tags(
+                en_tags, tags_map, effective_merge, lang_code, tag_misses
+            )
 
             seed[date_key] = {
-                "versiculo":    {"cita": main_cita, "texto": normalize_verse_text(main_texto)},
+                "versiculo": {
+                    "cita": main_cita,
+                    "texto": normalize_verse_text(main_texto),
+                },
                 "para_meditar": pm_results,
-                "tags":         target_tags,
+                "tags": target_tags,
             }
             ok_count += 1
             fb_note = f"  [fallback: {fallback_code}]" if fallback_used else ""
@@ -775,15 +860,21 @@ def run(
     print(f"      ✅ Seed        → {seed_path}")
 
     if errors:
-        ep = save_report(errors, output_dir, "seed_errors", lang_code, version_code, year)
+        ep = save_report(
+            errors, output_dir, "seed_errors", lang_code, version_code, year
+        )
         print(f"      ✅ Errors      → {ep}")
 
     if tag_misses:
-        mp = save_report(tag_misses, output_dir, "seed_tag_misses", lang_code, version_code, year)
+        mp = save_report(
+            tag_misses, output_dir, "seed_tag_misses", lang_code, version_code, year
+        )
         print(f"      ⚠️  Tag misses  → {mp}")
 
     if violations:
-        vp = save_report(violations, output_dir, "seed_violations", lang_code, version_code, year)
+        vp = save_report(
+            violations, output_dir, "seed_violations", lang_code, version_code, year
+        )
         print(f"      ⚠️  Violations  → {vp}")
 
     # ── Summary ──────────────────────────────────────────────────────────────
@@ -808,6 +899,7 @@ def run(
 # 10.  ENTRY POINT
 # ─────────────────────────────────────────────────────────────────────────────
 
+
 def _parse_cli() -> argparse.Namespace | None:
     """
     Parse CLI arguments when all four required flags are present.
@@ -820,15 +912,19 @@ def _parse_cli() -> argparse.Namespace | None:
         description="Seed Extractor Fetch — SOT Edition",
         add_help=True,
     )
-    parser.add_argument("--year",    type=int, help="Target year (2025 or 2026)")
-    parser.add_argument("--lang",    type=str, help="Target language code  (e.g. ar, de, hi)")
-    parser.add_argument("--version", type=str, help="Bible version code    (e.g. ALAB, LU17, HERV)")
-    parser.add_argument("--output",  type=str, help="Output folder path")
+    parser.add_argument("--year", type=int, help="Target year (2025 or 2026)")
+    parser.add_argument(
+        "--lang", type=str, help="Target language code  (e.g. ar, de, hi)"
+    )
+    parser.add_argument(
+        "--version", type=str, help="Bible version code    (e.g. ALAB, LU17, HERV)"
+    )
+    parser.add_argument("--output", type=str, help="Output folder path")
 
     args, _ = parser.parse_known_args()
     if args.year and args.lang and args.version and args.output:
         return args
-    return None   # fall through to interactive mode
+    return None  # fall through to interactive mode
 
 
 def main() -> None:
@@ -838,8 +934,8 @@ def main() -> None:
     print(SEP + "\n")
 
     # ── Pre-fetch shared remote resources ────────────────────────────────────
-    books_sot = load_books_sot()       # cached — reused in run()
-    index     = fetch_versions_index() # cached — reused in run()
+    books_sot = load_books_sot()  # cached — reused in run()
+    index = fetch_versions_index()  # cached — reused in run()
 
     _ = books_sot  # already fetched; run() will call load_books_sot() → cache hit
 
@@ -859,7 +955,9 @@ def main() -> None:
         version_entry = lang_entry["versions"].get(version_code)
         if version_entry is None:
             available = list(lang_entry["versions"].keys())
-            print(f"ERROR: version '{version_code}' not found for language '{lang_code}'.")
+            print(
+                f"ERROR: version '{version_code}' not found for language '{lang_code}'."
+            )
             print(f"       Available versions: {available}")
             sys.exit(1)
     else:

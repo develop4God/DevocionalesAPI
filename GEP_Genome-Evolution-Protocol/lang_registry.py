@@ -32,6 +32,7 @@ class LangConfig:
         filename_pattern: Template for source JSON files from GitHub
         persona: Reader persona description for Phase 2 prompts
     """
+
     code: str
     language_name: str
     country: str
@@ -63,7 +64,6 @@ _REGISTRY: Dict[str, LangConfig] = {
             "it feels like the author stopped listening to what they just wrote."
         ),
     ),
-
     "pt": LangConfig(
         code="pt",
         language_name="Brazilian Portuguese",
@@ -83,7 +83,6 @@ _REGISTRY: Dict[str, LangConfig] = {
             "you feel cheated out of that moment with God."
         ),
     ),
-
     "en": LangConfig(
         code="en",
         language_name="English",
@@ -103,7 +102,6 @@ _REGISTRY: Dict[str, LangConfig] = {
             "breaks your concentration."
         ),
     ),
-
     "fr": LangConfig(
         code="fr",
         language_name="French",
@@ -122,7 +120,6 @@ _REGISTRY: Dict[str, LangConfig] = {
             "an inconsistency there breaks the spiritual thread for you."
         ),
     ),
-
     "de": LangConfig(
         code="de",
         language_name="German",
@@ -141,7 +138,6 @@ _REGISTRY: Dict[str, LangConfig] = {
             "One that feels rushed or generic loses it."
         ),
     ),
-
     "ar": LangConfig(
         code="ar",
         language_name="Arabic",
@@ -162,7 +158,6 @@ _REGISTRY: Dict[str, LangConfig] = {
             "The closing of a prayer is sacred to you — it must end with proper reverence."
         ),
     ),
-
     "zh": LangConfig(
         code="zh",
         language_name="Mandarin Chinese",
@@ -181,7 +176,6 @@ _REGISTRY: Dict[str, LangConfig] = {
             "Natural Chinese devotional writing has a particular warmth and rhythm you have internalized."
         ),
     ),
-
     "ja": LangConfig(
         code="ja",
         language_name="Japanese",
@@ -201,7 +195,6 @@ _REGISTRY: Dict[str, LangConfig] = {
             "a native Japanese ear hears it immediately."
         ),
     ),
-
     "fil": LangConfig(
         code="fil",
         language_name="Filipino",
@@ -215,7 +208,6 @@ _REGISTRY: Dict[str, LangConfig] = {
             "You notice when language feels academic or cold rather than personal and warm."
         ),
     ),
-
     "hi": LangConfig(
         code="hi",
         language_name="Hindi",
@@ -237,6 +229,7 @@ _REGISTRY: Dict[str, LangConfig] = {
 
 
 # ── Public API ────────────────────────────────────────────────────────────────
+
 
 def get(lang: str) -> LangConfig:
     """
@@ -358,6 +351,7 @@ def get_filename_pattern(lang: str, version: str) -> str:
 
 # ── Backward Compatibility Aliases ───────────────────────────────────────────
 # For gradual migration from old scattered dictionaries.
+
 
 def get_lang_config(lang: str) -> LangConfig:
     """Alias for get() for clarity in some contexts."""

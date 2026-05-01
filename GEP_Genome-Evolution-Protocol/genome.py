@@ -9,13 +9,18 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from models import (
-    Genome, GenomeFragment, GeneState, PauseCategory, ReaderReaction, Verdict
+    Genome,
+    GenomeFragment,
+    GeneState,
+    PauseCategory,
+    ReaderReaction,
+    Verdict,
 )
 
 # Minimum confidence a fragment needs to appear in prompts
-CONFIDENCE_SEED    = 0.4   # first time a pattern is seen
-CONFIDENCE_BOOST   = 0.15  # each additional evidence date
-CONFIDENCE_MAX     = 0.95
+CONFIDENCE_SEED = 0.4  # first time a pattern is seen
+CONFIDENCE_BOOST = 0.15  # each additional evidence date
+CONFIDENCE_MAX = 0.95
 
 
 import paths as _paths
@@ -159,7 +164,7 @@ def absorb_reaction(
         language=genome.language,
         version=genome.version,
         category=category,
-        pattern=reaction.reaction,       # reader's own words become the pattern
+        pattern=reaction.reaction,  # reader's own words become the pattern
         example_quote=quote,
         evidence_dates=[date],
         confidence=CONFIDENCE_SEED,
@@ -198,9 +203,11 @@ def _find_similar_fragment(
             best = frag
     return best
 
+
 def get_saved_genomes() -> list[str]:
     """Returns list of genome JSON filenames found in the current working directory."""
     from pathlib import Path
+
     return [str(p) for p in Path(".").glob("genome_*.json")]
 
 
@@ -243,13 +250,15 @@ def corpus_scan(
                         pattern = fragment.example_quote
                         if pattern in text:
                             idx = text.find(pattern)
-                            context = text[max(0, idx - 40): idx + len(pattern) + 60]
-                            results[fragment.id].append({
-                                "entry_id": eid,
-                                "date": date,
-                                "field": field,
-                                "context": f"...{context}...",
-                            })
+                            context = text[max(0, idx - 40) : idx + len(pattern) + 60]
+                            results[fragment.id].append(
+                                {
+                                    "entry_id": eid,
+                                    "date": date,
+                                    "field": field,
+                                    "context": f"...{context}...",
+                                }
+                            )
 
     return results
 
@@ -315,6 +324,7 @@ def verify_fragments_against_source(
         # ── Remote SOT fetch ────────────────────────────────────────────────
         # Import here to avoid circular import — source.py is a peer module.
         from source import fetch_remote
+
         if year is None:
             raise ValueError("year is required when local=False (remote fetch)")
         try:
@@ -329,7 +339,7 @@ def verify_fragments_against_source(
             )
     else:
         # ── Local file scan ─────────────────────────────────────────────────
-        for source_path in (source_paths or []):
+        for source_path in source_paths or []:
             if not Path(source_path).exists():
                 print(f"  ⚠️  Source file not found: {source_path} — skipped")
                 continue
@@ -339,7 +349,7 @@ def verify_fragments_against_source(
             if len(found_ids) == len(confirmed):
                 break  # early exit: all accounted for
 
-    verified   = [f for f in confirmed if f.id in found_ids]
+    verified = [f for f in confirmed if f.id in found_ids]
     unverified = [f for f in confirmed if f.id not in found_ids]
     return verified, unverified
 
@@ -348,19 +358,19 @@ def print_corpus_scan_report(scan_results: dict, genome: Genome) -> None:
     """Pretty-print corpus_scan() results."""
     fragment_map = {f.id: f for f in genome.fragments}
     total_hits = sum(len(v) for v in scan_results.values())
-    print(f"\n{'═'*60}")
+    print(f"\n{'═' * 60}")
     print(f"  🧬 Genome Corpus Scan — {total_hits} total hits")
-    print(f"{'═'*60}")
+    print(f"{'═' * 60}")
     for fid, hits in scan_results.items():
         if not hits:
             continue
         fr = fragment_map.get(fid)
         if not fr:
             continue
-        print(f"\n  [{fr.category.value}] \"{fr.example_quote}\"")
+        print(f'\n  [{fr.category.value}] "{fr.example_quote}"')
         print(f"  Pattern: {fr.pattern[:80]}")
         print(f"  Hits: {len(hits)}")
         for hit in hits:
             print(f"    • {hit['date']} [{hit['field']}] {hit['entry_id']}")
             print(f"      {hit['context']}")
-    print(f"\n{'═'*60}\n")
+    print(f"\n{'═' * 60}\n")

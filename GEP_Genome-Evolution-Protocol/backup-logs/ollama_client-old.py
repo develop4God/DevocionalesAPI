@@ -9,7 +9,6 @@ import urllib.request
 import urllib.error
 
 from models import PauseCategory, ReaderReaction, Verdict
-from models_helper import get_model_for_key
 
 OLLAMA_URL = "http://localhost:11434/api/generate"
 
@@ -20,8 +19,8 @@ OLLAMA_URL = "http://localhost:11434/api/generate"
 #   <tag>  → any direct Ollama tag, e.g. qwen2.5:7b
 MODEL_KEYS = ["auto", "fast", "best"]
 
-MAX_RETRIES    = 2
-RETRY_DELAY_S  = 3
+MAX_RETRIES = 2
+RETRY_DELAY_S = 3
 
 
 def call_ollama(
@@ -33,17 +32,19 @@ def call_ollama(
     Returns (ReaderReaction, None) on success.
     Returns (None, raw_response_or_error) on failure.
     """
-    payload = json.dumps({
-        "model": model,
-        "prompt": user,
-        "system": system,
-        "stream": False,
-        "format": "json",
-        "options": {
-            "temperature": 0.1,
-            "num_predict": 500,   # reader reaction is short — no need for 1500
-        },
-    }).encode("utf-8")
+    payload = json.dumps(
+        {
+            "model": model,
+            "prompt": user,
+            "system": system,
+            "stream": False,
+            "format": "json",
+            "options": {
+                "temperature": 0.1,
+                "num_predict": 500,  # reader reaction is short — no need for 1500
+            },
+        }
+    ).encode("utf-8")
 
     req = urllib.request.Request(
         OLLAMA_URL,
@@ -55,8 +56,8 @@ def call_ollama(
     for attempt in range(1, MAX_RETRIES + 1):
         try:
             with urllib.request.urlopen(req, timeout=120) as resp:
-                result  = json.loads(resp.read().decode("utf-8"))
-                raw     = result.get("response", "").strip()
+                result = json.loads(resp.read().decode("utf-8"))
+                raw = result.get("response", "").strip()
                 return _parse_reaction(raw), None
 
         except urllib.error.URLError as e:
@@ -87,7 +88,7 @@ def _parse_reaction(raw: str) -> ReaderReaction | None:
         return None
 
     verdict_raw = data.get("verdict", "OK").strip().upper()
-    verdict     = Verdict.PAUSE if verdict_raw == "PAUSE" else Verdict.OK
+    verdict = Verdict.PAUSE if verdict_raw == "PAUSE" else Verdict.OK
 
     category = None
     if verdict == Verdict.PAUSE:

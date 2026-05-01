@@ -9,6 +9,7 @@ Environment overrides (optional):
     GEP_DATA_DIR    override the root data directory
     GEP_CONFIG_DIR  override the config directory
 """
+
 import os
 from pathlib import Path
 
@@ -16,18 +17,18 @@ from pathlib import Path
 ROOT = Path(__file__).parent
 
 # ── Config ────────────────────────────────────────────────────────────────────
-CONFIG_DIR    = ROOT / os.environ.get("GEP_CONFIG_DIR", "config")
+CONFIG_DIR = ROOT / os.environ.get("GEP_CONFIG_DIR", "config")
 PROVIDERS_YML = CONFIG_DIR / "providers.yml"
 
 # ── Data ──────────────────────────────────────────────────────────────────────
-DATA_DIR         = ROOT / os.environ.get("GEP_DATA_DIR", "data")
-AUDIT_DIR        = DATA_DIR / "audit"
-BATCH_INPUT_DIR  = DATA_DIR / "batch_input"
+DATA_DIR = ROOT / os.environ.get("GEP_DATA_DIR", "data")
+AUDIT_DIR = DATA_DIR / "audit"
+BATCH_INPUT_DIR = DATA_DIR / "batch_input"
 BATCH_OUTPUT_DIR = DATA_DIR / "batch_output"
-GENOMES_DIR      = DATA_DIR / "genomes"
-LOGS_DIR         = DATA_DIR / "logs"
-SOURCE_DIR       = DATA_DIR / "source"
-REPORTS_DIR      = DATA_DIR / "reports"
+GENOMES_DIR = DATA_DIR / "genomes"
+LOGS_DIR = DATA_DIR / "logs"
+SOURCE_DIR = DATA_DIR / "source"
+REPORTS_DIR = DATA_DIR / "reports"
 
 
 def ensure_dirs() -> None:

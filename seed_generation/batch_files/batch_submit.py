@@ -30,7 +30,6 @@ Dry-run file saved as: prompts_<lang>_<version>_<ts>.jsonl  (in output dir)
 
 import argparse
 import json
-import os
 import re
 import sys
 from datetime import datetime
@@ -38,6 +37,7 @@ from pathlib import Path
 
 try:
     from dotenv import load_dotenv
+
     load_dotenv()
 except ImportError:
     pass
@@ -53,12 +53,12 @@ def _safe_custom_id(date_key: str) -> str:
 
 
 def dry_run(
-    seed_path:      str,
-    master_lang:    str,
+    seed_path: str,
+    master_lang: str,
     master_version: str,
-    output_dir:     str,
-    start_date:     str | None = None,
-    limit:          int | None = None,
+    output_dir: str,
+    start_date: str | None = None,
+    limit: int | None = None,
 ) -> str:
     """
     Build prompts from seed and write a provider-agnostic JSONL to output_dir.
@@ -85,8 +85,10 @@ def dry_run(
     print(f"  Seed       : {seed_path}")
     print(f"  Lang       : {master_lang}  Version: {master_version}")
     print(f"  Entries    : {total}")
-    if start_date: print(f"  Start date : {start_date}")
-    if limit:      print(f"  Limit      : {limit}")
+    if start_date:
+        print(f"  Start date : {start_date}")
+    if limit:
+        print(f"  Limit      : {limit}")
     print(SEP + "\n")
 
     if total == 0:
@@ -94,44 +96,44 @@ def dry_run(
         sys.exit(1)
 
     Path(output_dir).mkdir(parents=True, exist_ok=True)
-    ts       = datetime.now().strftime("%Y%m%d_%H%M%S")
+    ts = datetime.now().strftime("%Y%m%d_%H%M%S")
     out_path = Path(output_dir) / f"prompts_{master_lang}_{master_version}_{ts}.jsonl"
 
     with open(out_path, "w", encoding="utf-8") as f:
         for date_key in all_dates:
             entry = seed[date_key]
-            cita  = entry["versiculo"]["cita"]
+            cita = entry["versiculo"]["cita"]
             texto = entry["versiculo"].get("texto", "")
             topic = entry.get("topic")
             record = {
                 "custom_id": _safe_custom_id(date_key),
-                "date":      date_key,
-                "lang":      master_lang,
-                "version":   master_version,
-                "verse":     cita,
-                "prompt":    build_prompt(cita, master_lang, topic, texto),
+                "date": date_key,
+                "lang": master_lang,
+                "version": master_version,
+                "verse": cita,
+                "prompt": build_prompt(cita, master_lang, topic, texto),
             }
             f.write(json.dumps(record, ensure_ascii=False) + "\n")
 
     print(f"✅ Dry-run JSONL → {out_path}")
     print(f"   {total} prompts — no model, no provider, no cost")
-    print(f"\nReview the file, then submit for real:")
-    print(f"  python batch_submit.py \\")
+    print("\nReview the file, then submit for real:")
+    print("  python batch_submit.py \\")
     print(f"    --seed {seed_path} \\")
     print(f"    --lang {master_lang} --version {master_version} \\")
     print(f"    --output {output_dir} \\")
-    print(f"    --provider <gemini|anthropic|fireworks> [--model <alias>]")
+    print("    --provider <gemini|anthropic|fireworks> [--model <alias>]")
     print(SEP + "\n")
 
     return str(out_path)
 
 
 def dry_run_full(
-    seed_path:      str,
-    master_lang:    str,
+    seed_path: str,
+    master_lang: str,
     master_version: str,
-    provider:       str,
-    model_alias:    str | None = None,
+    provider: str,
+    model_alias: str | None = None,
 ) -> None:
     """
     Show the exact wire payload for the first seed entry — what the
@@ -147,7 +149,7 @@ def dry_run_full(
 
     first_date = sorted(seed.keys())[0]
     entry = seed[first_date]
-    cita  = entry["versiculo"]["cita"]
+    cita = entry["versiculo"]["cita"]
     texto = entry["versiculo"].get("texto", "")
     topic = entry.get("topic")
 
@@ -164,7 +166,9 @@ def dry_run_full(
     print(SEP)
     print(f"  Provider   : {provider}")
     print(f"  Model      : {adapter.model_id}  (quality={adapter.quality})")
-    print(f"  Max tokens : {adapter.max_tokens}  ← sent as maxOutputTokens in every request")
+    print(
+        f"  Max tokens : {adapter.max_tokens}  ← sent as maxOutputTokens in every request"
+    )
     print(f"  Seed       : {seed_path}")
     print(f"  Entry      : {first_date}  |  Verse: {cita}")
     print(SEP)
@@ -176,7 +180,7 @@ def dry_run_full(
     else:
         print(f"\n⚠️  Adapter '{provider}' has no _to_jsonl_line().")
         print("   Inspect its submit() method manually.")
-        print(f"\n--- PROMPT CONTENT (agnostic, full) ---")
+        print("\n--- PROMPT CONTENT (agnostic, full) ---")
         print(req.prompt)
 
     # Show the complete prompt text for the sample entry (not truncated)
@@ -186,14 +190,14 @@ def dry_run_full(
 
 
 def submit_batch(
-    seed_path:      str,
-    master_lang:    str,
+    seed_path: str,
+    master_lang: str,
     master_version: str,
-    output_dir:     str,
-    provider:       str,
-    model_alias:    str | None = None,
-    start_date:     str | None = None,
-    limit:          int | None = None,
+    output_dir: str,
+    provider: str,
+    model_alias: str | None = None,
+    start_date: str | None = None,
+    limit: int | None = None,
 ) -> str:
     """
     Load seed, build BatchRequests, submit via adapter, save state file.
@@ -221,12 +225,16 @@ def submit_batch(
     print(SEP)
     print(f"  Provider   : {provider}")
     print(f"  Model      : {adapter.model_id}  (quality={adapter.quality})")
-    print(f"  Max tokens : {adapter.max_tokens}  ← sent as maxOutputTokens in every request")
+    print(
+        f"  Max tokens : {adapter.max_tokens}  ← sent as maxOutputTokens in every request"
+    )
     print(f"  Seed       : {seed_path}")
     print(f"  Lang       : {master_lang}  Version: {master_version}")
     print(f"  Entries    : {total}")
-    if start_date: print(f"  Start date : {start_date}")
-    if limit:      print(f"  Limit      : {limit}")
+    if start_date:
+        print(f"  Start date : {start_date}")
+    if limit:
+        print(f"  Limit      : {limit}")
     print(SEP + "\n")
 
     if total == 0:
@@ -237,16 +245,18 @@ def submit_batch(
     requests: list[BatchRequest] = []
     for date_key in all_dates:
         seed_entry = seed[date_key]
-        cita  = seed_entry["versiculo"]["cita"]
+        cita = seed_entry["versiculo"]["cita"]
         texto = seed_entry["versiculo"].get("texto", "")
         topic = seed_entry.get("topic")
-        requests.append(BatchRequest(
-            date_key=date_key,
-            custom_id=_safe_custom_id(date_key),
-            prompt=build_prompt(cita, master_lang, topic, texto),
-            model_id=adapter.model_id,
-            max_tokens=adapter.max_tokens,
-        ))
+        requests.append(
+            BatchRequest(
+                date_key=date_key,
+                custom_id=_safe_custom_id(date_key),
+                prompt=build_prompt(cita, master_lang, topic, texto),
+                model_id=adapter.model_id,
+                max_tokens=adapter.max_tokens,
+            )
+        )
 
     # ── Submit ─────────────────────────────────────────────────────────────
     print(f"INFO: Submitting {total} requests via {provider}...")
@@ -258,18 +268,18 @@ def submit_batch(
     state_path = _SCRIPT_DIR / state_filename
 
     state = {
-        "job_id":          job_id,
-        "provider":        provider,
-        "batch_strategy":  adapter.batch_strategy,
-        "model_alias":     model_alias or "default",
-        "model_id":        adapter.model_id,
-        "seed_path":       str(seed_path),
-        "master_lang":     master_lang,
-        "master_version":  master_version,
-        "output_dir":      str(output_dir),
-        "dates":           all_dates,
-        "total":           total,
-        "submitted_at":    datetime.now().isoformat(),
+        "job_id": job_id,
+        "provider": provider,
+        "batch_strategy": adapter.batch_strategy,
+        "model_alias": model_alias or "default",
+        "model_id": adapter.model_id,
+        "seed_path": str(seed_path),
+        "master_lang": master_lang,
+        "master_version": master_version,
+        "output_dir": str(output_dir),
+        "dates": all_dates,
+        "total": total,
+        "submitted_at": datetime.now().isoformat(),
     }
 
     with open(state_path, "w", encoding="utf-8") as f:
@@ -278,10 +288,12 @@ def submit_batch(
     print(f"\nState file → {state_path}")
 
     if adapter.batch_strategy == "openai_batch_file":
-        print(f"\nNext step (after downloading Fireworks results JSONL):")
-        print(f"  python batch_collect.py --state {state_path} --results <results.jsonl>")
+        print("\nNext step (after downloading Fireworks results JSONL):")
+        print(
+            f"  python batch_collect.py --state {state_path} --results <results.jsonl>"
+        )
     else:
-        print(f"\nNext step:")
+        print("\nNext step:")
         print(f"  python batch_collect.py --state {state_path}")
     print(SEP + "\n")
 
@@ -292,22 +304,39 @@ def main():
     parser = argparse.ArgumentParser(
         description="Submit seed to any AI provider for devotional generation (Step 1/2)."
     )
-    parser.add_argument("--seed",       type=str)
-    parser.add_argument("--lang",       type=str)
-    parser.add_argument("--version",    type=str)
-    parser.add_argument("--output",     type=str)
-    parser.add_argument("--provider",   type=str, default="anthropic",
-                        help="Provider name (anthropic | gemini | fireworks)")
-    parser.add_argument("--model",      type=str, default=None,
-                        help="Model alias from providers.yml (uses provider default if omitted)")
+    parser.add_argument("--seed", type=str)
+    parser.add_argument("--lang", type=str)
+    parser.add_argument("--version", type=str)
+    parser.add_argument("--output", type=str)
+    parser.add_argument(
+        "--provider",
+        type=str,
+        default="anthropic",
+        help="Provider name (anthropic | gemini | fireworks)",
+    )
+    parser.add_argument(
+        "--model",
+        type=str,
+        default=None,
+        help="Model alias from providers.yml (uses provider default if omitted)",
+    )
     parser.add_argument("--start-date", type=str, default=None)
-    parser.add_argument("--limit",      type=int, default=None)
-    parser.add_argument("--dry-run",    action="store_true",
-                        help="Write agnostic prompt JSONL to output dir — no API call, no cost")
-    parser.add_argument("--dry-run-full", action="store_true",
-                        help="Show exact provider wire payload for 1 entry — no API call, no cost")
-    parser.add_argument("--list-providers", action="store_true",
-                        help="Print all configured providers and models, then exit")
+    parser.add_argument("--limit", type=int, default=None)
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Write agnostic prompt JSONL to output dir — no API call, no cost",
+    )
+    parser.add_argument(
+        "--dry-run-full",
+        action="store_true",
+        help="Show exact provider wire payload for 1 entry — no API call, no cost",
+    )
+    parser.add_argument(
+        "--list-providers",
+        action="store_true",
+        help="Print all configured providers and models, then exit",
+    )
     args = parser.parse_args()
 
     if args.list_providers:
@@ -326,34 +355,34 @@ def main():
 
     if args.dry_run:
         dry_run(
-            seed_path      = args.seed,
-            master_lang    = args.lang,
-            master_version = args.version,
-            output_dir     = args.output,
-            start_date     = args.start_date,
-            limit          = args.limit,
+            seed_path=args.seed,
+            master_lang=args.lang,
+            master_version=args.version,
+            output_dir=args.output,
+            start_date=args.start_date,
+            limit=args.limit,
         )
         return
 
     if args.dry_run_full:
         dry_run_full(
-            seed_path   = args.seed,
-            master_lang = args.lang,
-            master_version = args.version,
-            provider    = args.provider,
-            model_alias = args.model,
+            seed_path=args.seed,
+            master_lang=args.lang,
+            master_version=args.version,
+            provider=args.provider,
+            model_alias=args.model,
         )
         return
 
     submit_batch(
-        seed_path      = args.seed,
-        master_lang    = args.lang,
-        master_version = args.version,
-        output_dir     = args.output,
-        provider       = args.provider,
-        model_alias    = args.model,
-        start_date     = args.start_date,
-        limit          = args.limit,
+        seed_path=args.seed,
+        master_lang=args.lang,
+        master_version=args.version,
+        output_dir=args.output,
+        provider=args.provider,
+        model_alias=args.model,
+        start_date=args.start_date,
+        limit=args.limit,
     )
 
 

@@ -1,5 +1,7 @@
 # Shared utility: unwrap model output for JSON parsing
 import re
+
+
 def _unwrap_text(text: str) -> str:
     """
     Normalize model output before JSON parsing.
@@ -20,15 +22,14 @@ def _unwrap_text(text: str) -> str:
     # 2. Extract content after "Final answer:" / "Final Answer:" / "final answer:"
     #    Requires the colon to be present (excludes "final answer is:").
     #    Handles multi-line gap between label and actual answer.
-    fa_m = re.search(r'(?i)final\s+answer\s*:\s*\n*([\s\S]+)', text)
+    fa_m = re.search(r"(?i)final\s+answer\s*:\s*\n*([\s\S]+)", text)
     if fa_m:
         text = fa_m.group(1).strip()
 
     # 3. Unwrap \\boxed{ \\{ ... \\} } — LaTeX format from some model configs
-    boxed_m = re.search(r'\\boxed\s*\{([\s\S]+)\}', text)
+    boxed_m = re.search(r"\\boxed\s*\{([\s\S]+)\}", text)
     if boxed_m:
-        text = boxed_m.group(1).replace(r'\\{', '{').replace(r'\\}', '}').strip()
-
+        text = boxed_m.group(1).replace(r"\\{", "{").replace(r"\\}", "}").strip()
 
     # 4. Strip markdown fences
     if text.startswith("```"):
@@ -38,6 +39,8 @@ def _unwrap_text(text: str) -> str:
             text = text[4:]
 
     return text.strip()
+
+
 """
 cloud_client.py — GEP Critic v3
 Single responsibility: call any cloud LLM provider defined in providers.yml.
@@ -61,12 +64,9 @@ CLI:
 import argparse
 import json
 import os
-import re
-import sys
 import time
 import urllib.request
 import urllib.error
-from dataclasses import dataclass, field
 from datetime import date
 from pathlib import Path
 from typing import Optional
@@ -83,6 +83,7 @@ import ollama_client as _ollama  # local routing
 try:
     from dotenv import load_dotenv
     from pathlib import Path
+
     load_dotenv(dotenv_path=Path(__file__).parent / ".env")
 except ImportError:
     pass
@@ -90,6 +91,7 @@ except ImportError:
 # ── Config loading ────────────────────────────────────────────────────────────
 
 from paths import PROVIDERS_YML as _PROVIDERS_YML
+
 _config: dict | None = None
 
 
@@ -106,14 +108,14 @@ def _load_config() -> dict:
     return _config
 
 
-
 def providers_for_phase(phase: int) -> list[dict]:
     """Return providers for the given phase filtered by default_backend, sorted by priority."""
     cfg = _load_config()
     backend = cfg["settings"].get("default_backend", "api")  # "api" or "local"
     phase_key = f"phase{phase}"
     result = [
-        p for p in cfg["providers"]
+        p
+        for p in cfg["providers"]
         if p.get("phase") in (phase_key, "both", phase)
         and p.get("client_type", "api") == backend
     ]
@@ -126,8 +128,11 @@ def settings() -> dict:
 
 # ── Daily usage tracking ──────────────────────────────────────────────────────
 
+
 def _usage_path() -> Path:
-    return Path(__file__).parent / settings().get("daily_counter_path", ".gep_daily_tokens.json")
+    return Path(__file__).parent / settings().get(
+        "daily_counter_path", ".gep_daily_tokens.json"
+    )
 
 
 def _load_usage() -> dict:
@@ -198,7 +203,10 @@ def _provider_warned(provider: dict) -> bool:
 
 # ── Request building ──────────────────────────────────────────────────────────
 
-def _build_request(provider: dict, system: str, user: str, phase: int) -> tuple[dict, str]:
+
+def _build_request(
+    provider: dict, system: str, user: str, phase: int
+) -> tuple[dict, str]:
     """
     Build the API payload and resolve the API key.
     Returns (payload_dict, api_key).
@@ -216,7 +224,7 @@ def _build_request(provider: dict, system: str, user: str, phase: int) -> tuple[
         "model": model,
         "messages": [
             {"role": "system", "content": system},
-            {"role": "user",   "content": user},
+            {"role": "user", "content": user},
         ],
         "max_tokens": 4096,
         "temperature": 0.1,
@@ -225,7 +233,11 @@ def _build_request(provider: dict, system: str, user: str, phase: int) -> tuple[
     # reasoning_effort style (Groq, OpenRouter)
     if style == "reasoning_effort" and thinking_cfg.get("supported"):
         param = thinking_cfg.get("param", "reasoning_effort")
-        value = thinking_cfg.get("value_on") if phase == 2 else thinking_cfg.get("value_off", "none")
+        value = (
+            thinking_cfg.get("value_on")
+            if phase == 2
+            else thinking_cfg.get("value_off", "none")
+        )
         if value:
             payload[param] = value
 
@@ -239,7 +251,9 @@ def _build_request(provider: dict, system: str, user: str, phase: int) -> tuple[
     return payload, api_key or "local"
 
 
-def _build_http_request(provider: dict, payload: dict, api_key: str) -> urllib.request.Request:
+def _build_http_request(
+    provider: dict, payload: dict, api_key: str
+) -> urllib.request.Request:
     base_url = provider["base_url"].rstrip("/")
     url = f"{base_url}/chat/completions"
 
@@ -261,6 +275,7 @@ def _build_http_request(provider: dict, payload: dict, api_key: str) -> urllib.r
 
 
 # ── Response parsing ──────────────────────────────────────────────────────────
+
 
 def _parse_response(data: dict) -> tuple[str, int]:
     """Returns (content, total_tokens)."""
@@ -319,6 +334,7 @@ def _extract_thinking(content: str) -> str:
 
 # ── Core call ─────────────────────────────────────────────────────────────────
 
+
 def _call_provider(
     provider: dict,
     system: str,
@@ -335,7 +351,9 @@ def _call_provider(
         model = provider.get("model")
         thinking_cfg = provider.get("thinking_mode", {})
         think = thinking_cfg.get("supported", False) and phase == 2
-        reaction, raw = _ollama.call_ollama(model, system, user, verbose=verbose, think=think)
+        reaction, raw = _ollama.call_ollama(
+            model, system, user, verbose=verbose, think=think
+        )
         return reaction, raw, None
     # ── API routing (below) ───────────────────────────────────────────────
     cfg = settings()
@@ -385,14 +403,19 @@ def _call_provider(
             body = e.read().decode("utf-8", errors="replace")
             if e.code == 429:
                 if verbose:
-                    print(f" 429 rate limit")
-                return None, "429", None          # signal to swap provider
+                    print(" 429 rate limit")
+                return None, "429", None  # signal to swap provider
             if attempt < max_retries:
                 time.sleep(retry_delay)
                 continue
             return None, f"HTTP {e.code}: {body[:200]}", None
 
-        except (urllib.error.URLError, TimeoutError, OSError, json.JSONDecodeError) as e:
+        except (
+            urllib.error.URLError,
+            TimeoutError,
+            OSError,
+            json.JSONDecodeError,
+        ) as e:
             if attempt < max_retries:
                 time.sleep(retry_delay)
                 continue
@@ -405,7 +428,6 @@ def _call_provider(
 
 # Mirror ollama_client MODEL_KEYS
 MODEL_KEYS = ["auto", "fast", "best"]
-
 
 
 def get_model_for_key(key: str) -> str:
@@ -460,7 +482,7 @@ def call_ollama(
             if swap_on_429:
                 msg = f"[{provider['name']}] 429 rate-limit → swapped"
                 if verbose:
-                    print(f"  swapping to next provider...")
+                    print("  swapping to next provider...")
                 failures.append(msg)
                 continue
             return None, f"429 rate limit on {provider['name']}"
@@ -510,7 +532,7 @@ def _cmd_list():
         key_set = "✅" if os.environ.get(p.get("env_var", "")) else "❌ key missing"
         exhausted = "⚠️  near limit" if _provider_warned(p) else ""
         print(
-            f"  {key_set} [{phase}] pri={p.get('priority','?')}  "
+            f"  {key_set} [{phase}] pri={p.get('priority', '?')}  "
             f"{p['name']:<20} {model:<30} "
             f"rpm={rpm}  tpd={tpd}  rpd={rpd}  thinking={thinking}  {exhausted}"
         )
@@ -529,8 +551,8 @@ def _cmd_usage():
         p = id_to_provider.get(pid, {})
         tpd = (p.get("limits") or {}).get("tpd") or 0
         rpd = (p.get("limits") or {}).get("rpd") or 0
-        tok_pct = f"({bucket['tokens']/tpd*100:.0f}%)" if tpd else ""
-        req_pct = f"({bucket['requests']/rpd*100:.0f}%)" if rpd else ""
+        tok_pct = f"({bucket['tokens'] / tpd * 100:.0f}%)" if tpd else ""
+        req_pct = f"({bucket['requests'] / rpd * 100:.0f}%)" if rpd else ""
         name = p.get("name", pid)
         print(
             f"  {name:<22} tokens: {bucket['tokens']:>7} {tok_pct:<8} "
@@ -570,11 +592,17 @@ def _cli():
             "  python cloud_client.py --test --phase 2\n"
         ),
     )
-    parser.add_argument("--list",        action="store_true", help="List all configured providers")
-    parser.add_argument("--usage",       action="store_true", help="Show today's token usage")
-    parser.add_argument("--reset-usage", action="store_true", help="Reset daily usage counters")
-    parser.add_argument("--test",        action="store_true", help="Run a test call")
-    parser.add_argument("--phase",       type=int, default=2, help="Phase for --test (1 or 2)")
+    parser.add_argument(
+        "--list", action="store_true", help="List all configured providers"
+    )
+    parser.add_argument("--usage", action="store_true", help="Show today's token usage")
+    parser.add_argument(
+        "--reset-usage", action="store_true", help="Reset daily usage counters"
+    )
+    parser.add_argument("--test", action="store_true", help="Run a test call")
+    parser.add_argument(
+        "--phase", type=int, default=2, help="Phase for --test (1 or 2)"
+    )
     args = parser.parse_args()
 
     if args.list:

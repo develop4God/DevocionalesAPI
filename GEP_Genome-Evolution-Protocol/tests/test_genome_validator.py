@@ -16,10 +16,7 @@ from pathlib import Path
 # Add parent directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from genome_validator import (
-    validate_entry, validate_entries, validate_file,
-    PatternMatch, ValidationReport
-)
+from genome_validator import validate_entry, validate_entries, validate_file
 from models import DevotionalEntry, Genome, GenomeFragment, PauseCategory, GeneState
 from datetime import datetime
 
@@ -54,7 +51,7 @@ entry = DevotionalEntry(
     reflexion="Dios nos ama profundamente profundamente y desea lo mejor.",
     oracion="Señor, gracias por tu amor incondicional.",
     para_meditar=[],
-    tags=[]
+    tags=[],
 )
 
 # Create a test genome with a repetition pattern
@@ -69,7 +66,7 @@ fragment = GenomeFragment(
     confidence=0.8,
     state=GeneState.CONFIRMED,
     created_at=datetime.now().isoformat(),
-    updated_at=datetime.now().isoformat()
+    updated_at=datetime.now().isoformat(),
 )
 
 genome = Genome(
@@ -79,13 +76,19 @@ genome = Genome(
     fragments=[fragment],
     total_entries_reviewed=10,
     total_pauses=2,
-    updated_at=datetime.now().isoformat()
+    updated_at=datetime.now().isoformat(),
 )
 
 matches = validate_entry(entry, genome, confidence_threshold=0.6)
 check("validate_entry returns matches", len(matches) > 0, f"found {len(matches)}")
-check("  Match has correct entry_id", matches[0].entry_id == "test_001" if matches else False)
-check("  Match has correct category", matches[0].category == "repetition" if matches else False)
+check(
+    "  Match has correct entry_id",
+    matches[0].entry_id == "test_001" if matches else False,
+)
+check(
+    "  Match has correct category",
+    matches[0].category == "repetition" if matches else False,
+)
 
 # ── Test 2: No matches when pattern doesn't exist ────────────────────────────
 print("\n[2] Testing no matches when pattern doesn't exist...")
@@ -99,7 +102,7 @@ clean_entry = DevotionalEntry(
     reflexion="El Señor es mi pastor, nada me falta.",
     oracion="Gracias Señor por tu cuidado.",
     para_meditar=[],
-    tags=[]
+    tags=[],
 )
 
 matches = validate_entry(clean_entry, genome, confidence_threshold=0.6)
@@ -139,13 +142,15 @@ temp_data = {
                 "reflexion": "Dios nos ama profundamente profundamente y desea lo mejor.",
                 "oracion": "Señor, gracias por tu amor.",
                 "para_meditar": [],
-                "tags": []
+                "tags": [],
             }
         }
     }
 }
 
-with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False, encoding='utf-8') as f:
+with tempfile.NamedTemporaryFile(
+    mode="w", suffix=".json", delete=False, encoding="utf-8"
+) as f:
     json.dump(temp_data, f)
     temp_path = f.name
 
@@ -167,7 +172,7 @@ empty_genome = Genome(
     fragments=[],
     total_entries_reviewed=0,
     total_pauses=0,
-    updated_at=datetime.now().isoformat()
+    updated_at=datetime.now().isoformat(),
 )
 
 matches = validate_entry(entry, empty_genome, confidence_threshold=0.6)
@@ -189,7 +194,7 @@ low_conf_fragment = GenomeFragment(
     confidence=0.3,  # Below threshold
     state=GeneState.CANDIDATE,
     created_at=datetime.now().isoformat(),
-    updated_at=datetime.now().isoformat()
+    updated_at=datetime.now().isoformat(),
 )
 
 low_conf_genome = Genome(
@@ -199,7 +204,7 @@ low_conf_genome = Genome(
     fragments=[low_conf_fragment],
     total_entries_reviewed=1,
     total_pauses=1,
-    updated_at=datetime.now().isoformat()
+    updated_at=datetime.now().isoformat(),
 )
 
 matches = validate_entry(entry, low_conf_genome, confidence_threshold=0.6)
@@ -217,7 +222,7 @@ multi_entry = DevotionalEntry(
     reflexion="Dios nos ama profundamente profundamente. La soteriológica paradigma universal.",
     oracion="Señor, gracias gracias por tu amor.",
     para_meditar=[],
-    tags=[]
+    tags=[],
 )
 
 multi_fragments = [
@@ -232,7 +237,7 @@ multi_fragments = [
         confidence=0.8,
         state=GeneState.CONFIRMED,
         created_at=datetime.now().isoformat(),
-        updated_at=datetime.now().isoformat()
+        updated_at=datetime.now().isoformat(),
     ),
     GenomeFragment(
         id="frag_reg",
@@ -245,7 +250,7 @@ multi_fragments = [
         confidence=0.7,
         state=GeneState.CONFIRMED,
         created_at=datetime.now().isoformat(),
-        updated_at=datetime.now().isoformat()
+        updated_at=datetime.now().isoformat(),
     ),
 ]
 
@@ -256,7 +261,7 @@ multi_genome = Genome(
     fragments=multi_fragments,
     total_entries_reviewed=10,
     total_pauses=5,
-    updated_at=datetime.now().isoformat()
+    updated_at=datetime.now().isoformat(),
 )
 
 matches = validate_entry(multi_entry, multi_genome, confidence_threshold=0.6)

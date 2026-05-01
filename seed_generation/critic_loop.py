@@ -31,39 +31,38 @@ from pathlib import Path
 # ── Constants ─────────────────────────────────────────────────────────────────
 
 GITHUB_RAW_BASE = (
-    "https://raw.githubusercontent.com/develop4God/devocionales-json"
-    "/refs/heads/main"
+    "https://raw.githubusercontent.com/develop4God/devocionales-json/refs/heads/main"
 )
 
 # Map lang+version → filename (handles non-ASCII version names like ja, zh)
 # Pattern: Devocional_year_{year}_{lang}_{version}.json
 KNOWN_FILES = {
-    ("pt", "NVI"):        "Devocional_year_{year}_pt_NVI.json",
-    ("pt", "ARC"):        "Devocional_year_{year}_pt_ARC.json",
-    ("en", "KJV"):        "Devocional_year_{year}_en_KJV.json",
-    ("en", "NIV"):        "Devocional_year_{year}_en_NIV.json",
-    ("es", "NVI"):        "Devocional_year_{year}_es_NVI.json",
-    ("fr", "LSG1910"):    "Devocional_year_{year}_fr_LSG1910.json",
-    ("fr", "TOB"):        "Devocional_year_{year}_fr_TOB.json",
-    ("de", "LU17"):       "Devocional_year_{year}_de_LU17.json",
-    ("de", "SCH2000"):    "Devocional_year_{year}_de_SCH2000.json",
-    ("hi", "HERV"):       "Devocional_year_{year}_hi_HERV.json",
-    ("hi", "HIOV"):       "Devocional_year_{year}_hi_HIOV.json",
-    ("ar", "NAV"):        "Devocional_year_{year}_ar_NAV.json",
-    ("ar", "SVDA"):       "Devocional_year_{year}_ar_SVDA.json",
-    ("tl", "ADB"):        "Devocional_year_{year}_tl_ADB.json",
-    ("tl", "ASND"):       "Devocional_year_{year}_tl_ASND.json",
-    ("ja", "リビングバイブル"):  "Devocional_year_{year}_ja_リビングバイブル.json",
-    ("ja", "新改訳2003"):     "Devocional_year_{year}_ja_新改訳2003.json",
-    ("zh", "和合本1919"):     "Devocional_year_{year}_zh_和合本1919.json",
-    ("zh", "新译本"):         "Devocional_year_{year}_zh_新译本.json",
+    ("pt", "NVI"): "Devocional_year_{year}_pt_NVI.json",
+    ("pt", "ARC"): "Devocional_year_{year}_pt_ARC.json",
+    ("en", "KJV"): "Devocional_year_{year}_en_KJV.json",
+    ("en", "NIV"): "Devocional_year_{year}_en_NIV.json",
+    ("es", "NVI"): "Devocional_year_{year}_es_NVI.json",
+    ("fr", "LSG1910"): "Devocional_year_{year}_fr_LSG1910.json",
+    ("fr", "TOB"): "Devocional_year_{year}_fr_TOB.json",
+    ("de", "LU17"): "Devocional_year_{year}_de_LU17.json",
+    ("de", "SCH2000"): "Devocional_year_{year}_de_SCH2000.json",
+    ("hi", "HERV"): "Devocional_year_{year}_hi_HERV.json",
+    ("hi", "HIOV"): "Devocional_year_{year}_hi_HIOV.json",
+    ("ar", "NAV"): "Devocional_year_{year}_ar_NAV.json",
+    ("ar", "SVDA"): "Devocional_year_{year}_ar_SVDA.json",
+    ("tl", "ADB"): "Devocional_year_{year}_tl_ADB.json",
+    ("tl", "ASND"): "Devocional_year_{year}_tl_ASND.json",
+    ("ja", "リビングバイブル"): "Devocional_year_{year}_ja_リビングバイブル.json",
+    ("ja", "新改訳2003"): "Devocional_year_{year}_ja_新改訳2003.json",
+    ("zh", "和合本1919"): "Devocional_year_{year}_zh_和合本1919.json",
+    ("zh", "新译本"): "Devocional_year_{year}_zh_新译本.json",
 }
 
 # Ollama endpoint
 OLLAMA_URL = "http://localhost:11434/api/generate"
 
 MODELS = {
-    "7b":  "qwen2.5-coder:7b",
+    "7b": "qwen2.5-coder:7b",
     "27b": "qwen3.5:27b",
 }
 
@@ -71,8 +70,6 @@ MODELS = {
 CONTENT_FIELDS = ["versiculo", "reflexion", "oracion"]
 
 # ── Critic Prompt ─────────────────────────────────────────────────────────────
-
-
 
 
 SYSTEM_PROMPT_TEMPLATE = """You are a Senior {lang_label} Christian Editor and Theological Auditor.
@@ -132,6 +129,7 @@ LANG_LABELS = {
 
 # ── GitHub Fetch ──────────────────────────────────────────────────────────────
 
+
 def build_url(lang: str, version: str, year: int) -> str:
     key = (lang, version)
     if key not in KNOWN_FILES:
@@ -177,7 +175,9 @@ def extract_entries(data: dict, lang: str) -> list[tuple[str, dict]]:
     entries.sort(key=lambda x: x[0])
     return entries
 
+
 # ── Audit Log ─────────────────────────────────────────────────────────────────
+
 
 def audit_path(lang: str, version: str, year: int) -> Path:
     return Path(f"critic_audit_{lang}_{version}_{year}.jsonl")
@@ -205,7 +205,9 @@ def append_audit(log_path: Path, record: dict):
     with open(log_path, "a", encoding="utf-8") as f:
         f.write(json.dumps(record, ensure_ascii=False) + "\n")
 
+
 # ── Ollama ────────────────────────────────────────────────────────────────────
+
 
 def call_ollama(model: str, system: str, user: str) -> dict | None:
     payload = {
@@ -214,7 +216,7 @@ def call_ollama(model: str, system: str, user: str) -> dict | None:
         "system": system,
         "stream": False,
         "options": {
-            "temperature": 0.2,   # low temp = consistent critic
+            "temperature": 0.2,  # low temp = consistent critic
             "num_predict": 512,
         },
     }
@@ -256,29 +258,31 @@ def build_prompts(entry: dict, lang: str, version: str) -> tuple[str, str]:
     )
     return system, user
 
+
 # ── Display ───────────────────────────────────────────────────────────────────
+
 
 def print_verdict(date_key: str, entry: dict, verdict: dict):
     v = verdict.get("verdict", "?")
     icon = "✅" if v == "OK" else "⚠️ "
     grammar = verdict.get("grammar", {})
-    tone    = verdict.get("tone", {})
+    tone = verdict.get("tone", {})
     g_score = grammar.get("score", "?")
     t_score = tone.get("score", "?")
-    g_note  = grammar.get("notes") or ""
-    t_note  = tone.get("notes") or ""
+    g_note = grammar.get("notes") or ""
+    t_note = tone.get("notes") or ""
     overall = verdict.get("overall_notes") or ""
-    fix     = verdict.get("suggested_fix") or ""
+    fix = verdict.get("suggested_fix") or ""
 
-    print(f"\n{'─'*60}")
-    print(f"  {icon}  {date_key}  |  Entry: {entry.get('id','?')}")
+    print(f"\n{'─' * 60}")
+    print(f"  {icon}  {date_key}  |  Entry: {entry.get('id', '?')}")
     print(f"  Grammar [{g_score}/5]: {g_note}")
     print(f"  Tone    [{t_score}/5]: {t_note}")
     if overall:
         print(f"  Summary: {overall}")
     if fix:
         print(f"  💡 Fix: {fix}")
-    print(f"{'─'*60}")
+    print(f"{'─' * 60}")
 
 
 def print_overnight_summary(log_path: Path):
@@ -309,26 +313,35 @@ def print_overnight_summary(log_path: Path):
             except (json.JSONDecodeError, KeyError):
                 errors += 1
 
-    print(f"\n{'═'*60}")
+    print(f"\n{'═' * 60}")
     print(f"  📊 OVERNIGHT REPORT — {log_path.name}")
-    print(f"{'═'*60}")
+    print(f"{'═' * 60}")
     print(f"  Total reviewed : {total}")
     print(f"  ✅ OK          : {ok}")
     print(f"  ⚠️  Issues      : {issues}")
     print(f"  ❌ Errors      : {errors}")
     if issue_list:
-        print(f"\n  Entries needing review:")
+        print("\n  Entries needing review:")
         for d in issue_list:
             print(f"    • {d}")
-    print(f"{'═'*60}\n")
+    print(f"{'═' * 60}\n")
+
 
 # ── Interactive Mode ──────────────────────────────────────────────────────────
 
-def run_interactive(entries: list, lang: str, version: str,
-                    model: str, log_path: Path, start_date: str | None):
+
+def run_interactive(
+    entries: list,
+    lang: str,
+    version: str,
+    model: str,
+    log_path: Path,
+    start_date: str | None,
+):
     reviewed = load_reviewed_dates(log_path)
     pending = [
-        (d, e) for d, e in entries
+        (d, e)
+        for d, e in entries
         if d not in reviewed and (start_date is None or d >= start_date)
     ]
 
@@ -340,7 +353,7 @@ def run_interactive(entries: list, lang: str, version: str,
     print(f"\n  📋 {total_pending} entries to review")
     print(f"  📝 Audit log: {log_path}")
     print(f"  🤖 Model: {model}")
-    print(f"\n  Controls: [A]pprove  [S]kip  [Q]uit\n")
+    print("\n  Controls: [A]pprove  [S]kip  [Q]uit\n")
 
     done = 0
     for date_key, entry in pending:
@@ -385,13 +398,22 @@ def run_interactive(entries: list, lang: str, version: str,
 
     print(f"\n  Session complete. Audit log: {log_path}")
 
+
 # ── Overnight Mode ────────────────────────────────────────────────────────────
 
-def run_overnight(entries: list, lang: str, version: str,
-                  model: str, log_path: Path, start_date: str | None):
+
+def run_overnight(
+    entries: list,
+    lang: str,
+    version: str,
+    model: str,
+    log_path: Path,
+    start_date: str | None,
+):
     reviewed = load_reviewed_dates(log_path)
     pending = [
-        (d, e) for d, e in entries
+        (d, e)
+        for d, e in entries
         if d not in reviewed and (start_date is None or d >= start_date)
     ]
 
@@ -404,7 +426,7 @@ def run_overnight(entries: list, lang: str, version: str,
     print(f"\n  🌙 OVERNIGHT MODE — {total} entries")
     print(f"  🤖 Model: {model}")
     print(f"  📝 Audit log: {log_path}")
-    print(f"  (Press Ctrl+C to stop cleanly)\n")
+    print("  (Press Ctrl+C to stop cleanly)\n")
 
     done = 0
     issues_found = 0
@@ -444,17 +466,21 @@ def run_overnight(entries: list, lang: str, version: str,
 
     print_overnight_summary(log_path)
 
+
 # ── List Files ────────────────────────────────────────────────────────────────
+
 
 def list_files():
     print("\n  Available lang/version combinations:\n")
     print(f"  {'LANG':<6} {'VERSION':<18} {'FILENAME PATTERN'}")
-    print(f"  {'─'*6} {'─'*18} {'─'*40}")
+    print(f"  {'─' * 6} {'─' * 18} {'─' * 40}")
     for (lang, version), pattern in sorted(KNOWN_FILES.items()):
         print(f"  {lang:<6} {version:<18} {pattern}")
     print()
 
+
 # ── Main ──────────────────────────────────────────────────────────────────────
+
 
 def main():
     parser = argparse.ArgumentParser(
@@ -468,17 +494,31 @@ def main():
             "  python critic_loop.py --list-files\n"
         ),
     )
-    parser.add_argument("--lang",       help="Language code (e.g. pt, en, de)")
-    parser.add_argument("--version",    help="Bible version (e.g. NVI, ARC, KJV)")
-    parser.add_argument("--year",       type=int, help="Year (2025 or 2026)")
-    parser.add_argument("--mode",       choices=["interactive", "overnight"],
-                        default="interactive", help="Review mode (default: interactive)")
-    parser.add_argument("--model",      choices=["7b", "27b"], default="7b",
-                        help="Ollama model to use (default: 7b)")
-    parser.add_argument("--start-date", dest="start_date",
-                        help="Skip entries before this date (YYYY-MM-DD)")
-    parser.add_argument("--list-files", action="store_true",
-                        help="List all known lang/version combinations and exit")
+    parser.add_argument("--lang", help="Language code (e.g. pt, en, de)")
+    parser.add_argument("--version", help="Bible version (e.g. NVI, ARC, KJV)")
+    parser.add_argument("--year", type=int, help="Year (2025 or 2026)")
+    parser.add_argument(
+        "--mode",
+        choices=["interactive", "overnight"],
+        default="interactive",
+        help="Review mode (default: interactive)",
+    )
+    parser.add_argument(
+        "--model",
+        choices=["7b", "27b"],
+        default="7b",
+        help="Ollama model to use (default: 7b)",
+    )
+    parser.add_argument(
+        "--start-date",
+        dest="start_date",
+        help="Skip entries before this date (YYYY-MM-DD)",
+    )
+    parser.add_argument(
+        "--list-files",
+        action="store_true",
+        help="List all known lang/version combinations and exit",
+    )
 
     args = parser.parse_args()
 
@@ -487,33 +527,42 @@ def main():
         return
 
     # Validate required args
-    missing = [f for f, v in [("--lang", args.lang), ("--version", args.version),
-                               ("--year", args.year)] if not v]
+    missing = [
+        f
+        for f, v in [
+            ("--lang", args.lang),
+            ("--version", args.version),
+            ("--year", args.year),
+        ]
+        if not v
+    ]
     if missing:
         parser.error(f"Required: {', '.join(missing)}")
 
     model_name = MODELS[args.model]
-    log_path   = audit_path(args.lang, args.version, args.year)
-    url        = build_url(args.lang, args.version, args.year)
+    log_path = audit_path(args.lang, args.version, args.year)
+    url = build_url(args.lang, args.version, args.year)
 
-    print(f"\n{'═'*60}")
-    print(f"  📖 Devotional Content Critic")
+    print(f"\n{'═' * 60}")
+    print("  📖 Devotional Content Critic")
     print(f"  Lang: {args.lang} | Version: {args.version} | Year: {args.year}")
     print(f"  Mode: {args.mode} | Model: {model_name}")
-    print(f"{'═'*60}")
+    print(f"{'═' * 60}")
 
     # Fetch remote JSON
-    data    = fetch_remote(url)
+    data = fetch_remote(url)
     entries = extract_entries(data, args.lang)
     print(f"  ✅ Loaded {len(entries)} entries from remote")
 
     # Run selected mode
     if args.mode == "interactive":
-        run_interactive(entries, args.lang, args.version,
-                        model_name, log_path, args.start_date)
+        run_interactive(
+            entries, args.lang, args.version, model_name, log_path, args.start_date
+        )
     else:
-        run_overnight(entries, args.lang, args.version,
-                      model_name, log_path, args.start_date)
+        run_overnight(
+            entries, args.lang, args.version, model_name, log_path, args.start_date
+        )
 
 
 if __name__ == "__main__":

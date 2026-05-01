@@ -36,7 +36,6 @@ import json
 import os
 import re
 import sys
-import time
 import unicodedata
 from dataclasses import dataclass, field
 from datetime import datetime
@@ -51,20 +50,31 @@ from google.genai import types
 # =============================================================================
 # CONFIG
 # =============================================================================
-VALIDATOR_MODEL     = "gemini-2.0-flash"   # Phase 2 quality check
-FIX_ORACION_MODEL   = "gemini-2.0-flash"   # Fix prayer  (cheap, ~150 words)
-FIX_REFLEXION_MODEL = "gemini-2.5-flash"   # Fix reflexion (quality, ~300 words)
+VALIDATOR_MODEL = "gemini-2.0-flash"  # Phase 2 quality check
+FIX_ORACION_MODEL = "gemini-2.0-flash"  # Fix prayer  (cheap, ~150 words)
+FIX_REFLEXION_MODEL = "gemini-2.5-flash"  # Fix reflexion (quality, ~300 words)
 
 REFLEXION_MIN_CHARS = 800
-ORACION_MIN_CHARS   = 150
+ORACION_MIN_CHARS = 150
 
 # Words allowed to repeat consecutively for liturgical/biblical reasons
-LITURGICAL_WHITELIST: frozenset = frozenset({
-    "heilig", "holy", "kadosh", "halleluja", "hosanna",
-    "amen", "amén", "āmen",
-    # Tagalog liturgical phrases
-    "amen", "aleluya", "hosanna", "panginoon",
-})
+LITURGICAL_WHITELIST: frozenset = frozenset(
+    {
+        "heilig",
+        "holy",
+        "kadosh",
+        "halleluja",
+        "hosanna",
+        "amen",
+        "amén",
+        "āmen",
+        # Tagalog liturgical phrases
+        "amen",
+        "aleluya",
+        "hosanna",
+        "panginoon",
+    }
+)
 
 # =============================================================================
 # PRAYER ENDINGS — loaded once from JSON, reused everywhere
@@ -85,7 +95,9 @@ def _load_prayer_endings() -> dict:
         _PRAYER_ENDINGS = {k: v for k, v in data.items() if not k.startswith("_")}
         print(f"INFO: prayer_endings.json loaded — {len(_PRAYER_ENDINGS)} languages")
     except Exception as e:
-        print(f"WARNING: Could not load prayer_endings.json: {e} — using fallback ['Amen']")
+        print(
+            f"WARNING: Could not load prayer_endings.json: {e} — using fallback ['Amen']"
+        )
         _PRAYER_ENDINGS = {}
     return _PRAYER_ENDINGS
 
@@ -104,8 +116,8 @@ def check_prayer_ending(oracion: str, lang: str) -> bool:
     """Returns True if oracion ends with a valid Amen variant for lang.
     Handles both single-word (e.g. 'Amen') and multi-word (e.g. 'Siya nawa') endings."""
     endings = _load_prayer_endings().get(lang, ["Amen"])
-    clean   = oracion.strip().rstrip(".!,;।").strip()
-    words   = clean.split()
+    clean = oracion.strip().rstrip(".!,;।").strip()
+    words = clean.split()
     for ending in endings:
         n = len(ending.split())
         tail = " ".join(words[-n:]) if len(words) >= n else clean
@@ -117,6 +129,7 @@ def check_prayer_ending(oracion: str, lang: str) -> bool:
 # =============================================================================
 # PHASE 1 — LOCAL CHECKS (free, no API)
 # =============================================================================
+
 
 def _find_consecutive_duplicate(text: str) -> Optional[str]:
     """
@@ -137,20 +150,18 @@ def _find_consecutive_duplicate(text: str) -> Optional[str]:
     return None
 
 
-def run_phase1_checks(
-    reflexion: str, oracion: str, lang: str
-) -> tuple:
+def run_phase1_checks(reflexion: str, oracion: str, lang: str) -> tuple:
     """
     Phase 1: Local validation — no API cost.
     Returns (passed: bool, issues: list[str], flags: dict[str, bool]).
     """
     flags = {
-        "min_length":             True,
-        "prayer_ending":          True,
-        "double_amen":            True,
-        "no_dup_words_oracion":   True,
+        "min_length": True,
+        "prayer_ending": True,
+        "double_amen": True,
+        "no_dup_words_oracion": True,
         "no_dup_words_reflexion": True,
-        "not_truncated":          True,
+        "not_truncated": True,
     }
     issues = []
     r, o = reflexion.strip(), oracion.strip()
@@ -158,7 +169,9 @@ def run_phase1_checks(
     # 1a. Min length
     if len(r) < REFLEXION_MIN_CHARS:
         flags["min_length"] = False
-        issues.append(f"reflexion too short: {len(r)} chars (min {REFLEXION_MIN_CHARS})")
+        issues.append(
+            f"reflexion too short: {len(r)} chars (min {REFLEXION_MIN_CHARS})"
+        )
     if len(o) < ORACION_MIN_CHARS:
         flags["min_length"] = False
         issues.append(f"oracion too short: {len(o)} chars (min {ORACION_MIN_CHARS})")
@@ -166,14 +179,14 @@ def run_phase1_checks(
     # 1b. Prayer ending — lang-aware Amen check
     if not check_prayer_ending(o, lang):
         flags["prayer_ending"] = False
-        last     = o.rstrip(".!,;।").split()[-1]
+        last = o.rstrip(".!,;।").split()[-1]
         expected = _load_prayer_endings().get(lang, ["Amen"])
         issues.append(
             f"prayer_ending: last word '{last}' — expected one of {expected} for '{lang}'"
         )
 
     # 1c. Double Amen artifact (scan last 120 chars)
-    if len(re.findall(r'\bAm[eé]n\b', o[-120:], re.IGNORECASE)) >= 2:
+    if len(re.findall(r"\bAm[eé]n\b", o[-120:], re.IGNORECASE)) >= 2:
         flags["double_amen"] = False
         issues.append("double_amen: duplicate Amen artifact detected in closing")
 
@@ -190,10 +203,24 @@ def run_phase1_checks(
         issues.append(f"dup_words_reflexion: consecutive duplicate {dup}")
 
     # 1f. Truncation check — reflexion must end with sentence-closing punctuation
-    _SENTENCE_ENDINGS = ('.', '!', '?', '»', '"', '\u201c', '\u201d', '।', '。', '！', '？')
+    _SENTENCE_ENDINGS = (
+        ".",
+        "!",
+        "?",
+        "»",
+        '"',
+        "\u201c",
+        "\u201d",
+        "।",
+        "。",
+        "！",
+        "？",
+    )
     if r and not r.rstrip().endswith(_SENTENCE_ENDINGS):
         flags["not_truncated"] = False
-        issues.append(f"reflexion_truncated: ends mid-sentence — last chars: '...{r.rstrip()[-40:]}'")
+        issues.append(
+            f"reflexion_truncated: ends mid-sentence — last chars: '...{r.rstrip()[-40:]}'"
+        )
     else:
         flags["not_truncated"] = True
 
@@ -204,39 +231,44 @@ def run_phase1_checks(
 # RESULT
 # =============================================================================
 
+
 @dataclass
 class ValidationResult:
     # Overall
-    passed:                bool
+    passed: bool
     # Phase 1
-    min_length:            bool
-    prayer_ending:         bool
-    double_amen:           bool
-    no_dup_words_oracion:  bool
+    min_length: bool
+    prayer_ending: bool
+    double_amen: bool
+    no_dup_words_oracion: bool
     no_dup_words_reflexion: bool
-    not_truncated:         bool
+    not_truncated: bool
     # Phase 2 (AI — defaults True = not yet checked)
-    language_clean:  bool
-    no_repetition:   bool
+    language_clean: bool
+    no_repetition: bool
     content_quality: bool
     # Meta
     phase1_passed: bool
     phase2_passed: bool
-    phase2_ran:    bool
-    issues:        list = field(default_factory=list)
-    raw_response:  str  = ""
+    phase2_ran: bool
+    issues: list = field(default_factory=list)
+    raw_response: str = ""
 
     @property
     def needs_fix_oracion(self) -> bool:
         """True when oracion-specific checks failed."""
-        return not (self.prayer_ending and self.double_amen and self.no_dup_words_oracion)
+        return not (
+            self.prayer_ending and self.double_amen and self.no_dup_words_oracion
+        )
 
     @property
     def needs_fix_reflexion(self) -> bool:
         """True when reflexion-specific checks failed."""
         return not (
-            self.min_length and self.no_dup_words_reflexion
-            and self.no_repetition and self.content_quality
+            self.min_length
+            and self.no_dup_words_reflexion
+            and self.no_repetition
+            and self.content_quality
         )
 
     @classmethod
@@ -263,11 +295,18 @@ class ValidationResult:
         """Fail-open result when the validator itself is unavailable."""
         return cls(
             passed=True,
-            min_length=True, prayer_ending=True, double_amen=True,
-            no_dup_words_oracion=True, no_dup_words_reflexion=True,
+            min_length=True,
+            prayer_ending=True,
+            double_amen=True,
+            no_dup_words_oracion=True,
+            no_dup_words_reflexion=True,
             not_truncated=True,
-            language_clean=True, no_repetition=True, content_quality=True,
-            phase1_passed=True, phase2_passed=True, phase2_ran=False,
+            language_clean=True,
+            no_repetition=True,
+            content_quality=True,
+            phase1_passed=True,
+            phase2_passed=True,
+            phase2_ran=False,
             issues=[f"validator_skipped: {reason}"],
         )
 
@@ -275,6 +314,7 @@ class ValidationResult:
 # =============================================================================
 # PHASE 2 — AI QUALITY CHECK (Gemini 2.0 Flash)
 # =============================================================================
+
 
 async def _run_phase2_ai_check(
     lang: str,
@@ -313,29 +353,30 @@ Evaluate ONLY these 3 criteria. Respond ONLY with valid JSON (no markdown):
 Be strict but fair. Only mark false on clear, objective failures."""
 
     try:
-
         # New SDK (google-genai) — async only
         client = genai.Client(api_key=os.environ.get("GOOGLE_API_KEY"))
         response = await client.aio.models.generate_content(
             model=VALIDATOR_MODEL,
             contents=prompt,
             config=types.GenerateContentConfig(
-                temperature=0.1, top_p=0.9, max_output_tokens=512,
+                temperature=0.1,
+                top_p=0.9,
+                max_output_tokens=512,
             ),
         )
         raw = response.text.strip().replace("```json", "").replace("```", "").strip()
         data = json.loads(raw)
 
-        language_clean  = bool(data.get("language_clean",  True))
-        no_repetition   = bool(data.get("no_repetition",   True))
+        language_clean = bool(data.get("language_clean", True))
+        no_repetition = bool(data.get("no_repetition", True))
         content_quality = bool(data.get("content_quality", True))
-        ai_issues       = data.get("issues", [])
+        ai_issues = data.get("issues", [])
 
         if not isinstance(ai_issues, list):
             ai_issues = [str(ai_issues)]
 
         phase2_passed = all([language_clean, no_repetition, content_quality])
-        all_passed    = all(p1_flags.values()) and phase2_passed
+        all_passed = all(p1_flags.values()) and phase2_passed
 
         print(
             f"INFO: Phase 2 — lang:{language_clean} "
@@ -372,12 +413,13 @@ Be strict but fair. Only mark false on clear, objective failures."""
 # PUBLIC VALIDATOR
 # =============================================================================
 
+
 async def validate_devotional_content(
-    lang:      str,
+    lang: str,
     verse_cita: str,
     reflexion: str,
-    oracion:   str,
-    skip_ai:   bool = False,
+    oracion: str,
+    skip_ai: bool = False,
 ) -> ValidationResult:
     """
     Main validation entry point.
@@ -402,16 +444,15 @@ async def validate_devotional_content(
 # FIX FUNCTIONS
 # =============================================================================
 
-async def fix_oracion(
-    verse_cita: str, lang: str, oracion: str, issues: list
-) -> str:
+
+async def fix_oracion(verse_cita: str, lang: str, oracion: str, issues: list) -> str:
     """
     Fixes prayer issues using Gemini 2.0 Flash (cost-efficient).
     Targets: wrong prayer ending, double Amen, consecutive duplicate words.
     Returns the fixed oracion text (falls back to original on error).
     Supports both old (google-generativeai) and new (google-genai) SDKs.
     """
-    amen       = _get_amen_phrase(lang)
+    amen = _get_amen_phrase(lang)
     issues_txt = "\n".join(f"  - {i}" for i in issues)
 
     prompt = f"""You are a Christian devotional editor. Fix the prayer (oracion) for language "{lang}".
@@ -438,7 +479,7 @@ Rules:
             config=types.GenerateContentConfig(temperature=0.2, max_output_tokens=600),
         )
         fixed = response.text.strip()
-        
+
         print(f"INFO: fix_oracion ✅ (model: {FIX_ORACION_MODEL})")
         return fixed
     except Exception as e:
@@ -495,12 +536,13 @@ Rules:
 # VALIDATE AND FIX — ORCHESTRATOR
 # =============================================================================
 
+
 async def validate_and_fix(
-    lang:       str,
+    lang: str,
     verse_cita: str,
-    reflexion:  str,
-    oracion:    str,
-    skip_ai:    bool = False,
+    reflexion: str,
+    oracion: str,
+    skip_ai: bool = False,
 ) -> tuple:
     """
     Full pipeline: validate → fix if needed → re-validate Phase 1.
@@ -510,7 +552,9 @@ async def validate_and_fix(
       oracion issues   → Gemini 2.0 Flash (cheap: ~150 words)
       reflexion issues → Gemini 2.5 Flash (quality: theological content)
     """
-    result = await validate_devotional_content(lang, verse_cita, reflexion, oracion, skip_ai)
+    result = await validate_devotional_content(
+        lang, verse_cita, reflexion, oracion, skip_ai
+    )
 
     if result.passed:
         return reflexion.strip(), oracion.strip(), result
@@ -520,7 +564,13 @@ async def validate_and_fix(
 
     # Partition issues by target field
     o_tags = ("prayer_ending", "double_amen", "dup_words_oracion")
-    r_tags = ("dup_words_reflexion", "reflexion too short", "no_repetition", "content_quality", "reflexion_truncated")
+    r_tags = (
+        "dup_words_reflexion",
+        "reflexion too short",
+        "no_repetition",
+        "content_quality",
+        "reflexion_truncated",
+    )
 
     o_issues = [i for i in result.issues if any(t in i for t in o_tags)]
     r_issues = [i for i in result.issues if any(t in i for t in r_tags)]
@@ -539,14 +589,22 @@ async def validate_and_fix(
 
     # Carry forward Phase 2 AI results where they weren't invalidated by the fix
     if result.phase2_ran:
-        final.language_clean  = result.language_clean
-        final.no_repetition   = True if result.needs_fix_reflexion else result.no_repetition
-        final.content_quality = True if result.needs_fix_reflexion else result.content_quality
-        final.phase2_passed   = all([final.language_clean, final.no_repetition, final.content_quality])
-        final.phase2_ran      = True
-        final.passed          = p1_passed and final.phase2_passed
+        final.language_clean = result.language_clean
+        final.no_repetition = (
+            True if result.needs_fix_reflexion else result.no_repetition
+        )
+        final.content_quality = (
+            True if result.needs_fix_reflexion else result.content_quality
+        )
+        final.phase2_passed = all(
+            [final.language_clean, final.no_repetition, final.content_quality]
+        )
+        final.phase2_ran = True
+        final.passed = p1_passed and final.phase2_passed
 
-    print(f"INFO: validate_and_fix complete — passed:{final.passed} | issues:{final.issues}")
+    print(
+        f"INFO: validate_and_fix complete — passed:{final.passed} | issues:{final.issues}"
+    )
     return fixed_r, fixed_o, final
 
 
@@ -557,17 +615,18 @@ async def validate_and_fix(
 #   Final output:  {"data": {"de": {"2025-08-01": [...], ...}}}
 # =============================================================================
 
+
 def _extract_entries(data: dict) -> tuple:
     if "completed" in data and "master_lang" in data:
-        lang    = data["master_lang"]
+        lang = data["master_lang"]
         entries = list(data["completed"].items())
         return lang, entries
 
     if "data" in data:
         lang_root = data["data"]
-        lang      = next(iter(lang_root))
-        date_map  = lang_root[lang]
-        entries   = []
+        lang = next(iter(lang_root))
+        date_map = lang_root[lang]
+        entries = []
         for date_key, val in date_map.items():
             if isinstance(val, list):
                 for e in val:
@@ -577,7 +636,9 @@ def _extract_entries(data: dict) -> tuple:
                 entries.append((date_key, val))
         return lang, entries
 
-    raise ValueError("Unrecognized JSON structure — expected 'completed' or 'data' root key")
+    raise ValueError(
+        "Unrecognized JSON structure — expected 'completed' or 'data' root key"
+    )
 
 
 async def _run_batch(json_path: str, ai_check: bool = False, delay: float = 3.0):
@@ -601,24 +662,26 @@ async def _run_batch(json_path: str, ai_check: bool = False, delay: float = 3.0)
         print(f"ERROR: {e}")
         sys.exit(1)
 
-    total   = len(entries)
-    passed  = failed = skipped = 0
-    report  = []
+    total = len(entries)
+    passed = failed = skipped = 0
+    report = []
 
-    print(f"\n{'='*60}")
-    print(f"CONTENT VALIDATOR — Batch Mode")
+    print(f"\n{'=' * 60}")
+    print("CONTENT VALIDATOR — Batch Mode")
     print(f"  File    : {path.name}")
     print(f"  Lang    : {lang}")
     print(f"  Entries : {total}")
-    print(f"  Mode    : {'Phase 1+2 — Gemini 2.0 Flash' if ai_check else 'Phase 1 only — local (free)'}")
-    print(f"{'='*60}\n")
+    print(
+        f"  Mode    : {'Phase 1+2 — Gemini 2.0 Flash' if ai_check else 'Phase 1 only — local (free)'}"
+    )
+    print(f"{'=' * 60}\n")
 
     for i, (date_key, entry) in enumerate(sorted(entries), 1):
         verse_cita = entry.get("versiculo", entry.get("cita", ""))[:80]
-        reflexion  = entry.get("reflexion", "")
-        oracion    = entry.get("oracion",   "")
-        entry_lang = entry.get("language",  lang)
-        entry_id   = entry.get("id",        date_key)
+        reflexion = entry.get("reflexion", "")
+        oracion = entry.get("oracion", "")
+        entry_lang = entry.get("language", lang)
+        entry_id = entry.get("id", date_key)
 
         print(f"[{i}/{total}] {date_key} — {entry_id}")
 
@@ -631,15 +694,16 @@ async def _run_batch(json_path: str, ai_check: bool = False, delay: float = 3.0)
         )
 
         status_str = "✅ PASS" if result.passed else "❌ FAIL"
-        p1_detail  = (
+        p1_detail = (
             f"len:{result.min_length} prayer:{result.prayer_ending} "
             f"2amen:{result.double_amen} dup_o:{result.no_dup_words_oracion} "
             f"dup_r:{result.no_dup_words_reflexion} trunc:{result.not_truncated}"
         )
-        p2_detail  = (
+        p2_detail = (
             f" | lang:{result.language_clean} repeat:{result.no_repetition} "
             f"quality:{result.content_quality}"
-            if result.phase2_ran else ""
+            if result.phase2_ran
+            else ""
         )
         print(f"  {status_str} | {p1_detail}{p2_detail}")
 
@@ -654,49 +718,51 @@ async def _run_batch(json_path: str, ai_check: bool = False, delay: float = 3.0)
         else:
             passed += 1
 
-        report.append({
-            "date":                   date_key,
-            "id":                     entry_id,
-            "passed":                 result.passed,
-            "min_length":             result.min_length,
-            "prayer_ending":          result.prayer_ending,
-            "double_amen":            result.double_amen,
-            "no_dup_words_oracion":   result.no_dup_words_oracion,
-            "no_dup_words_reflexion": result.no_dup_words_reflexion,
-            "not_truncated":          result.not_truncated,
-            "language_clean":         result.language_clean,
-            "no_repetition":          result.no_repetition,
-            "content_quality":        result.content_quality,
-            "phase2_ran":             result.phase2_ran,
-            "issues":                 result.issues,
-        })
+        report.append(
+            {
+                "date": date_key,
+                "id": entry_id,
+                "passed": result.passed,
+                "min_length": result.min_length,
+                "prayer_ending": result.prayer_ending,
+                "double_amen": result.double_amen,
+                "no_dup_words_oracion": result.no_dup_words_oracion,
+                "no_dup_words_reflexion": result.no_dup_words_reflexion,
+                "not_truncated": result.not_truncated,
+                "language_clean": result.language_clean,
+                "no_repetition": result.no_repetition,
+                "content_quality": result.content_quality,
+                "phase2_ran": result.phase2_ran,
+                "issues": result.issues,
+            }
+        )
 
         if ai_check and i < total:
             await asyncio.sleep(delay)
 
     # ── Summary ───────────────────────────────────────────────────────────────
-    print(f"\n{'='*60}")
-    print(f"SUMMARY")
+    print(f"\n{'=' * 60}")
+    print("SUMMARY")
     print(f"  Total   : {total}")
     print(f"  Passed  : {passed}")
     print(f"  Failed  : {failed}")
     print(f"  Skipped : {skipped}")
-    print(f"{'='*60}\n")
+    print(f"{'=' * 60}\n")
 
     # ── Save report ───────────────────────────────────────────────────────────
-    ts          = datetime.now().strftime("%Y%m%d_%H%M%S")
-    phase_tag   = "p1p2" if ai_check else "p1"
+    ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+    phase_tag = "p1p2" if ai_check else "p1"
     report_path = path.parent / f"validation_report_{lang}_{phase_tag}_{ts}.json"
     report_data = {
         "source_file": path.name,
-        "lang":        lang,
-        "ai_check":    ai_check,
-        "total":       total,
-        "passed":      passed,
-        "failed":      failed,
-        "skipped":     skipped,
-        "timestamp":   datetime.now().isoformat(),
-        "entries":     report,
+        "lang": lang,
+        "ai_check": ai_check,
+        "total": total,
+        "passed": passed,
+        "failed": failed,
+        "skipped": skipped,
+        "timestamp": datetime.now().isoformat(),
+        "entries": report,
     }
     with open(report_path, "w", encoding="utf-8") as f:
         json.dump(report_data, f, ensure_ascii=False, indent=2)
@@ -714,11 +780,14 @@ async def _run_batch(json_path: str, ai_check: bool = False, delay: float = 3.0)
 
 if __name__ == "__main__":
     from dotenv import load_dotenv
+
     load_dotenv()
 
     if len(sys.argv) < 2:
         print("Usage: python seed_content_validator.py <path.json> [--ai]")
-        print("  --ai  : also run Phase 2 Gemini 2.0 Flash quality check (uses API quota)")
+        print(
+            "  --ai  : also run Phase 2 Gemini 2.0 Flash quality check (uses API quota)"
+        )
         sys.exit(1)
 
     ai_flag = "--ai" in sys.argv

@@ -27,9 +27,15 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, status
 from anthropic import Anthropic
 from pydantic import BaseModel
-from tenacity import RetryError, retry, retry_if_exception_type, stop_after_attempt, wait_exponential
+from tenacity import (
+    RetryError,
+    retry,
+    retry_if_exception_type,
+    stop_after_attempt,
+    wait_exponential,
+)
 
-from seed_content_validator import validate_and_fix, run_phase1_checks
+from seed_content_validator import validate_and_fix
 
 # =============================================================================
 # STARTUP
@@ -49,7 +55,9 @@ _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 # =============================================================================
 # CLAUDE CONFIG
 # =============================================================================
-GENERATION_MODEL = "claude-haiku-4-5-20251001"  # Latest Claude Haiku model as of Oct 2025
+GENERATION_MODEL = (
+    "claude-haiku-4-5-20251001"  # Latest Claude Haiku model as of Oct 2025
+)
 
 # How many full Claude regeneration attempts before giving up
 MAX_CONTENT_RETRIES = 3
@@ -60,9 +68,9 @@ MAX_CONTENT_RETRIES = 3
 # Latin-script languages (de, es, en, fr, pt, tl) are always valid — no check needed.
 # =============================================================================
 SCRIPT_RANGES = {
-    "hi": (0x0900, 0x097F),   # Devanagari
-    "ja": (0x3040, 0x30FF),   # Hiragana + Katakana
-    "zh": (0x4E00, 0x9FFF),   # CJK Unified Ideographs
+    "hi": (0x0900, 0x097F),  # Devanagari
+    "ja": (0x3040, 0x30FF),  # Hiragana + Katakana
+    "zh": (0x4E00, 0x9FFF),  # CJK Unified Ideographs
 }
 
 SCRIPT_THRESHOLD = 0.6
@@ -83,31 +91,33 @@ def validate_script(text: str, lang: str) -> tuple[bool, float]:
 # PYDANTIC MODELS
 # =============================================================================
 
+
 class SeedGenerateRequest(BaseModel):
-    date:            str
-    master_lang:     str
-    master_version:  str
-    versiculo_cita:  str
-    topic:           Optional[str] = None
+    date: str
+    master_lang: str
+    master_version: str
+    versiculo_cita: str
+    topic: Optional[str] = None
 
 
 class CreativeContent(BaseModel):
     reflexion: str
-    oracion:   str
+    oracion: str
 
 
 class SeedGenerateResponse(BaseModel):
-    status:       str
-    date:         str
-    lang:         str
-    reflexion:    str
-    oracion:      str
-    val_issues:   list = []   # Phase 1 issues found + fixed (informational)
+    status: str
+    date: str
+    lang: str
+    reflexion: str
+    oracion: str
+    val_issues: list = []  # Phase 1 issues found + fixed (informational)
 
 
 # =============================================================================
 # CLAUDE CALLER
 # =============================================================================
+
 
 @retry(
     wait=wait_exponential(multiplier=1, min=4, max=10),
@@ -119,77 +129,83 @@ async def _call_claude_raw(
 ) -> CreativeContent:
     """Raw Claude generation — returns reflexion + oracion. No validation."""
 
-    prompt_parts = "\n\n".join([
-        f"You are a devoted biblical devotional writer. "
-        f"Write a devotional in {lang.upper()} based on the key verse: \"{verse_cita}\".",
-
-        "Return ONLY a valid JSON object with these exact keys:",
-
-        f"- `reflexion`: Deep contextualized reflection on the verse "
-        f"(minimum 900 characters, approximately 300 words, in {lang}). "
-        f"Each paragraph must develop a distinct aspect of the verse.",
-        f"Do NOT repeat any word consecutively, even when separated by punctuation marks — "
-        f"Never write patterns (example: 'word, word', 'word. Word', 'word; word').",
-        f"- Do NOT repeat the same sentence, phrase, or idea in different words.\n"
-
-        f"- `oracion`: Prayer on the devotional theme (minimum 150 words, 100% in {lang}). "
-        f"MUST end with 'in the name of Jesus, amen' correctly translated to {lang}. "
-        f"End with exactly one Amen — never write Amen twice.",
-        f"Do NOT repeat any word consecutively, even when separated by punctuation marks — "
-        f"Never write patterns (example: 'word, word', 'word. Word', 'word; word').",
-        f"- Do NOT repeat the same sentence, phrase, or idea in different words.\n"
-
-        f"RULES:\n"
-        f"- ALL text MUST be 100% in {lang} — no language mixing.\n"
-        f"- Do NOT include transliterations, romanizations, or text in parentheses.\n"
-        f"- Do NOT repeat any word consecutively.\n"
-        f"Do NOT repeat any word consecutively, even when separated by punctuation marks — "
-        f"Never write patterns (example: 'word, word', 'word. Word', 'word; word').",
-        f"- Do NOT repeat the same sentence, phrase, or idea in different words.\n"
-        f"- Every sentence must introduce new content or a new perspective."
-        + (f"\n- Suggested theme: {topic}." if topic else ""),
-    ])
+    prompt_parts = "\n\n".join(
+        [
+            f"You are a devoted biblical devotional writer. "
+            f'Write a devotional in {lang.upper()} based on the key verse: "{verse_cita}".',
+            "Return ONLY a valid JSON object with these exact keys:",
+            f"- `reflexion`: Deep contextualized reflection on the verse "
+            f"(minimum 900 characters, approximately 300 words, in {lang}). "
+            f"Each paragraph must develop a distinct aspect of the verse.",
+            "Do NOT repeat any word consecutively, even when separated by punctuation marks — "
+            "Never write patterns (example: 'word, word', 'word. Word', 'word; word').",
+            f"- Do NOT repeat the same sentence, phrase, or idea in different words.\n"
+            f"- `oracion`: Prayer on the devotional theme (minimum 150 words, 100% in {lang}). "
+            f"MUST end with 'in the name of Jesus, amen' correctly translated to {lang}. "
+            f"End with exactly one Amen — never write Amen twice.",
+            "Do NOT repeat any word consecutively, even when separated by punctuation marks — "
+            "Never write patterns (example: 'word, word', 'word. Word', 'word; word').",
+            f"- Do NOT repeat the same sentence, phrase, or idea in different words.\n"
+            f"RULES:\n"
+            f"- ALL text MUST be 100% in {lang} — no language mixing.\n"
+            f"- Do NOT include transliterations, romanizations, or text in parentheses.\n"
+            f"- Do NOT repeat any word consecutively.\n"
+            f"Do NOT repeat any word consecutively, even when separated by punctuation marks — "
+            f"Never write patterns (example: 'word, word', 'word. Word', 'word; word').",
+            "- Do NOT repeat the same sentence, phrase, or idea in different words.\n"
+            "- Every sentence must introduce new content or a new perspective."
+            + (f"\n- Suggested theme: {topic}." if topic else ""),
+        ]
+    )
 
     print(f"DEBUG: Claude call — verse: {verse_cita}, lang: {lang}")
-    
+
     message = _client.messages.create(
         model=GENERATION_MODEL,
         max_tokens=8192,
-        messages=[
-            {"role": "user", "content": prompt_parts}
-        ]
+        messages=[{"role": "user", "content": prompt_parts}],
     )
-    
-    raw = message.content[0].text.strip().replace("```json", "").replace("```", "").strip()
-    
+
+    raw = (
+        message.content[0]
+        .text.strip()
+        .replace("```json", "")
+        .replace("```", "")
+        .strip()
+    )
+
     # Extract JSON object robustly
-    match = re.search(r'\{.*\}', raw, re.DOTALL)
+    match = re.search(r"\{.*\}", raw, re.DOTALL)
     if not match:
-        raise ValueError(f"No JSON object found in Claude response")
+        raise ValueError("No JSON object found in Claude response")
     data = json.loads(match.group())
 
     reflexion = data.get("reflexion", "").strip()
-    oracion   = data.get("oracion",   "").strip()
+    oracion = data.get("oracion", "").strip()
 
     if not reflexion or not oracion:
-        raise ValueError(f"Claude returned empty reflexion or oracion for '{verse_cita}'")
+        raise ValueError(
+            f"Claude returned empty reflexion or oracion for '{verse_cita}'"
+        )
 
     return CreativeContent(reflexion=reflexion, oracion=oracion)
 
 
 async def _call_claude_fix_script(
-    verse_cita: str, lang: str,
-    bad_reflexion: str, bad_oracion: str,
+    verse_cita: str,
+    lang: str,
+    bad_reflexion: str,
+    bad_oracion: str,
 ) -> CreativeContent:
     """Script-fix retry — rewrites content into the correct language script."""
 
     prompt = (
         f"The following devotional text is NOT written in {lang.upper()} script. "
         f"Rewrite it completely in {lang.upper()}. Keep the same devotional meaning.\n\n"
-        f"Verse: \"{verse_cita}\"\n"
-        f"Wrong reflexion: \"{bad_reflexion[:300]}\"\n"
-        f"Wrong oracion:   \"{bad_oracion[:300]}\"\n\n"
-        f"Return ONLY: {{\"reflexion\": \"...\", \"oracion\": \"...\"}}\n"
+        f'Verse: "{verse_cita}"\n'
+        f'Wrong reflexion: "{bad_reflexion[:300]}"\n'
+        f'Wrong oracion:   "{bad_oracion[:300]}"\n\n'
+        f'Return ONLY: {{"reflexion": "...", "oracion": "..."}}\n'
         f"oracion MUST end with the correct {lang.upper()} translation of "
         f"'in the name of Jesus, amen'.\n"
         f"ALL text MUST be 100% in {lang} — no language mixing.\n"
@@ -197,32 +213,37 @@ async def _call_claude_fix_script(
     )
 
     print(f"WARNING: Script fix retry — verse: {verse_cita}, lang: {lang}")
-    
+
     message = _client.messages.create(
         model=GENERATION_MODEL,
         max_tokens=8192,
-        messages=[
-            {"role": "user", "content": prompt}
-        ]
+        messages=[{"role": "user", "content": prompt}],
     )
-    
-    raw = message.content[0].text.strip().replace("```json", "").replace("```", "").strip()
-    
+
+    raw = (
+        message.content[0]
+        .text.strip()
+        .replace("```json", "")
+        .replace("```", "")
+        .strip()
+    )
+
     # Extract JSON object robustly
-    match = re.search(r'\{.*\}', raw, re.DOTALL)
+    match = re.search(r"\{.*\}", raw, re.DOTALL)
     if not match:
-        raise ValueError(f"No JSON object found in Claude response")
+        raise ValueError("No JSON object found in Claude response")
     data = json.loads(match.group())
 
     return CreativeContent(
         reflexion=data.get("reflexion", bad_reflexion).strip(),
-        oracion=data.get("oracion",   bad_oracion).strip(),
+        oracion=data.get("oracion", bad_oracion).strip(),
     )
 
 
 # =============================================================================
 # GENERATE + VALIDATE + FIX PIPELINE
 # =============================================================================
+
 
 async def _generate_validated(
     verse_cita: str, lang: str, topic: Optional[str]
@@ -248,20 +269,22 @@ async def _generate_validated(
 
         # ── Step 2: Script validation ──────────────────────────────────────────
         r_valid, r_ratio = validate_script(content.reflexion, lang)
-        o_valid, o_ratio = validate_script(content.oracion,   lang)
+        o_valid, o_ratio = validate_script(content.oracion, lang)
         print(f"INFO: Script — reflexion:{r_ratio:.0%} oracion:{o_ratio:.0%}")
 
         if not r_valid or not o_valid:
-            print(f"WARNING: Script check failed — running script-fix retry")
+            print("WARNING: Script check failed — running script-fix retry")
             try:
                 content = await _call_claude_fix_script(
                     verse_cita, lang, content.reflexion, content.oracion
                 )
                 r_valid, r_ratio = validate_script(content.reflexion, lang)
-                o_valid, o_ratio = validate_script(content.oracion,   lang)
-                print(f"INFO: After script fix — reflexion:{r_ratio:.0%} oracion:{o_ratio:.0%}")
+                o_valid, o_ratio = validate_script(content.oracion, lang)
+                print(
+                    f"INFO: After script fix — reflexion:{r_ratio:.0%} oracion:{o_ratio:.0%}"
+                )
                 if not r_valid or not o_valid:
-                    print(f"WARNING: Script fix still failed — will retry generation")
+                    print("WARNING: Script fix still failed — will retry generation")
                     continue
             except Exception as e:
                 print(f"ERROR: Script fix failed: {e} — will retry generation")
@@ -273,7 +296,7 @@ async def _generate_validated(
             verse_cita=verse_cita,
             reflexion=content.reflexion,
             oracion=content.oracion,
-            skip_ai=True,   # skip Phase 2 AI check to preserve quota
+            skip_ai=True,  # skip Phase 2 AI check to preserve quota
         )
 
         last_issues = val_result.issues
@@ -311,7 +334,9 @@ async def generate_creative(request: SeedGenerateRequest):
     retries generation if Phase 1 still fails after fix.
     Returns {reflexion, oracion, val_issues} — Python builds the rest.
     """
-    print(f"\n--- {request.date} | {request.master_lang} | {request.versiculo_cita} ---")
+    print(
+        f"\n--- {request.date} | {request.master_lang} | {request.versiculo_cita} ---"
+    )
 
     try:
         reflexion, oracion, val_issues = await _generate_validated(
@@ -339,13 +364,13 @@ async def generate_creative(request: SeedGenerateRequest):
         print(f"ERROR: RetryError for {request.date}: {last}")
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail=f"Claude retry exhausted: {str(last)}"
+            detail=f"Claude retry exhausted: {str(last)}",
         )
     except Exception as e:
         traceback.print_exc()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Generation error: {str(e)}"
+            detail=f"Generation error: {str(e)}",
         )
 
 
@@ -355,5 +380,6 @@ async def generate_creative(request: SeedGenerateRequest):
 
 if __name__ == "__main__":
     import uvicorn
+
     print("Starting Claude-powered Devotional API Server...")
     uvicorn.run(app, host="0.0.0.0", port=8000)

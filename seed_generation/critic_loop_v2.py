@@ -40,36 +40,35 @@ from pathlib import Path
 # ── Constants ─────────────────────────────────────────────────────────────────
 
 GITHUB_RAW_BASE = (
-    "https://raw.githubusercontent.com/develop4God/devocionales-json"
-    "/refs/heads/main"
+    "https://raw.githubusercontent.com/develop4God/devocionales-json/refs/heads/main"
 )
 
 KNOWN_FILES = {
-    ("pt", "NVI"):        "Devocional_year_{year}_pt_NVI.json",
-    ("pt", "ARC"):        "Devocional_year_{year}_pt_ARC.json",
-    ("en", "KJV"):        "Devocional_year_{year}_en_KJV.json",
-    ("en", "NIV"):        "Devocional_year_{year}_en_NIV.json",
-    ("es", "NVI"):        "Devocional_year_{year}_es_NVI.json",
-    ("fr", "LSG1910"):    "Devocional_year_{year}_fr_LSG1910.json",
-    ("fr", "TOB"):        "Devocional_year_{year}_fr_TOB.json",
-    ("de", "LU17"):       "Devocional_year_{year}_de_LU17.json",
-    ("de", "SCH2000"):    "Devocional_year_{year}_de_SCH2000.json",
-    ("hi", "HERV"):       "Devocional_year_{year}_hi_HERV.json",
-    ("hi", "HIOV"):       "Devocional_year_{year}_hi_HIOV.json",
-    ("ar", "NAV"):        "Devocional_year_{year}_ar_NAV.json",
-    ("ar", "SVDA"):       "Devocional_year_{year}_ar_SVDA.json",
-    ("tl", "ADB"):        "Devocional_year_{year}_tl_ADB.json",
-    ("tl", "ASND"):       "Devocional_year_{year}_tl_ASND.json",
-    ("ja", "リビングバイブル"):  "Devocional_year_{year}_ja_リビングバイブル.json",
-    ("ja", "新改訳2003"):     "Devocional_year_{year}_ja_新改訳2003.json",
-    ("zh", "和合本1919"):     "Devocional_year_{year}_zh_和合本1919.json",
-    ("zh", "新译本"):         "Devocional_year_{year}_zh_新译本.json",
+    ("pt", "NVI"): "Devocional_year_{year}_pt_NVI.json",
+    ("pt", "ARC"): "Devocional_year_{year}_pt_ARC.json",
+    ("en", "KJV"): "Devocional_year_{year}_en_KJV.json",
+    ("en", "NIV"): "Devocional_year_{year}_en_NIV.json",
+    ("es", "NVI"): "Devocional_year_{year}_es_NVI.json",
+    ("fr", "LSG1910"): "Devocional_year_{year}_fr_LSG1910.json",
+    ("fr", "TOB"): "Devocional_year_{year}_fr_TOB.json",
+    ("de", "LU17"): "Devocional_year_{year}_de_LU17.json",
+    ("de", "SCH2000"): "Devocional_year_{year}_de_SCH2000.json",
+    ("hi", "HERV"): "Devocional_year_{year}_hi_HERV.json",
+    ("hi", "HIOV"): "Devocional_year_{year}_hi_HIOV.json",
+    ("ar", "NAV"): "Devocional_year_{year}_ar_NAV.json",
+    ("ar", "SVDA"): "Devocional_year_{year}_ar_SVDA.json",
+    ("tl", "ADB"): "Devocional_year_{year}_tl_ADB.json",
+    ("tl", "ASND"): "Devocional_year_{year}_tl_ASND.json",
+    ("ja", "リビングバイブル"): "Devocional_year_{year}_ja_リビングバイブル.json",
+    ("ja", "新改訳2003"): "Devocional_year_{year}_ja_新改訳2003.json",
+    ("zh", "和合本1919"): "Devocional_year_{year}_zh_和合本1919.json",
+    ("zh", "新译本"): "Devocional_year_{year}_zh_新译本.json",
 }
 
 OLLAMA_URL = "http://localhost:11434/api/generate"
 
 MODELS = {
-    "7b":  "qwen2.5:7b",
+    "7b": "qwen2.5:7b",
     "27b": "qwen3.5:27b",
 }
 
@@ -152,6 +151,7 @@ LANG_LABELS = {
 
 # ── Diff Validator ────────────────────────────────────────────────────────────
 
+
 def similarity(a: str, b: str) -> float:
     """Returns 0.0–1.0 similarity ratio between two strings."""
     if not a or not b:
@@ -167,7 +167,9 @@ def validate_fix(original_oracion: str, fix: str) -> tuple[bool, float]:
     ratio = similarity(original_oracion, fix)
     return ratio >= BLUFF_THRESHOLD, ratio
 
+
 # ── Evolve: load few-shot seeds from audit log ────────────────────────────────
+
 
 def load_evolve_seeds(log_path: Path, source_entries: dict, lang: str) -> list[dict]:
     """
@@ -217,12 +219,16 @@ def load_evolve_seeds(log_path: Path, source_entries: dict, lang: str) -> list[d
                     "overall_notes": v.get("overall_notes", ""),
                     "suggested_fix": fix,
                 }
-                seeds.append({
-                    "original": original_oracion,
-                    "verdict_json": json.dumps(verdict_json, ensure_ascii=False, indent=2),
-                    "date": date,
-                    "ratio": ratio,
-                })
+                seeds.append(
+                    {
+                        "original": original_oracion,
+                        "verdict_json": json.dumps(
+                            verdict_json, ensure_ascii=False, indent=2
+                        ),
+                        "date": date,
+                        "ratio": ratio,
+                    }
+                )
             except (json.JSONDecodeError, KeyError):
                 continue
 
@@ -243,7 +249,9 @@ def build_few_shot_block(seeds: list[dict]) -> str:
         )
     return block
 
+
 # ── GitHub Fetch ──────────────────────────────────────────────────────────────
+
 
 def build_url(lang: str, version: str, year: int) -> str:
     key = (lang, version)
@@ -284,7 +292,9 @@ def extract_entries(data: dict, lang: str) -> list[tuple[str, dict]]:
     entries.sort(key=lambda x: x[0])
     return entries
 
+
 # ── Audit Log ─────────────────────────────────────────────────────────────────
+
 
 def audit_path(lang: str, version: str, year: int) -> Path:
     return Path(f"critic_audit_{lang}_{version}_{year}.jsonl")
@@ -311,7 +321,9 @@ def append_audit(log_path: Path, record: dict):
     with open(log_path, "a", encoding="utf-8") as f:
         f.write(json.dumps(record, ensure_ascii=False) + "\n")
 
+
 # ── Helpers ───────────────────────────────────────────────────────────────────
+
 
 def _sanitize_nulls(obj):
     """Recursively replace string 'null' with actual None."""
@@ -323,7 +335,9 @@ def _sanitize_nulls(obj):
         return None
     return obj
 
+
 # ── Ollama ────────────────────────────────────────────────────────────────────
+
 
 def call_ollama(model: str, system: str, user: str) -> dict | None:
     payload = {
@@ -331,9 +345,9 @@ def call_ollama(model: str, system: str, user: str) -> dict | None:
         "prompt": user,
         "system": system,
         "stream": False,
-        "format": "json",         # forces valid JSON output regardless of model
+        "format": "json",  # forces valid JSON output regardless of model
         "options": {
-            "temperature": 0.1,   # lower = more consistent, less hallucination
+            "temperature": 0.1,  # lower = more consistent, less hallucination
             "num_predict": 1500,
         },
     }
@@ -364,8 +378,9 @@ def call_ollama(model: str, system: str, user: str) -> dict | None:
         return None
 
 
-def build_prompts(entry: dict, lang: str, version: str,
-                  few_shot_block: str) -> tuple[str, str]:
+def build_prompts(
+    entry: dict, lang: str, version: str, few_shot_block: str
+) -> tuple[str, str]:
     lang_label = LANG_LABELS.get(lang, lang)
     system = SYSTEM_PROMPT_TEMPLATE.format(
         lang_label=lang_label,
@@ -381,30 +396,35 @@ def build_prompts(entry: dict, lang: str, version: str,
     )
     return system, user
 
+
 # ── Display ───────────────────────────────────────────────────────────────────
 
-def print_verdict(date_key: str, entry: dict, verdict: dict,
-                  fix_quality: str | None = None):
+
+def print_verdict(
+    date_key: str, entry: dict, verdict: dict, fix_quality: str | None = None
+):
     v = verdict.get("verdict", "?")
     icon = "✅" if v == "OK" else "⚠️ "
-    grammar   = verdict.get("grammar", {})
-    tone      = verdict.get("tone", {})
+    grammar = verdict.get("grammar", {})
+    tone = verdict.get("tone", {})
     coherence = verdict.get("coherence", {})
-    fix       = verdict.get("suggested_fix") or ""
+    fix = verdict.get("suggested_fix") or ""
 
-    print(f"\n{'─'*60}")
-    print(f"  {icon}  {date_key}  |  {entry.get('id','?')}")
-    print(f"  Grammar   [{grammar.get('score','?')}/5]: {grammar.get('notes') or ''}")
-    print(f"  Tone      [{tone.get('score','?')}/5]: {tone.get('notes') or ''}")
-    print(f"  Coherence [{coherence.get('score','?')}/5]: {coherence.get('notes') or ''}")
+    print(f"\n{'─' * 60}")
+    print(f"  {icon}  {date_key}  |  {entry.get('id', '?')}")
+    print(f"  Grammar   [{grammar.get('score', '?')}/5]: {grammar.get('notes') or ''}")
+    print(f"  Tone      [{tone.get('score', '?')}/5]: {tone.get('notes') or ''}")
+    print(
+        f"  Coherence [{coherence.get('score', '?')}/5]: {coherence.get('notes') or ''}"
+    )
     if verdict.get("overall_notes"):
         print(f"  Summary: {verdict['overall_notes']}")
     if fix:
         if fix_quality == "bluff":
-            print(f"  ⚠️  Fix discarded (identical to original — model bluffed)")
+            print("  ⚠️  Fix discarded (identical to original — model bluffed)")
         else:
             print(f"  💡 Fix: {fix[:300]}{'...' if len(fix) > 300 else ''}")
-    print(f"{'─'*60}")
+    print(f"{'─' * 60}")
 
 
 def print_overnight_summary(log_path: Path):
@@ -440,9 +460,9 @@ def print_overnight_summary(log_path: Path):
 
     real_issues = [(d, fq) for d, fq in issue_list if fq != "bluff"]
 
-    print(f"\n{'═'*60}")
+    print(f"\n{'═' * 60}")
     print(f"  📊 OVERNIGHT REPORT — {log_path.name}")
-    print(f"{'═'*60}")
+    print(f"{'═' * 60}")
     print(f"  Total reviewed : {total}")
     print(f"  ✅ OK          : {ok}")
     print(f"  ⚠️  Issues      : {issues} ({bluffs} bluffs discarded)")
@@ -451,16 +471,25 @@ def print_overnight_summary(log_path: Path):
         print(f"\n  Entries needing real review ({len(real_issues)}):")
         for d, _ in real_issues:
             print(f"    • {d}")
-    print(f"{'═'*60}\n")
+    print(f"{'═' * 60}\n")
+
 
 # ── Interactive Mode ──────────────────────────────────────────────────────────
 
-def run_interactive(entries: list, lang: str, version: str,
-                    model: str, log_path: Path, start_date: str | None,
-                    few_shot_block: str):
+
+def run_interactive(
+    entries: list,
+    lang: str,
+    version: str,
+    model: str,
+    log_path: Path,
+    start_date: str | None,
+    few_shot_block: str,
+):
     reviewed = load_reviewed_dates(log_path)
     pending = [
-        (d, e) for d, e in entries
+        (d, e)
+        for d, e in entries
         if d not in reviewed and (start_date is None or d >= start_date)
     ]
 
@@ -471,7 +500,7 @@ def run_interactive(entries: list, lang: str, version: str,
     print(f"\n  📋 {len(pending)} entries to review")
     print(f"  📝 Audit log: {log_path}")
     print(f"  🤖 Model: {model}")
-    print(f"\n  Controls: [A]pprove  [S]kip  [Q]uit\n")
+    print("\n  Controls: [A]pprove  [S]kip  [Q]uit\n")
 
     done = 0
     for date_key, entry in pending:
@@ -524,14 +553,23 @@ def run_interactive(entries: list, lang: str, version: str,
 
     print(f"\n  Session complete. Audit log: {log_path}")
 
+
 # ── Overnight Mode ────────────────────────────────────────────────────────────
 
-def run_overnight(entries: list, lang: str, version: str,
-                  model: str, log_path: Path, start_date: str | None,
-                  few_shot_block: str):
+
+def run_overnight(
+    entries: list,
+    lang: str,
+    version: str,
+    model: str,
+    log_path: Path,
+    start_date: str | None,
+    few_shot_block: str,
+):
     reviewed = load_reviewed_dates(log_path)
     pending = [
-        (d, e) for d, e in entries
+        (d, e)
+        for d, e in entries
         if d not in reviewed and (start_date is None or d >= start_date)
     ]
 
@@ -543,7 +581,7 @@ def run_overnight(entries: list, lang: str, version: str,
     print(f"\n  🌙 OVERNIGHT MODE — {len(pending)} entries")
     print(f"  🤖 Model: {model}")
     print(f"  📝 Audit log: {log_path}")
-    print(f"  (Press Ctrl+C to stop cleanly)\n")
+    print("  (Press Ctrl+C to stop cleanly)\n")
 
     done = 0
     try:
@@ -567,7 +605,7 @@ def run_overnight(entries: list, lang: str, version: str,
                 if is_bluff:
                     fix_quality = "bluff"
                     verdict["suggested_fix"] = None
-                    print(f"⚠️  bluff", end=" ")
+                    print("⚠️  bluff", end=" ")
 
             v = verdict.get("verdict", "ERROR")
             icon = "✅" if v == "OK" else "⚠️ "
@@ -590,17 +628,21 @@ def run_overnight(entries: list, lang: str, version: str,
 
     print_overnight_summary(log_path)
 
+
 # ── List Files ────────────────────────────────────────────────────────────────
+
 
 def list_files():
     print("\n  Available lang/version combinations:\n")
     print(f"  {'LANG':<6} {'VERSION':<18} {'FILENAME PATTERN'}")
-    print(f"  {'─'*6} {'─'*18} {'─'*40}")
+    print(f"  {'─' * 6} {'─' * 18} {'─' * 40}")
     for (lang, version), pattern in sorted(KNOWN_FILES.items()):
         print(f"  {lang:<6} {version:<18} {pattern}")
     print()
 
+
 # ── Main ──────────────────────────────────────────────────────────────────────
+
 
 def main():
     parser = argparse.ArgumentParser(
@@ -614,19 +656,33 @@ def main():
             "  python critic_loop_v2.py --list-files\n"
         ),
     )
-    parser.add_argument("--lang",       help="Language code (e.g. pt, en, es)")
-    parser.add_argument("--version",    help="Bible version (e.g. NVI, ARC, KJV)")
-    parser.add_argument("--year",       type=int, help="Year (2025 or 2026)")
-    parser.add_argument("--mode",       choices=["interactive", "overnight"],
-                        default="interactive")
-    parser.add_argument("--model",      choices=["7b", "27b"], default="27b",
-                        help="Ollama model (default: 27b for overnight)")
-    parser.add_argument("--start-date", dest="start_date",
-                        help="Skip entries before this date (YYYY-MM-DD)")
-    parser.add_argument("--evolve",     action="store_true",
-                        help="Load real fixes from audit log as few-shot seeds")
-    parser.add_argument("--list-files", action="store_true",
-                        help="List all known lang/version combinations and exit")
+    parser.add_argument("--lang", help="Language code (e.g. pt, en, es)")
+    parser.add_argument("--version", help="Bible version (e.g. NVI, ARC, KJV)")
+    parser.add_argument("--year", type=int, help="Year (2025 or 2026)")
+    parser.add_argument(
+        "--mode", choices=["interactive", "overnight"], default="interactive"
+    )
+    parser.add_argument(
+        "--model",
+        choices=["7b", "27b"],
+        default="27b",
+        help="Ollama model (default: 27b for overnight)",
+    )
+    parser.add_argument(
+        "--start-date",
+        dest="start_date",
+        help="Skip entries before this date (YYYY-MM-DD)",
+    )
+    parser.add_argument(
+        "--evolve",
+        action="store_true",
+        help="Load real fixes from audit log as few-shot seeds",
+    )
+    parser.add_argument(
+        "--list-files",
+        action="store_true",
+        help="List all known lang/version combinations and exit",
+    )
 
     args = parser.parse_args()
 
@@ -634,25 +690,32 @@ def main():
         list_files()
         return
 
-    missing = [f for f, v in [("--lang", args.lang), ("--version", args.version),
-                                ("--year", args.year)] if not v]
+    missing = [
+        f
+        for f, v in [
+            ("--lang", args.lang),
+            ("--version", args.version),
+            ("--year", args.year),
+        ]
+        if not v
+    ]
     if missing:
         parser.error(f"Required: {', '.join(missing)}")
 
     model_name = MODELS[args.model]
-    log_path   = audit_path(args.lang, args.version, args.year)
-    url        = build_url(args.lang, args.version, args.year)
+    log_path = audit_path(args.lang, args.version, args.year)
+    url = build_url(args.lang, args.version, args.year)
 
-    print(f"\n{'═'*60}")
-    print(f"  📖 Devotional Content Critic v2")
+    print(f"\n{'═' * 60}")
+    print("  📖 Devotional Content Critic v2")
     print(f"  Lang: {args.lang} | Version: {args.version} | Year: {args.year}")
     print(f"  Mode: {args.mode} | Model: {model_name}")
     if args.evolve:
-        print(f"  🧬 Evolve: ON")
-    print(f"{'═'*60}")
+        print("  🧬 Evolve: ON")
+    print(f"{'═' * 60}")
 
     # Fetch remote JSON
-    data    = fetch_remote(url)
+    data = fetch_remote(url)
     entries = extract_entries(data, args.lang)
     print(f"  ✅ Loaded {len(entries)} entries from remote")
 
@@ -665,15 +728,29 @@ def main():
             few_shot_block = build_few_shot_block(seeds)
             print(f"  🧬 Loaded {len(seeds)} evolve seeds from audit log")
         else:
-            print(f"  🧬 No valid seeds found yet — running without few-shot")
+            print("  🧬 No valid seeds found yet — running without few-shot")
 
     # Run mode
     if args.mode == "interactive":
-        run_interactive(entries, args.lang, args.version,
-                        model_name, log_path, args.start_date, few_shot_block)
+        run_interactive(
+            entries,
+            args.lang,
+            args.version,
+            model_name,
+            log_path,
+            args.start_date,
+            few_shot_block,
+        )
     else:
-        run_overnight(entries, args.lang, args.version,
-                      model_name, log_path, args.start_date, few_shot_block)
+        run_overnight(
+            entries,
+            args.lang,
+            args.version,
+            model_name,
+            log_path,
+            args.start_date,
+            few_shot_block,
+        )
 
 
 if __name__ == "__main__":

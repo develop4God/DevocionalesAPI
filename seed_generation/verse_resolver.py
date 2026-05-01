@@ -51,6 +51,7 @@ _books_sot_cache: dict | None = None
 # LOW-LEVEL HELPERS  (module-level, usable without instantiation)
 # ─────────────────────────────────────────────────────────────────────────────
 
+
 def load_books_sot(local_path: str | None = None) -> dict:
     """
     Load the bible_books.json SOT.
@@ -73,8 +74,7 @@ def load_books_sot(local_path: str | None = None) -> dict:
             data = json.loads(resp.read())
 
     _books_sot_cache = {
-        name: entry["book_number"]
-        for name, entry in data["books"].items()
+        name: entry["book_number"] for name, entry in data["books"].items()
     }
     return _books_sot_cache
 
@@ -94,9 +94,9 @@ def parse_en_ref(cita: str) -> tuple[str, int, int, int] | None:
       None                                           on failure
     """
     cita = cita.strip().translate(_DEVA)
-    cita = re.sub(r'\s+[A-Z0-9]{2,6}$', '', cita).strip()  # strip version code
+    cita = re.sub(r"\s+[A-Z0-9]{2,6}$", "", cita).strip()  # strip version code
     m = re.match(
-        r'^((?:\d\s+)?[A-Za-z]+(?:\s+[A-Za-z]+)*)\s+(\d+):(\d+)(?:-(\d+))?$',
+        r"^((?:\d\s+)?[A-Za-z]+(?:\s+[A-Za-z]+)*)\s+(\d+):(\d+)(?:-(\d+))?$",
         cita,
     )
     if not m:
@@ -134,8 +134,8 @@ def fetch_text(
     if not rows:
         return None
     combined = " ".join(r[0] for r in rows)
-    combined = re.sub(r"<[^>]+>", "", combined)            # strip XML tags
-    combined = re.sub(r"[\u2460-\u24FF]", "", combined)    # strip Unicode ref markers
+    combined = re.sub(r"<[^>]+>", "", combined)  # strip XML tags
+    combined = re.sub(r"[\u2460-\u24FF]", "", combined)  # strip Unicode ref markers
     combined = re.sub(r"\s+", " ", combined).strip()
     return combined
 
@@ -143,6 +143,7 @@ def fetch_text(
 # ─────────────────────────────────────────────────────────────────────────────
 # VERSE RESOLVER CLASS
 # ─────────────────────────────────────────────────────────────────────────────
+
 
 class VerseResolver:
     """
@@ -174,8 +175,8 @@ class VerseResolver:
         books_sot_path: str | None = None,
     ) -> None:
         self.books_sot = load_books_sot(books_sot_path)
-        self.conn      = sqlite3.connect(sqlite_path)
-        self.cursor    = self.conn.cursor()
+        self.conn = sqlite3.connect(sqlite_path)
+        self.cursor = self.conn.cursor()
 
     # ── context manager support ───────────────────────────────────────────────
 
@@ -189,7 +190,7 @@ class VerseResolver:
         """Close the SQLite connection."""
         if self.conn:
             self.conn.close()
-            self.conn   = None
+            self.conn = None
             self.cursor = None
 
     # ── internal helpers ──────────────────────────────────────────────────────
@@ -244,7 +245,11 @@ class VerseResolver:
         # Confirm EN book name against SOT and get book_number
         book_number = self.books_sot.get(book_en)
         if book_number is None:
-            return None, None, f"unknown book: '{book_en}' — not in bible_books.json SOT"
+            return (
+                None,
+                None,
+                f"unknown book: '{book_en}' — not in bible_books.json SOT",
+            )
 
         # Get native book name directly from the DB (no manual mapping needed)
         local_name = self._native_book_name(book_number, fallback=book_en)
@@ -255,16 +260,20 @@ class VerseResolver:
                 "SELECT MAX(verse) FROM verses WHERE book_number=? AND chapter=?",
                 (book_number, chapter),
             )
-            row       = self.cursor.fetchone()
+            row = self.cursor.fetchone()
             max_verse = row[0] if row and row[0] else "unknown"
             range_str = f"{v_start}-{v_end}" if v_start != v_end else str(v_start)
-            return None, None, (
-                f"verse not found: '{cita_en}' → {local_name} {chapter}:{range_str} "
-                f"(chapter has {max_verse} verses)"
+            return (
+                None,
+                None,
+                (
+                    f"verse not found: '{cita_en}' → {local_name} {chapter}:{range_str} "
+                    f"(chapter has {max_verse} verses)"
+                ),
             )
 
         range_suffix = f"{v_start}-{v_end}" if v_start != v_end else str(v_start)
-        local_cita   = f"{local_name} {chapter}:{range_suffix}"
+        local_cita = f"{local_name} {chapter}:{range_suffix}"
         return local_cita, texto, None
 
     def resolve_many(
@@ -281,12 +290,14 @@ class VerseResolver:
         results = []
         for ref in refs:
             cita, texto, error = self.resolve(ref)
-            results.append({
-                "ref":   ref,
-                "cita":  cita,
-                "texto": texto,
-                "error": error,
-            })
+            results.append(
+                {
+                    "ref": ref,
+                    "cita": cita,
+                    "texto": texto,
+                    "error": error,
+                }
+            )
         return results
 
     def verse_count(self) -> int:

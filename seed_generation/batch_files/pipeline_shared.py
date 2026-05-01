@@ -6,14 +6,25 @@ import unicodedata
 from typing import Optional
 
 # --- Constants ---
-LITURGICAL_WHITELIST = frozenset({
-    "heilig", "holy", "kadosh", "halleluja", "hosanna",
-    "amen", "amén", "āmen", "aleluya", "panginoon",
-})
+LITURGICAL_WHITELIST = frozenset(
+    {
+        "heilig",
+        "holy",
+        "kadosh",
+        "halleluja",
+        "hosanna",
+        "amen",
+        "amén",
+        "āmen",
+        "aleluya",
+        "panginoon",
+    }
+)
+
 
 # --- JSON Repair ---
 def _extract_first_balanced_object(text: str) -> Optional[str]:
-    start = text.find('{')
+    start = text.find("{")
     if start == -1:
         return None
     depth = 0
@@ -23,7 +34,7 @@ def _extract_first_balanced_object(text: str) -> Optional[str]:
         if escape:
             escape = False
             continue
-        if c == '\\' and in_string:
+        if c == "\\" and in_string:
             escape = True
             continue
         if c == '"':
@@ -31,19 +42,20 @@ def _extract_first_balanced_object(text: str) -> Optional[str]:
             continue
         if in_string:
             continue
-        if c == '{':
+        if c == "{":
             depth += 1
-        elif c == '}':
+        elif c == "}":
             depth -= 1
             if depth == 0:
-                return text[start:i + 1]
+                return text[start : i + 1]
     return None
+
 
 def repair_json(raw_text: str) -> Optional[dict]:
     # Strip chain-of-thought <think>...</think> blocks (Qwen3, DeepSeek-R1, etc.)
-    text = re.sub(r'<think>[\s\S]*?</think>', '', raw_text, flags=re.IGNORECASE).strip()
-    text = re.sub(r'```(?:json)?\s*', '', text)
-    text = re.sub(r'```\s*$', '', text, flags=re.MULTILINE).strip()
+    text = re.sub(r"<think>[\s\S]*?</think>", "", raw_text, flags=re.IGNORECASE).strip()
+    text = re.sub(r"```(?:json)?\s*", "", text)
+    text = re.sub(r"```\s*$", "", text, flags=re.MULTILINE).strip()
     try:
         return json.loads(text)
     except json.JSONDecodeError:
@@ -54,18 +66,18 @@ def repair_json(raw_text: str) -> Optional[dict]:
             return json.loads(candidate)
         except json.JSONDecodeError:
             pass
-        fixed = re.sub(r',(\s*[}\]])', r'\1', candidate)
+        fixed = re.sub(r",(\s*[}\]])", r"\1", candidate)
         try:
             return json.loads(fixed)
         except json.JSONDecodeError:
             pass
-        fixed2 = re.sub(r'[\x00-\x08\x0b\x0c\x0e-\x1f]', '', fixed)
+        fixed2 = re.sub(r"[\x00-\x08\x0b\x0c\x0e-\x1f]", "", fixed)
         try:
             return json.loads(fixed2)
         except json.JSONDecodeError:
             pass
-        fixed3 = re.sub(r',([\s]*[}\]])', r'\1', candidate)
-        fixed3 = re.sub(r'(?<=: ")([^"]*?)\n([^"]*?)(?=")', r'\1\\n\2', fixed3)
+        fixed3 = re.sub(r",([\s]*[}\]])", r"\1", candidate)
+        fixed3 = re.sub(r'(?<=: ")([^"]*?)\n([^"]*?)(?=")', r"\1\\n\2", fixed3)
         try:
             return json.loads(fixed3)
         except json.JSONDecodeError:
@@ -75,55 +87,59 @@ def repair_json(raw_text: str) -> Optional[dict]:
     if reflexion_m and oracion_m:
         try:
             return {
-                "reflexion": reflexion_m.group(1).encode('raw_unicode_escape').decode('unicode_escape'),
-                "oracion":   oracion_m.group(1).encode('raw_unicode_escape').decode('unicode_escape'),
+                "reflexion": reflexion_m.group(1)
+                .encode("raw_unicode_escape")
+                .decode("unicode_escape"),
+                "oracion": oracion_m.group(1)
+                .encode("raw_unicode_escape")
+                .decode("unicode_escape"),
             }
         except Exception:
             return {
                 "reflexion": reflexion_m.group(1),
-                "oracion":   oracion_m.group(1),
+                "oracion": oracion_m.group(1),
             }
     return None
 
+
 # --- Prompt Builder ---
-def build_prompt(verse_cita: str, lang: str, topic: str | None = None, verse_texto: str | None = None) -> str:
+def build_prompt(
+    verse_cita: str, lang: str, topic: str | None = None, verse_texto: str | None = None
+) -> str:
     # Resolve canonical Amen for this language so the model never has to guess
     canonical_amen = _load_prayer_endings().get(lang, ["Amen"])[0]
     topic_line = f"\n- Suggested theme: {topic}." if topic else ""
 
-    lang_label = f"Filipino (ISO 639-2 code: fil)" if lang == "fil" else lang.upper()
+    lang_label = "Filipino (ISO 639-2 code: fil)" if lang == "fil" else lang.upper()
 
     verse_block = f"{verse_cita}"
     if verse_texto:
-        verse_block += f"\n\"{verse_texto}\""
+        verse_block += f'\n"{verse_texto}"'
 
     return (
         f"You are a devoted biblical devotional writer. "
         f"Write a devotional in {lang_label} based on the key verse:\n{verse_block}\n\n"
-
         f"Return ONLY a valid JSON object with these two exact keys:\n\n"
-
         f"- `reflexion`: Deep contextualized reflection on the verse "
         f"(minimum 800 characters, approximately 300 words, in {lang_label}). "
         f"Each paragraph must develop a distinct aspect of the verse.\n"
-
         f"- `oracion`: Prayer on the devotional theme (minimum 150 words, 100% in {lang_label}). "
         f"MUST end with 'in the name of Jesus, amen' correctly translated to {lang_label}. "
-        f"The correct closing word is \"{canonical_amen}\" — "
+        f'The correct closing word is "{canonical_amen}" — '
         f"use it exactly once at the very end.\n"
-
         f"RULES:\n"
         f"- ALL text MUST be 100% in {lang_label} — no language mixing.\n"
         f"- Do NOT include transliterations, romanizations, or text in parentheses.\n"
         f"- Do NOT use the same word twice in a row or in close proximity within the same sentence.\n"
         f"- Every sentence must introduce new content or a new perspective.{topic_line}\n\n"
-
         f"Return ONLY the JSON object — no markdown, no preamble, no explanation."
     )
+
 
 # --- Prayer Endings ---
 def _load_prayer_endings() -> dict:
     import os
+
     path = os.path.join(os.path.dirname(__file__), "prayer_endings.json")
     # Fallback: if not found locally, check parent directory (one level up)
     if not os.path.exists(path):
@@ -135,15 +151,17 @@ def _load_prayer_endings() -> dict:
     except Exception:
         return {}
 
+
 def _normalize_word(word: str) -> str:
     return unicodedata.normalize("NFD", word).encode("ascii", "ignore").decode().lower()
 
+
 def _check_prayer_ending(oracion: str, lang: str) -> bool:
     endings = _load_prayer_endings().get(lang, ["Amen"])
-    clean   = oracion.strip().rstrip(".!,;।").strip()
-    words   = clean.split()
+    clean = oracion.strip().rstrip(".!,;।").strip()
+    words = clean.split()
     for ending in endings:
-        n    = len(ending.split())
+        n = len(ending.split())
         tail = " ".join(words[-n:]) if len(words) >= n else clean
         if _normalize_word(ending) == _normalize_word(tail):
             return True

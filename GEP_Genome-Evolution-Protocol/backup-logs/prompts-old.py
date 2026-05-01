@@ -22,11 +22,10 @@ READER_PERSONAS = {
 
 # ── Pause categories for the reader ───────────────────────────────────────────
 
-CATEGORY_HINTS = "\n".join([
-    f"  - {c.value}" for c in PauseCategory
-])
+CATEGORY_HINTS = "\n".join([f"  - {c.value}" for c in PauseCategory])
 
 # ── Genome few-shot block ──────────────────────────────────────────────────────
+
 
 def build_genome_block(genome: Genome | None) -> str:
     if not genome:
@@ -37,7 +36,7 @@ def build_genome_block(genome: Genome | None) -> str:
     lines = ["### Patterns that have caused reader pauses before:\n"]
     for f in fragments[:5]:  # max 5 to keep prompt lean
         lines.append(
-            f"- [{f.category.value}] \"{f.example_quote}\" "
+            f'- [{f.category.value}] "{f.example_quote}" '
             f"— {f.pattern} (seen {len(f.evidence_dates)}x)"
         )
     return "\n".join(lines) + "\n"
@@ -45,8 +44,11 @@ def build_genome_block(genome: Genome | None) -> str:
 
 # ── Main prompt builders ───────────────────────────────────────────────────────
 
+
 def build_system_prompt(lang: str, version: str, genome: Genome | None = None) -> str:
-    persona = READER_PERSONAS.get(lang, "a Christian who reads one devotional every morning")
+    persona = READER_PERSONAS.get(
+        lang, "a Christian who reads one devotional every morning"
+    )
     genome_block = build_genome_block(genome)
 
     return f"""\
@@ -92,7 +94,7 @@ def build_user_prompt(entry: DevotionalEntry) -> str:
     if entry.para_meditar:
         lines = ["\n--- PARA MEDITAR ---"]
         for ref in entry.para_meditar:
-            lines.append(f"{ref.get('cita','')}: {ref.get('texto','')}")
+            lines.append(f"{ref.get('cita', '')}: {ref.get('texto', '')}")
         meditar_block = "\n".join(lines)
 
     return f"""\

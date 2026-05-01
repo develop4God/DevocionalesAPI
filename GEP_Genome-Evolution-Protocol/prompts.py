@@ -19,7 +19,7 @@ Two-phase validation:
 """
 
 from models import DevotionalEntry, Genome, PauseCategory
-from lang_registry import get_persona, get_native_speaker_info
+from lang_registry import get_native_speaker_info
 
 # ── Language persona labels ────────────────────────────────────────────────────
 # Each persona is a real person, not a label.
@@ -69,7 +69,6 @@ I am not a theologian. This felt like a seminary paper, not a morning devotional
 The rest of the entry was fine, but that opening sentence lost me immediately."
 → {"verdict": "PAUSE", "reaction": "The opening sentence used academic theological language that no ordinary reader would encounter in a morning devotional — it broke the intimacy of the moment.", "quoted_pause": "The soteriological implications of the Johannine corpus suggest a universal atonement paradigm", "category": "register_drift", "confidence": 0.93}
 """,
-
     "es": """
 ### Ejemplos de calibración — aprende de estos antes de leer la entrada de hoy:
 
@@ -94,7 +93,6 @@ Tu reacción: "Tuve que releer esa frase tres veces. No soy teóloga. Esto se si
 como un artículo académico, no como un devocional de la mañana."
 → {"verdict": "PAUSE", "reaction": "La frase inicial usó lenguaje teológico académico que ningún lector común encontraría en un devocional matutino — rompió la intimidad del momento.", "quoted_pause": "Las implicaciones soteriológicas del corpus juanino sugieren un paradigma de expiación universal", "category": "register_drift", "confidence": 0.93}
 """,
-
     "en": """
 ### Calibration examples — learn from these before reading today's entry:
 
@@ -119,7 +117,6 @@ Your reaction: "I've seen this quote attributed to many people but never to John
 Something felt off about the attribution — it didn't sound like his language or era."
 → {"verdict": "PAUSE", "reaction": "The quote attributed to John Wesley didn't feel authentic — the phrasing and style don't match his documented writings, and this attribution circulates widely without a source.", "quoted_pause": "As John Wesley once said, 'God never wastes a wound.'", "category": "hallucination", "confidence": 0.82}
 """,
-
     "fr": """
 ### Exemples de calibration — apprends de ceux-ci avant de lire l'entrée d'aujourd'hui:
 
@@ -137,7 +134,6 @@ Ta réaction: "J'ai dû relire cette phrase deux fois. Je lis un dévotionnel le
 pas un manuel de théologie. Cette phrase m'a sortie du moment de prière immédiatement."
 → {"verdict": "PAUSE", "reaction": "La première phrase utilisait un registre académique qui brise l'intimité d'un dévotionnel matinal — c'est froide et distante, pas un langage de foi vivante.", "quoted_pause": "L'herméneutique johannique révèle une sotériologie universaliste caractéristique du corpus néotestamentaire", "category": "register_drift", "confidence": 0.94}
 """,
-
     "de": """
 ### Kalibrierungsbeispiele — lerne daraus, bevor du den heutigen Eintrag liest:
 
@@ -156,7 +152,6 @@ mit HERR in Kapitälchen, nicht 'Herr'. Das ist die konventionelle Schreibweise 
 Gottesnamen und ein sachlicher Fehler."
 → {"verdict": "PAUSE", "reaction": "Die Großschreibung 'HERR' ist die korrekte Form für den Gottesnamen in der Lutherbibel — 'Herr' ist eine andere Bedeutung und ändert den theologischen Gehalt.", "quoted_pause": "Der Herr ist mein Hirte", "category": "verse_mismatch", "confidence": 0.85}
 """,
-
     "ar": """
 ### أمثلة المعايرة — تعلّم منها قبل قراءة الإدخال اليوم:
 
@@ -174,7 +169,6 @@ Gottesnamen und ein sachlicher Fehler."
 شعرت كأن الكاتب نسي ما كتبه للتو."
 → {"verdict": "PAUSE", "reaction": "الصلاة لم تكن لها علاقة بالمغفرة — طلبت نجاحاً مهنياً، مما جعلها منفصلة تماماً عن الآية والتأمل.", "quoted_pause": "النجاح في مقابلة العمل", "category": "prayer_drift", "confidence": 0.97}
 """,
-
     "zh": """
 ### 校准示例 — 在阅读今天的条目之前请先学习这些示例：
 
@@ -192,7 +186,6 @@ Gottesnamen und ein sachlicher Fehler."
 赐下独生子、相信的人、永生。感觉像是模板，不是对这节经文的真实回应。"
 → {"verdict": "PAUSE", "reaction": "默想与这节经文没有具体联系——它可以适用于任何关于神之爱的段落。感觉像是通用填充，而不是对约翰福音3:16的真实回应。", "quoted_pause": "神爱我们，希望我们得最好的。祂的爱是无条件的、永恒的。", "category": "other", "confidence": 0.91}
 """,
-
     "ja": """
 ### 校正例 — 今日のエントリーを読む前に、これらから学んでください：
 
@@ -209,7 +202,6 @@ Gottesnamen und ein sachlicher Fehler."
 朝のデボーションで神学論文のような言葉に出会うとは思っていませんでした。」
 → {"verdict": "PAUSE", "reaction": "冒頭の文が学術的な神学用語を使用しており、朝のデボーションの親密さを損なっていました。", "quoted_pause": "ヨハネ文書の救済論的含意は普遍的贖罪のパラダイムを示唆している", "category": "register_drift", "confidence": 0.93}
 """,
-
     "tl": """
 ### Mga halimbawa ng kalibrasyon — matuto mula rito bago basahin ang entry ngayon:
 
@@ -228,7 +220,6 @@ Iyong reaksyon: "Hintay — ang buong pagmumuni ay tungkol sa pagpapatawad,
 pero ang panalangin ay nagbago ng paksa. Parang nakalimutan ng may-akda ang kanilang sinulat."
 → {"verdict": "PAUSE", "reaction": "Ang panalangin ay walang kaugnayan sa pagpapatawad — humingi ito ng tagumpay sa karera, na pakiramdam ay ganap na naputol mula sa talata at pagmumuni.", "quoted_pause": "tagumpay sa isang job interview", "category": "prayer_drift", "confidence": 0.97}
 """,
-
     "fil": """
 ### Mga halimbawa ng kalibrasyon — matuto mula rito bago basahin ang entry ngayon:
 
@@ -247,7 +238,6 @@ Iyong reaksyon: "Hintay — ang buong pagmumuni ay tungkol sa pagpapatawad,
 pero ang panalangin ay nagbago ng paksa. Parang nakalimutan ng may-akda ang kanilang sinulat."
 → {"verdict": "PAUSE", "reaction": "Ang panalangin ay walang kaugnayan sa pagpapatawad — humingi ito ng tagumpay sa karera, na pakiramdam ay ganap na naputol mula sa talata at pagmumuni.", "quoted_pause": "tagumpay sa isang job interview", "category": "prayer_drift", "confidence": 0.97}
 """,
-
     "hi": """
 ### अंशांकन उदाहरण — आज की प्रविष्टि पढ़ने से पहले इनसे सीखें:
 
@@ -270,6 +260,7 @@ pero ang panalangin ay nagbago ng paksa. Parang nakalimutan ng may-akda ang kani
 # ── Genome few-shot block ──────────────────────────────────────────────────────
 # No fragment limit — local, zero cost. Send everything with high confidence.
 # The richer the genome context, the better the reader's calibration.
+
 
 def build_genome_block(
     genome: "Genome | None",
@@ -300,7 +291,7 @@ def build_genome_block(
         for f in excluded:
             print(
                 f"  ⚠️  Genome injection gate: fragment {f.id} "
-                f"[{f.category.value}] \"{f.example_quote[:50]}\" "
+                f'[{f.category.value}] "{f.example_quote[:50]}" '
                 f"not found in source — excluded from prompt"
             )
 
@@ -313,11 +304,11 @@ def build_genome_block(
         "  - If you said PAUSE: check whether the flagged phrase matches one of these patterns.\n"
         "    A match → keep PAUSE (confirmed pattern). No match → lower confidence; downgrade\n"
         "    to OK unless you are >= 0.90 confident the error is real and obvious.\n"
-        "  - If you said OK: genome check not required. Trust your reader instinct.\n"
+        "  - If you said OK: genome check not required. Trust your reader instinct.\n",
     ]
     for f in fragments:
         lines.append(
-            f"- [{f.category.value}] \"{f.example_quote}\"\n"
+            f'- [{f.category.value}] "{f.example_quote}"\n'
             f"  Pattern: {f.pattern}\n"
             f"  Seen {len(f.evidence_dates)} time(s).\n"
         )
@@ -344,6 +335,7 @@ Only after this internal review, form your verdict.
 """
 
 # ── Main prompt builders ───────────────────────────────────────────────────────
+
 
 def build_system_prompt(lang: str, version: str, genome: Genome | None = None) -> str:
     language_name, country = get_native_speaker_info(lang)
@@ -397,7 +389,7 @@ def build_user_prompt(entry: DevotionalEntry, lang: str = "es") -> str:
     if entry.para_meditar:
         lines = ["\n--- FOR MEDITATION ---"]
         for ref in entry.para_meditar:
-            lines.append(f"{ref.get('cita','')}: {ref.get('texto','')}")
+            lines.append(f"{ref.get('cita', '')}: {ref.get('texto', '')}")
         meditar_block = "\n".join(lines)
 
     return f"""\
@@ -462,7 +454,12 @@ Schema:
 flags is an empty array [] if verdict is CLEAN."""
 
 
-_PHASE1_GENOME_CATEGORIES = {"repetition", "typo", "grammar"}  # PauseCategory values for Phase 1
+_PHASE1_GENOME_CATEGORIES = {
+    "repetition",
+    "typo",
+    "grammar",
+}  # PauseCategory values for Phase 1
+
 
 def build_phase1_genome_block(genome: "Genome | None") -> str:
     """
@@ -473,7 +470,8 @@ def build_phase1_genome_block(genome: "Genome | None") -> str:
     if not genome:
         return ""
     fragments = [
-        f for f in genome.high_confidence_fragments(threshold=0.7)
+        f
+        for f in genome.high_confidence_fragments(threshold=0.7)
         if f.category.value in _PHASE1_GENOME_CATEGORIES
     ][:5]
     if not fragments:
@@ -481,7 +479,7 @@ def build_phase1_genome_block(genome: "Genome | None") -> str:
     lines = ["\n### Known genome patterns (check AFTER forming your verdict):\n"]
     for f in fragments:
         lines.append(
-            f"- [{f.category.value}] \"{f.example_quote}\"\n"
+            f'- [{f.category.value}] "{f.example_quote}"\n'
             f"  Pattern: {f.pattern}\n"
             f"  Seen {len(f.evidence_dates)} time(s).\n"
         )
@@ -499,12 +497,7 @@ def build_phase1_system(lang: str, genome: "Genome | None" = None) -> str:
 
 def build_phase1_user(entry: DevotionalEntry, lang: str = "es") -> str:
     """Phase 1 injects only reflexion + oracion. versiculo excluded from payload."""
-    return (
-        f"--- REFLECTION ---\n"
-        f"{entry.reflexion}\n\n"
-        f"--- PRAYER ---\n"
-        f"{entry.oracion}\n"
-    )
+    return f"--- REFLECTION ---\n{entry.reflexion}\n\n--- PRAYER ---\n{entry.oracion}\n"
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -581,17 +574,19 @@ def build_phase2_system(
     """
     language_name, country = get_native_speaker_info(lang)
     genome_block = build_genome_block(genome)
-    few_shot     = FEW_SHOT_EXAMPLES.get(lang, FEW_SHOT_EXAMPLES.get("en", ""))
+    few_shot = FEW_SHOT_EXAMPLES.get(lang, FEW_SHOT_EXAMPLES.get("en", ""))
 
     if phase1_result and phase1_result.get("verdict") == "FLAG":
         phase1_block = (
             f"\n### Phase 1 linguistic check already flagged this entry:\n"
             f"  Issue   : {phase1_result.get('issue')}\n"
-            f"  Phrase  : \"{phase1_result.get('quoted_problem')}\"\n"
+            f'  Phrase  : "{phase1_result.get("quoted_problem")}"\n'
             f"Focus only on CONTENT coherence. Do not re-flag the linguistic issue.\n"
         )
     elif phase1_result:
-        phase1_block = "\n### Phase 1 linguistic check: CLEAN. Focus only on content coherence.\n"
+        phase1_block = (
+            "\n### Phase 1 linguistic check: CLEAN. Focus only on content coherence.\n"
+        )
     else:
         phase1_block = ""
 

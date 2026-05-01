@@ -5,11 +5,13 @@ from pathlib import Path
 
 # ── thresholds ────────────────────────────────────────────────────────────────
 REFLEXION_MIN = 800
-ORACION_MIN   = 150
+ORACION_MIN = 150
+
 
 # ── Amén normalizer ───────────────────────────────────────────────────────────
 def _normalize(word: str) -> str:
     return unicodedata.normalize("NFD", word).encode("ascii", "ignore").decode().lower()
+
 
 # ── validator (with Amén fix applied) ─────────────────────────────────────────
 def run_checks(oracion: str, reflexion: str, lang: str = "de") -> list[str]:
@@ -29,7 +31,7 @@ def run_checks(oracion: str, reflexion: str, lang: str = "de") -> list[str]:
         issues.append(f"does not end with Amen — last word: '{last_word}'")
 
     # 3. Double Amen artifact
-    tail_matches = list(re.finditer(r'\bAm[eé]n\b', oracion[-120:], re.IGNORECASE))
+    tail_matches = list(re.finditer(r"\bAm[eé]n\b", oracion[-120:], re.IGNORECASE))
     if len(tail_matches) >= 2:
         issues.append("double Amen artifact in closing")
 
@@ -37,18 +39,22 @@ def run_checks(oracion: str, reflexion: str, lang: str = "de") -> list[str]:
     words = oracion.split()
     for i in range(len(words) - 1):
         w1 = words[i].strip(".,;:!?").lower()
-        w2 = words[i+1].strip(".,;:!?").lower()
+        w2 = words[i + 1].strip(".,;:!?").lower()
         if w1 == w2 and len(w1) > 2:
-            issues.append(f"consecutive duplicate in oracion: '{words[i]} {words[i+1]}'")
+            issues.append(
+                f"consecutive duplicate in oracion: '{words[i]} {words[i + 1]}'"
+            )
             break
 
     # 5. Consecutive duplicate words — reflexion
     words = reflexion.split()
     for i in range(len(words) - 1):
         w1 = words[i].strip(".,;:!?").lower()
-        w2 = words[i+1].strip(".,;:!?").lower()
+        w2 = words[i + 1].strip(".,;:!?").lower()
         if w1 == w2 and len(w1) > 2:
-            issues.append(f"consecutive duplicate in reflexion: '{words[i]} {words[i+1]}'")
+            issues.append(
+                f"consecutive duplicate in reflexion: '{words[i]} {words[i + 1]}'"
+            )
             break
 
     return issues
@@ -66,20 +72,20 @@ def validate_progress_json(json_path: str):
         for date_key, devo_list in dates.items():
             if devo_list:
                 entries[date_key] = devo_list[0]
-    print(f"Entries to validate: {len(entries)}\n{'='*60}")
+    print(f"Entries to validate: {len(entries)}\n{'=' * 60}")
 
     failed = {}
     for date, entry in sorted(entries.items()):
-        oracion   = entry.get("oracion", "")
+        oracion = entry.get("oracion", "")
         reflexion = entry.get("reflexion", "")
-        lang      = entry.get("language", "de")
-        issues    = run_checks(oracion, reflexion, lang)
+        lang = entry.get("language", "de")
+        issues = run_checks(oracion, reflexion, lang)
         if issues:
             failed[date] = {"id": entry.get("id"), "issues": issues}
 
     print(f"\nResults: {len(entries) - len(failed)}/{len(entries)} passed\n")
     if failed:
-        print(f"{'='*60}\nFAILED ENTRIES ({len(failed)})\n{'='*60}")
+        print(f"{'=' * 60}\nFAILED ENTRIES ({len(failed)})\n{'=' * 60}")
         for date, info in failed.items():
             print(f"\n❌ {date} — {info['id']}")
             for issue in info["issues"]:
@@ -87,8 +93,10 @@ def validate_progress_json(json_path: str):
     else:
         print("✅ ALL ENTRIES PASSED")
 
+
 if __name__ == "__main__":
     import sys
+
     if len(sys.argv) < 2:
         print("Usage: python validation_helper.py <path_to_progress_json>")
         sys.exit(1)

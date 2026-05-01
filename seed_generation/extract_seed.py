@@ -36,7 +36,7 @@ from tkinter import Tk, filedialog, messagebox, simpledialog
 # 1. CONSTANTS & CONFIG
 # =============================================================================
 
-_SCRIPT_DIR      = os.path.dirname(os.path.abspath(__file__))
+_SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 TAGS_MASTER_PATH = os.path.join(_SCRIPT_DIR, "tags_master.json")
 
 # SOT for EN book name → book_number; native name read from DB's books table
@@ -49,25 +49,25 @@ _books_sot_cache: dict | None = None
 # Normalized key → canonical key.
 # Applied BEFORE tags_master lookup — redirects deprecated variants.
 MERGE_MAP: dict[str, str] = {
-    "armorofgod":  "armor",
+    "armorofgod": "armor",
     "jesuschrist": "jesus",
-    "newlife":     "newbirth",
-    "wordofgod":   "word",
-    "liberation":  "deliverance",
-    "blessings":   "blessing",
-    "miracles":    "miracle",
+    "newlife": "newbirth",
+    "wordofgod": "word",
+    "liberation": "deliverance",
+    "blessings": "blessing",
+    "miracles": "miracle",
 }
 
 # Script ranges for reverse validation
 SCRIPT_RANGES: dict[str, tuple[int, int]] = {
-    "ar": (0x0600, 0x06FF),     # Arabic
-    "hi": (0x0900, 0x097F),     # Devanagari
-    "ko": (0xAC00, 0xD7A3),     # Hangul
-    "ja": (0x3040, 0x30FF),     # Hiragana + Katakana
-    "zh": (0x4E00, 0x9FFF),     # CJK Unified Ideographs
-    "ru": (0x0400, 0x04FF),     # Cyrillic
+    "ar": (0x0600, 0x06FF),  # Arabic
+    "hi": (0x0900, 0x097F),  # Devanagari
+    "ko": (0xAC00, 0xD7A3),  # Hangul
+    "ja": (0x3040, 0x30FF),  # Hiragana + Katakana
+    "zh": (0x4E00, 0x9FFF),  # CJK Unified Ideographs
+    "ru": (0x0400, 0x04FF),  # Cyrillic
 }
-SCRIPT_THRESHOLD = 0.5   # min ratio of target-script chars to flag as valid
+SCRIPT_THRESHOLD = 0.5  # min ratio of target-script chars to flag as valid
 
 # Latin-script languages — no script check needed
 LATIN_LANGS = {"en", "es", "pt", "fr", "de", "tl"}
@@ -79,6 +79,7 @@ _DEVA = str.maketrans("०१२३४५६७८९", "0123456789")
 # =============================================================================
 # 2. VERSE TEXT NORMALIZER
 # =============================================================================
+
 
 def normalize_verse_text(text: str) -> str:
     """Remove [N] footnote markers from Bible verse text.
@@ -93,16 +94,17 @@ def normalize_verse_text(text: str) -> str:
     collapse दिन[१] उसे → दिनउसे, losing the post-tag space when the tag is
     directly attached to the preceding word.
     """
-    text = re.sub(r' \[\d+\] ', ' ', text)   # space-[N]-space → single space
-    text = re.sub(r'\[\d+\]', '', text)        # remove tag, preserve surrounding whitespace
-    text = re.sub(r'  +', ' ', text)           # collapse double spaces
-    text = re.sub(r' ([,;।.])', r'\1', text)   # fix orphaned space before punctuation
+    text = re.sub(r" \[\d+\] ", " ", text)  # space-[N]-space → single space
+    text = re.sub(r"\[\d+\]", "", text)  # remove tag, preserve surrounding whitespace
+    text = re.sub(r"  +", " ", text)  # collapse double spaces
+    text = re.sub(r" ([,;।.])", r"\1", text)  # fix orphaned space before punctuation
     return text.strip()
 
 
 # =============================================================================
 # 3. TAG SERVICE
 # =============================================================================
+
 
 def normalize_tag(tag: str) -> str:
     """Lowercase + strip spaces, hyphens, apostrophes — mirrors tags_master keys."""
@@ -124,7 +126,7 @@ def load_tags_master() -> tuple[dict, dict]:
     with open(TAGS_MASTER_PATH, encoding="utf-8") as f:
         data = json.load(f)
     file_merge = data.get("merge_map", {})
-    merged_map = {**MERGE_MAP, **file_merge}   # file overrides constant
+    merged_map = {**MERGE_MAP, **file_merge}  # file overrides constant
     return data["tags"], merged_map
 
 
@@ -156,21 +158,28 @@ def preflight_coverage(
             seen_norms.add(canonical)
 
             if canonical not in tags_map:
-                misses.append({
-                    "date":       date_key,
-                    "en_tag":     tag,
-                    "normalized": norm,
-                    "canonical":  canonical,
-                    "reason":     "key not in tags_master",
-                })
-            elif target_lang not in tags_map[canonical] or not tags_map[canonical][target_lang]:
-                misses.append({
-                    "date":       date_key,
-                    "en_tag":     tag,
-                    "normalized": norm,
-                    "canonical":  canonical,
-                    "reason":     f"no '{target_lang}' translation for key",
-                })
+                misses.append(
+                    {
+                        "date": date_key,
+                        "en_tag": tag,
+                        "normalized": norm,
+                        "canonical": canonical,
+                        "reason": "key not in tags_master",
+                    }
+                )
+            elif (
+                target_lang not in tags_map[canonical]
+                or not tags_map[canonical][target_lang]
+            ):
+                misses.append(
+                    {
+                        "date": date_key,
+                        "en_tag": tag,
+                        "normalized": norm,
+                        "canonical": canonical,
+                        "reason": f"no '{target_lang}' translation for key",
+                    }
+                )
 
     SEP = "=" * 60
     print(f"\n{SEP}")
@@ -183,9 +192,11 @@ def preflight_coverage(
     if misses:
         print(f"  MISSES ({len(misses)}) — will use EN fallback:")
         for m in misses:
-            print(f"    [{m['date']}] '{m['en_tag']}' → '{m['canonical']}' — {m['reason']}")
+            print(
+                f"    [{m['date']}] '{m['en_tag']}' → '{m['canonical']}' — {m['reason']}"
+            )
     else:
-        print(f"  ✅ 100% coverage — all tags translate cleanly")
+        print("  ✅ 100% coverage — all tags translate cleanly")
     print(SEP + "\n")
 
     return misses
@@ -206,7 +217,7 @@ def translate_tags(
     """
     result = []
     for tag in en_tags:
-        norm     = normalize_tag(tag)
+        norm = normalize_tag(tag)
         canonical = effective_merge.get(norm, norm)
         translated = tags_map.get(canonical, {}).get(target_lang)
 
@@ -214,13 +225,15 @@ def translate_tags(
             result.append(translated)
         else:
             # Explicit miss — log and use EN as emergency fallback
-            miss_log.append({
-                "en_tag":    tag,
-                "canonical": canonical,
-                "lang":      target_lang,
-                "reason":    "not in tags_master — EN fallback used",
-            })
-            result.append(tag)   # EN fallback — flagged in report
+            miss_log.append(
+                {
+                    "en_tag": tag,
+                    "canonical": canonical,
+                    "lang": target_lang,
+                    "reason": "not in tags_master — EN fallback used",
+                }
+            )
+            result.append(tag)  # EN fallback — flagged in report
 
     return list(dict.fromkeys(result))
 
@@ -230,7 +243,7 @@ def _has_target_script(text: str, lang: str) -> bool:
     if lang in LATIN_LANGS:
         return True
     if lang not in SCRIPT_RANGES:
-        return True   # unknown lang — skip check
+        return True  # unknown lang — skip check
     lo, hi = SCRIPT_RANGES[lang]
     alpha = [c for c in text if c.isalpha()]
     if not alpha:
@@ -274,23 +287,29 @@ def reverse_validate_seed(
 
             # 2. Vocabulary check
             if tag not in valid_values:
-                checks.append(f"vocab_fail: '{tag}' not a known {target_lang} translation")
+                checks.append(
+                    f"vocab_fail: '{tag}' not a known {target_lang} translation"
+                )
 
             # 3. Round-trip check
             if tag in reverse_map:
                 canonical = reverse_map[tag]
                 if canonical not in tags_map:
-                    checks.append(f"roundtrip_fail: reverse maps to unknown key '{canonical}'")
+                    checks.append(
+                        f"roundtrip_fail: reverse maps to unknown key '{canonical}'"
+                    )
             elif tag in valid_values:
-                pass   # already caught by vocab check above
+                pass  # already caught by vocab check above
 
             if checks:
-                violations.append({
-                    "date": date_key,
-                    "tag":  tag,
-                    "lang": target_lang,
-                    "checks": checks,
-                })
+                violations.append(
+                    {
+                        "date": date_key,
+                        "tag": tag,
+                        "lang": target_lang,
+                        "checks": checks,
+                    }
+                )
 
     SEP = "=" * 60
     print(f"\n{SEP}")
@@ -301,7 +320,7 @@ def reverse_validate_seed(
         for v in violations:
             print(f"    [{v['date']}] tag='{v['tag']}' → {v['checks']}")
     else:
-        print(f"  ✅ All tags passed reverse validation")
+        print("  ✅ All tags passed reverse validation")
     print(SEP + "\n")
 
     return violations
@@ -310,6 +329,7 @@ def reverse_validate_seed(
 # =============================================================================
 # 3. REFERENCE RESOLVER
 # =============================================================================
+
 
 def load_books_sot(local_path: str | None = None) -> dict:
     """
@@ -333,8 +353,7 @@ def load_books_sot(local_path: str | None = None) -> dict:
             data = json.loads(resp.read())
 
     _books_sot_cache = {
-        name: entry["book_number"]
-        for name, entry in data["books"].items()
+        name: entry["book_number"] for name, entry in data["books"].items()
     }
     return _books_sot_cache
 
@@ -353,10 +372,9 @@ def parse_en_ref(cita: str) -> tuple[str, int, int, int] | None:
     Returns (book_name, chapter, verse_start, verse_end) or None.
     """
     cita = cita.strip().translate(_DEVA)
-    cita = re.sub(r'\s+[A-Z0-9]{2,6}$', '', cita).strip()   # strip trailing KJV/ESV/NIV
+    cita = re.sub(r"\s+[A-Z0-9]{2,6}$", "", cita).strip()  # strip trailing KJV/ESV/NIV
     m = re.match(
-        r'^((?:\d\s+)?[A-Za-z]+(?:\s+[A-Za-z]+)*)\s+(\d+):(\d+)(?:-(\d+))?$',
-        cita
+        r"^((?:\d\s+)?[A-Za-z]+(?:\s+[A-Za-z]+)*)\s+(\d+):(\d+)(?:-(\d+))?$", cita
     )
     if not m:
         return None
@@ -375,8 +393,10 @@ def extract_ref_from_versiculo(versiculo: str) -> str:
 
 def fetch_text(
     cursor: sqlite3.Cursor,
-    book_number: int, chapter: int,
-    v_start: int, v_end: int,
+    book_number: int,
+    chapter: int,
+    v_start: int,
+    v_end: int,
 ) -> str | None:
     """Fetch and clean verse text from SQLite. Returns None if not found."""
     cursor.execute(
@@ -389,8 +409,8 @@ def fetch_text(
     if not rows:
         return None
     combined = " ".join(r[0] for r in rows)
-    combined = re.sub(r"<[^>]+>", "", combined)           # strip XML tags
-    combined = re.sub(r"[\u2460-\u24FF]", "", combined)   # strip Unicode ref markers
+    combined = re.sub(r"<[^>]+>", "", combined)  # strip XML tags
+    combined = re.sub(r"[\u2460-\u24FF]", "", combined)  # strip Unicode ref markers
     combined = re.sub(r"\s+", " ", combined).strip()
     return combined
 
@@ -448,9 +468,13 @@ def resolve_reference(
         row = cursor.fetchone()
         max_verse = row[0] if row and row[0] else "unknown"
         range_str = f"{v_start}-{v_end}" if v_start != v_end else str(v_start)
-        return None, None, (
-            f"verse not found: '{cita}' → {local_name} {chapter}:{range_str} "
-            f"(chapter has {max_verse} verses)"
+        return (
+            None,
+            None,
+            (
+                f"verse not found: '{cita}' → {local_name} {chapter}:{range_str} "
+                f"(chapter has {max_verse} verses)"
+            ),
         )
 
     range_suffix = f"{v_start}-{v_end}" if v_start != v_end else str(v_start)
@@ -460,6 +484,7 @@ def resolve_reference(
 # =============================================================================
 # 4. SQLITE OPENER  (supports .db / .sqlite / .SQLite3 and .gz of any of those)
 # =============================================================================
+
 
 def open_sqlite(path: str) -> tuple[sqlite3.Connection, object]:
     """
@@ -481,7 +506,7 @@ def open_sqlite(path: str) -> tuple[sqlite3.Connection, object]:
             with gzip.open(path, "rb") as gz_in:
                 shutil.copyfileobj(gz_in, tmp)
             tmp.flush()
-            tmp.close()                          # close write handle; SQLite opens its own
+            tmp.close()  # close write handle; SQLite opens its own
             conn = sqlite3.connect(tmp.name)
             return conn, tmp
         except Exception:
@@ -496,21 +521,26 @@ def open_sqlite(path: str) -> tuple[sqlite3.Connection, object]:
 # 5. SEED WRITER
 # =============================================================================
 
-def save_seed(seed: dict, output_dir: str, target_lang: str, target_version: str) -> str:
+
+def save_seed(
+    seed: dict, output_dir: str, target_lang: str, target_version: str
+) -> str:
     """Write seed JSON. Returns output path."""
-    ts       = datetime.now().strftime("%Y%m%d_%H%M%S")
+    ts = datetime.now().strftime("%Y%m%d_%H%M%S")
     filename = f"seed_{target_lang}_{target_version}_{ts}.json"
-    path     = os.path.join(output_dir, filename)
+    path = os.path.join(output_dir, filename)
     with open(path, "w", encoding="utf-8") as f:
         json.dump(seed, f, ensure_ascii=False, indent=2)
     return path
 
 
-def save_report(data: list, output_dir: str, prefix: str, lang: str, version: str) -> str:
+def save_report(
+    data: list, output_dir: str, prefix: str, lang: str, version: str
+) -> str:
     """Write any error/miss/violation report JSON. Returns output path."""
-    ts       = datetime.now().strftime("%Y%m%d_%H%M%S")
+    ts = datetime.now().strftime("%Y%m%d_%H%M%S")
     filename = f"{prefix}_{lang}_{version}_{ts}.json"
-    path     = os.path.join(output_dir, filename)
+    path = os.path.join(output_dir, filename)
     with open(path, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
     return path
@@ -519,6 +549,7 @@ def save_report(data: list, output_dir: str, prefix: str, lang: str, version: st
 # =============================================================================
 # 5. ORCHESTRATOR
 # =============================================================================
+
 
 def extract_seed(
     kjv_path: str,
@@ -554,7 +585,9 @@ def extract_seed(
     print("[4/7] Connecting to SQLite...")
     is_gz = sqlite_path.lower().endswith(".gz")
     if is_gz:
-        print(f"      🗜️  Detected .gz — decompressing to temp file (will be deleted on exit)...")
+        print(
+            "      🗜️  Detected .gz — decompressing to temp file (will be deleted on exit)..."
+        )
     tmp_db = None
     try:
         conn, tmp_db = open_sqlite(sqlite_path)
@@ -573,23 +606,27 @@ def extract_seed(
 
     # ── Preflight tag coverage ────────────────────────────────────────────────
     print("[5/7] Tag preflight coverage check...")
-    preflight_misses = preflight_coverage(kjv_dates, tags_map, effective_merge, target_lang)
+    preflight_misses = preflight_coverage(
+        kjv_dates, tags_map, effective_merge, target_lang
+    )
 
     # ── Extract ───────────────────────────────────────────────────────────────
     print("[6/7] Extracting verses...\n")
 
-    seed        = {}
-    errors      = []
-    tag_misses  = []   # accumulated across all entries
-    ok_count    = 0
-    skip_count  = 0
+    seed = {}
+    errors = []
+    tag_misses = []  # accumulated across all entries
+    ok_count = 0
+    skip_count = 0
 
     try:
         for date_key in dates:
             try:
                 entry = kjv_dates[date_key][0]
             except (KeyError, IndexError):
-                errors.append({"date": date_key, "reason": "entry not accessible in KJV JSON"})
+                errors.append(
+                    {"date": date_key, "reason": "entry not accessible in KJV JSON"}
+                )
                 skip_count += 1
                 continue
 
@@ -597,23 +634,33 @@ def extract_seed(
 
             # Main verse
             main_ref_en = extract_ref_from_versiculo(entry.get("versiculo", ""))
-            hi_main_cita, main_texto, main_err = resolve_reference(main_ref_en, books_sot, cursor)
+            hi_main_cita, main_texto, main_err = resolve_reference(
+                main_ref_en, books_sot, cursor
+            )
             if main_err:
-                date_errors.append({"field": "versiculo", "reference": main_ref_en, "reason": main_err})
+                date_errors.append(
+                    {"field": "versiculo", "reference": main_ref_en, "reason": main_err}
+                )
 
             # Para meditar
             pm_results = []
             for idx, pm in enumerate(entry.get("para_meditar", [])):
                 cita_en = pm.get("cita", "").strip()
-                hi_pm_cita, pm_texto, pm_err = resolve_reference(cita_en, books_sot, cursor)
+                hi_pm_cita, pm_texto, pm_err = resolve_reference(
+                    cita_en, books_sot, cursor
+                )
                 if pm_err:
-                    date_errors.append({
-                        "field":     f"para_meditar[{idx}]",
-                        "reference": cita_en,
-                        "reason":    pm_err,
-                    })
+                    date_errors.append(
+                        {
+                            "field": f"para_meditar[{idx}]",
+                            "reference": cita_en,
+                            "reason": pm_err,
+                        }
+                    )
                 else:
-                    pm_results.append({"cita": hi_pm_cita, "texto": normalize_verse_text(pm_texto)})
+                    pm_results.append(
+                        {"cita": hi_pm_cita, "texto": normalize_verse_text(pm_texto)}
+                    )
 
             # Decision
             if date_errors:
@@ -625,13 +672,18 @@ def extract_seed(
                 continue
 
             # Translate tags — all misses logged to tag_misses
-            en_tags     = entry.get("tags") or []
-            target_tags = translate_tags(en_tags, tags_map, effective_merge, target_lang, tag_misses)
+            en_tags = entry.get("tags") or []
+            target_tags = translate_tags(
+                en_tags, tags_map, effective_merge, target_lang, tag_misses
+            )
 
             seed[date_key] = {
-                "versiculo":   {"cita": hi_main_cita, "texto": normalize_verse_text(main_texto)},
+                "versiculo": {
+                    "cita": hi_main_cita,
+                    "texto": normalize_verse_text(main_texto),
+                },
                 "para_meditar": pm_results,
-                "tags":         target_tags,
+                "tags": target_tags,
             }
             ok_count += 1
             print(f"  ✅  {date_key} — {hi_main_cita} | tags: {target_tags}")
@@ -649,7 +701,7 @@ def extract_seed(
     violations = reverse_validate_seed(seed, tags_map, effective_merge, target_lang)
 
     # ── Write outputs ─────────────────────────────────────────────────────────
-    print(f"[7/7] Writing output files...")
+    print("[7/7] Writing output files...")
 
     seed_path = save_seed(seed, output_dir, target_lang, target_version)
     print(f"      ✅ Seed    → {seed_path}")
@@ -659,11 +711,15 @@ def extract_seed(
         print(f"      ✅ Errors  → {ep}")
 
     if tag_misses:
-        mp = save_report(tag_misses, output_dir, "seed_tag_misses", target_lang, target_version)
+        mp = save_report(
+            tag_misses, output_dir, "seed_tag_misses", target_lang, target_version
+        )
         print(f"      ⚠️  Tag misses → {mp}")
 
     if violations:
-        vp = save_report(violations, output_dir, "seed_violations", target_lang, target_version)
+        vp = save_report(
+            violations, output_dir, "seed_violations", target_lang, target_version
+        )
         print(f"      ⚠️  Violations → {vp}")
 
     # ── Summary ───────────────────────────────────────────────────────────────
@@ -676,9 +732,9 @@ def extract_seed(
     print(f"  Tag misses        : {len(set(m['en_tag'] for m in tag_misses))} unique")
     print(f"  Reverse violations: {len(violations)}")
     if violations:
-        print(f"  ⚠️  Review seed_violations before running generate_from_seed.py")
+        print("  ⚠️  Review seed_violations before running generate_from_seed.py")
     else:
-        print(f"  ✅ Seed is clean — ready for generate_from_seed.py")
+        print("  ✅ Seed is clean — ready for generate_from_seed.py")
     print(f"{SEP}\n")
 
 
@@ -686,11 +742,14 @@ def extract_seed(
 # 6. ENTRY POINT
 # =============================================================================
 
+
 def main() -> None:
     root = Tk()
     root.withdraw()
 
-    messagebox.showinfo("Seed Extractor — Step 1 of 4", "Select the KJV devotional JSON file.")
+    messagebox.showinfo(
+        "Seed Extractor — Step 1 of 4", "Select the KJV devotional JSON file."
+    )
     kjv_path = filedialog.askopenfilename(
         title="Select KJV devotional JSON",
         filetypes=[("JSON files", "*.json"), ("All files", "*.*")],
@@ -699,7 +758,10 @@ def main() -> None:
         print("Cancelled.")
         sys.exit(0)
 
-    messagebox.showinfo("Seed Extractor — Step 2 of 4", "Select the SQLite Bible database (.db / .sqlite / .SQLite3 or .gz).")
+    messagebox.showinfo(
+        "Seed Extractor — Step 2 of 4",
+        "Select the SQLite Bible database (.db / .sqlite / .SQLite3 or .gz).",
+    )
     sqlite_path = filedialog.askopenfilename(
         title="Select SQLite DB",
         filetypes=[

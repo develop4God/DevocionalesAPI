@@ -53,3 +53,9 @@ yearly_devotionals/
 # Ignore excluded verses and tags
 1st_version_API_generation/excluded_verses.json
 seed_generation/tags_master*.json
+
+
+.vscode/extensions.json
+.vscode/launch.json
+
+

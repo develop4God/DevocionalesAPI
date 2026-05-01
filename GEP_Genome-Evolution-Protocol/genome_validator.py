@@ -22,14 +22,15 @@ import json
 import re
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Dict, Tuple
+from typing import List, Dict
 
-from models import DevotionalEntry, Genome, GenomeFragment, PauseCategory
+from models import DevotionalEntry, Genome, GenomeFragment
 
 
 @dataclass
 class PatternMatch:
     """A match of a genome pattern in an entry."""
+
     entry_id: str
     entry_date: str
     field: str  # "reflexion", "oracion", or "versiculo"
@@ -44,6 +45,7 @@ class PatternMatch:
 @dataclass
 class ValidationReport:
     """Report of genome pattern validation."""
+
     total_entries: int
     entries_with_matches: int
     total_matches: int
@@ -53,53 +55,53 @@ class ValidationReport:
     def summary(self) -> str:
         """Generate human-readable summary."""
         lines = [
-            f"\n{'═'*60}",
-            f"  📊 Genome Pattern Validation Report",
-            f"{'═'*60}",
+            f"\n{'═' * 60}",
+            "  📊 Genome Pattern Validation Report",
+            f"{'═' * 60}",
             f"  Total entries scanned : {self.total_entries}",
             f"  Entries with matches  : {self.entries_with_matches}",
             f"  Total pattern matches : {self.total_matches}",
         ]
 
         if self.categories_found:
-            lines.append(f"\n  Patterns found by category:")
-            for cat, count in sorted(self.categories_found.items(), key=lambda x: -x[1]):
+            lines.append("\n  Patterns found by category:")
+            for cat, count in sorted(
+                self.categories_found.items(), key=lambda x: -x[1]
+            ):
                 lines.append(f"    - {cat:<20} : {count} matches")
 
         if self.matches:
-            lines.append(f"\n  Top matches (showing first 10):")
+            lines.append("\n  Top matches (showing first 10):")
             for match in self.matches[:10]:
                 lines.append(
                     f"    [{match.category}] {match.entry_date} — "
-                    f"{match.field}: \"{match.matched_text[:60]}...\""
+                    f'{match.field}: "{match.matched_text[:60]}..."'
                 )
 
-        lines.append(f"{'═'*60}\n")
+        lines.append(f"{'═' * 60}\n")
         return "\n".join(lines)
 
 
 def _search_pattern_in_text(
-    text: str,
-    fragment: GenomeFragment,
-    entry_id: str,
-    entry_date: str,
-    field: str
+    text: str, fragment: GenomeFragment, entry_id: str, entry_date: str, field: str
 ) -> List[PatternMatch]:
     """Search for a genome pattern in text. Returns list of matches."""
     matches = []
 
     # Try exact quote match first
     if fragment.example_quote.lower() in text.lower():
-        matches.append(PatternMatch(
-            entry_id=entry_id,
-            entry_date=entry_date,
-            field=field,
-            fragment_id=fragment.id,
-            category=fragment.category.value,
-            pattern=fragment.pattern,
-            matched_text=fragment.example_quote,
-            confidence=fragment.confidence,
-        ))
+        matches.append(
+            PatternMatch(
+                entry_id=entry_id,
+                entry_date=entry_date,
+                field=field,
+                fragment_id=fragment.id,
+                category=fragment.category.value,
+                pattern=fragment.pattern,
+                matched_text=fragment.example_quote,
+                confidence=fragment.confidence,
+            )
+        )
         return matches
 
     # Try pattern-based search (convert pattern to regex)
@@ -110,16 +112,18 @@ def _search_pattern_in_text(
         regex = re.compile(pattern_regex, re.IGNORECASE | re.MULTILINE)
         for match in regex.finditer(text):
             matched_text = match.group(0)
-            matches.append(PatternMatch(
-                entry_id=entry_id,
-                entry_date=entry_date,
-                field=field,
-                fragment_id=fragment.id,
-                category=fragment.category.value,
-                pattern=fragment.pattern,
-                matched_text=matched_text,
-                confidence=fragment.confidence,
-            ))
+            matches.append(
+                PatternMatch(
+                    entry_id=entry_id,
+                    entry_date=entry_date,
+                    field=field,
+                    fragment_id=fragment.id,
+                    category=fragment.category.value,
+                    pattern=fragment.pattern,
+                    matched_text=matched_text,
+                    confidence=fragment.confidence,
+                )
+            )
     except re.error:
         # If pattern is not valid regex, skip
         pass
@@ -128,9 +132,7 @@ def _search_pattern_in_text(
 
 
 def validate_entry(
-    entry: DevotionalEntry,
-    genome: Genome,
-    confidence_threshold: float = 0.6
+    entry: DevotionalEntry, genome: Genome, confidence_threshold: float = 0.6
 ) -> List[PatternMatch]:
     """
     Validate a single entry against genome patterns.
@@ -147,37 +149,33 @@ def validate_entry(
         return []
 
     matches = []
-    high_conf_fragments = genome.high_confidence_fragments(threshold=confidence_threshold)
+    high_conf_fragments = genome.high_confidence_fragments(
+        threshold=confidence_threshold
+    )
 
     # Check reflexion field
     for fragment in high_conf_fragments:
-        matches.extend(_search_pattern_in_text(
-            entry.reflexion,
-            fragment,
-            entry.id,
-            entry.date,
-            "reflexion"
-        ))
+        matches.extend(
+            _search_pattern_in_text(
+                entry.reflexion, fragment, entry.id, entry.date, "reflexion"
+            )
+        )
 
     # Check oracion field
     for fragment in high_conf_fragments:
-        matches.extend(_search_pattern_in_text(
-            entry.oracion,
-            fragment,
-            entry.id,
-            entry.date,
-            "oracion"
-        ))
+        matches.extend(
+            _search_pattern_in_text(
+                entry.oracion, fragment, entry.id, entry.date, "oracion"
+            )
+        )
 
     # Check versiculo field (less common, but possible)
     for fragment in high_conf_fragments:
-        matches.extend(_search_pattern_in_text(
-            entry.versiculo,
-            fragment,
-            entry.id,
-            entry.date,
-            "versiculo"
-        ))
+        matches.extend(
+            _search_pattern_in_text(
+                entry.versiculo, fragment, entry.id, entry.date, "versiculo"
+            )
+        )
 
     return matches
 
@@ -188,7 +186,7 @@ def validate_entries(
     lang: str,
     version: str,
     year: int,
-    confidence_threshold: float = 0.6
+    confidence_threshold: float = 0.6,
 ) -> ValidationReport:
     """
     Validate multiple entries against genome patterns.
@@ -216,13 +214,13 @@ def validate_entries(
         fragments = genome.high_confidence_fragments(threshold=confidence_threshold)
         print(f"     Genome fragments: {len(fragments)}")
     else:
-        print(f"     ⚠️  No genome available — skipping validation")
+        print("     ⚠️  No genome available — skipping validation")
         return ValidationReport(
             total_entries=len(entries),
             entries_with_matches=0,
             total_matches=0,
             matches=[],
-            categories_found={}
+            categories_found={},
         )
 
     for entry in entries:
@@ -232,14 +230,16 @@ def validate_entries(
             all_matches.extend(entry_matches)
 
             for match in entry_matches:
-                categories_found[match.category] = categories_found.get(match.category, 0) + 1
+                categories_found[match.category] = (
+                    categories_found.get(match.category, 0) + 1
+                )
 
     report = ValidationReport(
         total_entries=len(entries),
         entries_with_matches=entries_with_matches,
         total_matches=len(all_matches),
         matches=all_matches,
-        categories_found=categories_found
+        categories_found=categories_found,
     )
 
     print(report.summary())
@@ -248,10 +248,7 @@ def validate_entries(
 
 
 def validate_file(
-    file_path: str,
-    genome: Genome,
-    lang: str,
-    confidence_threshold: float = 0.6
+    file_path: str, genome: Genome, lang: str, confidence_threshold: float = 0.6
 ) -> ValidationReport:
     """
     Validate a devotional JSON file against genome patterns.
@@ -302,7 +299,7 @@ def export_report_to_file(report: ValidationReport, output_path: str):
                 "confidence": m.confidence,
             }
             for m in report.matches
-        ]
+        ],
     }
 
     with open(output_path, "w", encoding="utf-8") as f:
@@ -312,6 +309,7 @@ def export_report_to_file(report: ValidationReport, output_path: str):
 
 
 # ── CLI Entry Point ────────────────────────────────────────────────────────────
+
 
 def main():
     """CLI entry point for genome validation."""
@@ -323,11 +321,21 @@ def main():
         description="GEP Genome Validator — validate devotional files against genome patterns"
     )
     parser.add_argument("--file", required=True, help="Path to devotional JSON file")
-    parser.add_argument("--lang", required=True, help="Language code (e.g., es, pt, fil)")
-    parser.add_argument("--version", required=True, help="Bible version (e.g., RVR1960, NVI)")
-    parser.add_argument("--year", type=int, required=True, help="Year (e.g., 2025, 2026)")
-    parser.add_argument("--threshold", type=float, default=0.6,
-                        help="Confidence threshold (default: 0.6)")
+    parser.add_argument(
+        "--lang", required=True, help="Language code (e.g., es, pt, fil)"
+    )
+    parser.add_argument(
+        "--version", required=True, help="Bible version (e.g., RVR1960, NVI)"
+    )
+    parser.add_argument(
+        "--year", type=int, required=True, help="Year (e.g., 2025, 2026)"
+    )
+    parser.add_argument(
+        "--threshold",
+        type=float,
+        default=0.6,
+        help="Confidence threshold (default: 0.6)",
+    )
     parser.add_argument("--export", help="Export report to JSON file")
 
     args = parser.parse_args()
@@ -336,7 +344,7 @@ def main():
     genome = load_genome(args.lang, args.version, args.year)
     if not genome:
         print(f"  ⚠️  No genome found for {args.lang}/{args.version}/{args.year}")
-        print(f"     Validation will skip genome checks")
+        print("     Validation will skip genome checks")
 
     # Validate file
     try:
@@ -351,6 +359,7 @@ def main():
     except Exception as e:
         print(f"  ❌ Validation failed: {e}")
         import traceback
+
         traceback.print_exc()
         sys.exit(1)
 

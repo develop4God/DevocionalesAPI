@@ -74,7 +74,11 @@ except ValueError as e:
 print("\n[4] Testing 'tl' (old code) is not registered...")
 try:
     lang_registry.get("tl")
-    check("get('tl') raises ValueError", False, "Should have raised ValueError — tl replaced with fil")
+    check(
+        "get('tl') raises ValueError",
+        False,
+        "Should have raised ValueError — tl replaced with fil",
+    )
 except ValueError as e:
     error_msg = str(e)
     check("get('tl') raises ValueError", True, "Correct — tl replaced with fil")
@@ -89,8 +93,11 @@ try:
     check("  fil: country is 'Philippines'", cfg.country == "Philippines")
     check("  fil: MBB05 in known_versions", "MBB05" in cfg.known_versions)
     check("  fil: ASND in known_versions", "ASND" in cfg.known_versions)
-    check("  fil: ADB NOT in known_versions", "ADB" not in cfg.known_versions,
-          "ADB removed per issue requirements")
+    check(
+        "  fil: ADB NOT in known_versions",
+        "ADB" not in cfg.known_versions,
+        "ADB removed per issue requirements",
+    )
 except ValueError as e:
     check("get('fil') should not raise ValueError", False, str(e))
 
@@ -110,8 +117,11 @@ except ValueError as e:
 print("\n[7] Testing validate_version() — unknown version...")
 try:
     lang_registry.validate_version("fil", "INVALID")
-    check("validate_version('fil', 'INVALID') raises ValueError", False,
-          "Should have raised ValueError")
+    check(
+        "validate_version('fil', 'INVALID') raises ValueError",
+        False,
+        "Should have raised ValueError",
+    )
 except ValueError as e:
     error_msg = str(e)
     check("validate_version('fil', 'INVALID') raises ValueError", True)
@@ -123,8 +133,11 @@ except ValueError as e:
 print("\n[8] Testing validate_version() — unknown language...")
 try:
     lang_registry.validate_version("ko", "KJV")
-    check("validate_version('ko', 'KJV') raises ValueError", False,
-          "Should have raised ValueError")
+    check(
+        "validate_version('ko', 'KJV') raises ValueError",
+        False,
+        "Should have raised ValueError",
+    )
 except ValueError as e:
     error_msg = str(e)
     check("validate_version('ko', 'KJV') raises ValueError", True)
@@ -155,7 +168,9 @@ try:
     check("  Returns non-empty list", len(versions) > 0)
 
     pattern = lang_registry.get_filename_pattern("es", "RVR1960")
-    check("get_filename_pattern('es', 'RVR1960') returns string", isinstance(pattern, str))
+    check(
+        "get_filename_pattern('es', 'RVR1960') returns string", isinstance(pattern, str)
+    )
     check("  Pattern contains {year} placeholder", "{year}" in pattern)
 
 except Exception as e:
@@ -176,12 +191,15 @@ for lang in lang_registry.list_languages():
 
         # Check labels structure
         required_label_keys = {"verse", "reflection", "prayer", "meditate"}
-        check(f"  {lang}: labels has all 4 keys",
-              set(cfg.labels.keys()) == required_label_keys)
+        check(
+            f"  {lang}: labels has all 4 keys",
+            set(cfg.labels.keys()) == required_label_keys,
+        )
 
         # Check filename pattern placeholders
-        check(f"  {lang}: filename_pattern has {{year}}",
-              "{year}" in cfg.filename_pattern)
+        check(
+            f"  {lang}: filename_pattern has {{year}}", "{year}" in cfg.filename_pattern
+        )
 
         # Check persona is substantial
         check(f"  {lang}: persona is substantial", len(cfg.persona) > 50)
@@ -206,7 +224,9 @@ try:
     lang_registry.get("ES")  # Should fail — codes are lowercase
     check("get('ES') is case-sensitive", False, "Should reject uppercase")
 except ValueError:
-    check("get('ES') is case-sensitive", True, "Correct — only lowercase codes accepted")
+    check(
+        "get('ES') is case-sensitive", True, "Correct — only lowercase codes accepted"
+    )
 
 # Empty string
 try:
@@ -231,8 +251,11 @@ try:
     fil_cfg = lang_registry.get("fil")
     check("fil has MBB05", "MBB05" in fil_cfg.known_versions)
     check("fil has ASND", "ASND" in fil_cfg.known_versions)
-    check("fil does NOT have ADB", "ADB" not in fil_cfg.known_versions,
-          "ADB removed per issue")
+    check(
+        "fil does NOT have ADB",
+        "ADB" not in fil_cfg.known_versions,
+        "ADB removed per issue",
+    )
 except ValueError as e:
     check("fil should be registered", False, str(e))
 
@@ -255,12 +278,16 @@ try:
     from source import build_url
 
     url_es = build_url("es", "RVR1960", 2025)
-    check("source.build_url('es', 'RVR1960', 2025) works",
-          "Devocional_year_2025" in url_es)
+    check(
+        "source.build_url('es', 'RVR1960', 2025) works",
+        "Devocional_year_2025" in url_es,
+    )
 
     url_fil = build_url("fil", "MBB05", 2026)
-    check("source.build_url('fil', 'MBB05', 2026) works",
-          "Devocional_year_2026" in url_fil)
+    check(
+        "source.build_url('fil', 'MBB05', 2026) works",
+        "Devocional_year_2026" in url_fil,
+    )
 
 except Exception as e:
     check("Integration with prompts/source failed", False, str(e))

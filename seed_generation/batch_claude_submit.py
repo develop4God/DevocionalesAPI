@@ -50,12 +50,14 @@ except ImportError:
 
 try:
     from dotenv import load_dotenv
+
     load_dotenv()
 except ImportError:
     pass
 
 try:
     from tkinter import Tk, filedialog, messagebox, simpledialog
+
     _HAS_TKINTER = True
 except ImportError:
     _HAS_TKINTER = False
@@ -65,8 +67,10 @@ except ImportError:
 # =============================================================================
 
 # Model choices (cheapest → best quality)
-BATCH_MODEL_DEFAULT = "claude-haiku-4-5-20251001"   # 50% off batch → ~$0.25/$1.25 per MTok
-MAX_TOKENS          = 4096
+BATCH_MODEL_DEFAULT = (
+    "claude-haiku-4-5-20251001"  # 50% off batch → ~$0.25/$1.25 per MTok
+)
+MAX_TOKENS = 4096
 
 _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -75,41 +79,40 @@ _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 # PROMPT BUILDER
 # =============================================================================
 
+
 def build_prompt(verse_cita: str, lang: str, topic: str | None = None) -> str:
     """
     Identical prompt to API_Server_Seed_Claude.py so output format is consistent.
     Returns reflexion + oracion as a JSON object.
     """
-    parts = "\n\n".join([
-        f"You are a devoted biblical devotional writer. "
-        f"Write a devotional in {lang.upper()} based on the key verse: \"{verse_cita}\".",
-
-        "Return ONLY a valid JSON object with these exact keys:",
-
-        f"- `reflexion`: Deep contextualized reflection on the verse "
-        f"(minimum 900 characters, approximately 300 words, in {lang}). "
-        f"Each paragraph must develop a distinct aspect of the verse.",
-        f"Do NOT repeat any word consecutively, even when separated by punctuation marks — "
-        f"Never write patterns (example: 'word, word', 'word. Word', 'word; word').",
-        f"- Do NOT repeat the same sentence, phrase, or idea in different words.\n"
-
-        f"- `oracion`: Prayer on the devotional theme (minimum 150 words, 100% in {lang}). "
-        f"MUST end with 'in the name of Jesus, amen' correctly translated to {lang}. "
-        f"End with exactly one Amen — never write Amen twice.",
-        f"Do NOT repeat any word consecutively, even when separated by punctuation marks — "
-        f"Never write patterns (example: 'word, word', 'word. Word', 'word; word').",
-        f"- Do NOT repeat the same sentence, phrase, or idea in different words.\n"
-
-        f"RULES:\n"
-        f"- ALL text MUST be 100% in {lang} — no language mixing.\n"
-        f"- Do NOT include transliterations, romanizations, or text in parentheses.\n"
-        f"- Do NOT repeat any word consecutively.\n"
-        f"Do NOT repeat any word consecutively, even when separated by punctuation marks — "
-        f"Never write patterns (example: 'word, word', 'word. Word', 'word; word').",
-        f"- Do NOT repeat the same sentence, phrase, or idea in different words.\n"
-        f"- Every sentence must introduce new content or a new perspective."
-        + (f"\n- Suggested theme: {topic}." if topic else ""),
-    ])
+    parts = "\n\n".join(
+        [
+            f"You are a devoted biblical devotional writer. "
+            f'Write a devotional in {lang.upper()} based on the key verse: "{verse_cita}".',
+            "Return ONLY a valid JSON object with these exact keys:",
+            f"- `reflexion`: Deep contextualized reflection on the verse "
+            f"(minimum 900 characters, approximately 300 words, in {lang}). "
+            f"Each paragraph must develop a distinct aspect of the verse.",
+            "Do NOT repeat any word consecutively, even when separated by punctuation marks — "
+            "Never write patterns (example: 'word, word', 'word. Word', 'word; word').",
+            f"- Do NOT repeat the same sentence, phrase, or idea in different words.\n"
+            f"- `oracion`: Prayer on the devotional theme (minimum 150 words, 100% in {lang}). "
+            f"MUST end with 'in the name of Jesus, amen' correctly translated to {lang}. "
+            f"End with exactly one Amen — never write Amen twice.",
+            "Do NOT repeat any word consecutively, even when separated by punctuation marks — "
+            "Never write patterns (example: 'word, word', 'word. Word', 'word; word').",
+            f"- Do NOT repeat the same sentence, phrase, or idea in different words.\n"
+            f"RULES:\n"
+            f"- ALL text MUST be 100% in {lang} — no language mixing.\n"
+            f"- Do NOT include transliterations, romanizations, or text in parentheses.\n"
+            f"- Do NOT repeat any word consecutively.\n"
+            f"Do NOT repeat any word consecutively, even when separated by punctuation marks — "
+            f"Never write patterns (example: 'word, word', 'word. Word', 'word; word').",
+            "- Do NOT repeat the same sentence, phrase, or idea in different words.\n"
+            "- Every sentence must introduce new content or a new perspective."
+            + (f"\n- Suggested theme: {topic}." if topic else ""),
+        ]
+    )
     return parts
 
 
@@ -124,6 +127,7 @@ def _safe_custom_id(date_key: str) -> str:
 # =============================================================================
 # SUBMIT
 # =============================================================================
+
 
 def submit_batch(
     seed_path: str,
@@ -174,19 +178,24 @@ def submit_batch(
     requests_list = []
     for date_key in all_dates:
         seed_entry = seed[date_key]
-        cita       = seed_entry["versiculo"]["cita"]
-        topic      = seed_entry.get("topic")
+        cita = seed_entry["versiculo"]["cita"]
+        topic = seed_entry.get("topic")
 
-        requests_list.append({
-            "custom_id": _safe_custom_id(date_key),
-            "params": {
-                "model": model,
-                "max_tokens": MAX_TOKENS,
-                "messages": [
-                    {"role": "user", "content": build_prompt(cita, master_lang, topic)}
-                ],
-            },
-        })
+        requests_list.append(
+            {
+                "custom_id": _safe_custom_id(date_key),
+                "params": {
+                    "model": model,
+                    "max_tokens": MAX_TOKENS,
+                    "messages": [
+                        {
+                            "role": "user",
+                            "content": build_prompt(cita, master_lang, topic),
+                        }
+                    ],
+                },
+            }
+        )
 
     # ── Submit to Anthropic ────────────────────────────────────────────────
     api_key = os.environ.get("ANTHROPIC_API_KEY", "")
@@ -205,19 +214,19 @@ def submit_batch(
     # ── Save state file ────────────────────────────────────────────────────
     ts = datetime.now().strftime("%Y%m%d_%H%M%S")
     state_filename = f"batch_state_{master_lang}_{master_version}_{ts}.json"
-    state_path     = os.path.join(_SCRIPT_DIR, state_filename)
+    state_path = os.path.join(_SCRIPT_DIR, state_filename)
 
     state = {
-        "batch_id":       batch_id,
-        "seed_path":      seed_path,
-        "master_lang":    master_lang,
+        "batch_id": batch_id,
+        "seed_path": seed_path,
+        "master_lang": master_lang,
         "master_version": master_version,
-        "output_dir":     output_dir,
-        "model":          model,
-        "dates":          all_dates,    # ordered list for reference
-        "total":          total,
-        "submitted_at":   datetime.now().isoformat(),
-        "expires_at":     str(batch.expires_at),
+        "output_dir": output_dir,
+        "model": model,
+        "dates": all_dates,  # ordered list for reference
+        "total": total,
+        "submitted_at": datetime.now().isoformat(),
+        "expires_at": str(batch.expires_at),
         "processing_status": batch.processing_status,
     }
 
@@ -225,9 +234,9 @@ def submit_batch(
         json.dump(state, f, ensure_ascii=False, indent=2)
 
     print(f"\nState file → {state_path}")
-    print(f"\nNext step:")
+    print("\nNext step:")
     print(f"  python batch_claude_collect.py --state {state_path}")
-    print(f"\n  (or just run it without --state to auto-find the latest state file)")
+    print("\n  (or just run it without --state to auto-find the latest state file)")
     print(SEP + "\n")
 
     return state_path
@@ -237,6 +246,7 @@ def submit_batch(
 # INTERACTIVE (Tkinter)
 # =============================================================================
 
+
 def _interactive():
     root = Tk()
     root.withdraw()
@@ -244,7 +254,7 @@ def _interactive():
     messagebox.showinfo("Batch Submit 1/4", "Select the seed JSON file.")
     seed_path = filedialog.askopenfilename(
         title="Select seed JSON",
-        filetypes=[("JSON files", "*.json"), ("All files", "*.*")]
+        filetypes=[("JSON files", "*.json"), ("All files", "*.*")],
     )
     if not seed_path:
         root.destroy()
@@ -255,50 +265,63 @@ def _interactive():
         _seed_preview = json.load(f)
     _first_date = sorted(_seed_preview.keys())[0] if _seed_preview else "2025-01-01"
 
-    master_lang = simpledialog.askstring("Language", "Language code (e.g. hi, ar, de):", initialvalue="hi")
+    master_lang = simpledialog.askstring(
+        "Language", "Language code (e.g. hi, ar, de):", initialvalue="hi"
+    )
     if not master_lang:
-        root.destroy(); sys.exit(0)
+        root.destroy()
+        sys.exit(0)
 
-    master_version = simpledialog.askstring("Version", "Version code (e.g. OV, NAV, LU17):", initialvalue="OV")
+    master_version = simpledialog.askstring(
+        "Version", "Version code (e.g. OV, NAV, LU17):", initialvalue="OV"
+    )
     if not master_version:
-        root.destroy(); sys.exit(0)
+        root.destroy()
+        sys.exit(0)
 
     messagebox.showinfo("Batch Submit 3/4", "Select the OUTPUT folder.")
     output_dir = filedialog.askdirectory(title="Select output folder")
     if not output_dir:
-        root.destroy(); sys.exit(0)
+        root.destroy()
+        sys.exit(0)
 
     model_raw = simpledialog.askstring(
         "Model",
         "Claude model to use:",
         initialvalue=BATCH_MODEL_DEFAULT,
     )
-    model = model_raw.strip() if model_raw and model_raw.strip() else BATCH_MODEL_DEFAULT
+    model = (
+        model_raw.strip() if model_raw and model_raw.strip() else BATCH_MODEL_DEFAULT
+    )
 
     start_date_raw = simpledialog.askstring(
         "Start date (optional)",
         "Start date YYYY-MM-DD — blank for full seed:",
         initialvalue=_first_date,
     )
-    start_date = start_date_raw.strip() if start_date_raw and start_date_raw.strip() else None
+    start_date = (
+        start_date_raw.strip() if start_date_raw and start_date_raw.strip() else None
+    )
 
     limit_raw = simpledialog.askstring(
         "Limit (optional)",
         "Max entries to submit — blank for all:",
         initialvalue="",
     )
-    limit = int(limit_raw.strip()) if limit_raw and limit_raw.strip().isdigit() else None
+    limit = (
+        int(limit_raw.strip()) if limit_raw and limit_raw.strip().isdigit() else None
+    )
 
     root.destroy()
 
     submit_batch(
-        seed_path      = seed_path,
-        master_lang    = master_lang.strip(),
-        master_version = master_version.strip(),
-        output_dir     = output_dir,
-        model          = model,
-        start_date     = start_date,
-        limit          = limit,
+        seed_path=seed_path,
+        master_lang=master_lang.strip(),
+        master_version=master_version.strip(),
+        output_dir=output_dir,
+        model=model,
+        start_date=start_date,
+        limit=limit,
     )
 
 
@@ -306,20 +329,30 @@ def _interactive():
 # ENTRY POINT
 # =============================================================================
 
+
 def main():
     parser = argparse.ArgumentParser(
         description="Submit seed entries to Anthropic Message Batches API (Step 1/2)."
     )
-    parser.add_argument("--seed",       type=str, help="Path to seed JSON file")
-    parser.add_argument("--lang",       type=str, help="Language code (e.g. hi, ar)")
-    parser.add_argument("--version",    type=str, help="Bible version code (e.g. OV, NAV)")
-    parser.add_argument("--output",     type=str, help="Output directory for results")
-    parser.add_argument("--model",      type=str, default=BATCH_MODEL_DEFAULT,
-                        help=f"Claude model (default: {BATCH_MODEL_DEFAULT})")
-    parser.add_argument("--start-date", type=str, default=None,
-                        help="Only submit entries from this date onwards (YYYY-MM-DD)")
-    parser.add_argument("--limit",      type=int, default=None,
-                        help="Maximum number of entries to submit")
+    parser.add_argument("--seed", type=str, help="Path to seed JSON file")
+    parser.add_argument("--lang", type=str, help="Language code (e.g. hi, ar)")
+    parser.add_argument("--version", type=str, help="Bible version code (e.g. OV, NAV)")
+    parser.add_argument("--output", type=str, help="Output directory for results")
+    parser.add_argument(
+        "--model",
+        type=str,
+        default=BATCH_MODEL_DEFAULT,
+        help=f"Claude model (default: {BATCH_MODEL_DEFAULT})",
+    )
+    parser.add_argument(
+        "--start-date",
+        type=str,
+        default=None,
+        help="Only submit entries from this date onwards (YYYY-MM-DD)",
+    )
+    parser.add_argument(
+        "--limit", type=int, default=None, help="Maximum number of entries to submit"
+    )
     args = parser.parse_args()
 
     # If required CLI args are missing → fall back to interactive
@@ -328,18 +361,20 @@ def main():
             _interactive()
         else:
             parser.print_help()
-            print("\nERROR: --seed, --lang, --version, --output are required in non-interactive mode.")
+            print(
+                "\nERROR: --seed, --lang, --version, --output are required in non-interactive mode."
+            )
             sys.exit(1)
         return
 
     submit_batch(
-        seed_path      = args.seed,
-        master_lang    = args.lang,
-        master_version = args.version,
-        output_dir     = args.output,
-        model          = args.model,
-        start_date     = args.start_date,
-        limit          = args.limit,
+        seed_path=args.seed,
+        master_lang=args.lang,
+        master_version=args.version,
+        output_dir=args.output,
+        model=args.model,
+        start_date=args.start_date,
+        limit=args.limit,
     )
 
 

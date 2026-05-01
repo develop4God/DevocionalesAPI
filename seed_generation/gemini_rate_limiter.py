@@ -72,21 +72,26 @@ class GeminiRateLimiter:
     All limit values come from MODEL_LIMITS — callers define nothing.
     """
 
-    def __init__(self, model: str = "gemini-2.0-flash", safety_margin: float = SAFETY_MARGIN):
+    def __init__(
+        self, model: str = "gemini-2.0-flash", safety_margin: float = SAFETY_MARGIN
+    ):
         if model not in MODEL_LIMITS:
             raise ValueError(
-                f"Unknown model: '{model}'. "
-                f"Available: {list(MODEL_LIMITS.keys())}"
+                f"Unknown model: '{model}'. Available: {list(MODEL_LIMITS.keys())}"
             )
 
-        self._model   = model
-        self._limits  = MODEL_LIMITS[model]
+        self._model = model
+        self._limits = MODEL_LIMITS[model]
         self._safe_rpm = int(self._limits["RPM"] * safety_margin)
-        self._safe_rpd = int(self._limits["RPD"] * safety_margin) if self._limits.get("RPD") else None
+        self._safe_rpd = (
+            int(self._limits["RPD"] * safety_margin)
+            if self._limits.get("RPD")
+            else None
+        )
 
-        self._lock          = threading.Lock()
-        self._recent_calls  = []   # UTC timestamps of calls in last RPM_WINDOW_SECS
-        self._daily_calls   = 0
+        self._lock = threading.Lock()
+        self._recent_calls = []  # UTC timestamps of calls in last RPM_WINDOW_SECS
+        self._daily_calls = 0
         self._day_start_utc = self._utc_midnight()
 
         print(
@@ -142,12 +147,12 @@ class GeminiRateLimiter:
             self._reset_daily_if_needed(now)
             self._purge_old_calls(now)
             return {
-                "model":     self._model,
-                "rpm":       len(self._recent_calls),
-                "rpm_safe":  self._safe_rpm,
+                "model": self._model,
+                "rpm": len(self._recent_calls),
+                "rpm_safe": self._safe_rpm,
                 "rpm_limit": self._limits["RPM"],
-                "rpd":       self._daily_calls,
-                "rpd_safe":  self._safe_rpd,
+                "rpd": self._daily_calls,
+                "rpd_safe": self._safe_rpd,
                 "rpd_limit": self._limits["RPD"],
             }
 
@@ -162,7 +167,7 @@ class GeminiRateLimiter:
         """Reset daily counter at UTC midnight."""
         midnight = self._utc_midnight()
         if midnight > self._day_start_utc:
-            self._daily_calls   = 0
+            self._daily_calls = 0
             self._day_start_utc = midnight
             print("INFO: Daily call counter reset (UTC midnight)")
 
@@ -170,6 +175,9 @@ class GeminiRateLimiter:
     def _utc_midnight() -> float:
         """Returns the UTC timestamp of today's midnight."""
         from datetime import datetime, timezone
-        return datetime.now(timezone.utc).replace(
-            hour=0, minute=0, second=0, microsecond=0
-        ).timestamp()
+
+        return (
+            datetime.now(timezone.utc)
+            .replace(hour=0, minute=0, second=0, microsecond=0)
+            .timestamp()
+        )

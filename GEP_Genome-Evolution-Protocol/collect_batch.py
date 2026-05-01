@@ -23,13 +23,13 @@ Output:
 import argparse
 import json
 import re
-import sys
 from pathlib import Path
 
 # Load .env for local development (optional)
 try:
     from dotenv import load_dotenv
     from pathlib import Path as _Path
+
     load_dotenv(dotenv_path=_Path(__file__).parent / ".env")
 except ImportError:
     pass
@@ -42,6 +42,7 @@ from genome import absorb_reaction, ensure_genome, save_genome
 
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
+
 
 def load_input_index(input_path: Path) -> dict[str, dict]:
     """
@@ -98,7 +99,11 @@ def load_source_index(source_path: Path) -> dict[str, str]:
             for entry in date_entries:
                 eid = entry.get("id", "")
                 if eid:
-                    full = (entry.get("reflexion") or "") + " " + (entry.get("oracion") or "")
+                    full = (
+                        (entry.get("reflexion") or "")
+                        + " "
+                        + (entry.get("oracion") or "")
+                    )
                     index[eid] = full
     return index
 
@@ -123,10 +128,11 @@ def extract_content(result_line: dict) -> str | None:
 
 _P1_CATEGORY_MAP: dict[str, PauseCategory] = {
     "repetition": PauseCategory.REPETITION,
-    "typo":       PauseCategory.TYPO,
-    "grammar":    PauseCategory.GRAMMAR,
-    "other":      PauseCategory.OTHER,
+    "typo": PauseCategory.TYPO,
+    "grammar": PauseCategory.GRAMMAR,
+    "other": PauseCategory.OTHER,
 }
+
 
 def _parse_phase1_reaction(raw: str) -> ReaderReaction | None:
     """
@@ -170,40 +176,41 @@ def _parse_phase1_reaction(raw: str) -> ReaderReaction | None:
     if "flags" in data and isinstance(data.get("flags"), list) and data["flags"]:
         flag0 = data["flags"][0]
         data = {
-            "verdict":        data.get("verdict", "CLEAN"),
-            "issue":          flag0.get("type"),           # "grammar", "typo", etc.
+            "verdict": data.get("verdict", "CLEAN"),
+            "issue": flag0.get("type"),  # "grammar", "typo", etc.
             "quoted_problem": flag0.get("quoted_problem"),
-            "confidence":     flag0.get("confidence", 1.0),
-            "category":       flag0.get("type"),
+            "confidence": flag0.get("confidence", 1.0),
+            "category": flag0.get("type"),
         }
 
     verdict_raw = (data.get("verdict") or "").strip().upper()
-    is_flag     = verdict_raw == "FLAG"
-    verdict     = Verdict.PAUSE if is_flag else Verdict.OK
+    is_flag = verdict_raw == "FLAG"
+    verdict = Verdict.PAUSE if is_flag else Verdict.OK
 
-    cat_raw  = (data.get("category") or "").strip().lower()
+    cat_raw = (data.get("category") or "").strip().lower()
     category = _P1_CATEGORY_MAP.get(cat_raw) if is_flag else None
     if is_flag and category is None:
         category = PauseCategory.OTHER
 
     reaction = ReaderReaction(
-        verdict      = verdict,
-        reaction     = (data.get("issue") or "").strip(),
-        quoted_pause = data.get("quoted_problem") or None,
-        category     = category,
-        confidence   = float(data.get("confidence") or 1.0),
+        verdict=verdict,
+        reaction=(data.get("issue") or "").strip(),
+        quoted_pause=data.get("quoted_problem") or None,
+        category=category,
+        confidence=float(data.get("confidence") or 1.0),
     )
 
     # ── Post-parse guard ─────────────────────────────────────────────────────
     # A FLAG with no quoted_problem means the verbatim gate has nothing to check.
     # Log a warning so silent data loss is visible in the run output.
     if is_flag and reaction.quoted_pause is None:
-        print(f"  ⚠️  FLAG parsed but quoted_problem is None — verbatim gate will skip")
+        print("  ⚠️  FLAG parsed but quoted_problem is None — verbatim gate will skip")
 
     return reaction
 
 
 # ── Main ──────────────────────────────────────────────────────────────────────
+
 
 def process_results(
     input_path: Path,
@@ -247,21 +254,23 @@ def process_results(
     # Load source index for verbatim gate (Phase 1 only)
     source_index = load_source_index(source_path) if source_path else {}
     if phase == 1 and not source_index:
-        print("  ⚠️  No --source provided for Phase 1 — verbatim gate disabled. Hallucinated flags will not be filtered.")
+        print(
+            "  ⚠️  No --source provided for Phase 1 — verbatim gate disabled. Hallucinated flags will not be filtered."
+        )
 
-    print(f"\n{'═'*60}")
-    print(f"  📥  GEP Batch Collector")
+    print(f"\n{'═' * 60}")
+    print("  📥  GEP Batch Collector")
     print(f"  Lang: {lang} | Version: {version} | Year: {year}")
     print(f"  Input  : {input_path}")
     print(f"  Results: {results_path}")
     print(f"  Audit  : {log_path}")
     if dry_run:
-        print(f"  ⚠️  DRY RUN — nothing will be written")
+        print("  ⚠️  DRY RUN — nothing will be written")
     if phase == 1:
-        print(f"  🔬 Phase 1 mode — CLEAN/FLAG schema")
-    print(f"{'═'*60}")
+        print("  🔬 Phase 1 mode — CLEAN/FLAG schema")
+    print(f"{'═' * 60}")
 
-    print(f"  📋 Loading input index...")
+    print("  📋 Loading input index...")
     input_index = load_input_index(input_path)
     print(f"  ✅ {len(input_index)} entries indexed")
 
@@ -288,7 +297,9 @@ def process_results(
 
             entry_meta = input_index.get(custom_id)
             if not entry_meta:
-                print(f"  ⚠️  Line {line_num}: custom_id '{custom_id}' not in input index — skipping")
+                print(
+                    f"  ⚠️  Line {line_num}: custom_id '{custom_id}' not in input index — skipping"
+                )
                 skipped += 1
                 continue
 
@@ -297,7 +308,9 @@ def process_results(
                 if existing.get(custom_id) == "error_parse":
                     skipped += 1
                     continue
-                print(f"  ❌  {custom_id}: empty/missing content — logging as error_parse")
+                print(
+                    f"  ❌  {custom_id}: empty/missing content — logging as error_parse"
+                )
                 if not dry_run:
                     err_reaction = ReaderReaction(
                         verdict=Verdict.OK,
@@ -328,7 +341,9 @@ def process_results(
                 if existing.get(custom_id) == "error_parse":
                     skipped += 1
                     continue
-                print(f"  ❌  {custom_id}: failed to parse JSON verdict — logging as error_parse")
+                print(
+                    f"  ❌  {custom_id}: failed to parse JSON verdict — logging as error_parse"
+                )
                 if not dry_run:
                     err_reaction = ReaderReaction(
                         verdict=Verdict.OK,
@@ -353,7 +368,12 @@ def process_results(
             # ── Verbatim gate (Phase 1 only) ─────────────────────────────
             # Discard any flags whose quoted_problem is not found verbatim
             # in the source entry. These are model hallucinations.
-            if phase == 1 and source_index and reaction and reaction.verdict == Verdict.PAUSE:
+            if (
+                phase == 1
+                and source_index
+                and reaction
+                and reaction.verdict == Verdict.PAUSE
+            ):
                 source_text = source_index.get(custom_id, "")
                 if source_text:
                     original_pause = reaction.quoted_pause or ""
@@ -365,7 +385,7 @@ def process_results(
                         # Downgrade to CLEAN — do not write as flagged
                         reaction = ReaderReaction(
                             verdict=Verdict.OK,
-                            reaction=f"[gate] Hallucinated flag discarded: \"{original_pause[:60]}\"",
+                            reaction=f'[gate] Hallucinated flag discarded: "{original_pause[:60]}"',
                             quoted_pause=None,
                             category=None,
                             confidence=0.0,
@@ -406,7 +426,9 @@ def process_results(
                 )
                 append_record(log_path, record)
                 if action == "flagged" and reaction.category and reaction.quoted_pause:
-                    genome, _ = absorb_reaction(genome, reaction, entry_meta["date"], year)
+                    genome, _ = absorb_reaction(
+                        genome, reaction, entry_meta["date"], year
+                    )
                     genome_dirty = True
 
             total += 1
@@ -414,7 +436,7 @@ def process_results(
                 paused += 1
                 print(
                     f"  🔶  {entry_meta['date']} [{reaction.category.value if reaction.category else '?'}] "
-                    f"conf={reaction.confidence:.2f}  \"{(reaction.quoted_pause or '')[:60]}\""
+                    f'conf={reaction.confidence:.2f}  "{(reaction.quoted_pause or "")[:60]}"'
                 )
             else:
                 ok += 1
@@ -423,8 +445,8 @@ def process_results(
         save_genome(genome, year)
         print(f"  🧬 Genome updated: {len(genome.fragments)} fragments")
 
-    print(f"\n{'═'*60}")
-    print(f"  📊 Collection complete")
+    print(f"\n{'═' * 60}")
+    print("  📊 Collection complete")
     print(f"  ✅ OK      : {ok}")
     print(f"  🔶 PAUSE   : {paused}")
     print(f"  ❌ Errors  : {errors}")
@@ -432,28 +454,52 @@ def process_results(
     print(f"  Total      : {total + errors + skipped}")
     if not dry_run and total > 0:
         print(f"  💾 Written to: {log_path}")
-    print(f"{'═'*60}\n")
+    print(f"{'═' * 60}\n")
 
     return {"ok": ok, "paused": paused, "errors": errors, "skipped": skipped}
 
 
 def main():
     parser = argparse.ArgumentParser(description="GEP Critic — Collect Batch Results")
-    parser.add_argument("--input",   required=True, metavar="FILE",
-                        help="Original batch input JSONL")
-    parser.add_argument("--results", required=True, metavar="FILE",
-                        help="Batch output JSONL (downloaded results file)")
-    parser.add_argument("--lang",    required=True, help="Language code (tl, es, ...)")
-    parser.add_argument("--version", required=True, help="Bible version (ASND, NVI, ...)")
-    parser.add_argument("--year",    required=True, type=int, help="Year (2025, 2026, ...)")
-    parser.add_argument("--dry-run", action="store_true",
-                        help="Parse and report only — do not write audit log")
-    parser.add_argument("--overwrite", action="store_true",
-                        help="Ignore existing audit entries and re-collect from scratch.")
-    parser.add_argument("--phase", type=int, default=2, choices=[1, 2],
-                        help="Phase whose results are being collected: 1 (CLEAN/FLAG) or 2 (OK/PAUSE). Default: 2")
-    parser.add_argument("--source", metavar="FILE", default=None,
-                        help="Source devotional JSON (required for Phase 1 verbatim gate).")
+    parser.add_argument(
+        "--input", required=True, metavar="FILE", help="Original batch input JSONL"
+    )
+    parser.add_argument(
+        "--results",
+        required=True,
+        metavar="FILE",
+        help="Batch output JSONL (downloaded results file)",
+    )
+    parser.add_argument("--lang", required=True, help="Language code (tl, es, ...)")
+    parser.add_argument(
+        "--version", required=True, help="Bible version (ASND, NVI, ...)"
+    )
+    parser.add_argument(
+        "--year", required=True, type=int, help="Year (2025, 2026, ...)"
+    )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Parse and report only — do not write audit log",
+    )
+    parser.add_argument(
+        "--overwrite",
+        action="store_true",
+        help="Ignore existing audit entries and re-collect from scratch.",
+    )
+    parser.add_argument(
+        "--phase",
+        type=int,
+        default=2,
+        choices=[1, 2],
+        help="Phase whose results are being collected: 1 (CLEAN/FLAG) or 2 (OK/PAUSE). Default: 2",
+    )
+    parser.add_argument(
+        "--source",
+        metavar="FILE",
+        default=None,
+        help="Source devotional JSON (required for Phase 1 verbatim gate).",
+    )
     args = parser.parse_args()
 
     process_results(
@@ -471,4 +517,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

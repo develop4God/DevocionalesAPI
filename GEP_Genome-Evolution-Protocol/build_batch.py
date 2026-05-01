@@ -46,17 +46,20 @@ from pathlib import Path
 try:
     from dotenv import load_dotenv
     from pathlib import Path as _Path
+
     load_dotenv(dotenv_path=_Path(__file__).parent / ".env")
 except ImportError:
     pass
 
 # ── Project imports ───────────────────────────────────────────────────────────
-from audit  import audit_path, load_reviewed_dates
+from audit import audit_path, load_reviewed_dates
 from genome import ensure_genome
 from models import DevotionalEntry
 from prompts import (
-    build_phase1_system, build_phase1_user,
-    build_phase2_system, build_phase2_user,
+    build_phase1_system,
+    build_phase1_user,
+    build_phase2_system,
+    build_phase2_user,
 )
 import paths as _paths
 from lang_registry import get as get_lang, validate_version
@@ -64,8 +67,7 @@ from lang_registry import get as get_lang, validate_version
 # ── Config ────────────────────────────────────────────────────────────────────
 
 _GITHUB_BASE = (
-    "https://raw.githubusercontent.com/develop4God/devocionales-json"
-    "/refs/heads/main"
+    "https://raw.githubusercontent.com/develop4God/devocionales-json/refs/heads/main"
 )
 
 # SOT exceptions: monolithic files (lang/version combos without split files)
@@ -74,10 +76,12 @@ _MONOLITHIC = {
     ("es", "NVI"),
 }
 
+
 def _github_url(lang: str, version: str, year: int) -> str:
     if (lang, version) in _MONOLITHIC:
         return f"{_GITHUB_BASE}/Devocional_year_{year}.json"
     return f"{_GITHUB_BASE}/Devocional_year_{year}_{lang}_{version}.json"
+
 
 # Hardcoded fallbacks — only used when providers.yml cannot be read.
 _FALLBACK_FIREWORKS = "accounts/fireworks/models/qwen3-vl-30b-a3b-thinking"
@@ -97,6 +101,7 @@ def _model_for_provider(provider: str, phases: list[int]) -> str:
     id_hint = provider.lower()  # e.g. "fireworks" or "dashscope"
     try:
         from cloud_client import _load_config
+
         for p in _load_config().get("providers", []):
             if p.get("phase") == phase_key and id_hint in p.get("id", "").lower():
                 return p["model"]
@@ -116,6 +121,7 @@ def _thinking_for_provider(provider: str, phases: list[int]) -> bool:
     id_hint = provider.lower()
     try:
         from cloud_client import _load_config
+
         for p in _load_config().get("providers", []):
             if p.get("phase") == phase_key and id_hint in p.get("id", "").lower():
                 tm = p.get("thinking_mode", {})
@@ -127,7 +133,10 @@ def _thinking_for_provider(provider: str, phases: list[int]) -> bool:
 
 # ── Entry loading ─────────────────────────────────────────────────────────────
 
-def load_entries(lang: str, version: str, year: int, local: str | None) -> list[DevotionalEntry]:
+
+def load_entries(
+    lang: str, version: str, year: int, local: str | None
+) -> list[DevotionalEntry]:
     if local:
         local_path = _paths.resolve_local(local)
         print(f"  📂 Loading local: {local_path}")
@@ -159,22 +168,25 @@ def load_entries(lang: str, version: str, year: int, local: str | None) -> list[
     for item in items:
         if not isinstance(item, dict):
             continue
-        entries.append(DevotionalEntry(
-            date         = item.get("date", item.get("fecha", "")),
-            id           = item.get("id", ""),
-            language     = lang,
-            version      = version,
-            versiculo    = item.get("versiculo", ""),
-            reflexion    = item.get("reflexion", ""),
-            oracion      = item.get("oracion", ""),
-            para_meditar = item.get("para_meditar", []),
-            tags         = item.get("tags", []),
-        ))
+        entries.append(
+            DevotionalEntry(
+                date=item.get("date", item.get("fecha", "")),
+                id=item.get("id", ""),
+                language=lang,
+                version=version,
+                versiculo=item.get("versiculo", ""),
+                reflexion=item.get("reflexion", ""),
+                oracion=item.get("oracion", ""),
+                para_meditar=item.get("para_meditar", []),
+                tags=item.get("tags", []),
+            )
+        )
     print(f"  ✅ {len(entries)} entries loaded")
     return entries
 
 
 # ── JSONL builder ─────────────────────────────────────────────────────────────
+
 
 def build_batch(
     lang: str,
@@ -203,10 +215,16 @@ def build_batch(
     effective_genome = None if no_genome else genome
 
     # Build system prompts once (static — cache hit on Fireworks)
-    p1_system = build_phase1_system(lang, genome=effective_genome) if 1 in phases else None
-    p2_system = build_phase2_system(
-        lang=lang, version=version, genome=effective_genome, phase1_result=None
-    ) if 2 in phases else None
+    p1_system = (
+        build_phase1_system(lang, genome=effective_genome) if 1 in phases else None
+    )
+    p2_system = (
+        build_phase2_system(
+            lang=lang, version=version, genome=effective_genome, phase1_result=None
+        )
+        if 2 in phases
+        else None
+    )
 
     for entry in entries:
         if skip_reviewed and entry.date in reviewed:
@@ -217,13 +235,13 @@ def build_batch(
 
         if 1 in phases:
             messages.append({"role": "system", "content": p1_system})
-            messages.append({"role": "user",   "content": build_phase1_user(entry, lang)})
+            messages.append({"role": "user", "content": build_phase1_user(entry, lang)})
 
         if 2 in phases:
             if 1 in phases:
                 # P2 injected as assistant continuation after P1
                 messages.append({"role": "assistant", "content": "<<P1_DONE>>"})
-                messages.append({"role": "system",    "content": p2_system})
+                messages.append({"role": "system", "content": p2_system})
             else:
                 messages.append({"role": "system", "content": p2_system})
             messages.append({"role": "user", "content": build_phase2_user(entry, lang)})
@@ -232,10 +250,10 @@ def build_batch(
         record = {
             "custom_id": entry.id,
             "body": {
-                "model":       model,
-                "max_tokens":  16384,
+                "model": model,
+                "max_tokens": 16384,
                 "temperature": 0.1,
-                "messages":    messages,
+                "messages": messages,
                 **({"enable_thinking": True} if enable_thinking else {}),
             },
         }
@@ -248,6 +266,7 @@ def build_batch(
 
 
 # ── Output ────────────────────────────────────────────────────────────────────
+
 
 def phase_suffix(phases: list[int]) -> str:
     """Returns filename suffix: _p1, _p2, _p1p2, _p1p2p3, etc."""
@@ -264,6 +283,7 @@ def write_jsonl(records: list[dict], path: Path):
 
 # ── Token estimate ────────────────────────────────────────────────────────────
 
+
 def estimate_cost(records: list[dict], model: str):
     """
     Rough token estimate. System prompt tokens counted once (cached after first request).
@@ -273,11 +293,11 @@ def estimate_cost(records: list[dict], model: str):
         return
 
     system_chars = len(records[0]["body"]["messages"][0]["content"])
-    user_chars   = sum(len(r["body"]["messages"][1]["content"]) for r in records)
-    output_chars = len(records) * 200   # ~200 chars per JSON verdict
+    user_chars = sum(len(r["body"]["messages"][1]["content"]) for r in records)
+    output_chars = len(records) * 200  # ~200 chars per JSON verdict
 
     system_tokens = system_chars // 4
-    user_tokens   = user_chars   // 4
+    user_tokens = user_chars // 4
     output_tokens = output_chars // 4
 
     # Pricing (batch = 50% off real-time)
@@ -285,7 +305,7 @@ def estimate_cost(records: list[dict], model: str):
     # DashScope qwen-plus: ~$0.80/1M input → batch ~$0.40/1M
     # DashScope qwen-flash: ~$0.14/1M input → batch ~$0.07/1M
     # Using Fireworks batch rates as conservative estimate
-    price_input_per_m  = 0.45   # batch rate
+    price_input_per_m = 0.45  # batch rate
     price_cached_per_m = 0.225  # cached system prompt (Fireworks)
     price_output_per_m = 0.45
 
@@ -293,12 +313,14 @@ def estimate_cost(records: list[dict], model: str):
     # System prompt: first request full price, rest cached
     system_cost = (system_tokens / 1_000_000) * price_input_per_m
     system_cost += ((n - 1) * system_tokens / 1_000_000) * price_cached_per_m
-    user_cost    = (user_tokens   / 1_000_000) * price_input_per_m
-    output_cost  = (output_tokens / 1_000_000) * price_output_per_m
-    total        = system_cost + user_cost + output_cost
+    user_cost = (user_tokens / 1_000_000) * price_input_per_m
+    output_cost = (output_tokens / 1_000_000) * price_output_per_m
+    total = system_cost + user_cost + output_cost
 
     print(f"\n  📊 Token estimate ({n} entries):")
-    print(f"     System prompt : ~{system_tokens:,} tokens (cached after first request)")
+    print(
+        f"     System prompt : ~{system_tokens:,} tokens (cached after first request)"
+    )
     print(f"     User prompts  : ~{user_tokens:,} tokens total")
     print(f"     Output        : ~{output_tokens:,} tokens total")
     print(f"     Est. cost     : ~${total:.3f} USD  (batch + cache rates)")
@@ -307,25 +329,55 @@ def estimate_cost(records: list[dict], model: str):
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 
+
 def main():
-    parser = argparse.ArgumentParser(description="GEP Critic — Build Fireworks Batch JSONL")
-    parser.add_argument("--lang",     required=True, help="Language code (tl, es, pt, ...)")
-    parser.add_argument("--version",  required=True, help="Bible version (ASND, NVI, ...)")
-    parser.add_argument("--year",     required=True, type=int, help="Year (2025, 2026, ...)")
-    parser.add_argument("--phase",    default="2",
-                        help="Phases to include: 1, 2, or comma-separated e.g. 1,2 (default: 2)")
-    parser.add_argument("--model",    default=_AUTO, help="Model ID override (default: read from providers.yml)")
-    parser.add_argument("--provider", default="fireworks",
-                        choices=["fireworks", "dashscope"],
-                        help="Batch provider: fireworks (default) or dashscope")
-    parser.add_argument("--local",    metavar="FILE", help="Use local JSON file instead of GitHub")
-    parser.add_argument("--skip-reviewed", action="store_true",
-                        help="Skip entries already in the audit log")
-    parser.add_argument("--output",   metavar="FILE", help="Output JSONL path (default: auto)")
-    parser.add_argument("--ids",      metavar="ID[,ID...]",
-                        help="Comma-separated list of entry IDs to include (re-run specific entries)")
-    parser.add_argument("--no-genome", action="store_true",
-                        help="Suppress genome injection (baseline run without prior pattern knowledge)")
+    parser = argparse.ArgumentParser(
+        description="GEP Critic — Build Fireworks Batch JSONL"
+    )
+    parser.add_argument("--lang", required=True, help="Language code (tl, es, pt, ...)")
+    parser.add_argument(
+        "--version", required=True, help="Bible version (ASND, NVI, ...)"
+    )
+    parser.add_argument(
+        "--year", required=True, type=int, help="Year (2025, 2026, ...)"
+    )
+    parser.add_argument(
+        "--phase",
+        default="2",
+        help="Phases to include: 1, 2, or comma-separated e.g. 1,2 (default: 2)",
+    )
+    parser.add_argument(
+        "--model",
+        default=_AUTO,
+        help="Model ID override (default: read from providers.yml)",
+    )
+    parser.add_argument(
+        "--provider",
+        default="fireworks",
+        choices=["fireworks", "dashscope"],
+        help="Batch provider: fireworks (default) or dashscope",
+    )
+    parser.add_argument(
+        "--local", metavar="FILE", help="Use local JSON file instead of GitHub"
+    )
+    parser.add_argument(
+        "--skip-reviewed",
+        action="store_true",
+        help="Skip entries already in the audit log",
+    )
+    parser.add_argument(
+        "--output", metavar="FILE", help="Output JSONL path (default: auto)"
+    )
+    parser.add_argument(
+        "--ids",
+        metavar="ID[,ID...]",
+        help="Comma-separated list of entry IDs to include (re-run specific entries)",
+    )
+    parser.add_argument(
+        "--no-genome",
+        action="store_true",
+        help="Suppress genome injection (baseline run without prior pattern knowledge)",
+    )
     args = parser.parse_args()
 
     # Parse --phase into sorted list of ints, validate
@@ -335,10 +387,10 @@ def main():
         print(f"  ❌ Invalid --phase value: '{args.phase}'. Use e.g. 1, 2, or 1,2")
         sys.exit(1)
 
-    print(f"\n{'═'*60}")
-    print(f"  🏗️  GEP Batch Builder")
+    print(f"\n{'═' * 60}")
+    print("  🏗️  GEP Batch Builder")
     print(f"  Lang: {args.lang} | Version: {args.version} | Year: {args.year}")
-    print(f"{'═'*60}")
+    print(f"{'═' * 60}")
 
     # ── Validation gate: fail fast before loading any data ──────────────────
     try:
@@ -347,18 +399,22 @@ def main():
         print(f"  ✅ Language '{args.lang}' ({cfg.language_name}) validated")
         print(f"  ✅ Version '{args.version}' validated for {args.lang}")
     except ValueError as e:
-        print(f"\n  ❌ Validation failed:\n")
-        for line in str(e).split('\n'):
+        print("\n  ❌ Validation failed:\n")
+        for line in str(e).split("\n"):
             print(f"     {line}")
-        print(f"\n{'═'*60}\n")
+        print(f"\n{'═' * 60}\n")
         sys.exit(1)
 
     # Resolve model: providers.yml is the SOT; --model overrides when supplied explicitly
-    model = args.model if args.model != _AUTO else _model_for_provider(args.provider, phases)
+    model = (
+        args.model
+        if args.model != _AUTO
+        else _model_for_provider(args.provider, phases)
+    )
     print(f"  Provider: {args.provider}")
     print(f"  Phases: {phases}")
     print(f"  Model: {model}")
-    print(f"{'═'*60}")
+    print(f"{'═' * 60}")
 
     # Load entries
     entries = load_entries(args.lang, args.version, args.year, args.local)
@@ -373,7 +429,9 @@ def main():
     if getattr(args, "ids", None):
         id_set = set(i.strip() for i in args.ids.split(","))
         entries = [e for e in entries if e.id in id_set]
-        print(f"  🎯 --ids filter: {len(entries)} entries matched ({len(id_set)} requested)")
+        print(
+            f"  🎯 --ids filter: {len(entries)} entries matched ({len(id_set)} requested)"
+        )
 
     # Load genome — Phase 1 uses linguistic fragments (repetition/typo/grammar, confirmed only)
     #              Phase 2 uses full genome (all confirmed fragments)
@@ -387,17 +445,17 @@ def main():
 
     # Build JSONL records
     records = build_batch(
-        lang           = args.lang,
-        version        = args.version,
-        year           = args.year,
-        entries        = entries,
-        reviewed       = reviewed,
-        genome         = genome,
-        model          = model,
-        provider       = args.provider,
-        skip_reviewed  = args.skip_reviewed,
-        phases         = phases,
-        no_genome      = no_genome,
+        lang=args.lang,
+        version=args.version,
+        year=args.year,
+        entries=entries,
+        reviewed=reviewed,
+        genome=genome,
+        model=model,
+        provider=args.provider,
+        skip_reviewed=args.skip_reviewed,
+        phases=phases,
+        no_genome=no_genome,
     )
 
     # DashScope requires method + url fields at record top level
@@ -417,18 +475,28 @@ def main():
 
     # Write output — filename reflects phases included
     suffix = phase_suffix(phases)
-    model_slug = model.replace("accounts/fireworks/models/", "").replace("/", "-").replace(":", "-")
+    model_slug = (
+        model.replace("accounts/fireworks/models/", "")
+        .replace("/", "-")
+        .replace(":", "-")
+    )
     ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
-    out_path = Path(args.output) if args.output else \
-               _paths.BATCH_INPUT_DIR / f"batch_input_{args.lang}_{args.version}_{args.year}{suffix}_{model_slug}_{ts}.jsonl"
+    out_path = (
+        Path(args.output)
+        if args.output
+        else _paths.BATCH_INPUT_DIR
+        / f"batch_input_{args.lang}_{args.version}_{args.year}{suffix}_{model_slug}_{ts}.jsonl"
+    )
     write_jsonl(records, out_path)
 
-    print(f"\n  Next step:")
-    print(f"    Run the full pipeline (upload → submit → poll → download → collect):")
-    print(f"      python3 batch_pipeline.py --lang {args.lang} --version {args.version} --year {args.year} \\")
+    print("\n  Next step:")
+    print("    Run the full pipeline (upload → submit → poll → download → collect):")
+    print(
+        f"      python3 batch_pipeline.py --lang {args.lang} --version {args.version} --year {args.year} \\"
+    )
     print(f"          --phase {args.phase} --provider {args.provider} \\")
     print(f"          --input {out_path}")
-    print(f"{'═'*60}\n")
+    print(f"{'═' * 60}\n")
 
 
 if __name__ == "__main__":

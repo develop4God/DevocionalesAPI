@@ -10,7 +10,6 @@ import urllib.request
 import urllib.error
 
 from models import PauseCategory, ReaderReaction, Verdict
-from models_helper import get_model_for_key
 
 OLLAMA_URL = "http://localhost:11434/api/generate"
 
@@ -21,7 +20,7 @@ OLLAMA_URL = "http://localhost:11434/api/generate"
 #   <tag>  → any direct Ollama tag, e.g. qwen2.5:7b
 MODEL_KEYS = ["auto", "fast", "best"]
 
-MAX_RETRIES   = 2
+MAX_RETRIES = 2
 RETRY_DELAY_S = 3
 
 
@@ -41,21 +40,23 @@ def call_ollama(
     # Validate model parameter (catches common typos/missing models early)
     if not model or model.isspace():
         return None, f"Error: invalid model parameter '{model}'"
-    
-    payload = json.dumps({
-        "model": model,
-        "prompt": user,
-        "system": system,
-        "stream": True,  # streaming avoids read-timeout on thinking models
-        # NOTE: Do NOT use "format": "json" with Qwen3 thinking models.
-        # Ollama's grammar-constrained JSON conflicts with thinking-token generation
-        # and produces an empty response. The prompts already instruct JSON output.
-        "think": think,  # expose thinking tokens in separate field (Ollama 0.6+)
-        "options": {
-            "temperature": 0.1,
-            "num_predict": 8192,  # thinking models need room for reasoning + JSON
-        },
-    }).encode("utf-8")
+
+    payload = json.dumps(
+        {
+            "model": model,
+            "prompt": user,
+            "system": system,
+            "stream": True,  # streaming avoids read-timeout on thinking models
+            # NOTE: Do NOT use "format": "json" with Qwen3 thinking models.
+            # Ollama's grammar-constrained JSON conflicts with thinking-token generation
+            # and produces an empty response. The prompts already instruct JSON output.
+            "think": think,  # expose thinking tokens in separate field (Ollama 0.6+)
+            "options": {
+                "temperature": 0.1,
+                "num_predict": 8192,  # thinking models need room for reasoning + JSON
+            },
+        }
+    ).encode("utf-8")
 
     for attempt in range(1, MAX_RETRIES + 1):
         try:
@@ -70,7 +71,9 @@ def call_ollama(
             if parsed is None:
                 if attempt < MAX_RETRIES:
                     if verbose:
-                        print(f"  ⚠️  parse failed, retrying ({attempt}/{MAX_RETRIES})...")
+                        print(
+                            f"  ⚠️  parse failed, retrying ({attempt}/{MAX_RETRIES})..."
+                        )
                     time.sleep(RETRY_DELAY_S)
                     continue
                 # Return the full raw (incl. <think> blocks) so the caller can store
@@ -84,9 +87,9 @@ def call_ollama(
                 continue
             # Capture HTTP response body if available (400 Bad Request usually has details)
             error_msg = f"URLError: {e.reason}"
-            if hasattr(e, 'read'):
+            if hasattr(e, "read"):
                 try:
-                    details = e.read().decode('utf-8')[:400]
+                    details = e.read().decode("utf-8")[:400]
                     error_msg += f"\n[Response: {details}]"
                 except Exception:
                     pass
@@ -129,7 +132,7 @@ def _collect_stream(req: urllib.request.Request, verbose: bool) -> str:
                 continue
 
             think_token = chunk.get("thinking", "")
-            resp_token  = chunk.get("response", "")
+            resp_token = chunk.get("response", "")
             if think_token:
                 think_tokens.append(think_token)
             tokens.append(resp_token)
@@ -175,14 +178,14 @@ def _unwrap_text(text: str) -> str:
     # 2. Extract content after "Final answer:" / "Final Answer:" / "final answer:"
     #    Requires the colon to be present (excludes "final answer is:").
     #    Handles multi-line gap between label and actual answer.
-    fa_m = re.search(r'(?i)final\s+answer\s*:\s*\n*([\s\S]+)', text)
+    fa_m = re.search(r"(?i)final\s+answer\s*:\s*\n*([\s\S]+)", text)
     if fa_m:
         text = fa_m.group(1).strip()
 
     # 3. Unwrap \boxed{ \{ ... \} } — LaTeX format from some model configs
-    boxed_m = re.search(r'\\boxed\s*\{([\s\S]+)\}', text)
+    boxed_m = re.search(r"\\boxed\s*\{([\s\S]+)\}", text)
     if boxed_m:
-        text = boxed_m.group(1).replace(r'\{', '{').replace(r'\}', '}').strip()
+        text = boxed_m.group(1).replace(r"\{", "{").replace(r"\}", "}").strip()
 
     # 4. Strip markdown fences
     if text.startswith("```"):
@@ -205,9 +208,13 @@ def _parse_reaction(raw: str) -> ReaderReaction | None:
         # Model returned a plain JSON string (e.g. "No repeated phrase found") → OK
         if isinstance(parsed, str):
             tu = parsed.upper()
-            if re.search(r'\bPAUSE\b|\bFLAG\b', tu):
-                return ReaderReaction(verdict=Verdict.PAUSE, reaction=parsed,
-                                      category=PauseCategory.OTHER, confidence=0.7)
+            if re.search(r"\bPAUSE\b|\bFLAG\b", tu):
+                return ReaderReaction(
+                    verdict=Verdict.PAUSE,
+                    reaction=parsed,
+                    category=PauseCategory.OTHER,
+                    confidence=0.7,
+                )
             return ReaderReaction(verdict=Verdict.OK, reaction=parsed, confidence=1.0)
         data = parsed
     except json.JSONDecodeError:
@@ -216,12 +223,23 @@ def _parse_reaction(raw: str) -> ReaderReaction | None:
     # 2. Find any JSON object in the text (model may wrap JSON in prose)
     #    — broadened: no longer requires "verdict" key to handle Phase-1 format responses
     if data is None:
-        for m in re.finditer(r'\{[^{}]+\}', text, re.DOTALL):
+        for m in re.finditer(r"\{[^{}]+\}", text, re.DOTALL):
             try:
                 candidate = json.loads(m.group())
                 # Accept if it has at least one known key from either phase
-                known = {"verdict", "reaction", "quoted_pause", "category", "confidence",
-                         "quoted_problem", "type", "issue", "quoted", "problem", "error"}
+                known = {
+                    "verdict",
+                    "reaction",
+                    "quoted_pause",
+                    "category",
+                    "confidence",
+                    "quoted_problem",
+                    "type",
+                    "issue",
+                    "quoted",
+                    "problem",
+                    "error",
+                }
                 if known & candidate.keys():
                     data = candidate
                     break
@@ -247,7 +265,7 @@ def _parse_reaction(raw: str) -> ReaderReaction | None:
     # 4. Prose keyword fallback (model answered entirely in natural language)
     if data is None:
         tu = text.upper()
-        if re.search(r'\bPAUSE\b', tu) or re.search(r'\bFLAG\b', tu):
+        if re.search(r"\bPAUSE\b", tu) or re.search(r"\bFLAG\b", tu):
             lines = [l.strip() for l in text.splitlines() if l.strip()]
             reaction_text = lines[0] if lines else "Reader paused (prose response)"
             quoted_m = re.search(r'"([^"]{3,120})"', text)
@@ -259,18 +277,27 @@ def _parse_reaction(raw: str) -> ReaderReaction | None:
                 confidence=0.7,
             )
         # OK / CLEAN / "no issue" / "not found" / "nothing wrong" → no problem detected
-        if (re.search(r'\bOK\b', tu) or re.search(r'\bCLEAN\b', tu)
-                or re.search(r'no\s+(repeated|issue|problem|error|phrase|flag)\b', tu)
-                or re.search(r'nothing\s+(wrong|found|flagged)\b', tu)
-                or re.search(r'not\s+found\b', tu)):
+        if (
+            re.search(r"\bOK\b", tu)
+            or re.search(r"\bCLEAN\b", tu)
+            or re.search(r"no\s+(repeated|issue|problem|error|phrase|flag)\b", tu)
+            or re.search(r"nothing\s+(wrong|found|flagged)\b", tu)
+            or re.search(r"not\s+found\b", tu)
+        ):
             lines = [l.strip() for l in text.splitlines() if l.strip()]
             reaction_text = lines[0] if lines else "Entry looks good (prose response)"
-            return ReaderReaction(verdict=Verdict.OK, reaction=reaction_text, confidence=1.0)
+            return ReaderReaction(
+                verdict=Verdict.OK, reaction=reaction_text, confidence=1.0
+            )
         # Last resort — store whatever the model said, mark as OK with low confidence
         # Better to pass through than drop the entry permanently as an unhandled error.
         lines = [l.strip() for l in text.splitlines() if l.strip()]
-        reaction_text = (lines[0] if lines else text[:200]) + " [fallback: unrecognised format]"
-        return ReaderReaction(verdict=Verdict.OK, reaction=reaction_text, confidence=0.5)
+        reaction_text = (
+            lines[0] if lines else text[:200]
+        ) + " [fallback: unrecognised format]"
+        return ReaderReaction(
+            verdict=Verdict.OK, reaction=reaction_text, confidence=0.5
+        )
 
     verdict_raw = (data.get("verdict") or "OK").strip().upper()
     # CLEAN (Phase-1 vocab) and OK (Phase-2 vocab) both mean no issue

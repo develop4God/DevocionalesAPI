@@ -32,6 +32,7 @@ from pathlib import Path
 # Load .env for local development (optional)
 try:
     from dotenv import load_dotenv
+
     load_dotenv(dotenv_path=Path(__file__).parent / ".env")
 except ImportError:
     pass
@@ -43,26 +44,44 @@ import paths as _paths
 
 # Phase 1 prompt markers
 _P1_MARKERS = {
-    "reflexion": re.compile(r"--- REFLEXIÓN ---\n(.*?)(?=--- ORACIÓN ---|Evaluate only)", re.DOTALL),
-    "oracion":   re.compile(r"--- ORACIÓN ---\n(.*?)(?=Evaluate only|\Z)", re.DOTALL),
+    "reflexion": re.compile(
+        r"--- REFLEXIÓN ---\n(.*?)(?=--- ORACIÓN ---|Evaluate only)", re.DOTALL
+    ),
+    "oracion": re.compile(r"--- ORACIÓN ---\n(.*?)(?=Evaluate only|\Z)", re.DOTALL),
 }
 
 # Phase 2 prompt markers (versiculo included in p2 prompts)
 _P2_MARKERS = {
-    "versiculo": re.compile(r"--- VERSÍCULO ---\n(.*?)(?=--- REFLEXIÓN ---)", re.DOTALL),
+    "versiculo": re.compile(
+        r"--- VERSÍCULO ---\n(.*?)(?=--- REFLEXIÓN ---)", re.DOTALL
+    ),
     "reflexion": re.compile(r"--- REFLEXIÓN ---\n(.*?)(?=--- ORACIÓN ---)", re.DOTALL),
-    "oracion":   re.compile(r"--- ORACIÓN ---\n(.*?)(?=--- PARA MEDITAR ---|Evaluate only|\Z)", re.DOTALL),
+    "oracion": re.compile(
+        r"--- ORACIÓN ---\n(.*?)(?=--- PARA MEDITAR ---|Evaluate only|\Z)", re.DOTALL
+    ),
 }
 
 # ── Issue type classifier (heuristic, no model) ───────────────────────────────
 
 _ISSUE_TYPE_RULES: list[tuple[str, re.Pattern]] = [
-    ("structure",    re.compile(r"double|amén.*amén|two clos|duplicate closing|spliced", re.I)),
-    ("punctuation",  re.compile(r"punctuat|lowercase|capitaliz|uppercase|capital", re.I)),
-    ("typo",         re.compile(r"typo|spelling|misspell|orthograph", re.I)),
-    ("grammar",      re.compile(r"grammar|grammat|conjugat|infinitiv|verb form|incorrect form", re.I)),
-    ("repetition",   re.compile(r"repeat|redundan|verbatim|same phrase|reiterat", re.I)),
+    (
+        "structure",
+        re.compile(r"double|amén.*amén|two clos|duplicate closing|spliced", re.I),
+    ),
+    (
+        "punctuation",
+        re.compile(r"punctuat|lowercase|capitaliz|uppercase|capital", re.I),
+    ),
+    ("typo", re.compile(r"typo|spelling|misspell|orthograph", re.I)),
+    (
+        "grammar",
+        re.compile(
+            r"grammar|grammat|conjugat|infinitiv|verb form|incorrect form", re.I
+        ),
+    ),
+    ("repetition", re.compile(r"repeat|redundan|verbatim|same phrase|reiterat", re.I)),
 ]
+
 
 def _classify_issue(issue: str) -> str:
     for label, pattern in _ISSUE_TYPE_RULES:
@@ -82,12 +101,19 @@ def _extract_fields(prompt: str, phase: int) -> dict[str, str]:
 
 # ── Response parsing ──────────────────────────────────────────────────────────
 
+
 def _parse_p1_response(raw: str) -> dict | None:
     """Extract verdict dict from Phase 1 response (CLEAN/FLAG)."""
     clean = re.sub(r"<think>.*?</think>", "", raw, flags=re.DOTALL).strip()
     if clean.startswith("```"):
         parts = clean.split("```")
-        clean = parts[1][4:] if len(parts) > 1 and parts[1].startswith("json") else parts[1] if len(parts) > 1 else clean
+        clean = (
+            parts[1][4:]
+            if len(parts) > 1 and parts[1].startswith("json")
+            else parts[1]
+            if len(parts) > 1
+            else clean
+        )
     try:
         return json.loads(clean.strip())
     except json.JSONDecodeError:
@@ -105,7 +131,13 @@ def _parse_p2_response(raw: str) -> dict | None:
     clean = re.sub(r"<think>.*?</think>", "", raw, flags=re.DOTALL).strip()
     if clean.startswith("```"):
         parts = clean.split("```")
-        clean = parts[1][4:] if len(parts) > 1 and parts[1].startswith("json") else parts[1] if len(parts) > 1 else clean
+        clean = (
+            parts[1][4:]
+            if len(parts) > 1 and parts[1].startswith("json")
+            else parts[1]
+            if len(parts) > 1
+            else clean
+        )
     try:
         return json.loads(clean.strip())
     except json.JSONDecodeError:
@@ -130,7 +162,10 @@ def _extract_content(result_line: dict) -> str | None:
 
 # ── Auto-resolve input/results files ─────────────────────────────────────────
 
-def _auto_resolve(lang: str, version: str, year: int, phase: int) -> tuple[Path | None, Path | None]:
+
+def _auto_resolve(
+    lang: str, version: str, year: int, phase: int
+) -> tuple[Path | None, Path | None]:
     """
     Find the most recent matching input + results file pair in data dirs.
     Pattern: batch_input_{lang}_{version}_{year}_p{N}*.jsonl
@@ -139,16 +174,25 @@ def _auto_resolve(lang: str, version: str, year: int, phase: int) -> tuple[Path 
     """
     _paths.ensure_dirs()
 
-    prefix_in  = f"batch_input_{lang}_{version}_{year}_p{phase}"
+    prefix_in = f"batch_input_{lang}_{version}_{year}_p{phase}"
     prefix_out = f"BIJOutputSet_{lang}_{version}_{year}_p{phase}"
 
-    inputs  = sorted(_paths.BATCH_INPUT_DIR.glob(f"{prefix_in}*.jsonl"),  key=lambda p: p.stat().st_mtime, reverse=True)
-    outputs = sorted(_paths.BATCH_OUTPUT_DIR.glob(f"{prefix_out}*_results.jsonl"), key=lambda p: p.stat().st_mtime, reverse=True)
+    inputs = sorted(
+        _paths.BATCH_INPUT_DIR.glob(f"{prefix_in}*.jsonl"),
+        key=lambda p: p.stat().st_mtime,
+        reverse=True,
+    )
+    outputs = sorted(
+        _paths.BATCH_OUTPUT_DIR.glob(f"{prefix_out}*_results.jsonl"),
+        key=lambda p: p.stat().st_mtime,
+        reverse=True,
+    )
 
     return (inputs[0] if inputs else None, outputs[0] if outputs else None)
 
 
 # ── Core ──────────────────────────────────────────────────────────────────────
+
 
 def build_report(
     lang: str,
@@ -157,16 +201,16 @@ def build_report(
     phase: int,
     input_path: Path,
     results_path: Path,
-    verdict_filter: str,        # "FLAG" | "PAUSE" | "ALL"
+    verdict_filter: str,  # "FLAG" | "PAUSE" | "ALL"
 ) -> tuple[str, int, int, int]:
     """
     Join input + results, filter by verdict, build report string.
     Returns (report_text, total, matched, errors).
     """
     # Phase 1: FLAG/CLEAN   Phase 2: PAUSE/OK
-    flag_term  = "FLAG"  if phase == 1 else "PAUSE"
+    flag_term = "FLAG" if phase == 1 else "PAUSE"
     clean_term = "CLEAN" if phase == 1 else "OK"
-    issue_key  = "issue"          if phase == 1 else "reaction"
+    issue_key = "issue" if phase == 1 else "reaction"
     quoted_key = "quoted_problem" if phase == 1 else "quoted_pause"
 
     # Build input index: custom_id -> user prompt content
@@ -213,8 +257,8 @@ def build_report(
                 continue
 
             verdict = parsed.get("verdict", "").upper()
-            fields  = _extract_fields(input_index.get(cid, ""), phase)
-            issue   = parsed.get(issue_key, "") or ""
+            fields = _extract_fields(input_index.get(cid, ""), phase)
+            issue = parsed.get(issue_key, "") or ""
 
             quoted_val = parsed.get(quoted_key, "") or ""
 
@@ -225,17 +269,19 @@ def build_report(
             else:
                 qa_tag = ""
 
-            entries.append({
-                "id":         cid,
-                "verdict":    verdict,
-                "issue":      issue,
-                "issue_type": _classify_issue(issue),
-                "quoted":     quoted_val,
-                "conf":       parsed.get("confidence", ""),
-                "category":   parsed.get("category", "") or "",
-                "qa_tag":     qa_tag,
-                **fields,
-            })
+            entries.append(
+                {
+                    "id": cid,
+                    "verdict": verdict,
+                    "issue": issue,
+                    "issue_type": _classify_issue(issue),
+                    "quoted": quoted_val,
+                    "conf": parsed.get("confidence", ""),
+                    "category": parsed.get("category", "") or "",
+                    "qa_tag": qa_tag,
+                    **fields,
+                }
+            )
 
     # Filter
     if verdict_filter == "ALL":
@@ -243,7 +289,7 @@ def build_report(
     else:
         filtered = [e for e in entries if e["verdict"] == verdict_filter]
 
-    ok_count   = sum(1 for e in entries if e["verdict"] in (clean_term,))
+    ok_count = sum(1 for e in entries if e["verdict"] in (clean_term,))
     flag_count = sum(1 for e in entries if e["verdict"] == flag_term)
 
     # Issue type summary for flagged entries
@@ -255,14 +301,22 @@ def build_report(
     lines: list[str] = []
 
     header_verdict = flag_term if verdict_filter != "ALL" else "ALL"
-    lines.append(f"GEP·REVIEW  {lang}·{version}·{year}·p{phase}  {header_verdict}:{len(filtered)}  generated:{ts_now}")
+    lines.append(
+        f"GEP·REVIEW  {lang}·{version}·{year}·p{phase}  {header_verdict}:{len(filtered)}  generated:{ts_now}"
+    )
     lines.append(f"input  : {input_path.name}")
     lines.append(f"results: {results_path.name}")
-    lines.append(f"total:{total}  {clean_term}:{ok_count}  {flag_term}:{flag_count}  errors:{parse_errors}")
+    lines.append(
+        f"total:{total}  {clean_term}:{ok_count}  {flag_term}:{flag_count}  errors:{parse_errors}"
+    )
     if auto_dismiss_count:
-        lines.append(f"qa_warn  AUTO_DISMISS_CANDIDATES:{auto_dismiss_count} — review carefully before patching")
+        lines.append(
+            f"qa_warn  AUTO_DISMISS_CANDIDATES:{auto_dismiss_count} — review carefully before patching"
+        )
     if issue_type_counts:
-        pattern_parts = "  ".join(f"{k}:{v}" for k, v in issue_type_counts.most_common())
+        pattern_parts = "  ".join(
+            f"{k}:{v}" for k, v in issue_type_counts.most_common()
+        )
         lines.append(f"patterns  {pattern_parts}")
     lines.append("")
 
@@ -270,7 +324,7 @@ def build_report(
         lines.append(f"  No entries matched filter '{verdict_filter}'.")
     else:
         for i, e in enumerate(filtered, 1):
-            lines.append(f"{'═'*64}")
+            lines.append(f"{'═' * 64}")
             lines.append(f"[{i}/{len(filtered)}] {e['id']}")
             lines.append(f"VERDICT     {e['verdict']}")
             if e.get("qa_tag"):
@@ -290,7 +344,7 @@ def build_report(
             lines.append(f"ORA  {e['oracion']}")
             lines.append("")
 
-    lines.append(f"{'═'*64}")
+    lines.append(f"{'═' * 64}")
     lines.append(f"END·GEP·REVIEW  {lang}·{version}·{year}·p{phase}")
 
     return "\n".join(lines), total, len(filtered), parse_errors
@@ -298,23 +352,46 @@ def build_report(
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 
+
 def main() -> None:
     parser = argparse.ArgumentParser(
         description="GEP — Generate human-readable FLAG review report (no model calls)."
     )
-    parser.add_argument("--lang",     required=True, help="Language code (es, ar, tl, ...)")
-    parser.add_argument("--version",  required=True, help="Bible version (RVR1960, NAV, ...)")
-    parser.add_argument("--year",     required=True, type=int, help="Year (2025, 2026, ...)")
-    parser.add_argument("--phase",    default=1, type=int, choices=[1, 2],
-                        help="Phase to review: 1 (linguistic) or 2 (content) — default: 1")
-    parser.add_argument("--input",    metavar="FILE",
-                        help="Batch input JSONL — auto-resolved from data/batch_input/ if omitted")
-    parser.add_argument("--results",  metavar="FILE",
-                        help="Batch results JSONL — auto-resolved from data/batch_output/ if omitted")
-    parser.add_argument("--verdict",  default="FLAG", choices=["FLAG", "PAUSE", "CLEAN", "OK", "ALL"],
-                        help="Filter by verdict (default: FLAG for p1, PAUSE for p2)")
-    parser.add_argument("--output",   metavar="FILE",
-                        help="Override output report path (default: data/reports/review_...txt)")
+    parser.add_argument("--lang", required=True, help="Language code (es, ar, tl, ...)")
+    parser.add_argument(
+        "--version", required=True, help="Bible version (RVR1960, NAV, ...)"
+    )
+    parser.add_argument(
+        "--year", required=True, type=int, help="Year (2025, 2026, ...)"
+    )
+    parser.add_argument(
+        "--phase",
+        default=1,
+        type=int,
+        choices=[1, 2],
+        help="Phase to review: 1 (linguistic) or 2 (content) — default: 1",
+    )
+    parser.add_argument(
+        "--input",
+        metavar="FILE",
+        help="Batch input JSONL — auto-resolved from data/batch_input/ if omitted",
+    )
+    parser.add_argument(
+        "--results",
+        metavar="FILE",
+        help="Batch results JSONL — auto-resolved from data/batch_output/ if omitted",
+    )
+    parser.add_argument(
+        "--verdict",
+        default="FLAG",
+        choices=["FLAG", "PAUSE", "CLEAN", "OK", "ALL"],
+        help="Filter by verdict (default: FLAG for p1, PAUSE for p2)",
+    )
+    parser.add_argument(
+        "--output",
+        metavar="FILE",
+        help="Override output report path (default: data/reports/review_...txt)",
+    )
     args = parser.parse_args()
 
     # Normalise verdict default per phase
@@ -336,20 +413,26 @@ def main() -> None:
         _, results_path = _auto_resolve(args.lang, args.version, args.year, args.phase)
 
     if not input_path or not input_path.exists():
-        print(f"  ❌ batch_input not found. Pass --input explicitly or run build_batch first.")
+        print(
+            "  ❌ batch_input not found. Pass --input explicitly or run build_batch first."
+        )
         sys.exit(1)
 
     if not results_path or not results_path.exists():
-        print(f"  ❌ batch_results not found. Pass --results explicitly or run batch_pipeline first.")
+        print(
+            "  ❌ batch_results not found. Pass --results explicitly or run batch_pipeline first."
+        )
         sys.exit(1)
 
-    print(f"\n{'═'*64}")
-    print(f"  📋  GEP Flag Reviewer")
-    print(f"  Lang: {args.lang} | Version: {args.version} | Year: {args.year} | Phase: {args.phase}")
+    print(f"\n{'═' * 64}")
+    print("  📋  GEP Flag Reviewer")
+    print(
+        f"  Lang: {args.lang} | Version: {args.version} | Year: {args.year} | Phase: {args.phase}"
+    )
     print(f"  Input  : {input_path.name}")
     print(f"  Results: {results_path.name}")
     print(f"  Filter : {verdict_filter}")
-    print(f"{'═'*64}\n")
+    print(f"{'═' * 64}\n")
 
     report, total, matched, errors = build_report(
         lang=args.lang,

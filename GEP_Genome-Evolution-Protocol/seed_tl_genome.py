@@ -20,7 +20,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 from models import GeneState, Genome, GenomeFragment, PauseCategory
 
-LANG    = "tl"
+LANG = "tl"
 VERSIONS = ["ASND", "ADB"]
 REVIEW_DATE = "2026-04-18"
 
@@ -30,7 +30,7 @@ SEED_FRAGMENTS = [
     GenomeFragment(
         id="seed_tl_001",
         language="tl",
-        version="*",                        # applies to all TL versions
+        version="*",  # applies to all TL versions
         category=PauseCategory.TYPO,
         pattern=(
             "Sonnet uses the wrong verb form when the correct form appears in the "
@@ -178,7 +178,9 @@ def seed_version(version: str):
         )
         genome.fragments.append(clone)
         added += 1
-        print(f"  ✅ [{version}] {frag.id} — {frag.category.value} (confidence: {frag.confidence})")
+        print(
+            f"  ✅ [{version}] {frag.id} — {frag.category.value} (confidence: {frag.confidence})"
+        )
 
     if added > 0:
         save_genome(genome, path)
@@ -188,11 +190,11 @@ def seed_version(version: str):
 
 
 # ── Run ───────────────────────────────────────────────────────────────────────
-print(f"\n{'═'*60}")
+print(f"\n{'═' * 60}")
 print(f"  🧬 TL Genome Seed — {REVIEW_DATE}")
 print(f"  Fragments to inject: {len(SEED_FRAGMENTS)}")
 print(f"  Versions: {', '.join(VERSIONS)}")
-print(f"{'═'*60}\n")
+print(f"{'═' * 60}\n")
 
 for v in VERSIONS:
     seed_version(v)

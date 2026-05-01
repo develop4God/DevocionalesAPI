@@ -8,7 +8,7 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
-from models import AuditRecord, ReaderReaction, Verdict
+from models import AuditRecord, ReaderReaction
 import paths as _paths
 
 
@@ -154,7 +154,9 @@ def print_summary(log_path: Path):
                     pauses += 1
                     cat = rec.get("category") or "other"
                     by_category[cat] = by_category.get(cat, 0) + 1
-                    pause_dates.append((rec["date"], cat, rec.get("quoted_pause", "")[:60]))
+                    pause_dates.append(
+                        (rec["date"], cat, rec.get("quoted_pause", "")[:60])
+                    )
                 elif action in ("error_tech", "error_parse"):
                     errors += 1
                 else:
@@ -166,25 +168,27 @@ def print_summary(log_path: Path):
                         pauses += 1
                         cat = rec.get("category") or "other"
                         by_category[cat] = by_category.get(cat, 0) + 1
-                        pause_dates.append((rec["date"], cat, rec.get("quoted_pause", "")[:60]))
+                        pause_dates.append(
+                            (rec["date"], cat, rec.get("quoted_pause", "")[:60])
+                        )
                     else:
                         errors += 1
             except (json.JSONDecodeError, KeyError):
                 errors += 1
 
-    print(f"\n{'═'*60}")
+    print(f"\n{'═' * 60}")
     print(f"  📊 AUDIT REPORT — {log_path.name}")
-    print(f"{'═'*60}")
+    print(f"{'═' * 60}")
     print(f"  Total reviewed : {total}")
     print(f"  ✅ OK          : {ok}")
     print(f"  🔶 PAUSE       : {pauses}")
     print(f"  ❌ Errors      : {errors}")
     if by_category:
-        print(f"\n  Pauses by category:")
+        print("\n  Pauses by category:")
         for cat, count in sorted(by_category.items(), key=lambda x: -x[1]):
             print(f"    {cat:<22} {count}")
     if pause_dates:
-        print(f"\n  Entries needing review:")
+        print("\n  Entries needing review:")
         for d, cat, quote in pause_dates:
-            print(f"    • {d}  [{cat}]  \"{quote}\"")
-    print(f"{'═'*60}\n")
+            print(f'    • {d}  [{cat}]  "{quote}"')
+    print(f"{'═' * 60}\n")
