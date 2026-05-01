@@ -1,10 +1,20 @@
 
-              print('No Devocional_year_*.json found for validation!')
+import sys
+import subprocess
+import argparse
+import os
+from pathlib import Path
+
+
+def run(cmd, check=True):
+    """Execute a command and handle errors."""
     print(f"\n$ {' '.join(cmd)}")
     result = subprocess.run(cmd, check=check)
     return result.returncode
 
-              sys.exit(1)
+
+def main():
+    """Run full batch pipeline."""
     # If no arguments (just the script name), launch the Tkinter GUI for batch_claude_submit.py
     if len(sys.argv) == 1:
         print("Launching GUI interface for batch submission...")
@@ -69,10 +79,6 @@
         final = str(sorted(outputs, key=os.path.getmtime, reverse=True)[0])
         run([sys.executable, 'validation_helper.py', final])
 
+
 if __name__ == '__main__':
     main()
-          final = str(sorted(outputs, key=os.path.getmtime, reverse=True)[0])
-          run([sys.executable, 'validation_helper.py', final])
-
-  if __name__ == '__main__':
-      main()
