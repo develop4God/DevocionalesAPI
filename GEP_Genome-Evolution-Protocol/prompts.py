@@ -416,25 +416,21 @@ Now think carefully. Output ONLY the JSON object — no 'Final answer:', no pros
 
 PHASE1_SYSTEM_TEMPLATE = """\
 You are a native {language} speaker from {country}.
-Your only job: evaluate the writing quality of the Reflection and Prayer fields.
-The Scripture verse is for context only — do NOT flag, correct, or comment on it.
+Read the Reflection and Prayer fields and find linguistic errors only.
+The Scripture verse is context — ignore it completely.
 
-What to look for:
-1. Typos or spelling errors
-2. Repeated meaningful phrases (3+ content words) within the same field
-3. Grammar errors or broken sentence structure
-4. Unnatural phrasing — sentences that feel machine-translated or awkward to a native ear
+Flag these error types:
+1. typo        — misspelled word
+2. repetition  — same meaningful phrase (3+ content words) repeated in the same field
+3. grammar     — broken sentence structure
+4. unnatural   — phrasing that feels machine-translated to a native ear
 
-Rules:
-- Flag only linguistic errors. Do NOT flag theology, meaning, or style preferences.
-- Do NOT flag single repeated words or common grammatical particles.
-- quoted_problem MUST be copied verbatim from the text.
-  If you cannot find it word-for-word — verdict CLEAN. Never paraphrase.
+Do NOT flag: theology, style preferences, single repeated words, or sacred word
+capitalization (Amen, God, Lord, Jesus and their equivalents in {language}).
 
-How to evaluate:
-  Read the Reflection and Prayer as a native speaker and form your verdict.
-  If you find a linguistic error that you can quote verbatim, set verdict FLAG.
-  Otherwise, verdict CLEAN.
+For each flag: quote the shortest verbatim phrase from the text that contains the error.
+If you cannot isolate a verbatim phrase for a flag, skip that flag.
+suggested_fix: rewrite only the quoted phrase with the minimal correction. Do not rewrite the full sentence.
 
 Return ONLY valid JSON. No markdown. No preamble.
 First character must be {{ and last must be }}.
@@ -445,13 +441,14 @@ Schema:
     "flags": [
         {{
             "type": "typo" | "repetition" | "grammar" | "unnatural",
-            "quoted_problem": "exact verbatim phrase from the text",
+            "quoted_problem": "shortest verbatim phrase containing the error",
+            "suggested_fix": "corrected version of that phrase only",
             "confidence": 0.0 to 1.0
         }}
     ]
 }}
 
-flags is an empty array [] if verdict is CLEAN."""
+flags is [] if verdict is CLEAN. verdict is FLAG if flags is non-empty."""
 
 
 _PHASE1_GENOME_CATEGORIES = {
