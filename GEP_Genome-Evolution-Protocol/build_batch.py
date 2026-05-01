@@ -59,6 +59,7 @@ from prompts import (
     build_phase2_system, build_phase2_user,
 )
 import paths as _paths
+from lang_registry import get as get_lang, validate_version
 
 # ── Config ────────────────────────────────────────────────────────────────────
 
@@ -337,6 +338,21 @@ def main():
     print(f"\n{'═'*60}")
     print(f"  🏗️  GEP Batch Builder")
     print(f"  Lang: {args.lang} | Version: {args.version} | Year: {args.year}")
+    print(f"{'═'*60}")
+
+    # ── Validation gate: fail fast before loading any data ──────────────────
+    try:
+        cfg = get_lang(args.lang)
+        validate_version(args.lang, args.version)
+        print(f"  ✅ Language '{args.lang}' ({cfg.language_name}) validated")
+        print(f"  ✅ Version '{args.version}' validated for {args.lang}")
+    except ValueError as e:
+        print(f"\n  ❌ Validation failed:\n")
+        for line in str(e).split('\n'):
+            print(f"     {line}")
+        print(f"\n{'═'*60}\n")
+        sys.exit(1)
+
     # Resolve model: providers.yml is the SOT; --model overrides when supplied explicitly
     model = args.model if args.model != _AUTO else _model_for_provider(args.provider, phases)
     print(f"  Provider: {args.provider}")
