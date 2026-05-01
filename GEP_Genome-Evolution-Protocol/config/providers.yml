@@ -74,13 +74,13 @@ providers:
       rpm: null
 
   - id: fireworks_batch_phase1
-    name: "Fireworks/qwen3-vl-30b-a3b-thinking"
+    name: "Fireworks/deepseek-v3p2"
     phase: phase1
     priority: 2
     default: false
     client_type: api
     base_url: "https://api.fireworks.ai/inference/v1"
-    model: "accounts/fireworks/models/qwen3-vl-30b-a3b-thinking"
+    model: "accounts/fireworks/models/deepseek-v3p2"
     env_var: FIREWORKS_API_KEY
     batch:
       supported: true
