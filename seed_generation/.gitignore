@@ -45,8 +45,8 @@ Bibles/**/*.SQLite3
 
 # Generated/Output files
 validation_report_*.json
-raw_*.json
-*-Devocional_*.json
+
+
 *.log
 
 # Generated Devocional outputs (keep seeds, ignore generated files)
