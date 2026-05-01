@@ -254,7 +254,7 @@ _REGISTRY: Dict[str, LangConfig] = {
 
     "fil": LangConfig(
         code="fil",
-        language_name="Tagalog",
+        language_name="Filipino",
         country="Philippines",
         known_versions=("ASND", "MBB05"),
         labels={
@@ -265,7 +265,7 @@ _REGISTRY: Dict[str, LangConfig] = {
         },
         filename_pattern="Devocional_year_{year}_fil_{version}.json",
         persona=(
-            "a Filipino Christian reading a morning devotional in Tagalog. "
+            "a Filipino Christian reading a morning devotional in Filipino. "
             "You are not a theologian. "
             "You notice immediately when the prayer feels disconnected from the reflection. "
             "You notice when language feels academic or cold rather than personal and warm."
