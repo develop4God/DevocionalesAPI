@@ -58,4 +58,4 @@ seed_generation/tags_master*.json
 .vscode/extensions.json
 .vscode/launch.json
 
-
+.ruff_cache/
