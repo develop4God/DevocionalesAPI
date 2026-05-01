@@ -379,16 +379,14 @@ def validate(filepath, lang_override, version_override, expected_min: int = 0):
     # Summaries
     if version_mismatches:
         e(f"VERSION MISMATCH — {len(version_mismatches)} entries")
-        for m in version_mismatches[:5]: lines.append(f"    {m}")
-        if len(version_mismatches) > 5: lines.append(f"    ... and {len(version_mismatches)-5} more")
+        for m in version_mismatches: lines.append(f"    {m}")
 
     if lang_mismatches:
         e(f"LANGUAGE MISMATCH — {len(lang_mismatches)} entries")
 
     if latin_issues:
         e(f"LATIN CHARS FOUND — {len(latin_issues)} occurrences")
-        for li in latin_issues[:15]: lines.append(f"    {li}")
-        if len(latin_issues) > 15: lines.append(f"    ... and {len(latin_issues)-15} more")
+        for li in latin_issues: lines.append(f"    {li}")
 
     if label_totals:
         info(f"Allowed labels (correct): " + ", ".join(f"{k}×{v}" for k, v in sorted(label_totals.items())))
@@ -396,13 +394,11 @@ def validate(filepath, lang_override, version_override, expected_min: int = 0):
     if spanish_issues:
         deduped = list(dict.fromkeys(spanish_issues))
         e(f"SPANISH LEAK — {len(deduped)} occurrences")
-        for si in deduped[:15]: lines.append(f"    {si}")
-        if len(deduped) > 15: lines.append(f"    ... and {len(deduped)-15} more")
+        for si in deduped: lines.append(f"    {si}")
 
     if content_issues:
         e(f"CONTENT ISSUES — {len(content_issues)} entries")
-        for ci in content_issues[:20]: lines.append(f"    {ci}")
-        if len(content_issues) > 20: lines.append(f"    ... and {len(content_issues)-20} more")
+        for ci in content_issues: lines.append(f"    {ci}")
     else:
         ok("Content quality: all entries pass Phase 1")
 
