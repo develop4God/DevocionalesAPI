@@ -1,0 +1,9 @@
+[
+  {
+    "date": "2025-12-13",
+    "cita": "Santiago 4:10",
+    "reason": "Cannot reach server — is API_Server_Seed.py running?",
+    "completed_before_crash": 1,
+    "timestamp": "2026-04-27T15:43:13.200928"
+  }
+]

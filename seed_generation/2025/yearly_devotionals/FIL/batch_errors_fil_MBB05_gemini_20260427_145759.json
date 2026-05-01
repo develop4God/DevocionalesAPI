@@ -1,0 +1,32 @@
+[
+  {
+    "date": "2025-12-13",
+    "reason": "parse_error",
+    "detail": "```json\n{\n  \"reflexion\": \"Ang talata mula sa Santiago 4:10 ay naglalahad ng isang malalim na prinsipyo ng kaharian ng Diyos: ang kapakumbabaan. Hindi ito simpleng pag-iwas sa pagmamataas, kundi isang "
+  },
+  {
+    "date": "2026-01-26",
+    "reason": "parse_error",
+    "detail": "```json\n{\n  \"reflexion\": \"Ang mga salita ni Apostol Pablo kay Timoteo sa 2 Timoteo 3:1-5 ay nagbibigay ng matinding babala, isang malinaw na paalala hinggil sa kalagayan ng sangkatauhan sa mga panahon"
+  },
+  {
+    "date": "2025-10-05",
+    "reason": "parse_error",
+    "detail": "```json\n{\n  \"reflexion\": \"Ang Lucas 24:47 ay hindi lamang isang simpleng deklarasyon; ito'y isang makapangyarihang pahayag ng misyon mula mismo sa bibig ng muling nabuhay na Kristo. Dito ipinapakita a"
+  },
+  {
+    "date": "2026-04-02",
+    "reason": "parse_error",
+    "detail": "```json\n{\n  \"reflexion\": \"Ang talatang Mga Taga-Efeso 4:31 ay isang direkta at malalim na paanyaya mula sa Diyos upang suriin ang ating puso at ugali. Ipinahihiwatig nito ang isang malalim na pagbabag"
+  },
+  {
+    "date": "2026-04-05",
+    "reason": "parse_error",
+    "detail": "```json\n{\n  \"reflexion\": \"Ang mga salita ni Hesus sa Lucas 12:4-5 ay malinaw na naghihiwalay sa dalawang magkaibang uri ng pagkatakot na maaaring maramdaman ng isang tao. Una, mayroong pagkatakot sa m"
+  },
+  {
+    "date": "2026-06-29",
+    "reason": "empty_fields",
+    "detail": "reflexion=True oracion=False"
+  }
+]
