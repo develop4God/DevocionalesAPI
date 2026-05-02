@@ -231,19 +231,15 @@ def process_results(
     """
     log_path = audit_path(lang, version, year)
 
-    # Load existing audit into memory for dedup (id → verdict)
-    existing: dict[str, str] = {}
+    # Load existing audit into memory for dedup (id:phase)
+    existing: set[str] = set()      # "id:phase"
     if log_path.exists() and not overwrite:
         with open(log_path, encoding="utf-8") as f:
             for line in f:
                 if line.strip():
                     try:
                         r = json.loads(line)
-                        existing[r["id"]] = (
-                            r.get("action")
-                            if r.get("action") == "error_parse"
-                            else r.get("verdict", "error_parse")
-                        )
+                        existing.add(f"{r['id']}:{r.get('phase', 0)}")
                     except Exception:
                         pass
 
@@ -305,7 +301,7 @@ def process_results(
 
             raw_content = extract_content(result)
             if not raw_content:
-                if existing.get(custom_id) == "error_parse":
+                if f"{custom_id}:{phase}" in existing:
                     skipped += 1
                     continue
                 print(
@@ -338,7 +334,7 @@ def process_results(
                 reaction = _parse_reaction(raw_content)
 
             if reaction is None:
-                if existing.get(custom_id) == "error_parse":
+                if f"{custom_id}:{phase}" in existing:
                     skipped += 1
                     continue
                 print(
@@ -394,37 +390,25 @@ def process_results(
 
             action = "flagged" if reaction.verdict.value == "PAUSE" else "reviewed"
 
-            prior = existing.get(custom_id)
-            if prior and prior != "error_parse":
-                skipped += 1
-                continue
-            if prior == "error_parse" and action == "error_parse":
+            # Dedup by composite key id:phase
+            if f"{custom_id}:{phase}" in existing:
                 skipped += 1
                 continue
 
             if not dry_run:
-                if prior == "error_parse":
-                    lines = log_path.read_text(encoding="utf-8").splitlines()
-                    with open(log_path, "w", encoding="utf-8") as fw:
-                        for l in lines:
-                            if l.strip():
-                                try:
-                                    if json.loads(l).get("id") != custom_id:
-                                        fw.write(l + "\n")
-                                except Exception:
-                                    fw.write(l + "\n")
-                    existing[custom_id] = reaction.verdict.value
-
                 record = build_record(
                     entry_date=entry_meta["date"],
                     entry_id=custom_id,
                     lang=lang,
                     version=version,
+                    phase=phase,
                     action=action,
                     reaction=reaction,
                     raw_response=raw_content,
                 )
                 append_record(log_path, record)
+                # mark as seen for this phase
+                existing.add(f"{custom_id}:{phase}")
                 if action == "flagged" and reaction.category and reaction.quoted_pause:
                     genome, _ = absorb_reaction(
                         genome, reaction, entry_meta["date"], year

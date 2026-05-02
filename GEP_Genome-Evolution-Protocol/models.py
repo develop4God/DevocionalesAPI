@@ -66,6 +66,7 @@ class AuditRecord:
     version: str
     reviewed_at: str
     action: str  # "overnight" | "interactive" | "approved" | "skipped"
+    phase: int = 0          # 1 or 2; 0 = unknown (legacy)
     verdict: Verdict
     reaction: str
     quoted_pause: Optional[str] = None
