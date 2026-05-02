@@ -1,6 +1,6 @@
 # GEP Command Reference
 
-All commands run from the project root with the venv active:
+All commands run from `GEP_Genome-Evolution-Protocol/` with the venv active:
 ```bash
 source .venv/bin/activate
 ```
@@ -32,7 +32,7 @@ python3 batch_pipeline.py --lang es --version RVR1960 --year 2025 \
 # Use local JSON instead of GitHub fetch
 python3 batch_pipeline.py --lang es --version RVR1960 --year 2025 \
     --phase 1 --provider dashscope \
-    --local Devocional_year_2025_es_RVR1960.json
+    --local Devocional_year_2025.json
 ```
 
 ### 1.2 Dry run (build JSONL only, no upload)
@@ -45,21 +45,24 @@ python3 batch_pipeline.py --lang es --version RVR1960 --year 2025 \
 ```bash
 python3 batch_pipeline.py --lang es --version RVR1960 --year 2025 \
     --phase 1 --provider dashscope \
-    --input batch_input_es_RVR1960_2025_p1_qwen-flash_20260425_013924.jsonl
+    --input batch_input_es_RVR1960_2025_p1_qwen-flash_<ts>.jsonl
 ```
 
-### 1.4 Use existing results (skip upload/submit/poll/download, collect only)
+### 1.4 Use existing results (collect only)
 ```bash
 python3 batch_pipeline.py --lang es --version RVR1960 --year 2025 \
     --phase 1 --provider dashscope \
-    --input  batch_input_es_RVR1960_2025_p1_qwen-flash_20260425_013924.jsonl \
-    --results BIJOutputSet_es_RVR1960_2025_p1_qwen-flash_20260425_013924_results.jsonl
+    --input  batch_input_es_RVR1960_2025_p1_qwen-flash_<ts>.jsonl \
+    --results BIJOutputSet_es_RVR1960_2025_p1_qwen-flash_<ts>_results.jsonl
 ```
 
-### 1.5 All languages — common batch commands
+### 1.5 Common language examples
 ```bash
-# Tagalog ASND 2026
-python3 batch_pipeline.py --lang tl --version ASND --year 2026 --phase 1 --provider dashscope
+# Filipino MBB05 2025  (note: --lang fil, not tl)
+python3 batch_pipeline.py --lang fil --version MBB05 --year 2025 --phase 1 --provider dashscope
+
+# Filipino ASND 2026
+python3 batch_pipeline.py --lang fil --version ASND --year 2026 --phase 1 --provider dashscope
 
 # Portuguese ARC 2025
 python3 batch_pipeline.py --lang pt --version ARC --year 2025 --phase 1 --provider dashscope
@@ -76,6 +79,8 @@ python3 batch_pipeline.py --lang de --version LU17 --year 2025 --phase 1 --provi
 # French LSG1910 2025
 python3 batch_pipeline.py --lang fr --version LSG1910 --year 2025 --phase 1 --provider dashscope
 ```
+
+> ⚠️ Language code for Filipino is `fil` — not `tl`. Old examples using `--lang tl` are outdated.
 
 ---
 
@@ -116,7 +121,7 @@ python3 build_batch.py --lang es --version RVR1960 --year 2025 --phase 1 \
 Runs the full two-phase review locally with Ollama (or cloud provider).
 
 ```bash
-# Overnight mode (default — runs all pending entries)
+# Overnight mode (runs all pending entries)
 python3 critic_v3.py --lang pt --version ARC --year 2025 --mode overnight
 
 # Interactive mode (ask before each entry)
@@ -165,12 +170,12 @@ python3 review_flags.py --lang es --version RVR1960 --year 2025 --phase 1 --verd
 
 # Point to specific files
 python3 review_flags.py --lang es --version RVR1960 --year 2025 --phase 1 \
-    --input  batch_input_es_RVR1960_2025_p1_qwen-flash_20260425_013924.jsonl \
-    --results BIJOutputSet_es_RVR1960_2025_p1_qwen-flash_20260425_013924_results.jsonl
+    --input  batch_input_es_RVR1960_2025_p1_qwen-flash_<ts>.jsonl \
+    --results BIJOutputSet_es_RVR1960_2025_p1_qwen-flash_<ts>_results.jsonl
 
 # Other languages
 python3 review_flags.py --lang pt --version ARC --year 2025 --phase 1
-python3 review_flags.py --lang tl --version ASND --year 2026 --phase 1
+python3 review_flags.py --lang fil --version ASND --year 2026 --phase 1
 python3 review_flags.py --lang ar --version NAV --year 2025 --phase 1
 ```
 
@@ -182,7 +187,7 @@ python3 review_flags.py --lang ar --version NAV --year 2025 --phase 1
 # View genome for a language/version
 python3 critic_v3.py --genome es RVR1960 2025
 python3 critic_v3.py --genome pt ARC 2025
-python3 critic_v3.py --genome tl ASND 2026
+python3 critic_v3.py --genome fil ASND 2026
 
 # Print audit report
 python3 critic_v3.py --lang pt --version ARC --year 2025 --report
@@ -218,16 +223,15 @@ python3 collect_batch.py \
 ## 8. Quick Comparison: With vs Without Genome
 
 ```bash
-# ── Step A: baseline (no genome) ──────────────────────────────────────────────
+# Step A — baseline (no genome)
 python3 batch_pipeline.py --lang es --version RVR1960 --year 2025 \
     --phase 1 --provider dashscope --no-genome --dry-run
-# → produces: batch_input_es_RVR1960_2025_p1_<model>_<ts>.jsonl
 
-# ── Step B: with genome (same entries) ────────────────────────────────────────
+# Step B — with genome
 python3 batch_pipeline.py --lang es --version RVR1960 --year 2025 \
     --phase 1 --provider dashscope --dry-run
 
-# Compare FLAG rates between the two result files using review_flags.py
+# Compare FLAG rates between the two result files
 python3 review_flags.py --lang es --version RVR1960 --year 2025 --phase 1 \
     --input  batch_input_es_RVR1960_2025_p1_<no-genome-ts>.jsonl \
     --results BIJOutputSet_es_RVR1960_2025_p1_<no-genome-ts>_results.jsonl
@@ -248,7 +252,7 @@ source .venv/bin/activate
 # Install dependencies
 pip install -r requirements.txt
 
-# Required environment variables (in .env or exported):
+# Required .env variables:
 # GROQ_API_KEY=gsk_...
 # FIREWORKS_API_KEY=fw_...
 # DASHSCOPE_API_KEY=sk-...
