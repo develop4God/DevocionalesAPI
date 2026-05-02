@@ -218,8 +218,8 @@ def build_report(
     # Phase 1: FLAG/CLEAN   Phase 2: PAUSE/OK
     flag_term = "FLAG" if phase == 1 else "PAUSE"
     clean_term = "CLEAN" if phase == 1 else "OK"
-    issue_key = "issue" if phase == 1 else "reaction"
-    quoted_key = "quoted_problem" if phase == 1 else "quoted_pause"
+    issue_key = "reaction"
+    quoted_key = "quoted_pause"
 
     # Build input index: custom_id -> user prompt content
     input_index: dict[str, str] = {}
@@ -267,6 +267,14 @@ def build_report(
             verdict = parsed.get("verdict", "").upper()
             fields = _extract_fields(input_index.get(cid, ""), phase)
             issue = parsed.get(issue_key, "") or ""
+
+            # Phase 1: qwen-plus returns array schema {verdict, flags:[{type, quoted_problem, confidence}]}
+            # Normalize to flat fields
+            if phase == 1 and "flags" in parsed and isinstance(parsed.get("flags"), list) and parsed["flags"]:
+                flag0 = parsed["flags"][0]
+                issue = flag0.get("type", "") or ""
+                parsed["quoted_pause"] = flag0.get("quoted_problem") or ""
+                parsed["confidence"] = flag0.get("confidence", 1.0)
 
             quoted_val = parsed.get(quoted_key, "") or ""
 
