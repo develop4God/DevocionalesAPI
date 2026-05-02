@@ -1,0 +1,137 @@
+[
+  {
+    "date": "2027-05-28",
+    "reason": "parse_error",
+    "detail": "```json\n{\n  \"reflexion\": \"Ang talatang ito ay nagtatanghal sa atin ng isang malalim na metapora, inihahalintulad tayo sa mga sanggol na kapapanganak pa lamang. Sa natural na kalagayan, ang isang pasli"
+  },
+  {
+    "date": "2027-05-30",
+    "reason": "provider_error",
+    "detail": "gemini_error: {'message': 'The request timed out. Please try again.', 'code': 4}"
+  },
+  {
+    "date": "2027-06-01",
+    "reason": "parse_error",
+    "detail": "```json\n{\n  \"reflexion\": \"Inaanyayahan tayo ng ating Panginoong Hesus sa isang matimyas na pangako: 'Pasanin ninyo ang aking pamatok, at matuto kayo sa akin; sapagkat ako'y maamo at mapagpakumbabang p"
+  },
+  {
+    "date": "2027-06-30",
+    "reason": "parse_error",
+    "detail": "```json\n{\n  \"reflexion\": \"Lucas 4:43 ay naglalahad ng malinaw na pahayag ni Hesus hinggil sa Kanyang misyon. Ipinakita rito ang pangunahing layunin ng Kanyang pagparito sa mundo, ang ipahayag ang eban"
+  },
+  {
+    "date": "2027-07-13",
+    "reason": "parse_error",
+    "detail": "```json\n{\n  \"reflexion\": \"Ang Mga Taga-Efeso 5:18 ay nagbibigay ng matinding pagtutol sa pagkalasing sa alak, isang kondisyon na nagdudulot ng kaguluhan, kapabayaan, at humahantong sa iba't ibang uri "
+  },
+  {
+    "date": "2027-07-28",
+    "reason": "parse_error",
+    "detail": "```json\n{\n  \"reflexion\": \"Ang pundasyon ng Banal na Hapunan ay hindi mula sa tao; ito'y direkta mula sa Panginoon. Malinaw na sinabi ni Apostol Pablo na kanyang natanggap ang turo mismo sa Diyos, at b"
+  },
+  {
+    "date": "2026-11-19",
+    "reason": "empty_fields",
+    "detail": "reflexion=True oracion=False"
+  },
+  {
+    "date": "2026-12-06",
+    "reason": "empty_fields",
+    "detail": "reflexion=True oracion=False"
+  },
+  {
+    "date": "2026-12-24",
+    "reason": "parse_error",
+    "detail": "```json\n{\n  \"reflexion\": \"Ang talatang \\\"Sapagkat hindi na kayo sasakupin ng kasalanan, dahil hindi kayo nasa ilalim ng Kautusan kundi nasa ilalim ng biyaya\\\" mula sa Mga Taga-Roma 6:14 ay nagpapahaya"
+  },
+  {
+    "date": "2027-02-05",
+    "reason": "parse_error",
+    "detail": "```json\n{\n  \"reflexion\": \"Ang talatang Marcos 5:36 ay naghahatid ng isang makapangyarihang mensahe sa isang sandali ng sukdulang pagsubok, isang kaganapang puno ng matinding emosyon. Sa tagpong iyon, "
+  },
+  {
+    "date": "2027-02-16",
+    "reason": "empty_fields",
+    "detail": "reflexion=True oracion=False"
+  },
+  {
+    "date": "2027-02-23",
+    "reason": "parse_error",
+    "detail": "```json\n{\n  \"reflexion\": \"Ang bawat linya ng Banal na Kasulatan ay nagmumula sa kalooban ng Diyos, isang banal na paghinga na nagbibigay buhay sa espirituwal. Hindi lamang ito kalipunan ng mga salitan"
+  },
+  {
+    "date": "2027-02-26",
+    "reason": "parse_error",
+    "detail": "```json\n{\n  \"reflexion\": \"Lucas 5:24 ay naglalahad ng isang makapangyarihang pahayag ni Kristo, \\\"Ngunit upang malaman ninyo na ang Anak ng Tao ay may kapangyarihan sa lupa na magpatawad ng mga kasala"
+  },
+  {
+    "date": "2027-04-02",
+    "reason": "parse_error",
+    "detail": "```json\n{\n  \"reflexion\": \"Ang talatang I Mga Taga-Corinto 8:6 ay nagtatanghal ng pundasyon ng ating pananampalataya: iisang Diyos lamang. Siya ang Ama, pinagmulan ng lahat ng nilalang, bukal ng buhay,"
+  },
+  {
+    "date": "2027-05-09",
+    "reason": "parse_error",
+    "detail": "```json\n{\n  \"reflexion\": \"Ang ating pinagbabatayang talata sa Unang Juan 5:14 ay nagtataglay ng isang malaking pangako. Ito ay nagbibigay-diin sa kapanatagang taglay natin sa Panginoon, na kung saan a"
+  },
+  {
+    "date": "2027-05-26",
+    "reason": "parse_error",
+    "detail": "```json\n{\n  \"reflexion\": \"Ang paanyaya sa Mga Taga-Filipos 2:5 ay napakalalim, nag-uutos sa bawat mananampalataya na taglayin ang isipan ni Kristo Hesus. Hindi lamang ito simpleng mungkahi; isa itong "
+  },
+  {
+    "date": "2026-08-08",
+    "reason": "parse_error",
+    "detail": "```json\n{\n  \"reflexion\": \"Ang siping II Kay Timoteo 2:3-4 ay isang matinding paalala sa bawat mananampalataya tungkol sa ating tungkulin bilang mga alagad ni Kristo. Ito'y nagbibigay-diin sa pangangai"
+  },
+  {
+    "date": "2026-08-23",
+    "reason": "parse_error",
+    "detail": "```json\n{\n  \"reflexion\": \"Ang kahanga-hangang sulyap sa Apocalipsis 7:9-10 ay nagbubukas ng maluwalhating pananaw sa huling tagumpay ng Diyos. Dito'y nasasaksihan natin ang isang napakalaking pulutong"
+  },
+  {
+    "date": "2026-08-25",
+    "reason": "parse_error",
+    "detail": "```json\n{\n  \"reflexion\": \"Ang salita ng Panginoong Hesus sa Mateo 12:31 ay nagdadala ng isang matinding babala, subalit kasabay nito'y nagbibigay din ng napakalaking katiyakan. Malinaw niyang binibigy"
+  },
+  {
+    "date": "2026-09-07",
+    "reason": "parse_error",
+    "detail": "```json\n{\n  \"reflexion\": \"Ang I Juan 1:7 ay naglalatag ng isang napakahalagang prinsipyo sa buhay Kristiyano. Ito'y hindi lamang basta isang mungkahi; ito ay sadyang pag-anyaya sa isang buong pamamara"
+  },
+  {
+    "date": "2026-09-21",
+    "reason": "parse_error",
+    "detail": "```json\n{\n  \"reflexion\": \"Ang makapangyarihang pahayag na 'Narito, ako'y dumarating na madali' mula sa Apocalipsis 22:12 ay pumupukaw ng matinding pag-asa sa puso ng bawat mananampalataya. Ito ay nagl"
+  },
+  {
+    "date": "2026-09-26",
+    "reason": "parse_error",
+    "detail": "```json\n{\n  \"reflexion\": \"Ang talatang I Kay Timoteo 3:9 ay nagbibigay-diin sa mahalagang kalidad ng mga nagsisilbi sa Simbahan, partikular ang mga diakono. Sinasaad nito ang pananatili sa hiwaga ng p"
+  },
+  {
+    "date": "2026-10-12",
+    "reason": "parse_error",
+    "detail": "```json\n{\n  \"reflexion\": \"Ang ikalawang aklat ng Corinto, kabanata anim, talata labing-anim, ay naglalaman ng isang matinding paalala sa mga mananampalataya. Malalim ang kahulugan ng pahayag na, “At a"
+  },
+  {
+    "date": "2026-10-13",
+    "reason": "parse_error",
+    "detail": "```json\n{\n  \"reflexion\": \"Ang talatang Taga-Colosas 1:18 ay naglalarawan nang malinaw sa di-matatawarang posisyon ni Cristo sa lahat ng nilalang at sa Kanyang iglesya. Sinasabi nito na Siya ang ulo ng"
+  },
+  {
+    "date": "2026-10-14",
+    "reason": "parse_error",
+    "detail": "```json\n{\n  \"reflexion\": \"Ang pahayag ng Panginoon sa Lucas 8:21 ay nagbibigay-linaw sa isang rebolusyonaryong konsepto ng samahan. Nang dumalaw ang kanyang ina at mga kapatid upang siya'y kausapin, i"
+  },
+  {
+    "date": "2026-10-23",
+    "reason": "empty_fields",
+    "detail": "reflexion=True oracion=False"
+  },
+  {
+    "date": "2026-10-24",
+    "reason": "parse_error",
+    "detail": "```json\n{\n  \"reflexion\": \"Ang sulat ni Pedro ay naghahatid ng matinding paalala sa bawat mananampalataya. Malalim ang mensahe ng sipi sa II Pedro 1:8, naglalahad ito ng mahalagang koneksyon sa pagitan"
+  }
+]

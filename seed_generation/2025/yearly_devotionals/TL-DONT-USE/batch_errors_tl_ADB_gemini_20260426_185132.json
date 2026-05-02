@@ -1,0 +1,57 @@
+[
+  {
+    "date": "2025-08-04",
+    "reason": "parse_error",
+    "detail": "```json\n{\n  \"reflexion\": \"Ang Banal na Kasulatan sa II Pedro 1:3-4 ay naghahayag ng pambihirang katotohanan hinggil sa kapangyarihan ng Diyos para sa bawat mananampalataya. Sinusuklian ng Kanyang daki"
+  },
+  {
+    "date": "2025-10-12",
+    "reason": "parse_error",
+    "detail": "```json\n{\n  \"reflexion\": \"Ang sipi mula sa I Pedro 5:5-6 ay nagbibigay ng malinaw na paanyaya sa lahat ng mananampalataya, lalo na sa mga mas nakababata, na maging masunurin sa mga matatanda. Hindi la"
+  },
+  {
+    "date": "2025-11-05",
+    "reason": "parse_error",
+    "detail": "```json\n{\n  \"reflexion\": \"Si Nicodemo, isang pinuno ng mga Judio at Pariseo, ay lumapit kay Hesus sa dilim ng gabi, humahanap ng kasagutan. Ang kanyang paglapit ay nagpapakita ng malalim na paghahanap"
+  },
+  {
+    "date": "2025-12-25",
+    "reason": "parse_error",
+    "detail": "```json\n{\n  \"reflexion\": \"Ang talatang ito ay nagbubunyag ng isang napakahalagang katotohanan: ang pagpili ng Diyos sa atin. Mula pa sa simula, bago pa man tayo nabuo, mayroon nang nakatalagang plano "
+  },
+  {
+    "date": "2026-01-02",
+    "reason": "parse_error",
+    "detail": "```json\n{\n  \"reflexion\": \"Ang Santiago 1:12 ay naglalahad ng isang makapangyarihang pangako para sa bawat mananampalataya. Ipinapahayag nito ang malalim na biyaya na matatagpuan sa pagtitiis ng mga pa"
+  },
+  {
+    "date": "2026-07-16",
+    "reason": "parse_error",
+    "detail": "```json\n{\n  \"reflexion\": \"Ang Salita ng Diyos, lalo na ang mga isinulat ng Kanyang mga propeta, ay patuloy na nagbibigay ng matibay na katiyakan sa ating mga kaluluwa. Ito ay nagsisilbing isang makina"
+  },
+  {
+    "date": "2026-02-10",
+    "reason": "parse_error",
+    "detail": "{\"reflexion\": \"Ang Lucas 15:32 ay nagtatampok ng malalim na pag-unawa sa puso ng Diyos, hindi lamang ito isang simpleng pahayag kundi isang masiglang paanyaya sa pagdiriwang at galak. Ang ama sa talin"
+  },
+  {
+    "date": "2026-05-02",
+    "reason": "parse_error",
+    "detail": "```json\n{\n  \"reflexion\": \"Ang sipi mula sa Juan 4:23-24 ay naglalahad ng isang makabuluhang pagbabago sa paraan ng pagsamba. Ipinahayag ni Hesus kay Photina, ang babaeng Samaritana, na ang tunay na pa"
+  },
+  {
+    "date": "2026-05-05",
+    "reason": "parse_error",
+    "detail": "```json\n{\n  \"reflexion\": \"Ang Filipos 4:19 ay isang nakapagpapatibay na pangako mula sa Banal na Kasulatan. Ipinapaalala nito sa atin ang kapangyarihan ng Diyos na punan ang lahat ng ating kailangan. "
+  },
+  {
+    "date": "2026-05-21",
+    "reason": "empty_fields",
+    "detail": "reflexion=True oracion=False"
+  },
+  {
+    "date": "2026-06-08",
+    "reason": "parse_error",
+    "detail": "```json\n{\n  \"reflexion\": \"Ang galit ay isang likas na emosyon, nararanasan ng bawat indibidwal. Hindi ito ipinagbabawal ng Banal na Kasulatan; sa kabila nito, binibigyang-diin ang tamang pamamahala ri"
+  }
+]

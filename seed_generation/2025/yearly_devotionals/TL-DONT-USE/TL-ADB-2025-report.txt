@@ -1,0 +1,35 @@
+==========================================================
+📋 File: 00-Devocional_year_2025_tl_ADB.json
+==========================================================
+  ✅ Lang: tl | Version: ADB | Year: 2025
+  ℹ️  Latin check: skipped
+  ✅ Structure valid — language key: tl
+  ✅ Total entries: 128
+  ⚠️  Only 128 entries — expected ≥ 358 (date range: 2025-08-05 → 2026-07-28)
+  ❌ CONTENT ISSUES — 35 entries
+    2025-08-24: reflexion too short: 777 chars (min 800)
+    2025-09-16: reflexion too short: 672 chars (min 800)
+    2025-10-04: reflexion too short: 703 chars (min 800)
+    2025-10-08: reflexion too short: 639 chars (min 800)
+    2025-10-16: reflexion too short: 640 chars (min 800)
+    2025-10-16: prayer_ending: oracion does not end with Amen variant
+    2025-10-27: reflexion too short: 687 chars (min 800)
+    2025-10-29: reflexion too short: 695 chars (min 800)
+    2025-10-31: reflexion too short: 728 chars (min 800)
+    2025-11-08: reflexion too short: 608 chars (min 800)
+    2025-11-14: reflexion too short: 567 chars (min 800)
+    2025-11-20: reflexion too short: 621 chars (min 800)
+    2025-12-13: reflexion too short: 598 chars (min 800)
+    2025-12-19: reflexion too short: 646 chars (min 800)
+    2026-01-08: reflexion too short: 676 chars (min 800)
+    2026-01-15: reflexion too short: 698 chars (min 800)
+    2026-01-24: reflexion too short: 623 chars (min 800)
+    2026-01-31: reflexion too short: 637 chars (min 800)
+    2026-02-11: reflexion too short: 710 chars (min 800)
+    2026-03-09: reflexion too short: 671 chars (min 800)
+    ... and 15 more
+  ⚠️  Missing dates (230): ['2025-08-06', '2025-08-07', '2025-08-08', '2025-08-09', '2025-08-10', '2025-08-11', '2025-08-12', '2025-08-17', '2025-08-18', '2025-08-19']...
+
+==========================================================
+❌ FAILED — 1 error(s)
+==========================================================

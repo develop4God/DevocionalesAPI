@@ -38,7 +38,7 @@ seed_generation/ERRORS-RAG/
 !README*.md
 
 # Ignore large data and output files
-yearly_devotionals/
+
 *.bak
 *.tmp
 

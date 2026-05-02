@@ -1,0 +1,917 @@
+[
+  {
+    "date": "2025-08-01",
+    "reason": "parse_error",
+    "detail": "We are writing in Tagalog (tl) only. The verse is Juan 15:5 from the Bible.\n Key verse: \"Juan 15:5 - Ako'y ang ubas, at kayo ang mga tangkay. Siya na nananatili sa akin, at ako sa kanya, ay magbubunga"
+  },
+  {
+    "date": "2025-08-30",
+    "reason": "parse_error",
+    "detail": "We are writing in Tagalog (tl) only, as per the instructions.\n The verse is Acts 17:28 (Mga Gawa 17:28) which in English is: \"For in him we live and move and have our being.\"\n In Tagalog, the verse is"
+  },
+  {
+    "date": "2025-08-05",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on Ephesians 5:25-27.\n The verse in Tagalog (from the Bible) is: \n   \"25 Mga asawa, kayo'y dapat magmamahal kayo ng inyong mga asawa, kagaya ng pagmam"
+  },
+  {
+    "date": "2025-08-13",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on Mark 15:39.\n The verse: \"At nang makita ng punong hukom ng mga Hukom ang nangyari, ay sinabi, Tunay na tao ito ang Anak ng Diyos.\" \n (Translation: "
+  },
+  {
+    "date": "2025-11-14",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on Revelation 2:7.\n Key verse: \"Apocalipsis 2:7\" (in Tagalog, this is \"Apocalipsis 2:7\", but the verse itself is in Tagalog translation? Actually, the"
+  },
+  {
+    "date": "2025-08-22",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on James 2:17 (Santiago 2:17 in Spanish is the same as James 2:17, but the verse is in the Bible in Spanish as \"Santiago 2:17\", but the devotional mus"
+  },
+  {
+    "date": "2025-08-11",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on Romans 6:23.\n The verse: \"Mga Taga-Roma 6:23\" -> \"Kung ang kapahamakan ay parang pribadong trabaho, ang kapaligiran ay parang regalo mula sa Diyos."
+  },
+  {
+    "date": "2025-08-15",
+    "reason": "parse_error",
+    "detail": "We are writing in Tagalog (tl) only, as per the instruction.\n The key verse is 2 Timothy 4:7-8.\n We need two keys: \"reflexion\" and \"oracion\".\n Reflexion must be at least 900 characters (approx 300 wor"
+  },
+  {
+    "date": "2025-08-19",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on Acts 13:38-39.\n Key verse: \"Mga Gawa 13:38-39\"\n We are to produce a JSON object with two keys: \"reflexion\" and \"oracion\"\n\n Rules for reflexion:\n   "
+  },
+  {
+    "date": "2025-08-27",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on John 14:2-3.\n The verse: \"Juan 14:2-3\" -> \"Dito sa bahay ko ay maraming mga silid. Kung hindi ko sinasabi, kayo'y maaaring magpunta doon. At kung a"
+  },
+  {
+    "date": "2025-11-20",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on 1 Juan 5:13.\n The key verse in English is: \"I know that I have eternal life.\"\n In Tagalog, the verse is: \"Alam kong may buhay na walang hanggan ako"
+  },
+  {
+    "date": "2025-08-24",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on 2 Corinthians 4:16-18.\n The key verse is: \"Kaya't hindi kami bumabagsak, bagama't ang aming panlabas na tao ay nangangasawa, ang aming loob ay dina"
+  },
+  {
+    "date": "2025-09-13",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Matthew 5:3-10 (the Beatitudes).\n The JSON must have two keys: \"reflexion\" and \"oracion\".\n \n Requirements for reflexion:\n   - Minimum 900 character"
+  },
+  {
+    "date": "2025-08-14",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on Acts 2:21.\n Key verse: \"Mga Gawa 2:21\" -> \"At ang anumang makakapagpangalan sa Panginoon ay mabubuhay.\"\n\n Requirements:\n - Reflexion: Minimum 900 c"
+  },
+  {
+    "date": "2025-11-09",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on Romans 13:1.\n The verse: \"Mga Taga-Roma 13:1\" -> \"Sino man ang nasa kapangyarihan, naman nang nasa kapangyarihan, ay katuwiran ng Dios.\"\n\n We are t"
+  },
+  {
+    "date": "2025-09-14",
+    "reason": "parse_error",
+    "detail": "We are writing in Tagalog (tl) only.\n Key verse: Apocalipsis 22:12-13 (Revelation 22:12-13)\n Verse in English: \"Behold, I am coming soon! Blessed is the one who keeps the words of the prophecy of this"
+  },
+  {
+    "date": "2025-09-03",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on 1 Corinthians 15:57.\n The verse: \"Ngunit sa ating Panginoon na Siyang naghahari sa lahat, ang pangako ay 'Napalaya tayo ng kamatayan, at ang laban "
+  },
+  {
+    "date": "2025-08-29",
+    "reason": "parse_error",
+    "detail": "Okay, the user wants me to write a biblical devotional in Tagalog based on Acts 7:55-56. They've given very specific rules about the format and content. \n\nFirst I need to understand the verse properly"
+  },
+  {
+    "date": "2025-10-09",
+    "reason": "parse_error",
+    "detail": "We are writing in Tagalog (TL) only. The key verse is Luke 18:14 (Lucas 18:14).\n The reflection must be at least 900 characters (about 300 words) and in Tagalog. It must have distinct paragraphs (each"
+  },
+  {
+    "date": "2025-11-19",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on Mark 4:35.\n The verse: \"At siya'y nagpahatid sa kaniyang mga alagad, at sinabi, 'Lumakad tayo ng tabi ng dagat.'\" (Mark 4:35)\n\n Steps:\n 1. Reflexio"
+  },
+  {
+    "date": "2025-09-20",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on James 1:19-20.\n The key verse in Tagalog is: \"Santiago 1:19-20\"\n We are to write two parts: \n   - `reflexion`: a deep contextualized reflection (mi"
+  },
+  {
+    "date": "2025-09-08",
+    "reason": "parse_error",
+    "detail": "We are writing in Tagalog (tl) only. The key verse is Marcos 1:15, which in English is \"The time has come,\" he said. \"The kingdom of God has come near. Repent and believe the good news!\"\n\n We are to w"
+  },
+  {
+    "date": "2025-10-12",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on 1 Pedro 5:5-6.\n The key verse in English: \n   \"5:5 Likewise, you who are younger, be subject to the elders. And all of you, clothe yourselves with "
+  },
+  {
+    "date": "2025-08-09",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Galatians 6:9.\n Key verse: \"Mga Taga-Galacia 6:9\" - which in English is Galatians 6:9: \"And let us not grow weary in doing good, for in due season "
+  },
+  {
+    "date": "2025-08-17",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on 1 Corinthians 3:16.\n The verse: \"Huwag kayong maging tao na matuklasan ang mga bagay na pangkalahatang, kundi kailangan ninyong maging may karunung"
+  },
+  {
+    "date": "2025-08-08",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Romans 11:33-36.\n The key verse is: \"Mga Taga-Roma 11:33-36\" which in English is Romans 11:33-36.\n\n We must produce a JSON object with two keys:\n  "
+  },
+  {
+    "date": "2025-10-03",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on 1 Peter 2:2-3.\n Key verse: \"I Pedro 2:2-3\" (which in English is 1 Peter 2:2-3)\n\n The verse in Tagalog (from a common translation) is:\n \"Kung kaya'y"
+  },
+  {
+    "date": "2025-08-10",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on John 8:12.\n The verse: \"Juan 8:12\" -> In Tagalog: \"Si Hesus ay nagsabi, 'Ako ang liwanag ng mundo. Ang taong sumusunod sa akin, hindi luluha sa kad"
+  },
+  {
+    "date": "2025-10-23",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on 1 Peter 5:7.\n The verse in Tagalog (as per common translation) is: \"Panghawakan mo ang lahat ng iyong kabaliktadang pagkabigat sa Diyos; sapagka't "
+  },
+  {
+    "date": "2025-09-04",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on 1 Corinthians 15:3-4.\n Key verse: \"I Mga Taga-Corinto 15:3-4\" (which is 1 Corinthians 15:3-4 in English)\n\n The verse in Tagalog (based on the conte"
+  },
+  {
+    "date": "2025-09-19",
+    "reason": "parse_error",
+    "detail": "We are writing in Tagalog (tl) only. The verse is 1 John 4:16: \"At narinig namin at tinanggap namin ang pag-ibig na ito, sapagkat siyang Dios ay pag-ibig; at ang nagsisilang ng pananampalataya sa atin"
+  },
+  {
+    "date": "2025-12-12",
+    "reason": "parse_error",
+    "detail": "We are writing in Tagalog (tl) only. The key verse is \"I Kay Timoteo 4:12\", which is 1 Timothy 4:12.\n The verse in Tagalog: \"Wala kang maging mababang isip sa iyo, kundi maging halimbawa sa mga manana"
+  },
+  {
+    "date": "2025-10-02",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Philippians 3:13-14.\n The verse: \"Mga Taga-Filipos 3:13-14\" - which in English is Philippians 3:13-14.\n\n Key points from the verse (in English for "
+  },
+  {
+    "date": "2025-08-20",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Acts 20:24.\n The key verse in Tagalog: \"Ngunit ang lahat ng aking pagkakakataon ay ginawa ko upang ipakita ang buong kahulugan ng kaharian ng Diyos"
+  },
+  {
+    "date": "2025-10-16",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Romans 12:1-2.\n The key verse is: \"Mga Taga-Roma 12:1-2\"\n We must return ONLY a JSON object with two keys: `reflexion` and `oracion`\n\n Requirements"
+  },
+  {
+    "date": "2025-08-03",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Romans 9:15-16.\n Key verse: \"Mga Taga-Roma 9:15-16\" (Romans 9:15-16)\n The verse in Tagalog (from the Tagalog Bible) is:\n   15 Sapagka't sinabi niya"
+  },
+  {
+    "date": "2025-10-19",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on 1 Timothy 6:10.\n The key verse is: \"Ang panganib na maging mayayaman ay ang pagmamahal sa pera, sapagka't ang pagmamahal sa pera ay pinagmulan ng l"
+  },
+  {
+    "date": "2025-11-18",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on Romans 3:24.\n The key verse in Tagalog: \"Mga Taga-Roma 3:24\" - which is \"At binibigay ng Diyos sa lahat ng tao ng walang bayad, sa pamamagitan ng k"
+  },
+  {
+    "date": "2025-09-17",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Romans 5:8.\n The verse in Tagalog: \"Ngunit ngayon, sa halip na ako'y tumigil, ang Diyos ay nagpapakita ng kanyang pagmamahal sa amin sa pamamagitan"
+  },
+  {
+    "date": "2025-10-20",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on 1 Juan 2:3-4.\n The verse: \"At kung sinabi nating maaari tayong manatili sa kanya, at hindi naman natin ipinakikita ang ating pagsunod sa kanyang ut"
+  },
+  {
+    "date": "2025-09-06",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Ephesians 6:1-3.\n The verse: \"Mga Taga-Efeso 6:1-3\" (Ephesians 6:1-3) which in Tagalog is:\n   \"Mga anak, maglingkod kayo sa inyong mga ama at inyon"
+  },
+  {
+    "date": "2025-12-26",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Titus 3:8.\n The verse is: \"Tito 3:8\" which in English is: \"This is a trustworthy saying, and I want you to stress these things, so that those who h"
+  },
+  {
+    "date": "2025-09-15",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Acts 1:8.\n The verse is: \"Ngunit makakakamit kayo ng kapangyarihan kapag dumating ang Espiritu Santo sa inyo; at magsisilbi kayo bilang aking saksi"
+  },
+  {
+    "date": "2025-12-27",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on John 3:16 (Juan 3:16).\n The key verse is: \"Juan 3:16: Sapagka't ganito ang pagmamahal ng Diyos sa sangkatauhan, na ibinigay Niya ang Kanyang Anak n"
+  },
+  {
+    "date": "2025-10-15",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Luke 12:34 (Lucas 12:34). The verse says: \"Sapagka't kung ang inyong piling ay sa langit, doon ay makakatagpuan ninyo ang inyong kayamanan; subalit"
+  },
+  {
+    "date": "2025-12-25",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on 2 Thessalonians 2:13-14.\n The verse in English: \"But we ought to give thanks to God always for you, brethren, beloved by the Lord, because God from"
+  },
+  {
+    "date": "2025-11-22",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on John 6:35.\n The verse in Tagalog is: \"At sinabi ni Hesus, 'Ako ang tinapay ng buhay; ang humihingi sa akin ay hindi kailanman aayaw, at ang nagakai"
+  },
+  {
+    "date": "2025-11-17",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Ephesians 2:19-22.\n The verse (in English) is: \n   \"So then you are no longer strangers and aliens, but you are fellow citizens with the saints and"
+  },
+  {
+    "date": "2025-10-08",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on Matthew 27:46.\n The verse: \"At sa huling bahagi ng araw, nang dumating ang ika-ayong oras, ay nagsabi si Jesus, 'Aba, Ama ko, bakit mo ako iniwan?'"
+  },
+  {
+    "date": "2025-12-28",
+    "reason": "parse_error",
+    "detail": "Okay, I need to create a devotional in Tagalog based on John 15:16. Let me start by understanding the verse. The key verse is \"Juan 15:16,\" which in English is John 15:16. The verse says, \"You did not"
+  },
+  {
+    "date": "2025-09-18",
+    "reason": "parse_error",
+    "detail": "We are writing in Tagalog (TL) only. The verse is from Ephesians 2:8-9.\n Key verse in English: \"For it is by grace you have been saved, through faith—and this is not from yourselves, it is the gift of"
+  },
+  {
+    "date": "2026-01-02",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on James 1:12.\n Key verse: \"Santiago 1:12\" which is James 1:12 in English. The verse says: \"Blessed is the man who perseveres under trial because, hav"
+  },
+  {
+    "date": "2025-10-10",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on the verse III Juan 1:11.\n The verse is: \"Huwag kayong magtulungan sa mga masasama, kung hindi ay maaaring maging kasangkot sa kanilang masama.\"\n Ho"
+  },
+  {
+    "date": "2025-12-22",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Luke 15:10 (Lucas 15:10 in Spanish is the same as Luke 15:10 in English, but the verse in Tagalog is the same as the Bible verse in English). \n The"
+  },
+  {
+    "date": "2025-10-31",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Matthew 23:11-12.\n The key verse is: \"Pero ang pinakamahal sa inyo ay ang nagsisilbing alipin. At ang laging nangangalaga ng kanyang sarili ay hind"
+  },
+  {
+    "date": "2025-10-06",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on 2 Corinthians 1:3-4.\n The key verse: \"Ito ay mula kay Dios, na siyang nagsasalba sa atin, at ang siyang nagsasala sa atin, na siyang nagsasala sa a"
+  },
+  {
+    "date": "2025-11-15",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on 1 John 4:18.\n The verse: \"Ang pagmamahal ay walang takot; kung nangyari nang takot, ito ay dahil sa kawalan ng pagsasalubong ng pagsasalubong sa pa"
+  },
+  {
+    "date": "2025-12-30",
+    "reason": "parse_error",
+    "detail": "We are writing in Tagalog (tl) only.\n Key verse: \"I Kay Timoteo 6:17-19\" (which is 1 Timothy 6:17-19 in English)\n We are to write a devotional with two keys: `reflexion` and `oracion`\n \n Reflexion:\n  "
+  },
+  {
+    "date": "2025-11-29",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Revelation 4:8.\n The verse: \"Apocalipsis 4:8\" - In Tagalog, the verse reads: \"At kahalagahan ng apat na hayop at ng mga matatanda, sila'y nangangal"
+  },
+  {
+    "date": "2025-10-25",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on 2 Timothy 1:9.\n The verse: \"Kung saan ang kalooban ng Diyos ay ang kanyang pagpapatawad sa atin sa pamamagitan ng ating Panginoong Jesu Kristo, na "
+  },
+  {
+    "date": "2025-11-11",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Matthew 13:44-46 (Mateo 13:44-46). \n The key verse is about the parables of the hidden treasure and the pearl of great value.\n\n Requirements for re"
+  },
+  {
+    "date": "2025-09-11",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Revelation 2:4.\n The verse in Tagalog: \"Ngunit mayroon akong kahilingan sa iyo: iwasan mo ang ika-apat na bagay na isinulat ng aking lingkod, na an"
+  },
+  {
+    "date": "2025-11-02",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on Colossians 3:12-14.\n The verse: \"Mga Taga-Colosas 3:12-14\" which in Tagalog is: \n   \"Kaya'y kayo ay maging mga anak ng Dios, na ipinagkalooban ng b"
+  },
+  {
+    "date": "2026-01-24",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Ephesians 4:30.\n The verse in Tagalog: \"Mga Taga-Efeso 4:30\" (Ephesians 4:30) which is translated as: \n \"At huwag ninyong palayain ang Espiritu ng "
+  },
+  {
+    "date": "2025-12-09",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on 2 Corinthians 7:10.\n The verse: \"Isa ang lalaking talagang umaasa sa Diyos na nangangaral ng katuwiran, at isa ang lalaking talagang umaasa sa Diyo"
+  },
+  {
+    "date": "2025-12-21",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Matthew 13:3-9 (Mateo 13:3-9).\n The verse is the Parable of the Sower.\n\n Requirements:\n - reflexion: at least 900 characters (approx 300 words) in "
+  },
+  {
+    "date": "2025-11-25",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on 1 Thessalonians 5:19.\n The key verse: \"Mga Taga-Tesalonica 5:19\" which in Tagalog is \"I Mga Taga-Tesalonica 5:19\" but note that the verse text is a"
+  },
+  {
+    "date": "2026-03-11",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Luke 14:11.\n The verse: \"Kung sinong nangangalang magiging taas, siya'y magsisihina, at kung sinong magsisihina, siya'y magsisilakas.\" (Luke 14:11)"
+  },
+  {
+    "date": "2025-12-15",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on Luke 18:27.\n The verse: \"Lucas 18:27\" (which in English is Luke 18:27) says: \"Ang mga may hawak ng pera ay napakarami, ngunit ang mga taong walang "
+  },
+  {
+    "date": "2025-11-07",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on 2 Corinthians 12:9-10.\n The key verse in English is: \"But he said to me, 'My grace is sufficient for you, for my power is made perfect in weakness."
+  },
+  {
+    "date": "2025-11-06",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on Hebrews 12:2.\n The verse in Tagalog: \"Na tingnan ninyo ang Panginoon, na kanyang hinalo at nilakip ng tiyaga, at kanyang pinagpatuloy ang kanyang p"
+  },
+  {
+    "date": "2025-11-08",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on 1 Juan 4:11.\n Key verse: \"I Juan 4:11\" (which is 1 John 4:11 in English) — the verse in Tagalog is: \"Kaya, kapatid, ang pag-ibig ay dapat na pumunt"
+  },
+  {
+    "date": "2025-12-13",
+    "reason": "parse_error",
+    "detail": "We are writing in Tagalog (tl) only. The key verse is Santiago 4:10, which in Tagalog is: \"Mababa ang iyong sarili sa harap ng Diyos, at ipakita niya sa iyo ang kanyang biyaya.\"\n\nWe are to create:\n- `"
+  },
+  {
+    "date": "2025-12-04",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on Apocalipsis 7:16-17.\n The verse: \"Wala nang iinom, at wala nang inaapi, sapagka't ang Kanyang kaharangan ay sa kanila; at ang kanyang kaharian ay s"
+  },
+  {
+    "date": "2025-12-29",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on Romans 1:16.\n The key verse: \"Mga Taga-Roma 1:16\" (Romans 1:16 in Tagalog)\n We are to write a reflection (reflexion) of at least 900 characters (ab"
+  },
+  {
+    "date": "2025-10-29",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on John 14:27 (Juan 14:27).\n The verse in Tagalog: \"Ang kapayapaan ay ibinibigay ko sa inyo, hindi katulad ng inyong kapayapaan. Ang aking kapayapaan "
+  },
+  {
+    "date": "2025-09-16",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on 1 Thessalonians 5:23-24.\n The verse: \"I Mga Taga-Tesalonica 5:23-24\" (which is 1 Thessalonians 5:23-24 in Tagalog)\n In Tagalog, the verse is: \"At a"
+  },
+  {
+    "date": "2025-12-11",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Revelation 3:8.\n The verse in Tagalog: \"Narito ako, nagsisimula ng pinto na hindi kayang buksan ng tao. Nangako ako sa iyo na kung sinumang pumasok"
+  },
+  {
+    "date": "2025-11-21",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Hebrews 9:27-28.\n The verse in Tagalog (as per common translation) is:\n \"27 At kaya'y isang pagkakataon lamang para sa lahat ang mamatay, at pagkat"
+  },
+  {
+    "date": "2025-10-30",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on II Kay Timoteo 2:3-4.\n The verse (in English) is: \"Thou therefore endure hardness, as a good soldier of Jesus Christ. No man that warreth entanglet"
+  },
+  {
+    "date": "2025-12-02",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Hebrews 4:12.\n The verse in Tagalog: \"At ang salitang panginoon ay mabisa at masangkap, at nangangatwiran ang puso at ang diwa, at nangangatwiran a"
+  },
+  {
+    "date": "2026-02-05",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on Acts 17:30-31.\n The verse: \"Mga Gawa 17:30-31\" - which in English is Acts 17:30-31.\n\n In Tagalog, the verse is commonly known as:\n   \"Mga Gawa 17:3"
+  },
+  {
+    "date": "2026-01-28",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Ephesians 1:7.\n Key verse: \"Mga Taga-Efeso 1:7\" (Ephesians 1:7)\n\n The verse in Tagalog (based on the Tagalog Bible) is:\n \"Sa kanya (sa kaniya) na m"
+  },
+  {
+    "date": "2026-03-05",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on John 14:16-17 (Juan 14:16-17). The verse in Spanish is: \"Y yo ruego al Padre, y os dará otro Consolador, para que esté con vosotros siempre: el Esp"
+  },
+  {
+    "date": "2026-01-12",
+    "reason": "parse_error",
+    "detail": "We are writing in Tagalog (TL) only, no other languages.\n The key verse is \"Mga Taga-Colosas 1:27\" (Colossians 1:27).\n We must produce a JSON object with two keys: \"reflexion\" and \"oracion\".\n \n Rules "
+  },
+  {
+    "date": "2026-02-09",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on 1 Juan 3:2.\n The verse in English is: \"See what great love the Father has lavished on us, that we should be called children of God! And that is wha"
+  },
+  {
+    "date": "2026-02-14",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Revelation 19:11.\n The verse: \"At ang baging na lalaki na nasa kabayo ay may kalahating kahariang pula, at ang kanyang pangalan ay ang Salita ng Di"
+  },
+  {
+    "date": "2026-01-29",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on Galatians 5:13.\n Key verse: \"Mga Taga-Galacia 5:13\" which in English is \"Galatians 5:13\". The verse says: \"For you, brothers and sisters, were call"
+  },
+  {
+    "date": "2026-02-18",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on Luke 4:18-19.\n The key verse in Tagalog: \"Si Hesus ay lumapit at nagsimula na magbasa sa librong nasa kamay niya. Ito ang nasa loob: 'Ang Espiritu "
+  },
+  {
+    "date": "2026-02-04",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Luke 12:48.\n The verse in Tagalog is: \"Dahil kung maraming ibinigay sa isang tao, maraming kailangang bigyan niya. At kung maraming ibinigay sa isa"
+  },
+  {
+    "date": "2026-01-27",
+    "reason": "parse_error",
+    "detail": "We are writing in Tagalog (tl) only.\n Key verse: Lucas 10:19\n We must write two keys: \"reflexion\" and \"oracion\"\n Reflexion: minimum 900 characters (approx 300 words) in tl. Must have distinct aspects "
+  },
+  {
+    "date": "2026-03-06",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on 1 Corinthians 13:4-7.\n The key verse: \"I Mga Taga-Corinto 13:4-7\" (which is 1 Corinthians 13:4-7 in Tagalog)\n We are to produce a JSON object with "
+  },
+  {
+    "date": "2026-04-15",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on Matthew 16:18-19.\n The verse in Tagalog: \"At ako, aking sinasabi sa iyo, ikaw ay si Pedro, at sa ibabaw ng bato na ito ay gagawa ako ng kongregasyo"
+  },
+  {
+    "date": "2026-04-17",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on 1 Peter 3:15.\n The key verse in English is: \"But in your hearts honor Christ the Lord as holy, always being prepared to make a defense to anyone wh"
+  },
+  {
+    "date": "2026-04-19",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on Acts 5:29 (Mga Gawa 5:29). The verse says: \"Ngunit sinabi ni Pedro at ang mga kabilang apostol, 'Kailangan naming sumunod sa Diyos at hindi sa mga "
+  },
+  {
+    "date": "2026-04-20",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Luke 6:36.\n The key verse is: \"Lucas 6:36\" which in Tagalog is \"Lucas 6:36\" but the verse text is: \n   \"Maging kayo tulad ng inyong Ama na nasa lan"
+  },
+  {
+    "date": "2026-04-21",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on Romans 10:4.\n The verse in Tagalog: \"Kung gayon, ang kalooban ng batas ay tagapagpuno ng katuwiran kay lahat na nanampalad sa Kristo Jesus.\"\n\n We a"
+  },
+  {
+    "date": "2026-04-23",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Luke 15:7 (Lucas 15:7 in Tagalog).\n The verse: \"Sabi ng Panginoon, 'Ako'y nagsasabi sa inyo, na kung may isang maliwanag na kapatid na makapagsalit"
+  },
+  {
+    "date": "2026-04-24",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on 2 Corinthians 8:9.\n The key verse: \"Kung gayon, sinasabi ninyo, 'Narito, ang Tagapagligtas ay nagsiwalat sa kanyang sarili, dahil sa pagmamahal sa "
+  },
+  {
+    "date": "2026-04-26",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on Galatians 5:22-23.\n The key verse: \"Mga Taga-Galacia 5:22-23\"\n We must output a JSON object with two keys: \"reflexion\" and \"oracion\"\n \n Requirement"
+  },
+  {
+    "date": "2026-04-27",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on Philippians 3:7-8.\n The key verse in Tagalog (from the Bible) is:\n \"Ngunit lahat ng aking pagkakaroon ay pinagbago ko ng kalungkutan; sapagka't ang"
+  },
+  {
+    "date": "2026-04-29",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on Acts 10:43. The verse in Tagalog is: \"At ang lahat ng propeta ay nagpahayag na ang sinuman ang mananampalataya sa Kanya ay mabubuhay nang mabuhay.\""
+  },
+  {
+    "date": "2026-04-30",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on Romans 3:23.\n The key verse in Tagalog: \"Mga Taga-Roma 3:23\" which is \"sapagka't lahat ng tao ay nagkakasala at wala nang may kumakatawan sa kaluwa"
+  },
+  {
+    "date": "2026-05-09",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on Hebrews 13:5.\n The verse: \"Mga Hebreo 13:5\" which in Tagalog is \"Mga Hebreo 13:5\" but the actual verse in Tagalog is: \n \"Huwag mo nang ipagkait ang"
+  },
+  {
+    "date": "2026-05-07",
+    "reason": "parse_error",
+    "detail": "We are writing in Tagalog (tl) only. The verse is Marcos 16:15, which in Tagalog is: \"At kanyang sinabi sa kanila, 'Lumabas kayo sa buong sangkatauhan at ipagpatawag kayo sa lahat ng mga bansa.'\"\n The"
+  },
+  {
+    "date": "2026-06-06",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Titus 3:4-5.\n The verse: \"Ngunit nang dumating ang kagandahan at ang kagandahan ng Diyos at ng kanyang kagandahan, sa kanyang pagmamahal at kanyang"
+  },
+  {
+    "date": "2026-05-26",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on 1 Corinthians 1:18.\n The verse: \"Sapagka't ang salitang nagsasalba sa mga walang katalinuhan ay katuwiran sa atin, ngunit sa mga may katalinuhan ay"
+  },
+  {
+    "date": "2026-05-18",
+    "reason": "parse_error",
+    "detail": "We are writing in Tagalog (TL) only. The verse is Acts 4:12. We must have two keys: \"reflexion\" and \"oracion\".\n \n For \"reflexion\":\n   - Minimum 900 characters (approx 300 words) in Tagalog.\n   - Each "
+  },
+  {
+    "date": "2026-05-16",
+    "reason": "parse_error",
+    "detail": "We are writing in Tagalog (tl) only. The key verse is Marcos 6:31.\n The verse (in English) says: \"Then Jesus said to them, 'Come with me by yourselves to a quiet place and get some rest.'\"\n We must wr"
+  },
+  {
+    "date": "2026-05-22",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on John 4:24 (Juan 4:24 in Spanish, but we are to write in Tagalog). The verse is: \"Ang Diyos ay Espiritu: at ang mga nagkakaisa sa pagpapalang-palang"
+  },
+  {
+    "date": "2026-05-19",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on 1 Peter 3:8-9.\n The verse: \"Isa sa lahat, igiingat ninyo ang inyong kapwa, magpakumbaba sa bawat isa, at magpakasangga, at mabuti sa lahat, at mapa"
+  },
+  {
+    "date": "2026-06-01",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Romans 5:1.\n The verse in Tagalog: \"Kaya't sa pamamagitan ng pananampalataya, may kapayapaan tayo sa Diyos sa pamamagitan ng ating Panginoong Jesu-"
+  },
+  {
+    "date": "2026-05-31",
+    "reason": "parse_error",
+    "detail": "Okay, the user wants me to act as a devoted biblical devotional writer and create a devotional based on John 7:38-39 in Tagalog (TL). They've given very specific requirements: I need to return only a "
+  },
+  {
+    "date": "2026-05-17",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Revelation 22:20.\n The verse: \"Ako'y darating. Mahal na Panginoon, saan ka ba?\" (This is the translation of Revelation 22:20 in Tagalog: \"I am comi"
+  },
+  {
+    "date": "2026-06-16",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on Hebrews 12:6-7.\n Key verse: \"Mga Hebreo 12:6-7\"\n We must return a JSON object with two keys: `reflexion` and `oracion`.\n \n Rules for `reflexion`:\n "
+  },
+  {
+    "date": "2026-06-07",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Jude 1:20-21.\n The key verse: \"But you, beloved, building yourselves up in your most holy faith, praying in the Holy Spirit, keep yourselves in the"
+  },
+  {
+    "date": "2026-05-12",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on Galatians 6:2.\n The key verse in Tagalog: \"Mga Taga-Galacia 6:2\" -> \"Sundan ninyo ang kanyang pagsasabog, at sa gayon ay mapupukaw ninyo ang kanyan"
+  },
+  {
+    "date": "2026-05-27",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on John 1:1 (Juan 1:1). The verse in Tagalog is: \"Sa simula ay may salita, at ang salita ay nasa tabi ng Diyos, at ang salita ay Diyos.\"\n\nRules:\n- Onl"
+  },
+  {
+    "date": "2026-05-15",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Acts 9:3-6.\n The verse in Tagalog (based on the standard Filipino Bible) is:\n   3 At si Saulo ay naglakad na patungo sa Damasco, at biglang dumapo "
+  },
+  {
+    "date": "2026-05-05",
+    "reason": "parse_error",
+    "detail": "We are writing in Tagalog (tl) only, no other languages.\n The key verse is: \"Mga Taga-Filipos 4:19\" which translates to \"Philippians 4:19\" in English.\n The verse in Tagalog: \"At gayon din, ang aking D"
+  },
+  {
+    "date": "2026-05-08",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on 2 Mga Taga-Tesalonica 3:10.\n Key verse: \"Kung mayroon kang pagkakataon na magtrabaho, gawin mo ito; kung hindi, huwag kang maghingi ng anumang baga"
+  },
+  {
+    "date": "2026-05-03",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Revelation 21:1.\n The verse: \"Apocalipsis 21:1\" - which in Tagalog is: \"At ang pangalawang anghel ay dala sa akin ang isang malaking tubig, at nang"
+  },
+  {
+    "date": "2026-05-04",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Mark 9:23.\n The key verse in Spanish is \"Marcos 9:23\", but note: the user said \"key verse: 'Marcos 9:23'\", which is in Spanish. However, the requir"
+  },
+  {
+    "date": "2026-06-13",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on Luke 11:28.\n The key verse: \"Lucas 11:28\" -> In Tagalog, the verse is: \"Ngunit sinabi niya, 'Masasayang ang tao na nagsasabi, 'Masasayang ang iyong"
+  },
+  {
+    "date": "2026-06-08",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Ephesians 4:26-27.\n Key verse: \"Mga Taga-Efeso 4:26-27\" -> \"Ephesians 4:26-27\"\n\n The verse in Tagalog (from common Bible translation):\n 26 \"Huwag k"
+  },
+  {
+    "date": "2026-05-29",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on Mark 10:45.\n The key verse: \"Marcos 10:45\" -> In Tagalog, this is \"Marcos 10:45\", but the verse text in Tagalog is: \"Dahil sa ganito ang kaniyang l"
+  },
+  {
+    "date": "2026-06-04",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on Hebrews 12:1.\n The key verse in Tagalog is: \"Dapat kaming magsimula at magpatuloy sa ating pagsisikap na umaabot sa kumpleto sa ating pananampalata"
+  },
+  {
+    "date": "2026-05-14",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Revelation 21:4.\n The verse: \"At hindi na may luha sa kanyang presensya; at ang mga lumubog na huling bahagi ay sasakaling wala na.\" (This is the T"
+  },
+  {
+    "date": "2026-06-17",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Matthew 1:1.\n The verse in Tagalog: \"Mga Awit 1:1\" but note: the user specified \"Mateo 1:1\", which is Matthew 1:1.\n In Tagalog, Matthew is \"Mateo\","
+  },
+  {
+    "date": "2026-06-11",
+    "reason": "parse_error",
+    "detail": "We are writing in Tagalog (tl) only. The verse is Mateo 19:26.\n Key verse: \"Pero ang mga kumakatawan sa Diyos, wala ring kahinaan.\" (Note: The actual verse in Tagalog is \"Pero ang mga kumakatawan sa D"
+  },
+  {
+    "date": "2026-06-10",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on Ephesians 4:22-24.\n The verse in English: \"You were taught, according to the truth that is in Jesus, to put off your old self, which is being corru"
+  },
+  {
+    "date": "2026-06-15",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on 1 Thessalonians 1:9-10.\n The key verse: \"1 Mga Taga-Tesalonica 1:9-10\"\n\n We need to produce a JSON object with two keys:\n   - `reflexion`: A deep c"
+  },
+  {
+    "date": "2026-06-24",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tlingit (tl) based on John 5:24.\n The verse in English: \"Truly, truly, I say to you, whoever hears my word and believes him who sent me has eternal life. He does not com"
+  },
+  {
+    "date": "2026-06-27",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Ephesians 2:4-5.\n The verse in Tagalog (as per common translation) is:\n   \"Ngunit ang Dios, na maraming kahabag-habag at napakalaking pag-ibig, na "
+  },
+  {
+    "date": "2026-07-06",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on Romans 13:8.\n The verse: \"Mga Taga-Roma 13:8\" -> \"Huwag kayo magsisisi sa anumang tao, maliban sa pag-uusap ng kabutihan. Sa lahat ng bagay, maging"
+  },
+  {
+    "date": "2026-06-21",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on James 4:8 (Santiago 4:8 in Spanish, but the verse is the same).\n The key verse in Tagalog is: \"Pumapalapit kayo sa Diyos, at siya'y pumapalapit sa "
+  },
+  {
+    "date": "2026-07-04",
+    "reason": "parse_error",
+    "detail": "We are writing in Tagalog (tl) only. The key verse is 2 Corinthians 5:20.\n The JSON must have two keys: \"reflexion\" and \"oracion\".\n For \"reflexion\":\n   - Minimum 900 characters (approx 300 words) in T"
+  },
+  {
+    "date": "2026-06-26",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on John 12:24.\n Key verse: Juan 12:24 (which in English is John 12:24: \"Truly, truly, I say to you, unless a grain of wheat falls into the earth and d"
+  },
+  {
+    "date": "2026-07-03",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on 2 Timothy 4:2.\n The verse in Tagalog (as per common translations) is: \"Sundin mo ang salita ng Diyos, at huwag kang magpahalagang maging ligtas sa "
+  },
+  {
+    "date": "2026-07-07",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on 1 Corintios 3:11.\n The key verse is: \"I Mga Taga-Corinto 3:11\" which in English is \"For no one can lay any foundation other than the one that has b"
+  },
+  {
+    "date": "2026-07-11",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on Matthew 5:14-16.\n The verse: \"Kaya't kayo'y ilaw ng mundo; ibigay ninyo ang inyong liwanag sa kanila, upang makita nila ang inyong mabuting gawa at"
+  },
+  {
+    "date": "2026-07-12",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on 1 Corinthians 14:33.\n The verse: \"I Mga Taga-Corinto 14:33\" -> \"Siya ay di nangangalaga ng kaguluhan kundi ng kapayapaan; gaya ng lahat ng pagkatao"
+  },
+  {
+    "date": "2026-07-16",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on II Pedro 1:19-21.\n The verse (II Pedro 1:19-21) in English (for reference) says:\n   \"19 And we have the prophetic word made more sure, to which you"
+  },
+  {
+    "date": "2026-07-17",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Colossians 3:15.\n The verse in Tagalog (from common translations) is: \"At ang kapayapaan ng Cristo ay mangangasiwa sa inyong puso, sapagkat sa iyo'"
+  },
+  {
+    "date": "2026-07-20",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Philemon 1:6.\n The verse: \"I pray that you may be active in sharing your faith so that you will have a full understanding of every good thing we ha"
+  },
+  {
+    "date": "2026-07-21",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on 2 Timothy 4:18.\n The key verse: \"At ang Panginoon ay nasa aking tabi, at binigyan ako ng lakas, upang ako'y maging mabisa sa pagpaparating ng tungk"
+  },
+  {
+    "date": "2026-07-25",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on Matthew 21:21-22.\n The verse in English: \"Jesus replied, 'Truly I tell you, if you have faith and do not doubt, you will not only do what was done "
+  },
+  {
+    "date": "2026-07-30",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on 1 Thessalonians 4:3-5.\n The key verse: \"I Mga Taga-Tesalonica 4:3-5\" (which is 1 Thessalonians 4:3-5 in Tagalog)\n\n We must produce a JSON object wi"
+  },
+  {
+    "date": "2026-03-24",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Romans 15:4.\n The key verse: \"Mga Taga-Roma 15:4\" -> Romans 15:4\n The verse in Tagalog (as per common translation): \n   \"Sapagka't ang lahat ng mga"
+  },
+  {
+    "date": "2026-03-28",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on 2 Corinthians 5:7.\n The verse: \"Iisa lang ang pagkakataon natin na umiral sa pamamagitan ng pananampalataya, at hindi sa pamamagitan ng pananaw.\" ("
+  },
+  {
+    "date": "2026-03-12",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on 2 Corinthians 5:18-19.\n The key verse: \"At ang Dios ay ang nagpapagawa sa atin na maging kausap sa Kanya, sa pamamagitan ng Cristo. At ang Dios ay "
+  },
+  {
+    "date": "2026-02-27",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Acts 16:31.\n Key verse: \"Mga Gawa 16:31\" -> \"Mga Gawa 16:31 ay nagsasabing: 'Pananatiliin mo ang pananampalataya sa Panginoon, at ikaw at ang iyong"
+  },
+  {
+    "date": "2026-03-09",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on Hebrews 13:14.\n The verse in Tagalog: \"Dahil sa nararapat nating manatili sa kaharian ng Diyos, hindi tayo maaaring magmukhang mabuti sa mga pook n"
+  },
+  {
+    "date": "2026-02-28",
+    "reason": "parse_error",
+    "detail": "We are writing in Tagalog (tl) only. The verse is Apocalipsis 14:13.\n The reflection must be at least 900 characters (about 300 words) in Tagalog. It must have multiple paragraphs, each developing a d"
+  },
+  {
+    "date": "2026-04-05",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Luke 12:4-5.\n Key verse: Lucas 12:4-5 (in Tagalog: \"Kaya'y huwag kayong matakot sa mga taong mapapahamak ang katawan, ngunit ang magpapahamak ng ka"
+  },
+  {
+    "date": "2026-02-10",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Luke 15:32 (Lucas 15:32). The verse in English is: \"But we had to celebrate and be glad, for this brother of yours was dead and is alive again; he "
+  },
+  {
+    "date": "2026-02-08",
+    "reason": "parse_error",
+    "detail": "We are writing in Tagalog (tl) for both reflexion and oracion.\n The key verse is Mateo 2:1-2 (Matthew 2:1-2). In Tagalog, it's: \n \"At nang dumating ang Pasko, sumama ang mga mag-aaral na lumalakad pat"
+  },
+  {
+    "date": "2026-02-16",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on Romans 3:28.\n The key verse is: \"Mga Taga-Roma 3:28\" which in English is \"For we maintain that a person is justified by faith apart from the works "
+  },
+  {
+    "date": "2026-03-01",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on Hebrews 2:14-15.\n The verse in English is: \"Since the children have flesh and blood, he too shared in their humanity so that by his death he might "
+  },
+  {
+    "date": "2026-01-17",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Apocalipsis 3:20.\n The verse: \"Narito ako sa pintuan at kumakatok. Kung may makarinig sa aking tinig at magbukas, pupunta ako sa iyo at makaninong "
+  },
+  {
+    "date": "2026-04-01",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on II Mga Taga-Corinto 4:5.\n The verse in Tagalog: \"Dahil sa ating pagkakataon, hindi namin pinapahayag ang ating sariling mga salita, kundi ang mga s"
+  },
+  {
+    "date": "2026-01-22",
+    "reason": "parse_error",
+    "detail": "We are writing in Tagalog (tl) only.\n Key verse: Juan 14:1 (John 14:1) in Tagalog is: \"Huwag kang mag-alala sa puso mo, at huwag kang matakot; sapagka't ang bahay ng aking ama ay marami sa mga silid, "
+  },
+  {
+    "date": "2026-04-12",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Colossians 2:8.\n Key verse: \"Mga Taga-Colosas 2:8\" (Colossians 2:8) which in Tagalog is: \"Mag-ingat kayo, baka kayo ay mapabayaan ng kagustuhan ng "
+  },
+  {
+    "date": "2026-03-16",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on Luke 24:6-7.\n Key verse: Lucas 24:6-7 (in Tagalog, the Bible verse is often quoted in Tagalog, but note that the user provided the reference in Eng"
+  },
+  {
+    "date": "2026-02-24",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on 1 Juan 3:8. The verse in English is: \"He who commits sin is of the devil, for the devil has been sinning from the beginning. The Son of God came to"
+  },
+  {
+    "date": "2026-03-22",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on Colossians 1:15-17.\n The key verse in Tagalog: \"Mga Taga-Colosas 1:15-17\"\n We need to write two parts: \n   - reflexion: at least 900 characters (ab"
+  },
+  {
+    "date": "2026-02-22",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on John 15:8 (Juan 15:8 in Spanish, but we are to write in Tagalog).\n The verse in English is: \"By this my Father is glorified, that you bear much fru"
+  },
+  {
+    "date": "2026-04-13",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on 1 Timothy 3:16.\n The verse: \"I kay Timoteo 3:16\" -> This is the Tagalog translation of \"1 Timothy 3:16\". The actual verse in Tagalog is: \"At ang ka"
+  },
+  {
+    "date": "2026-01-26",
+    "reason": "parse_error",
+    "detail": "Okay, the user wants me to act as a devoted biblical devotional writer. They need a devotional based on 2 Timothy 3:1-5 in Tagalog (TL). I have to return only a valid JSON object with two keys: \"refle"
+  },
+  {
+    "date": "2026-03-20",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Matthew 5:44-45.\n The verse: \"But I tell you, love your enemies and pray for those who persecute you, that you may be children of your Father in he"
+  },
+  {
+    "date": "2026-04-11",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on Colossians 3:1-2.\n The key verse: \"Mga Taga-Colosas 3:1-2\" (Colossians 3:1-2)\n\n We need to produce a JSON object with two keys:\n   - `reflexion`: A"
+  },
+  {
+    "date": "2026-02-06",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on 1 John 1:8.\n Key verse: \"Kung sinasabi nating walang kasalanan kami, ay nagpapahayag kami ng isang kabulukan sa atin.\" (1 John 1:8)\n\n Requirements:"
+  },
+  {
+    "date": "2026-02-07",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Matthew 6:9-13 (Mateo 6:9-13).\n The devotional must have two keys: `reflexion` and `oracion`.\n \n For `reflexion`:\n   - Minimum 900 characters (appr"
+  },
+  {
+    "date": "2026-03-14",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Hebrews 1:3.\n The verse: \"Siya ang kaharmoniya ng kanyang karangalan at ang tanda ng kanyang katapangan, na nagpapakita ng kanyang kaluwalhatian at"
+  },
+  {
+    "date": "2026-03-26",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Matthew 4:19 (Mateo 4:19). The verse says: \"Then Jesus said to them, 'Follow me, and I will make you fishers of men.'\" (NIV)\n\n We need to create tw"
+  },
+  {
+    "date": "2026-03-31",
+    "reason": "parse_error",
+    "detail": "We are writing in Tagalog (tl) only, as per the instruction.\n The key verse is \"I Juan 5:20\" which in Tagalog is \"I Juan 5:20\" but note: in the Bible, it's often written as \"I Juan\" for 1 John. Howeve"
+  },
+  {
+    "date": "2026-02-02",
+    "reason": "parse_error",
+    "detail": "We are writing in Tagalog (tl) only. The key verse is 1 Timothy 4:7-8.\n\n Steps:\n 1. We must write a reflection (reflexion) of at least 900 characters (approx 300 words) in Tagalog.\n    - Each paragrap"
+  },
+  {
+    "date": "2026-01-30",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Romans 8:31.\n The key verse is \"Mga Taga-Roma 8:31\" which in English is \"What then shall we say to these things? If God is for us, who can be again"
+  },
+  {
+    "date": "2026-03-08",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on Matthew 11:28-30.\n The key verse: \"Mateo 11:28-30\" (which is the Spanish translation of the Bible verse, but we are to write in Tagalog)\n We must w"
+  },
+  {
+    "date": "2026-03-04",
+    "reason": "parse_error",
+    "detail": "We are writing in Tagalog (tl) only.\n The key verse is Santiago 5:15-16 (James 5:15-16 in English).\n We must write:\n   - `reflexion`: at least 900 characters (about 300 words) in Tagalog, with distinc"
+  },
+  {
+    "date": "2026-04-06",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (tl) based on John 21:17 (Juan 21:17 in Spanish, but note: the user says \"TL\" which we interpret as Tagalog, as in the context of the request for \"tl\" in the ins"
+  },
+  {
+    "date": "2026-03-25",
+    "reason": "parse_error",
+    "detail": "We are writing a devotional in Tagalog (TL) based on John 15:1.\n The verse is: \"I am the true vine, and my Father is the gardener.\" (Juan 15:1 in Spanish, but we are to write in Tagalog)\n\n We must cre"
+  },
+  {
+    "date": "2026-07-31",
+    "reason": "parse_error",
+    "detail": "We are writing in Tagalog (tl) only. The verse is Romans 15:13.\n Key verse: \"Mga Taga-Roma 15:13\" - which is: \"Kaya, ang pag-asa ay ipagkaloob sa inyo ng Diyos, na buhayin ang inyong puso sa pag-asa, "
+  }
+]

@@ -1,0 +1,37 @@
+[
+  {
+    "date": "2026-09-06",
+    "issue": "phase1",
+    "detail": [
+      "reflexion_truncated: ends mid-sentence — '...o ay nagpapakumbaba sa Kanyang harapan.''"
+    ]
+  },
+  {
+    "date": "2026-10-16",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 632 chars (min 800)"
+    ]
+  },
+  {
+    "date": "2026-11-14",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 558 chars (min 800)"
+    ]
+  },
+  {
+    "date": "2027-03-18",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 500 chars (min 800)"
+    ]
+  },
+  {
+    "date": "2027-07-17",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 560 chars (min 800)"
+    ]
+  }
+]

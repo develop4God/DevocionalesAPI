@@ -1,0 +1,1318 @@
+[
+  {
+    "date": "2025-08-01",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-08-03",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-08-07",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-08-08",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 621 < 800",
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-08-09",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-08-10",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-08-11",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 471 < 800",
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-08-12",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-08-17",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-08-18",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-08-19",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 585 < 800"
+    ]
+  },
+  {
+    "date": "2025-08-22",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-08-24",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 673 < 800"
+    ]
+  },
+  {
+    "date": "2025-08-26",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 713 < 800",
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-08-27",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-08-28",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 610 < 800",
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-08-29",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-08-30",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-08-31",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-09-02",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 644 < 800",
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-09-07",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-09-08",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-09-09",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 770 < 800",
+      "double_amen: duplicate Amen artifact detected in closing",
+      "dup_words_reflexion: consecutive duplicate 'ito. Ito'"
+    ]
+  },
+  {
+    "date": "2025-09-13",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-09-14",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-09-15",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-09-16",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-09-21",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-09-23",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 619 < 800",
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-09-26",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 697 < 800",
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-10-02",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-10-04",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 729 < 800"
+    ]
+  },
+  {
+    "date": "2025-10-05",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-10-06",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 639 < 800",
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-10-08",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-10-10",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-10-15",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 568 < 800"
+    ]
+  },
+  {
+    "date": "2025-10-16",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-10-17",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-10-20",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-10-23",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 578 < 800"
+    ]
+  },
+  {
+    "date": "2025-10-26",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 735 < 800"
+    ]
+  },
+  {
+    "date": "2025-10-29",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-10-30",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 552 < 800"
+    ]
+  },
+  {
+    "date": "2025-11-01",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-11-02",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-11-04",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 585 < 800",
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-11-06",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-11-07",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-11-08",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-11-10",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-11-13",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 698 < 800"
+    ]
+  },
+  {
+    "date": "2025-11-14",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-11-15",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-11-17",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-11-19",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-11-20",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 727 < 800"
+    ]
+  },
+  {
+    "date": "2025-11-21",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-11-23",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 535 < 800"
+    ]
+  },
+  {
+    "date": "2025-11-26",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-12-01",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-12-06",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 542 < 800",
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-12-07",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 547 < 800",
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-12-08",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-12-09",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-12-13",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-12-14",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-12-15",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-12-16",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-12-17",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-12-19",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-12-21",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-12-23",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-12-26",
+    "issue": "phase1",
+    "detail": [
+      "dup_words_reflexion: consecutive duplicate 'na, na'"
+    ]
+  },
+  {
+    "date": "2025-12-27",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-12-28",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-12-30",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-12-31",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 560 < 800"
+    ]
+  },
+  {
+    "date": "2026-01-01",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-01-04",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 658 < 800"
+    ]
+  },
+  {
+    "date": "2026-06-16",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-06-20",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 592 < 800",
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-06-22",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-06-23",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 720 < 800",
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-06-25",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-06-27",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-06-29",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-07-02",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 522 < 800"
+    ]
+  },
+  {
+    "date": "2026-07-03",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-07-07",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-07-11",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-07-12",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 474 < 800"
+    ]
+  },
+  {
+    "date": "2026-07-17",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-07-21",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-07-22",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-07-24",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 776 < 800"
+    ]
+  },
+  {
+    "date": "2026-07-25",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-07-29",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 699 < 800",
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-07-30",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-01-07",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-01-08",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-01-09",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-01-13",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-01-14",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 661 < 800"
+    ]
+  },
+  {
+    "date": "2026-01-15",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-01-17",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-01-21",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-01-22",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-01-24",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 734 < 800"
+    ]
+  },
+  {
+    "date": "2026-01-26",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-01-28",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-01-29",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-01-30",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 558 < 800",
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-02-02",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-02-03",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-02-04",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 681 < 800",
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-02-05",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-02-11",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-02-12",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-02-15",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-02-16",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-02-17",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 603 < 800",
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-02-18",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-02-19",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 729 < 800",
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-02-21",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing",
+      "dup_words_reflexion: consecutive duplicate 'ito. Ito'"
+    ]
+  },
+  {
+    "date": "2026-02-22",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-02-26",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-02-27",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 759 < 800",
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-02-28",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 681 < 800",
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-03-01",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-03-05",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-03-08",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-03-09",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-03-12",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 719 < 800"
+    ]
+  },
+  {
+    "date": "2026-03-13",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 622 < 800",
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-03-14",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-03-17",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-03-18",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-03-21",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 349 < 800",
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-03-22",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-03-23",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing",
+      "dup_words_reflexion: consecutive duplicate 'na \"na'"
+    ]
+  },
+  {
+    "date": "2026-03-29",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-03-30",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-03-31",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-04-01",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-04-04",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 494 < 800",
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-04-05",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-04-08",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing",
+      "dup_words_reflexion: consecutive duplicate 'ito. Ito'"
+    ]
+  },
+  {
+    "date": "2026-04-09",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 625 < 800",
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-04-10",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-04-13",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 621 < 800",
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-04-15",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-04-17",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing",
+      "dup_words_reflexion: consecutive duplicate 'ito. Ito'"
+    ]
+  },
+  {
+    "date": "2026-04-19",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 606 < 800",
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-04-20",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 635 < 800",
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-04-21",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-04-23",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 432 < 800",
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-04-24",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 733 < 800",
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-04-25",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 646 < 800",
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-04-27",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-04-30",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-05-04",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-05-06",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 632 < 800",
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-05-07",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-05-12",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-05-13",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-05-15",
+    "issue": "phase1",
+    "detail": [
+      "dup_words_reflexion: consecutive duplicate '\"Saulo, Saulo,'"
+    ]
+  },
+  {
+    "date": "2026-05-16",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 577 < 800",
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-05-17",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 624 < 800"
+    ]
+  },
+  {
+    "date": "2026-05-19",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-05-22",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-05-24",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-05-27",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-05-30",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 706 < 800",
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-05-31",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-06-03",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 756 < 800",
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-06-04",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 667 < 800"
+    ]
+  },
+  {
+    "date": "2026-06-05",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 728 < 800",
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-06-07",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-06-09",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 437 < 800",
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-06-11",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-06-15",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  }
+]

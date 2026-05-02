@@ -1,0 +1,432 @@
+[
+  {
+    "date": "2026-08-06",
+    "reason": "json_decode_error",
+    "detail": "Extra data: line 8 column 1 (char 3509)"
+  },
+  {
+    "date": "2026-08-24",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2617)"
+  },
+  {
+    "date": "2026-08-25",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2801)"
+  },
+  {
+    "date": "2026-08-28",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2744)"
+  },
+  {
+    "date": "2026-09-07",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 3030)"
+  },
+  {
+    "date": "2026-09-13",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2810)"
+  },
+  {
+    "date": "2026-09-27",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2440)"
+  },
+  {
+    "date": "2026-09-28",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 3124)"
+  },
+  {
+    "date": "2026-09-30",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 3112)"
+  },
+  {
+    "date": "2026-10-03",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 3004)"
+  },
+  {
+    "date": "2026-10-14",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2674)"
+  },
+  {
+    "date": "2026-10-15",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2744)"
+  },
+  {
+    "date": "2026-10-25",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2751)"
+  },
+  {
+    "date": "2026-10-28",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2827)"
+  },
+  {
+    "date": "2026-10-29",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2515)"
+  },
+  {
+    "date": "2026-10-31",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2639)"
+  },
+  {
+    "date": "2026-11-01",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2664)"
+  },
+  {
+    "date": "2026-11-02",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2830)"
+  },
+  {
+    "date": "2026-11-06",
+    "reason": "json_decode_error",
+    "detail": "Extra data: line 8 column 1 (char 3350)"
+  },
+  {
+    "date": "2026-11-08",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2583)"
+  },
+  {
+    "date": "2026-11-16",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2818)"
+  },
+  {
+    "date": "2026-11-17",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2807)"
+  },
+  {
+    "date": "2026-11-26",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2783)"
+  },
+  {
+    "date": "2026-11-29",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 5 column 1 (char 2812)"
+  },
+  {
+    "date": "2026-12-01",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2893)"
+  },
+  {
+    "date": "2026-12-12",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 5 column 1 (char 3411)"
+  },
+  {
+    "date": "2026-12-14",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2660)"
+  },
+  {
+    "date": "2027-01-01",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 5 column 1 (char 3001)"
+  },
+  {
+    "date": "2027-01-03",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 3030)"
+  },
+  {
+    "date": "2027-01-06",
+    "reason": "json_decode_error",
+    "detail": "Expecting ',' delimiter: line 2 column 368 (char 369)"
+  },
+  {
+    "date": "2027-01-08",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2996)"
+  },
+  {
+    "date": "2027-01-11",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 5 column 1 (char 2925)"
+  },
+  {
+    "date": "2027-01-18",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2872)"
+  },
+  {
+    "date": "2027-01-24",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 3012)"
+  },
+  {
+    "date": "2027-01-27",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 3120)"
+  },
+  {
+    "date": "2027-02-06",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2760)"
+  },
+  {
+    "date": "2027-02-07",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2809)"
+  },
+  {
+    "date": "2027-02-10",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2786)"
+  },
+  {
+    "date": "2027-02-12",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2707)"
+  },
+  {
+    "date": "2027-02-14",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2813)"
+  },
+  {
+    "date": "2027-02-17",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2692)"
+  },
+  {
+    "date": "2027-02-20",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 5 column 1 (char 2903)"
+  },
+  {
+    "date": "2027-02-23",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2778)"
+  },
+  {
+    "date": "2027-02-25",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2599)"
+  },
+  {
+    "date": "2027-02-27",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 5 column 1 (char 2888)"
+  },
+  {
+    "date": "2027-02-28",
+    "reason": "json_decode_error",
+    "detail": "Extra data: line 8 column 1 (char 3748)"
+  },
+  {
+    "date": "2027-03-03",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2864)"
+  },
+  {
+    "date": "2027-03-13",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2637)"
+  },
+  {
+    "date": "2027-03-16",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 5 column 1 (char 3145)"
+  },
+  {
+    "date": "2027-03-19",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2581)"
+  },
+  {
+    "date": "2027-03-26",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2678)"
+  },
+  {
+    "date": "2027-03-27",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 3021)"
+  },
+  {
+    "date": "2027-03-30",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 3022)"
+  },
+  {
+    "date": "2027-03-31",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2888)"
+  },
+  {
+    "date": "2027-04-06",
+    "reason": "build_error",
+    "detail": "[2027-04-06] texto missing"
+  },
+  {
+    "date": "2027-04-09",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2695)"
+  },
+  {
+    "date": "2027-04-11",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2847)"
+  },
+  {
+    "date": "2027-04-16",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2940)"
+  },
+  {
+    "date": "2027-04-19",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2767)"
+  },
+  {
+    "date": "2027-04-29",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2752)"
+  },
+  {
+    "date": "2027-05-08",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 3044)"
+  },
+  {
+    "date": "2027-05-11",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 5 column 1 (char 3075)"
+  },
+  {
+    "date": "2027-05-13",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2768)"
+  },
+  {
+    "date": "2027-05-17",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 5 column 1 (char 2862)"
+  },
+  {
+    "date": "2027-05-20",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2953)"
+  },
+  {
+    "date": "2027-05-21",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 3089)"
+  },
+  {
+    "date": "2027-05-23",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2919)"
+  },
+  {
+    "date": "2027-05-25",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2829)"
+  },
+  {
+    "date": "2027-05-27",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2570)"
+  },
+  {
+    "date": "2027-05-31",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2807)"
+  },
+  {
+    "date": "2027-06-07",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2874)"
+  },
+  {
+    "date": "2027-06-08",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 3012)"
+  },
+  {
+    "date": "2027-06-12",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2707)"
+  },
+  {
+    "date": "2027-06-18",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 3324)"
+  },
+  {
+    "date": "2027-06-19",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2737)"
+  },
+  {
+    "date": "2027-06-21",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2921)"
+  },
+  {
+    "date": "2027-06-24",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2907)"
+  },
+  {
+    "date": "2027-06-26",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2607)"
+  },
+  {
+    "date": "2027-06-27",
+    "reason": "json_decode_error",
+    "detail": "Extra data: line 8 column 1 (char 3828)"
+  },
+  {
+    "date": "2027-06-28",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2759)"
+  },
+  {
+    "date": "2027-06-30",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2632)"
+  },
+  {
+    "date": "2027-07-05",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 3093)"
+  },
+  {
+    "date": "2027-07-07",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2694)"
+  },
+  {
+    "date": "2027-07-13",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 3010)"
+  },
+  {
+    "date": "2027-07-18",
+    "reason": "json_decode_error",
+    "detail": "Expecting ',' delimiter: line 2 column 451 (char 452)"
+  },
+  {
+    "date": "2027-07-21",
+    "reason": "json_decode_error",
+    "detail": "Expecting property name enclosed in double quotes: line 4 column 1 (char 2829)"
+  }
+]

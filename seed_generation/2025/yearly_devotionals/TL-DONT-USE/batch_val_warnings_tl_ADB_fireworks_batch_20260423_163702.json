@@ -1,0 +1,1225 @@
+[
+  {
+    "date": "2025-08-16",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 25 < 800",
+      "oracion too short: 21 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'tl' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2025-08-31",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 7 < 800",
+      "oracion too short: 7 < 150",
+      "prayer_ending: last word 'text...' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2025-08-28",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 9 < 800",
+      "oracion too short: 9 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'here' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2025-09-09",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 6 < 800",
+      "oracion too short: 6 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'string' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2025-12-24",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-10-01",
+    "issue": "phase1",
+    "detail": [
+      "dup_words_reflexion: consecutive duplicate 'anumang anumang'"
+    ]
+  },
+  {
+    "date": "2025-11-24",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 19 < 800",
+      "oracion too short: 15 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'prayer' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2025-10-14",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing",
+      "dup_words_reflexion: consecutive duplicate 'siyang siyang'"
+    ]
+  },
+  {
+    "date": "2025-08-26",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 14 < 800",
+      "oracion too short: 21 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'above' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2025-08-06",
+    "issue": "phase1",
+    "detail": [
+      "dup_words_reflexion: consecutive duplicate 'siyang siyang'"
+    ]
+  },
+  {
+    "date": "2025-08-25",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 15 < 800",
+      "oracion too short: 15 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'tl' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2025-09-02",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 19 < 800",
+      "oracion too short: 15 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'text' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-01-08",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 153 < 800",
+      "oracion too short: 93 < 150"
+    ]
+  },
+  {
+    "date": "2025-11-23",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 9 < 800",
+      "oracion too short: 9 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'here' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2025-08-21",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 41 < 800",
+      "oracion too short: 36 < 150",
+      "prayer_ending: last word 'words)' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2025-12-06",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 24 < 800",
+      "oracion too short: 20 < 150",
+      "prayer_ending: last word 'tl...' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2025-09-30",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 36 < 800",
+      "oracion too short: 36 < 150",
+      "prayer_ending: last word 'words)' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2025-10-28",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 19 < 800",
+      "oracion too short: 15 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'text' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2025-09-21",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 40 < 800",
+      "oracion too short: 31 < 150",
+      "prayer_ending: last word 'words)' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2025-11-12",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 20 < 800",
+      "oracion too short: 20 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'Tagalog' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-01-05",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 24 < 800",
+      "oracion too short: 20 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'here' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2025-11-04",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 18 < 800",
+      "oracion too short: 15 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'text' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2025-12-03",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 45 < 800",
+      "oracion too short: 36 < 150",
+      "prayer_ending: last word 'words)' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2025-08-12",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 35 < 800",
+      "oracion too short: 27 < 150",
+      "prayer_ending: last word 'words)' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2025-10-22",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 12 < 800",
+      "oracion too short: 19 < 150",
+      "prayer_ending: last word 'here...' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2025-12-08",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 13 < 800",
+      "oracion too short: 20 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'here' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2025-11-30",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 4 < 800",
+      "oracion too short: 4 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'text' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2025-09-12",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 9 < 800",
+      "oracion too short: 9 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'here' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2025-09-26",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 9 < 800",
+      "oracion too short: 9 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'here' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2025-09-23",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 22 < 800",
+      "oracion too short: 19 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'here' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2025-08-07",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 26 < 800",
+      "oracion too short: 23 < 150",
+      "prayer_ending: last word 'here...' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2025-11-01",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 9 < 800",
+      "oracion too short: 9 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'here' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2025-08-04",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 45 < 800",
+      "oracion too short: 78 < 150",
+      "prayer_ending: last word 'Amen'' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2025-08-18",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 20 < 800",
+      "oracion too short: 22 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'Tagalog' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2025-09-28",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-12-14",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 56 < 800",
+      "oracion too short: 47 < 150",
+      "prayer_ending: last word 'words)' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2025-12-18",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 56 < 800",
+      "oracion too short: 84 < 150",
+      "prayer_ending: last word 'Amen')' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2025-10-27",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 19 < 800",
+      "oracion too short: 15 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'prayer' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2025-09-29",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-01-11",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 9 < 800",
+      "oracion too short: 9 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'here' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2025-10-05",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 3 < 800",
+      "oracion too short: 3 < 150",
+      "prayer_ending: last word '...' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2025-09-07",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 35 < 800",
+      "oracion too short: 30 < 150",
+      "prayer_ending: last word 'Tagalog...' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-01-04",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 3 < 800",
+      "oracion too short: 3 < 150",
+      "prayer_ending: last word '...' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2025-11-16",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-02-23",
+    "issue": "phase1",
+    "detail": [
+      "dup_words_reflexion: consecutive duplicate 'ito. Ito'"
+    ]
+  },
+  {
+    "date": "2025-12-17",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 19 < 800",
+      "oracion too short: 15 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'text' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-01-01",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 41 < 800",
+      "oracion too short: 77 < 150",
+      "prayer_ending: last word 'amen'' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2025-10-26",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 24 < 800",
+      "oracion too short: 22 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'oracion' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2025-09-25",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 4 < 800",
+      "oracion too short: 4 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'text' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-01-03",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 19 < 800",
+      "oracion too short: 15 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'text' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2025-11-05",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 61 < 800",
+      "oracion too short: 77 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'Amen'' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2025-12-10",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 9 < 800",
+      "oracion too short: 9 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'here' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2025-11-26",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 9 < 800",
+      "oracion too short: 9 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'here' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2025-11-10",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 19 < 800",
+      "oracion too short: 15 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'prayer' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2025-12-31",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 42 < 800",
+      "prayer_ending: last word 'again.' — expected one of ['Amen']",
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2025-12-16",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 9 < 800",
+      "oracion too short: 9 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'here' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2025-12-23",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 45 < 800",
+      "oracion too short: 36 < 150",
+      "prayer_ending: last word 'words)' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2025-09-24",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 41 < 800",
+      "oracion too short: 36 < 150",
+      "prayer_ending: last word 'words)' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2025-12-01",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 3 < 800",
+      "oracion too short: 3 < 150",
+      "prayer_ending: last word '...' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2025-11-13",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 10 < 800",
+      "oracion too short: 10 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'tl' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2025-11-27",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 19 < 800",
+      "oracion too short: 15 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'prayer' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2025-11-03",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 19 < 800",
+      "oracion too short: 15 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'text' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-02-17",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 18 < 800",
+      "oracion too short: 16 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'oracion' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2025-10-17",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 15 < 800",
+      "oracion too short: 15 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'tagalog' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2025-12-07",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 9 < 800",
+      "oracion too short: 9 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'here' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-04-22",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-01-10",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 45 < 800",
+      "oracion too short: 32 < 150",
+      "prayer_ending: last word 'words)' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-01-21",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 19 < 800",
+      "oracion too short: 15 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'prayer' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-04-04",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 9 < 800",
+      "oracion too short: 16 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'here' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-01-13",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 20 < 800",
+      "oracion too short: 20 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'tagalog' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-01-09",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 9 < 800",
+      "oracion too short: 9 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'here' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-01-07",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 19 < 800",
+      "oracion too short: 15 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'prayer' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-02-12",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 66 < 800",
+      "oracion too short: 76 < 150",
+      "prayer_ending: last word 'amen')' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-03-18",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 55 < 800",
+      "oracion too short: 50 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'words' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-03-10",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 9 < 800",
+      "oracion too short: 9 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'here' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-04-18",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 19 < 800",
+      "oracion too short: 15 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'text' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-05-11",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 23 < 800",
+      "oracion too short: 20 < 150",
+      "prayer_ending: last word 'Tagalog...' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-05-25",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-04-25",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 19 < 800",
+      "oracion too short: 15 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'prayer' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-06-09",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 45 < 800",
+      "oracion too short: 36 < 150",
+      "prayer_ending: last word 'words)' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-05-01",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 19 < 800",
+      "oracion too short: 15 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'text' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-06-20",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 19 < 800",
+      "oracion too short: 15 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'prayer' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-07-15",
+    "issue": "phase1",
+    "detail": [
+      "dup_words_oracion: consecutive duplicate 'anumang anumang'"
+    ]
+  },
+  {
+    "date": "2026-04-28",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 9 < 800",
+      "oracion too short: 9 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'here' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-05-13",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 9 < 800",
+      "oracion too short: 9 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'here' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-05-30",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 66 < 800",
+      "oracion too short: 81 < 150",
+      "prayer_ending: last word 'Amen')' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-05-24",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 19 < 800",
+      "oracion too short: 15 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'text' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-05-02",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 56 < 800",
+      "oracion too short: 27 < 150",
+      "prayer_ending: last word 'words)' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-05-06",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 45 < 800",
+      "oracion too short: 36 < 150",
+      "prayer_ending: last word 'words)' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-06-03",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 26 < 800",
+      "oracion too short: 22 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'prayer' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-05-21",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 19 < 800",
+      "oracion too short: 15 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'prayer' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-06-05",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 8 < 800",
+      "oracion too short: 15 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'text' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-06-12",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 18 < 800",
+      "oracion too short: 16 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'oracion' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-06-14",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 23 < 800",
+      "oracion too short: 19 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'prayer' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-04-07",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-06-22",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 18 < 800",
+      "oracion too short: 16 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'text' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-06-29",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 15 < 800",
+      "oracion too short: 17 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'tl' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-06-23",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 135 < 800",
+      "oracion too short: 62 < 150",
+      "prayer_ending: last word 'prayer)' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-07-02",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 45 < 800",
+      "oracion too short: 36 < 150",
+      "prayer_ending: last word 'words)' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-07-05",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 45 < 800",
+      "oracion too short: 68 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'Amen'' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-03-13",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 9 < 800",
+      "oracion too short: 9 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'here' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-07-28",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 18 < 800",
+      "oracion too short: 15 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'text' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-04-09",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-07-13",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 19 < 800",
+      "oracion too short: 15 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'prayer' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-01-14",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 9 < 800",
+      "oracion too short: 9 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'here' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-03-21",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 45 < 800",
+      "oracion too short: 84 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'Amen'' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-07-18",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 4 < 800",
+      "oracion too short: 4 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'text' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-07-19",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 3 < 800",
+      "oracion too short: 3 < 150",
+      "prayer_ending: last word '...' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-01-31",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 26 < 800",
+      "oracion too short: 23 < 150",
+      "prayer_ending: last word 'here...' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-03-03",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-07-22",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 45 < 800",
+      "oracion too short: 36 < 150",
+      "prayer_ending: last word 'words)' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-03-29",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 19 < 800",
+      "oracion too short: 15 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'prayer' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-07-24",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 18 < 800",
+      "oracion too short: 14 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'prayer' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-07-26",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 19 < 800",
+      "oracion too short: 15 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'prayer' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-03-27",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 22 < 800",
+      "oracion too short: 18 < 150",
+      "prayer_ending: last word 'text...' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-07-29",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 43 < 800",
+      "oracion too short: 35 < 150",
+      "prayer_ending: last word 'words)' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-04-08",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 46 < 800",
+      "oracion too short: 37 < 150",
+      "prayer_ending: last word 'words)' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-02-03",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 33 < 800",
+      "oracion too short: 28 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'words' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-02-19",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 35 < 800",
+      "oracion too short: 74 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'Amen'' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-02-15",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 45 < 800",
+      "oracion too short: 36 < 150",
+      "prayer_ending: last word 'words)' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-02-13",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2026-04-02",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 25 < 800",
+      "oracion too short: 21 < 150",
+      "prayer_ending: last word 'prayer...' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-02-20",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 18 < 800",
+      "oracion too short: 15 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'prayer' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-03-23",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 44 < 800",
+      "oracion too short: 35 < 150",
+      "prayer_ending: last word 'words)' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-02-26",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 4 < 800",
+      "oracion too short: 4 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'text' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-03-30",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 26 < 800",
+      "oracion too short: 22 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'here' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-01-19",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 34 < 800",
+      "oracion too short: 30 < 150",
+      "prayer_ending: last word 'words)' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-01-20",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 20 < 800",
+      "oracion too short: 22 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'Tagalog' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-04-10",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 55 < 800",
+      "oracion too short: 47 < 150",
+      "prayer_ending: last word 'words)' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-02-21",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 19 < 800",
+      "oracion too short: 15 < 150",
+      "reflexion_truncated: ends mid-word",
+      "prayer_ending: last word 'prayer' — expected one of ['Amen']"
+    ]
+  },
+  {
+    "date": "2026-03-17",
+    "issue": "phase1",
+    "detail": [
+      "reflexion too short: 3 < 800",
+      "oracion too short: 3 < 150",
+      "prayer_ending: last word '...' — expected one of ['Amen']"
+    ]
+  }
+]
