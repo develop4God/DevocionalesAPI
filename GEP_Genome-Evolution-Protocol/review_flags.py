@@ -42,22 +42,30 @@ import paths as _paths
 
 # ── Field extraction ──────────────────────────────────────────────────────────
 
-# Phase 1 prompt markers
+# Phase 1 prompt markers (Spanish with tildes + English)
 _P1_MARKERS = {
     "reflexion": re.compile(
-        r"--- REFLEXIÓN ---\n(.*?)(?=--- ORACIÓN ---|Evaluate only)", re.DOTALL
+        r"--- (?:REFLEXIÓN|REFLECTION) ---\n(.*?)(?=--- (?:ORACIÓN|PRAYER) ---|Evaluate only)",
+        re.DOTALL,
     ),
-    "oracion": re.compile(r"--- ORACIÓN ---\n(.*?)(?=Evaluate only|\Z)", re.DOTALL),
+    "oracion": re.compile(
+        r"--- (?:ORACIÓN|PRAYER) ---\n(.*?)(?=Evaluate only|\Z)", re.DOTALL
+    ),
 }
 
-# Phase 2 prompt markers (versiculo included in p2 prompts)
+# Phase 2 prompt markers (Spanish with tildes + English)
 _P2_MARKERS = {
     "versiculo": re.compile(
-        r"--- VERSÍCULO ---\n(.*?)(?=--- REFLEXIÓN ---)", re.DOTALL
+        r"--- (?:VERSÍCULO|VERSE) ---\n(.*?)(?=--- (?:REFLEXIÓN|REFLECTION) ---)",
+        re.DOTALL,
     ),
-    "reflexion": re.compile(r"--- REFLEXIÓN ---\n(.*?)(?=--- ORACIÓN ---)", re.DOTALL),
+    "reflexion": re.compile(
+        r"--- (?:REFLEXIÓN|REFLECTION) ---\n(.*?)(?=--- (?:ORACIÓN|PRAYER) ---)",
+        re.DOTALL,
+    ),
     "oracion": re.compile(
-        r"--- ORACIÓN ---\n(.*?)(?=--- PARA MEDITAR ---|Evaluate only|\Z)", re.DOTALL
+        r"--- (?:ORACIÓN|PRAYER) ---\n(.*?)(?=--- (?:PARA MEDITAR|FOR MEDITATION) ---|Evaluate only|\Z)",
+        re.DOTALL,
     ),
 }
 
