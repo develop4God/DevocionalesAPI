@@ -1,0 +1,13 @@
+{
+  "date": "2026-04-20",
+  "providers": {
+    "cerebras_phase2": {
+      "tokens": 80931,
+      "requests": 33
+    },
+    "groq_qwen3_phase2": {
+      "tokens": 5070,
+      "requests": 2
+    }
+  }
+}

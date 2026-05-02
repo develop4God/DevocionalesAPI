@@ -1,0 +1,164 @@
+{
+  "language": "fil",
+  "version": "MBB05",
+  "genome_version": "fil-MBB05-2025-v1",
+  "total_entries_reviewed": 14,
+  "total_pauses": 14,
+  "updated_at": "2026-05-02T22:28:52.088166+00:00",
+  "fragments": [
+    {
+      "id": "frag_abc8a040",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "prayer_drift",
+      "pattern": "The prayer drifts into a long list of generic spiritual requests (e.g., 'cleanse our hearts', 'strengthen our faith', 'guide our decisions') that, while pious, are not anchored to the reflection’s core themes: divine nearness to the humble, the universality of joy, the significance of names/titles (Tagapagligtas, Cristo, Panginoon), or the contrast between heavenly glory and earthly simplicity — all uniquely highlighted in Luke 2:10–11.",
+      "example_quote": "Linisin Mo ang aming mga puso at patuloy na palakasin ang aming pananampalataya sa Iyong Anak. Bigyan Mo kami ng kakayahang mamuhay nang nararapat sa Iyong kabutihan at ng Espiritu Santo na gumagabay sa aming mga desisyon.",
+      "evidence_dates": [
+        "2025-09-02",
+        "2026-02-12"
+      ],
+      "confidence": 0.55,
+      "state": "candidate",
+      "created_at": "2026-05-02T22:28:52.047888+00:00",
+      "updated_at": "2026-05-02T22:28:52.071059+00:00"
+    },
+    {
+      "id": "frag_14b15ca4",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "register_drift",
+      "pattern": "The reflection is overly academic and abstract—phrases like 'nagtatakda ng isang pundamental na prinsipyo sa pananampalatayang Kristiyano' and 'nagpapakita ng direktang koneksyon sa pagitan ng pagiging masunurin at paggalang sa pagtanggap ng biyaya ng Diyos' sound like seminary lecture notes, not a warm, personal devotional reflection; they distance the reader instead of inviting them into the verse’s lived reality.",
+      "example_quote": "nagtatakda ng isang pundamental na prinsipyo sa pananampalatayang Kristiyano",
+      "evidence_dates": [
+        "2025-09-06"
+      ],
+      "confidence": 0.4,
+      "state": "candidate",
+      "created_at": "2026-05-02T22:28:52.048242+00:00",
+      "updated_at": "2026-05-02T22:28:52.048242+00:00"
+    },
+    {
+      "id": "frag_1077c2ff",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "other",
+      "pattern": "The reflection is generic — it speaks of God's 'limitless love' and 'ultimate proof' without anchoring to what makes Romans 5:8 unique: that Christ died *while we were still sinners*, not just 'in our darkest moment' or 'when we were lost'. That specific temporal tension ('noong tayo'y makasalanan pa') is the theological heartbeat of the verse, but the reflection treats it as background color rather than the central, shocking claim.",
+      "example_quote": "Sa isang mundong madalas naghahanap ng patunay ng pagmamahal, ang Diyos ay nagbigay ng sukdulang ebidensya sa pinakamadilim na sandali ng kasaysayan ng tao.",
+      "evidence_dates": [
+        "2025-09-17"
+      ],
+      "confidence": 0.4,
+      "state": "candidate",
+      "created_at": "2026-05-02T22:28:52.049497+00:00",
+      "updated_at": "2026-05-02T22:28:52.049497+00:00"
+    },
+    {
+      "id": "frag_cef9a627",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "other",
+      "pattern": "The reflection is deeply rich and theologically sound, but it is overwhelmingly generic — nearly every sentence could apply equally to John 16:33, Philippians 4:7, or Isaiah 26:3; it never anchors itself to what is *distinctive* in John 14:27 — especially the phrase 'Aking kapayapaan' (My peace) as a personal, Christological possession He *leaves behind*, like a testamentary gift before His departure — nor does it engage with the immediate context of the Upper Room discourse (e.g., imminent betrayal, abandonment, crucifixion).",
+      "example_quote": "Ang kapayapaang ito ay naiiba sa anumang iniaalok ng sanlibutan, sapagkat ang kapayapaang mula sa Diyos ay nagmumula sa isang pinagmulan na hindi nababago, anuman ang mangyari.",
+      "evidence_dates": [
+        "2025-10-29",
+        "2026-06-17"
+      ],
+      "confidence": 0.55,
+      "state": "candidate",
+      "created_at": "2026-05-02T22:28:52.059482+00:00",
+      "updated_at": "2026-05-02T22:28:52.083662+00:00"
+    },
+    {
+      "id": "frag_afd5451b",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "other",
+      "pattern": "The reflection is overwhelmingly generic — nearly every sentence (e.g., 'ang bawat nilalang ay may itinakdang hantungan', 'ang kamatayan ang pintuan patungo sa kaganapang ito', 'ang bawat sandali ay mahalaga') could apply equally to Ecclesiastes 3:2, Psalm 90:10, or Hebrews 9:27’s *parallel* theme in other passages; it never engages the verse’s unique dual structure: (1) human mortality + judgment *and* (2) Christ’s *once-for-all* sacrifice *and* His *return for salvation*, not judgment — this distinctive two-part contrast is lost in favor of generalized eschatology and moral exhortation.",
+      "example_quote": "Ang bawat nilalang ay may itinakdang hantungan, isang katotohanang inilalantad ng Salita ng Diyos. Hindi maiiwasan ang kamatayan, isang tiyak na hangganan para sa buhay na ito, at pagkatapos nito ay ang pagharap sa paghuhukom.",
+      "evidence_dates": [
+        "2025-11-21"
+      ],
+      "confidence": 0.4,
+      "state": "candidate",
+      "created_at": "2026-05-02T22:28:52.062392+00:00",
+      "updated_at": "2026-05-02T22:28:52.062392+00:00"
+    },
+    {
+      "id": "frag_12106159",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "other",
+      "pattern": "The reflection is deeply theological and beautifully written, but it never names or engages with the *specific claim* in Romans 1:20 — that God’s invisible attributes are 'clearly seen' *because they are understood through what has been made*, and that this leaves people 'without excuse'. Instead, it speaks broadly about creation revealing God, conscience, sovereignty, and design — themes that could apply equally to Psalm 19, Isaiah 40, or Job 38. It misses the verse’s sharp forensic thrust: revelation → knowledge → accountability → no excuse.",
+      "example_quote": "Ang sipi mula sa Aklat ng Roma, kabanata uno talata beynte, ay naglalatag ng isang napakalalim na katotohanan hinggil sa ating Panginoon.",
+      "evidence_dates": [
+        "2025-12-08",
+        "2026-03-14"
+      ],
+      "confidence": 0.55,
+      "state": "candidate",
+      "created_at": "2026-05-02T22:28:52.064187+00:00",
+      "updated_at": "2026-05-02T22:28:52.073852+00:00"
+    },
+    {
+      "id": "frag_b1c1732c",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "other",
+      "pattern": "The reflection is rich and theologically sound, but it’s not specific to Matthew 3:16–17 — nearly all of it could apply equally to Luke 3:21–22 or Mark 1:9–11; it never engages with what makes *this* account distinct (e.g., Matthew’s emphasis on divine approval *after* baptism, the Trinitarian moment as inauguration of Jesus’ mission *as Israel’s faithful Servant*, or how Matthew frames this as fulfillment of Isaiah 42:1 — which is cited in meditation but not woven into the reflection).",
+      "example_quote": "Ang pagpapabinyag kay Hesus sa Ilog Jordan ay hindi lamang isang simpleng seremonya; ito ay isang napakahalagang sandali na naghudyat sa simula ng Kanyang ministeryo sa lupa, puno ng malalim na espirituwal na kahulugan.",
+      "evidence_dates": [
+        "2025-12-24",
+        "2026-07-24"
+      ],
+      "confidence": 0.55,
+      "state": "candidate",
+      "created_at": "2026-05-02T22:28:52.065474+00:00",
+      "updated_at": "2026-05-02T22:28:52.086666+00:00"
+    },
+    {
+      "id": "frag_44e6d418",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "other",
+      "pattern": "The reflection is highly generic — it could apply equally to Ephesians 2:20, 1 Peter 2:5, or Hebrews 12:28; it never engages the unique, controversial, or contextually charged elements of Matthew 16:18–19 (e.g., the play on 'Petros/petra', the immediate post-confession setting, the binding/loosing language tied to rabbinic authority, or the ecclesial implications debated across traditions). Instead, it reads like a doctrinal summary of 'the church as foundation' detached from this verse’s narrative and linguistic specificity.",
+      "example_quote": "Ang salita ng Panginoong Hesus sa Mateo 16:18-19 ay nagtatatag ng isang napakahalagang deklarasyon tungkol sa Kanyang iglesya, na nagbibigay katiyakan at kapangyarihan sa lahat ng Kanyang tagasunod.",
+      "evidence_dates": [
+        "2026-04-15"
+      ],
+      "confidence": 0.4,
+      "state": "candidate",
+      "created_at": "2026-05-02T22:28:52.077177+00:00",
+      "updated_at": "2026-05-02T22:28:52.077177+00:00"
+    },
+    {
+      "id": "frag_390f6c81",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "prayer_drift",
+      "pattern": "The reflection is deeply specific to Revelation 1:7 — it unpacks the clouds, universal visibility, the spear-thrust reference, mourning of tribes, and the 'Amen' seal with theological precision tied directly to this verse's unique phrasing and imagery; but the prayer drifts by introducing 'sharing the Gospel' and 'evangelism' as central petitions, which are absent from both the verse and the reflection’s themes (sovereignty, visibility, judgment, readiness, awe before Christ’s return).",
+      "example_quote": "upang ibahagi ang Mabuting Balita, upang ang mas marami pa ay makakilala sa Iyo at magkaroon ng pag-asa sa Kanyang muling pagdating",
+      "evidence_dates": [
+        "2026-05-11"
+      ],
+      "confidence": 0.4,
+      "state": "candidate",
+      "created_at": "2026-05-02T22:28:52.079428+00:00",
+      "updated_at": "2026-05-02T22:28:52.079428+00:00"
+    },
+    {
+      "id": "frag_b45125fa",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "other",
+      "pattern": "The reflection is generic — it could apply equally to any verse about spiritual joy in others’ faithfulness (e.g., Phil 1:4, 2 Cor 7:13, 1 Thess 3:9), without anchoring to what makes 3 John 1:4 unique: the *personal, paternal delight* of an aging apostle hearing *specific reports* ('marinig ang balitang...') — not just abstract 'righteous living', but *testimony-based affirmation* of truth-walking.",
+      "example_quote": "Ang talatang ito, na buong pagmamahal na isinulat, ay nagpapakita ng isang malalim na ugnayan sa pagitan ng espirituwal na magulang at ng kanyang mga pinatnubayan, na ang kagalakan ay nakasalalay sa katapatan ng kanilang paglakad.",
+      "evidence_dates": [
+        "2026-05-20"
+      ],
+      "confidence": 0.4,
+      "state": "candidate",
+      "created_at": "2026-05-02T22:28:52.081320+00:00",
+      "updated_at": "2026-05-02T22:28:52.081320+00:00"
+    }
+  ]
+}
