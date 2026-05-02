@@ -157,8 +157,7 @@ def _parse_phase1_reaction(raw: str) -> ReaderReaction | None:
     if "</think>" in raw:
         text = raw.split("</think>")[-1].strip()
     else:
-        # Truncated — model hit token limit before producing JSON
-        return None
+        text = raw.strip()
     if text.startswith("```"):
         parts = text.split("```")
         text = parts[1] if len(parts) > 1 else text
