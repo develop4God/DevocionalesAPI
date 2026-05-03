@@ -2,9 +2,9 @@
   "language": "fil",
   "version": "MBB05",
   "genome_version": "fil-MBB05-2025-v1",
-  "total_entries_reviewed": 29,
-  "total_pauses": 29,
-  "updated_at": "2026-05-03T04:23:24.160046+00:00",
+  "total_entries_reviewed": 284,
+  "total_pauses": 284,
+  "updated_at": "2026-05-03T20:07:23.823386+00:00",
   "fragments": [
     {
       "id": "frag_abc8a040",
@@ -17,12 +17,87 @@
         "2025-09-02",
         "2026-02-12",
         "2025-10-29",
-        "2026-07-19"
+        "2026-07-19",
+        "2025-08-02",
+        "2025-08-09",
+        "2025-08-07",
+        "2025-08-05",
+        "2025-08-10",
+        "2025-08-14",
+        "2025-08-12",
+        "2025-08-17",
+        "2025-08-13",
+        "2025-08-19",
+        "2025-08-15",
+        "2025-08-29",
+        "2025-08-30",
+        "2025-09-07",
+        "2025-09-09",
+        "2025-09-13",
+        "2025-09-19",
+        "2025-09-28",
+        "2025-10-03",
+        "2025-10-08",
+        "2025-10-07",
+        "2025-10-14",
+        "2025-10-23",
+        "2025-11-01",
+        "2025-11-11",
+        "2025-11-16",
+        "2025-11-10",
+        "2025-11-26",
+        "2025-11-23",
+        "2025-11-22",
+        "2025-11-27",
+        "2025-12-01",
+        "2025-11-30",
+        "2025-12-16",
+        "2025-12-27",
+        "2025-12-25",
+        "2025-12-21",
+        "2026-01-05",
+        "2025-12-31",
+        "2026-01-11",
+        "2026-01-08",
+        "2026-01-25",
+        "2026-01-22",
+        "2026-01-29",
+        "2026-01-28",
+        "2026-02-07",
+        "2026-02-08",
+        "2026-02-24",
+        "2026-03-01",
+        "2026-03-06",
+        "2026-03-07",
+        "2026-02-27",
+        "2026-03-13",
+        "2026-03-18",
+        "2026-03-26",
+        "2026-03-30",
+        "2026-04-07",
+        "2026-04-08",
+        "2026-04-18",
+        "2026-05-04",
+        "2026-04-30",
+        "2026-05-03",
+        "2026-04-29",
+        "2026-05-10",
+        "2026-05-22",
+        "2026-05-21",
+        "2026-05-25",
+        "2026-05-20",
+        "2026-06-04",
+        "2026-06-03",
+        "2026-06-05",
+        "2026-07-02",
+        "2026-07-20",
+        "2026-07-31",
+        "2026-07-27"
       ],
-      "confidence": 0.8500000000000001,
+      "confidence": 0.95,
       "state": "confirmed",
       "created_at": "2026-05-02T22:28:52.047888+00:00",
-      "updated_at": "2026-05-03T04:23:24.158234+00:00"
+      "updated_at": "2026-05-03T20:07:23.822269+00:00"
     },
     {
       "id": "frag_14b15ca4",
@@ -49,10 +124,10 @@
       "evidence_dates": [
         "2025-09-17"
       ],
-      "confidence": 0.4,
+      "confidence": 0.55,
       "state": "candidate",
       "created_at": "2026-05-02T22:28:52.049497+00:00",
-      "updated_at": "2026-05-02T22:28:52.049497+00:00"
+      "updated_at": "2026-05-03T20:07:23.557918+00:00"
     },
     {
       "id": "frag_cef9a627",
@@ -63,12 +138,19 @@
       "example_quote": "Ang kapayapaang ito ay naiiba sa anumang iniaalok ng sanlibutan, sapagkat ang kapayapaang mula sa Diyos ay nagmumula sa isang pinagmulan na hindi nababago, anuman ang mangyari.",
       "evidence_dates": [
         "2025-10-29",
-        "2026-06-17"
+        "2026-06-17",
+        "2026-01-24",
+        "2026-02-05",
+        "2026-02-13",
+        "2026-04-09",
+        "2026-05-06",
+        "2026-06-27",
+        "2026-07-18"
       ],
-      "confidence": 0.55,
-      "state": "candidate",
+      "confidence": 0.95,
+      "state": "confirmed",
       "created_at": "2026-05-02T22:28:52.059482+00:00",
-      "updated_at": "2026-05-02T22:28:52.083662+00:00"
+      "updated_at": "2026-05-03T20:07:23.815699+00:00"
     },
     {
       "id": "frag_afd5451b",
@@ -78,12 +160,15 @@
       "pattern": "The reflection is overwhelmingly generic — nearly every sentence (e.g., 'ang bawat nilalang ay may itinakdang hantungan', 'ang kamatayan ang pintuan patungo sa kaganapang ito', 'ang bawat sandali ay mahalaga') could apply equally to Ecclesiastes 3:2, Psalm 90:10, or Hebrews 9:27’s *parallel* theme in other passages; it never engages the verse’s unique dual structure: (1) human mortality + judgment *and* (2) Christ’s *once-for-all* sacrifice *and* His *return for salvation*, not judgment — this distinctive two-part contrast is lost in favor of generalized eschatology and moral exhortation.",
       "example_quote": "Ang bawat nilalang ay may itinakdang hantungan, isang katotohanang inilalantad ng Salita ng Diyos. Hindi maiiwasan ang kamatayan, isang tiyak na hangganan para sa buhay na ito, at pagkatapos nito ay ang pagharap sa paghuhukom.",
       "evidence_dates": [
-        "2025-11-21"
+        "2025-11-21",
+        "2026-06-01",
+        "2026-06-11",
+        "2026-07-08"
       ],
-      "confidence": 0.55,
-      "state": "candidate",
+      "confidence": 0.95,
+      "state": "confirmed",
       "created_at": "2026-05-02T22:28:52.062392+00:00",
-      "updated_at": "2026-05-03T04:23:24.131901+00:00"
+      "updated_at": "2026-05-03T20:07:23.801621+00:00"
     },
     {
       "id": "frag_12106159",
@@ -96,12 +181,25 @@
         "2025-12-08",
         "2026-03-14",
         "2025-11-24",
-        "2026-07-12"
+        "2026-07-12",
+        "2025-09-16",
+        "2025-09-24",
+        "2025-10-06",
+        "2025-10-21",
+        "2025-11-03",
+        "2025-11-07",
+        "2025-11-04",
+        "2025-11-13",
+        "2025-11-12",
+        "2026-02-16",
+        "2026-02-17",
+        "2026-03-29",
+        "2026-06-13"
       ],
-      "confidence": 0.8500000000000001,
+      "confidence": 0.95,
       "state": "confirmed",
       "created_at": "2026-05-02T22:28:52.064187+00:00",
-      "updated_at": "2026-05-03T04:23:24.156988+00:00"
+      "updated_at": "2026-05-03T20:07:23.771129+00:00"
     },
     {
       "id": "frag_b1c1732c",
@@ -112,12 +210,13 @@
       "example_quote": "Ang pagpapabinyag kay Hesus sa Ilog Jordan ay hindi lamang isang simpleng seremonya; ito ay isang napakahalagang sandali na naghudyat sa simula ng Kanyang ministeryo sa lupa, puno ng malalim na espirituwal na kahulugan.",
       "evidence_dates": [
         "2025-12-24",
-        "2026-07-24"
+        "2026-07-24",
+        "2026-04-23"
       ],
-      "confidence": 0.7000000000000001,
+      "confidence": 0.95,
       "state": "confirmed",
       "created_at": "2026-05-02T22:28:52.065474+00:00",
-      "updated_at": "2026-05-03T04:23:24.158845+00:00"
+      "updated_at": "2026-05-03T20:07:23.807218+00:00"
     },
     {
       "id": "frag_44e6d418",
@@ -127,12 +226,17 @@
       "pattern": "The reflection is highly generic — it could apply equally to Ephesians 2:20, 1 Peter 2:5, or Hebrews 12:28; it never engages the unique, controversial, or contextually charged elements of Matthew 16:18–19 (e.g., the play on 'Petros/petra', the immediate post-confession setting, the binding/loosing language tied to rabbinic authority, or the ecclesial implications debated across traditions). Instead, it reads like a doctrinal summary of 'the church as foundation' detached from this verse’s narrative and linguistic specificity.",
       "example_quote": "Ang salita ng Panginoong Hesus sa Mateo 16:18-19 ay nagtatatag ng isang napakahalagang deklarasyon tungkol sa Kanyang iglesya, na nagbibigay katiyakan at kapangyarihan sa lahat ng Kanyang tagasunod.",
       "evidence_dates": [
-        "2026-04-15"
+        "2026-04-15",
+        "2025-10-26",
+        "2025-11-28",
+        "2025-12-05",
+        "2026-01-13",
+        "2026-01-15"
       ],
-      "confidence": 0.4,
-      "state": "candidate",
+      "confidence": 0.95,
+      "state": "confirmed",
       "created_at": "2026-05-02T22:28:52.077177+00:00",
-      "updated_at": "2026-05-02T22:28:52.077177+00:00"
+      "updated_at": "2026-05-03T20:07:23.640536+00:00"
     },
     {
       "id": "frag_390f6c81",
@@ -142,12 +246,14 @@
       "pattern": "The reflection is deeply specific to Revelation 1:7 — it unpacks the clouds, universal visibility, the spear-thrust reference, mourning of tribes, and the 'Amen' seal with theological precision tied directly to this verse's unique phrasing and imagery; but the prayer drifts by introducing 'sharing the Gospel' and 'evangelism' as central petitions, which are absent from both the verse and the reflection’s themes (sovereignty, visibility, judgment, readiness, awe before Christ’s return).",
       "example_quote": "upang ibahagi ang Mabuting Balita, upang ang mas marami pa ay makakilala sa Iyo at magkaroon ng pag-asa sa Kanyang muling pagdating",
       "evidence_dates": [
-        "2026-05-11"
+        "2026-05-11",
+        "2025-09-03",
+        "2026-05-13"
       ],
-      "confidence": 0.4,
-      "state": "candidate",
+      "confidence": 0.8500000000000001,
+      "state": "confirmed",
       "created_at": "2026-05-02T22:28:52.079428+00:00",
-      "updated_at": "2026-05-02T22:28:52.079428+00:00"
+      "updated_at": "2026-05-03T20:07:23.747345+00:00"
     },
     {
       "id": "frag_b45125fa",
@@ -158,12 +264,14 @@
       "example_quote": "Ang talatang ito, na buong pagmamahal na isinulat, ay nagpapakita ng isang malalim na ugnayan sa pagitan ng espirituwal na magulang at ng kanyang mga pinatnubayan, na ang kagalakan ay nakasalalay sa katapatan ng kanilang paglakad.",
       "evidence_dates": [
         "2026-05-20",
-        "2025-09-06"
+        "2025-09-06",
+        "2026-02-04",
+        "2026-03-17"
       ],
-      "confidence": 0.7000000000000001,
+      "confidence": 0.95,
       "state": "confirmed",
       "created_at": "2026-05-02T22:28:52.081320+00:00",
-      "updated_at": "2026-05-03T04:23:24.150968+00:00"
+      "updated_at": "2026-05-03T20:07:23.690086+00:00"
     },
     {
       "id": "frag_b6f2e57f",
@@ -175,12 +283,19 @@
       "evidence_dates": [
         "2025-08-03",
         "2025-09-17",
-        "2026-06-17"
+        "2026-06-17",
+        "2025-08-08",
+        "2025-08-20",
+        "2025-12-06",
+        "2025-12-23",
+        "2026-03-04",
+        "2026-05-01",
+        "2026-07-12"
       ],
-      "confidence": 0.7000000000000001,
+      "confidence": 0.95,
       "state": "confirmed",
       "created_at": "2026-05-03T04:23:24.115453+00:00",
-      "updated_at": "2026-05-03T04:23:24.154252+00:00"
+      "updated_at": "2026-05-03T20:07:23.794576+00:00"
     },
     {
       "id": "frag_691111e6",
@@ -241,6 +356,750 @@
       "state": "candidate",
       "created_at": "2026-05-03T04:23:24.145793+00:00",
       "updated_at": "2026-05-03T04:23:24.145793+00:00"
+    },
+    {
+      "id": "frag_a092fcc7",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "prayer_drift",
+      "pattern": "The prayer drifts into a long list of generic spiritual requests — 'akayin at gabayan', 'maging masigasig sa pananalangin', 'uhaw sa Salita', 'handang sumunod' — none of which are anchored to the reflection’s core theme: the *ontological dependence* of the branch on the vine, the *inevitability of withering* when severed, and the *fruit as evidence of abiding*, not just a list of virtues. The prayer feels like a standard 'Spirit-filled life' petition, not a response to John 15:5’s stark, biological urgency.",
+      "example_quote": "Tulungan Mo kaming maging masigasig sa pananalangin, maging uhaw sa Iyong Salita, at maging handang sumunod sa Iyong kalooban, upang ang Iyong buhay ay dumaloy sa amin nang walang humpay.",
+      "evidence_dates": [
+        "2025-08-01",
+        "2025-08-22",
+        "2025-08-27",
+        "2025-10-27",
+        "2025-10-30",
+        "2025-11-20",
+        "2025-12-04",
+        "2025-12-29",
+        "2026-02-12",
+        "2026-02-15",
+        "2026-02-28",
+        "2026-03-31",
+        "2026-06-15",
+        "2026-07-01",
+        "2026-07-09"
+      ],
+      "confidence": 0.95,
+      "state": "confirmed",
+      "created_at": "2026-05-03T20:07:23.534791+00:00",
+      "updated_at": "2026-05-03T20:07:23.795896+00:00"
+    },
+    {
+      "id": "frag_0da84c3d",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "other",
+      "pattern": "The reflection is rich but generic — it never names or develops the unique elements of 2 Pedro 1:3–4, especially the phrase 'makabahagi tayo sa kanyang likas bilang Diyos' (partakers of the divine nature), which is a rare and theologically distinctive concept in Scripture; instead, it speaks broadly about 'guidance', 'holiness', and 'walking in a holy path' — themes that could apply equally to Ephesians 4, Colossians 3, or 1 Peter 1.",
+      "example_quote": "nagbibigay ng bawat kasangkapan at pagtuturo na kailangan ng ating espiritu upang lumakad sa banal na landas, na lubos na nagpapakita ng kagandahan ng Kanyang presensya sa ating buhay.",
+      "evidence_dates": [
+        "2025-08-04"
+      ],
+      "confidence": 0.4,
+      "state": "candidate",
+      "created_at": "2026-05-03T20:07:23.536439+00:00",
+      "updated_at": "2026-05-03T20:07:23.536439+00:00"
+    },
+    {
+      "id": "frag_4f90ccf2",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "other",
+      "pattern": "The reflection is rich and coherent, but it never engages with the *specific contrast* in Ephesians 5:18 — not just 'drunkenness vs. Spirit-filling' in general, but drunkenness as a *culturally embedded substitute* for Spirit-led worship (cf. the surrounding context of singing psalms, giving thanks, submitting to one another — all Spirit-filled alternatives to pagan revelry). Instead, it reads like a generic warning against alcohol abuse and a general call to spirituality, applicable equally to Proverbs 23 or 1 Corinthians 6.",
+      "example_quote": "Ang ating talata sa Mga Taga-Efeso 5:18 ay nagtatanghal ng malinaw na paghahambing sa dalawang landas ng pamumuhay: ang paglalasing at ang pagkapuspos ng Banal na Espiritu.",
+      "evidence_dates": [
+        "2025-08-16",
+        "2025-09-06",
+        "2025-09-18",
+        "2025-11-14",
+        "2026-05-02"
+      ],
+      "confidence": 0.95,
+      "state": "confirmed",
+      "created_at": "2026-05-03T20:07:23.543788+00:00",
+      "updated_at": "2026-05-03T20:07:23.735084+00:00"
+    },
+    {
+      "id": "frag_ab2c0036",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "other",
+      "pattern": "The reflection is rich and theologically sound, but it never engages with what makes John 11:25–26 *distinctive*: Jesus’ direct, self-referential claim ('I am the resurrection and the life') spoken *in dialogue with Marta*, where her confession ('Yes, Lord... I believe that You are the Christ') immediately precedes this declaration — making this not just a metaphysical statement but a relational, faith-eliciting moment anchored in personal encounter and response.",
+      "example_quote": "Ang mga salitang binitawan ni Hesus kay Marta, sa gitna ng matinding pagluluksa dahil sa pagkamatay ng kanyang kapatid na si Lazaro, ay naghahayag ng pinakamalalim na katotohanan tungkol sa Kanya.",
+      "evidence_dates": [
+        "2025-08-28"
+      ],
+      "confidence": 0.4,
+      "state": "candidate",
+      "created_at": "2026-05-03T20:07:23.547239+00:00",
+      "updated_at": "2026-05-03T20:07:23.547239+00:00"
+    },
+    {
+      "id": "frag_4aecd6d3",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "other",
+      "pattern": "The reflection is rich and well-written, but it never engages with the *specific grammatical force* or *contextual urgency* of 1 Corinthians 10:31 — particularly how this verse concludes Paul’s argument about idol meat (ch. 8–10), where 'glorifying God' is not just a general lifestyle principle but a *practical boundary* against causing others to stumble; the reflection could apply equally to Colossians 3:17 or Romans 12:1–2 without change.",
+      "example_quote": "Ang talatang ito ay nagbibigay ng malalim na pagtuturo tungkol sa kalikasan ng ating buhay bilang mga tagasunod ni Kristo. Hindi lamang nito binibigyang-diin ang mga malalaking gawain o mga relihiyosong seremonya kundi itinataas din ang kahalagahan ng bawat munting pagkilos.",
+      "evidence_dates": [
+        "2025-09-01",
+        "2025-09-12",
+        "2026-02-06",
+        "2026-02-09",
+        "2026-03-09",
+        "2026-03-14",
+        "2026-03-28",
+        "2026-06-09",
+        "2026-07-04",
+        "2026-07-23",
+        "2026-07-29"
+      ],
+      "confidence": 0.95,
+      "state": "confirmed",
+      "created_at": "2026-05-03T20:07:23.551792+00:00",
+      "updated_at": "2026-05-03T20:07:23.820959+00:00"
+    },
+    {
+      "id": "frag_88b73662",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "prayer_drift",
+      "pattern": "The reflection is strong and specific to 1 John 5:3 — it directly engages the link between love and obedience, and highlights the 'ease' of God's commands as a contrast to human burden, which is unique to this verse. But the prayer drifts into a long list of generic spiritual requests (e.g., 'fill us with Your Spirit', 'strengthen our faith', 'remove doubt', 'open our eyes') that aren’t anchored to the verse’s core emphasis: the *intrinsic ease* of obedience when love is genuine, and the *contrast between divine lightness and human heaviness*. Instead, it treats obedience as something we need strength to endure — contradicting the verse’s assurance that 'His commands are not burdensome.'",
+      "example_quote": "Bigyan mo kami ng kalakasan upang labanan ang mga tukso at sundin ang Iyong mga daan na puno ng katarungan. Tanggalin mo sa amin ang anumang pag-aalinlangan o pagkatakot sa pagtupad ng Iyong mga utos na nagdudulot ng kalayaan.",
+      "evidence_dates": [
+        "2025-08-31",
+        "2025-10-10",
+        "2026-07-21"
+      ],
+      "confidence": 0.7000000000000001,
+      "state": "confirmed",
+      "created_at": "2026-05-03T20:07:23.552491+00:00",
+      "updated_at": "2026-05-03T20:07:23.814336+00:00"
+    },
+    {
+      "id": "frag_1c6a043b",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "prayer_drift",
+      "pattern": "The prayer drifts into a long list of generic spiritual requests — 'teach us to forgive', 'help us overcome grudges', 'make our love a tool to erase sins', 'guide us so our hearts overflow with Your love' — none of which are anchored to the verse’s unique claim: that *love itself* (not just forgiveness or obedience) *covers many sins*, a specific, almost startlingly functional truth about love’s atoning-like effect in community. The prayer never reflects on *how* love covers sin — through restoration, silence of accusation, bearing burdens — as the reflection briefly hints but doesn’t develop.",
+      "example_quote": "Nawa'y ang aming pagmamahalan ay maging kasangkapan upang mas maraming kasalanan ang mapawi, hindi sa pag-iisang tabi ng mali, kundi sa pagbibigay ng biyaya at bagong simula sa bawat isa.",
+      "evidence_dates": [
+        "2025-09-05"
+      ],
+      "confidence": 0.4,
+      "state": "candidate",
+      "created_at": "2026-05-03T20:07:23.553847+00:00",
+      "updated_at": "2026-05-03T20:07:23.553847+00:00"
+    },
+    {
+      "id": "frag_374a31a2",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "other",
+      "pattern": "The reflection is rich and theologically sound, but it never engages with what makes Mark 1:15 *distinct* from parallel passages — especially its abrupt, urgent, kerygmatic tone ('Now! Repent! Believe!') and its framing as the *inaugural proclamation* of Jesus’ ministry immediately after John’s arrest (Mark 1:14), which heightens the immediacy and divine authority of the message. Instead, it reads like a generic exposition applicable equally to Matthew 4:17 or Luke 4:43.",
+      "example_quote": "Ang Marcos 1:15 ay naghahayag ng pinakabuod ng mensahe ni Kristo, isang paanyaya na nagbibigay-liwanag sa daan patungo sa isang tunay na relasyon sa Diyos.",
+      "evidence_dates": [
+        "2025-09-08",
+        "2026-06-24"
+      ],
+      "confidence": 0.55,
+      "state": "candidate",
+      "created_at": "2026-05-03T20:07:23.555593+00:00",
+      "updated_at": "2026-05-03T20:07:23.782439+00:00"
+    },
+    {
+      "id": "frag_53772238",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "other",
+      "pattern": "The reflection is beautiful and theologically rich, but it never engages with what makes 1 Peter 1:3–5 *distinctive*: the triadic structure of divine protection (‘guarded by God’s power’), the eschatological tension (‘salvation ready to be revealed in the last time’), or the specific description of the inheritance as ‘imperishable, undefiled, and unfading’ — all of which are *anchored in persecution context* (1 Pet 1:6–7). Instead, it reads like a generic meditation on resurrection hope, applicable equally to Romans 6 or Ephesians 2.",
+      "example_quote": "Hindi ito isang ordinaryong buhay kundi isang buhay na punong-puno ng sigla, isang buhay na nagtataglay ng tunay na pag-asa na hindi maglalaho, nakasandig sa katiyakan ng tagumpay ng ating Tagapagligtas laban sa kamatayan.",
+      "evidence_dates": [
+        "2025-09-10"
+      ],
+      "confidence": 0.4,
+      "state": "candidate",
+      "created_at": "2026-05-03T20:07:23.560282+00:00",
+      "updated_at": "2026-05-03T20:07:23.560282+00:00"
+    },
+    {
+      "id": "frag_c53dbfd0",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "prayer_drift",
+      "pattern": "The prayer drifts into a long list of generic spiritual requests — readiness, guidance, strength, evangelism, resisting temptation — none of which are anchored to the reflection’s core themes: Christ’s imminent return as Alpha and Omega, the certainty of His coming, the personal accountability tied to 'according to what each has done,' or the eschatological weight of 'the beginning and the end.' Instead, it reads like a general end-times prayer that could follow any verse about Jesus’ return.",
+      "example_quote": "Gabayan po Ninyo kami upang ang aming mga ginawa ay maging karapat-dapat sa Iyong pagkilala, hindi para sa aming kapurihan, kundi upang ipakita ang aming taos-pusong pagmamahal at paglilingkod sa Iyo. Bigyan po Ninyo kami ng lakas na magpatuloy sa paggawa ng mabuti, sa pagbabahagi ng Iyong Ebanghelyo, at sa pagtulong sa aming kapwa.",
+      "evidence_dates": [
+        "2025-09-14",
+        "2025-09-27",
+        "2025-09-29",
+        "2025-10-11",
+        "2025-10-13",
+        "2025-10-18",
+        "2025-11-06",
+        "2025-11-15",
+        "2025-12-22",
+        "2026-01-07",
+        "2026-01-23",
+        "2026-02-11",
+        "2026-03-08",
+        "2026-03-03",
+        "2026-04-22",
+        "2026-05-17",
+        "2026-05-31",
+        "2026-06-28",
+        "2026-07-11",
+        "2026-07-25"
+      ],
+      "confidence": 0.95,
+      "state": "confirmed",
+      "created_at": "2026-05-03T20:07:23.562714+00:00",
+      "updated_at": "2026-05-03T20:07:23.812879+00:00"
+    },
+    {
+      "id": "frag_f3ae983c",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "other",
+      "pattern": "The reflection is rich and theologically sound, but it never engages with what makes 1 Timothy 2:8 *distinctive*: the immediate context of *public, corporate worship* (vv. 1–7), the link between male leadership in prayer and the *peaceful, quiet life* Paul urges for all believers (v. 2), or how this instruction functions as part of a larger argument about *orderly worship* — not just personal devotion. Nearly all of it could apply equally to Matthew 6:5–13 or James 5:16.",
+      "example_quote": "Ang sipi mula sa Unang Timoteo 2:8 ay nagbibigay ng matinding panawagan para sa lahat ng mga lalaki na magkaroon ng aktibong bahagi sa pagdarasal.",
+      "evidence_dates": [
+        "2025-09-21",
+        "2025-10-16",
+        "2026-06-07"
+      ],
+      "confidence": 0.7000000000000001,
+      "state": "confirmed",
+      "created_at": "2026-05-03T20:07:23.564933+00:00",
+      "updated_at": "2026-05-03T20:07:23.776730+00:00"
+    },
+    {
+      "id": "frag_7c4b4d80",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "other",
+      "pattern": "The reflection is generic — it could apply equally to Matthew 17:20 or Mark 11:23, since it never engages with what makes Luke 17:6 unique: the *specific command to a sycamore tree* (not a mountain), and its context in Luke’s narrative — immediately after the disciples’ request 'Palakasin mo ang aming pananampalataya' (v.5) and before Jesus’ teaching on unworthiness (vv.7–10). The reflection misses the link between humility, service, and faith’s power — the sycamore tree symbolizes something deeply rooted, common, and even 'unclean' (cf. Amos 7:14), making the command to uproot it and plant it in the sea especially jarring and grace-filled.",
+      "example_quote": "Ang salita ng Panginoon sa Lucas 17:6 ay nagtatago ng isang malalim na katotohanan tungkol sa kapangyarihan ng pananampalataya, na madalas nating hinahanap sa malalaking gawa o dramatikong pagpapahayag.",
+      "evidence_dates": [
+        "2025-09-23"
+      ],
+      "confidence": 0.4,
+      "state": "candidate",
+      "created_at": "2026-05-03T20:07:23.567755+00:00",
+      "updated_at": "2026-05-03T20:07:23.567755+00:00"
+    },
+    {
+      "id": "frag_4be33fba",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "other",
+      "pattern": "The reflection is rich but generic — it speaks broadly about God's grace, salvation, and Jesus' coming without engaging with what makes Titus 2:11–14 *distinct*: the threefold ethical imperative ('reject ungodliness and worldly passions, live self-controlled, upright, and godly lives'), the explicit link between grace and *present* holy living (not just future hope), and the unique christological title 'our great God and Savior Jesus Christ' — a rare Trinitarian identification that the reflection never names or unpacks.",
+      "example_quote": "Ang talatang ito mula kay Tito ay isang matibay na pahayag ng sentro ng ating pananampalataya: ang walang hanggang kagandahang-loob ng Diyos.",
+      "evidence_dates": [
+        "2025-10-01",
+        "2025-11-02",
+        "2025-11-18",
+        "2026-04-13",
+        "2026-04-19",
+        "2026-04-25",
+        "2026-05-24",
+        "2026-07-07"
+      ],
+      "confidence": 0.95,
+      "state": "confirmed",
+      "created_at": "2026-05-03T20:07:23.569625+00:00",
+      "updated_at": "2026-05-03T20:07:23.793187+00:00"
+    },
+    {
+      "id": "frag_93fb1a71",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "prayer_drift",
+      "pattern": "The prayer drifts into a long list of generic spiritual requests — cleansing hearts, giving clear vision, guiding decisions, protecting from sorrow — none of which are anchored to the verse’s specific warning: that love of money is *the root* of *all kinds of evil*, leading people to *depart from faith* and fall into *many sorrows*. The reflection names this precisely, but the prayer abandons it for broad piety.",
+      "example_quote": "Linisin po Ninyo ang aming mga puso mula sa anumang bahid ng kasakiman o labis na paghahangad ng yaman na maaaring humila sa amin palayo sa Iyo. Bigyan po Ninyo kami ng malinaw na pananaw upang makita ang tunay na halaga ng buhay na espirituwal.",
+      "evidence_dates": [
+        "2025-10-19",
+        "2025-12-07",
+        "2026-03-23",
+        "2026-04-17",
+        "2026-07-14"
+      ],
+      "confidence": 0.95,
+      "state": "confirmed",
+      "created_at": "2026-05-03T20:07:23.578393+00:00",
+      "updated_at": "2026-05-03T20:07:23.800276+00:00"
+    },
+    {
+      "id": "frag_da8a65c9",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "other",
+      "pattern": "The reflection is rich and theologically sound, but it never engages with what makes 2 Timothy 1:9 *distinct*: the phrase 'sa simula pa, ito ay ibinigay na niya sa atin sa pamamagitan ni Cristo Jesus' — pointing to *eternal predestination in Christ*, not just general divine sovereignty or grace. Nearly all of it could apply equally to Ephesians 1:4–6 or Titus 1:2; it misses the verse’s unique emphasis on *Christ as the eternal locus* of the calling and salvation.",
+      "example_quote": "Ang dakilang kaloob na ito ay hindi isang huling sandaling desisyon; ito ay itinatag na sa walang hanggan bago pa man likhain ang mundo.",
+      "evidence_dates": [
+        "2025-10-25",
+        "2026-06-14"
+      ],
+      "confidence": 0.55,
+      "state": "candidate",
+      "created_at": "2026-05-03T20:07:23.582171+00:00",
+      "updated_at": "2026-05-03T20:07:23.768266+00:00"
+    },
+    {
+      "id": "frag_e74240d3",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "prayer_drift",
+      "pattern": "The prayer drifts into a long list of generic spiritual requests — 'alisin Mo sa aming puso ang anumang bakas ng pagmamataas, pagkamakasarili...', 'ibigay Mo sa amin ang lakas na patuloy na manatili sa landas ng kababaang-loob' — that, while pious, are not anchored to the reflection’s core themes: the radical inversion of greatness as service (v. 11), and the divine reversal ('ang nagmamataas ay ibababâ, at ang nagpapakumbabá ay itataas', v. 12). It misses the verse’s sharp, structural contrast — not just humility as virtue, but *divine action*: God actively humbles the proud and exalts the humble.",
+      "example_quote": "Alisin Mo sa aming puso ang anumang bakas ng pagmamataas, pagkamakasarili, at paghahangad ng aming sariling kagalingan. Ibigay Mo sa amin ang lakas na patuloy na manatili sa landas ng kababaang-loob, sa pagtakwil sa lahat ng anyo ng kapalaluan.",
+      "evidence_dates": [
+        "2025-10-31"
+      ],
+      "confidence": 0.4,
+      "state": "candidate",
+      "created_at": "2026-05-03T20:07:23.588776+00:00",
+      "updated_at": "2026-05-03T20:07:23.588776+00:00"
+    },
+    {
+      "id": "frag_344c4cbc",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "prayer_drift",
+      "pattern": "The prayer drifts into a long, generic intercession for national leaders and civic virtues (wisdom, justice, integrity, peace) that, while noble, is not anchored to the reflection’s core theme: the theological grounding of authority in God’s sovereign ordination and our *heart-level submission* as an act of discipleship — not just good citizenship. It reads like a civic prayer, not a response to Romans 13:1’s radical claim that all existing authorities are *de facto* instituted by God.",
+      "example_quote": "Bigyan po Ninyo sila ng karunungan, katarungan, at integridad sa kanilang paglilingkod sa bayan. Patnubayan po Ninyo sila sa bawat desisyon, upang ang kanilang mga pagkilos ay magdala ng kapakinabangan at pag-unlad sa lahat ng mamamayan, lalo na sa mga mahihirap at walang boses.",
+      "evidence_dates": [
+        "2025-11-09",
+        "2026-04-28"
+      ],
+      "confidence": 0.55,
+      "state": "candidate",
+      "created_at": "2026-05-03T20:07:23.598497+00:00",
+      "updated_at": "2026-05-03T20:07:23.741725+00:00"
+    },
+    {
+      "id": "frag_c7d11e1a",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "prayer_drift",
+      "pattern": "The prayer drifts into a long list of generic spiritual aspirations ('lubusang maunawaan ang lalim ng Iyong kabanalan', 'pusong laging naghahangad ng Iyong presensya', 'nauuhaw sa Iyong matuwid na kalooban') that, while pious, are not anchored to the reflection’s core themes: the ceaseless worship of the four living creatures, their six wings and all-encompassing eyes as symbols of total readiness and omniscient awareness, or the Trinitarian-sounding 'past-present-future' divine identity tied to eternal sovereignty — instead, it defaults to common devotional tropes disconnected from Revelation 4:8’s vivid, liturgical, and cosmically ordered vision.",
+      "example_quote": "Tulungan Mo kaming lubusang maunawaan ang lalim ng Iyong kabanalan, ang Iyong pagiging hiwalay sa lahat ng kasalanan, at ang Iyong ganap na kagandahan. Bigyan Mo kami ng pusong laging naghahangad ng Iyong presensya at patuloy na nauuhaw sa Iyong matuwid na kalooban.",
+      "evidence_dates": [
+        "2025-11-29",
+        "2025-12-02",
+        "2026-03-05"
+      ],
+      "confidence": 0.7000000000000001,
+      "state": "confirmed",
+      "created_at": "2026-05-03T20:07:23.612420+00:00",
+      "updated_at": "2026-05-03T20:07:23.686473+00:00"
+    },
+    {
+      "id": "frag_14ab5470",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "other",
+      "pattern": "The reflection is rich and encouraging, but it never engages with what makes Revelation 3:8 *distinctive*: the specific historical context of the church in Philadelphia (a city known for earthquakes and vulnerability), the symbolic weight of 'the key of David' (referenced just before this verse in v.7), or how this 'open door' directly echoes Isaiah 22:22 — a royal, covenantal promise of unassailable authority given to a faithful steward. Instead, it treats the 'open door' as a generic metaphor for opportunity or salvation, which could apply equally to Acts 14:27, 1 Cor 16:9, or Col 4:3.",
+      "example_quote": "Ang bukas na pinto na ito ay maaaring sumagisag sa iba't ibang pagpapala: pagkakataon para sa epektibong ministeryo, patuloy na pagpapalaganap ng mabuting balita, o ang katiyakan ng kaligtasan at walang hanggang buhay.",
+      "evidence_dates": [
+        "2025-12-11"
+      ],
+      "confidence": 0.4,
+      "state": "candidate",
+      "created_at": "2026-05-03T20:07:23.619738+00:00",
+      "updated_at": "2026-05-03T20:07:23.619738+00:00"
+    },
+    {
+      "id": "frag_efd382ce",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "prayer_drift",
+      "pattern": "The prayer drifts into a long list of generic spiritual requests — 'patuloy Mo kaming bigyan ng Iyong banal na lakas', 'mapagtagumpayan namin ang bawat hamon, tukso, at paghihirap', 'manatiling matatag sa aming pananampalataya', 'maging matiyaga sa paggawa ng mabuti' — none of which are anchored to the reflection’s core theme: *Christ’s strength enabling contentment in all circumstances* (Phil 4:11–13), especially the paradoxical power made perfect in weakness and joy rooted in relational dependence, not performance. Instead, it reads like a standard 'strength-for-victory' petition.",
+      "example_quote": "upang mapagtagumpayan namin ang bawat hamon, tukso, at paghihirap. Tulungan po Ninyo kaming manatiling matatag sa aming pananampalataya, maging matiyaga sa paggawa ng mabuti, at magkaroon ng kagalakan sa lahat ng pagkakataon, gaya ng ipinahayag ni Apostol Pablo.",
+      "evidence_dates": [
+        "2025-12-19"
+      ],
+      "confidence": 0.4,
+      "state": "candidate",
+      "created_at": "2026-05-03T20:07:23.623234+00:00",
+      "updated_at": "2026-05-03T20:07:23.623234+00:00"
+    },
+    {
+      "id": "frag_9ed182ce",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "prayer_drift",
+      "pattern": "The prayer drifts into generic spiritual requests — 'hubugin ang aming mga puso', 'maging instrumento ng Iyong kalooban', 'nagpapahayag ng Iyong kaluwalhatian sa bawat sulok ng mundo' — none of which are anchored to the reflection’s core themes: Christ as Head of the church (bodily union, organic dependence), His preeminence as 'firstborn from the dead', or His supremacy as 'beginning' and 'first in all things'.",
+      "example_quote": "Patuloy mong hubugin ang aming mga puso, O Diyos, upang mas higit ka naming mahalin at sundin. Hangarin naming maging instrumento ng Iyong kalooban, na nagpapahayag ng Iyong kaluwalhatian sa bawat sulok ng mundo.",
+      "evidence_dates": [
+        "2025-12-20",
+        "2026-02-26",
+        "2026-04-04",
+        "2026-06-06"
+      ],
+      "confidence": 0.8500000000000001,
+      "state": "confirmed",
+      "created_at": "2026-05-03T20:07:23.625325+00:00",
+      "updated_at": "2026-05-03T20:07:23.765568+00:00"
+    },
+    {
+      "id": "frag_8b49957d",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "other",
+      "pattern": "The reflection is rich but generic — it speaks broadly about 'faithfulness in trials' and 'God's higher purpose', yet never names or develops what makes James 1:12 unique: the specific promise of 'the crown of life' (not just 'eternal life' or 'blessing'), its direct link to *love for God* as the condition ('to those who love Him'), and the forensic, covenantal weight of 'the Lord has promised'. Nearly all of it could apply equally to Romans 5:3–4 or 1 Peter 1:6–7 quoted in meditation.",
+      "example_quote": "Ang ganitong pagpapala ay nagmumula sa pagpili ng isang puso na manindigan nang buo, anuman ang idulot ng kapalaran, dahil sa pagtitiwala sa mas mataas na layunin ng Panginoon.",
+      "evidence_dates": [
+        "2026-01-02"
+      ],
+      "confidence": 0.4,
+      "state": "candidate",
+      "created_at": "2026-05-03T20:07:23.630653+00:00",
+      "updated_at": "2026-05-03T20:07:23.630653+00:00"
+    },
+    {
+      "id": "frag_8cf1578d",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "prayer_drift",
+      "pattern": "The prayer drifts into a long list of generic spiritual requests — 'make us instruments of Your righteousness', 'guide our faith journey', 'let our lives be testimony' — none of which are anchored to the verse’s sharp, binary contrast between public confession and public shame, or its eschatological consequence ('I will also disown him before My Father'). Instead, it reads like a general prayer for boldness and witness, applicable to any evangelism passage.",
+      "example_quote": "Gawin Mo po kaming mga instrumento ng Iyong katuwiran at pag-ibig sa mundong ito na nangangailangan ng Iyong liwanag. Hindi po namin nais na ipahiya ka, kundi nais po naming Ika'y luwalhatiin sa lahat ng aming ginagawa.",
+      "evidence_dates": [
+        "2026-01-10",
+        "2026-01-21",
+        "2026-02-23",
+        "2026-04-10",
+        "2026-04-16",
+        "2026-05-23",
+        "2026-07-26"
+      ],
+      "confidence": 0.95,
+      "state": "confirmed",
+      "created_at": "2026-05-03T20:07:23.637393+00:00",
+      "updated_at": "2026-05-03T20:07:23.808644+00:00"
+    },
+    {
+      "id": "frag_55146989",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "other",
+      "pattern": "The reflection is rich and theologically sound, but it never engages with what makes Colossians 1:27 *distinct*: the phrase 'si Cristo na nasa inyo' as the *content* of the mystery — not just His indwelling, but that the mystery *is* Christ-in-you-as-the-hope-of-glory, a unique christological claim tied to Gentile inclusion and eschatological anticipation. Nearly all of it could apply equally to Ephesians 3:4–6 or 2 Corinthians 4:6.",
+      "example_quote": "Ang kaibuturan ng hiwagang ito ay walang iba kundi ang persona ni Cristo, partikular ang Kanyang presensiya \"na nasa inyo.\"",
+      "evidence_dates": [
+        "2026-01-12"
+      ],
+      "confidence": 0.4,
+      "state": "candidate",
+      "created_at": "2026-05-03T20:07:23.639508+00:00",
+      "updated_at": "2026-05-03T20:07:23.639508+00:00"
+    },
+    {
+      "id": "frag_c46c1989",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "other",
+      "pattern": "The reflection is rich and well-structured, but it’s generic — every point (rejoicing in hope, enduring affliction, praying continually) could apply equally to 1 Thessalonians 5:16–18 or James 1:2–3; it never engages with what makes Romans 12:12 *distinctive* in its context: it’s part of Paul’s urgent, embodied call to 'spiritual worship' (12:1–2), immediately following the mercies of God, and embedded in a web of mutual, concrete responsibilities (12:3–21). The reflection misses that this verse isn’t abstract advice—it’s liturgical, communal, and rooted in response to grace already received.",
+      "example_quote": "Ang Mga Taga-Roma 12:12 ay isang makapangyarihang paalala at gabay sa ating espirituwal na paglalakbay, na nagbibigay ng tatlong mahahalagang direksyon para sa isang buhay na puno ng pananampalataya.",
+      "evidence_dates": [
+        "2026-01-16",
+        "2026-01-30",
+        "2026-03-24"
+      ],
+      "confidence": 0.7000000000000001,
+      "state": "confirmed",
+      "created_at": "2026-05-03T20:07:23.641617+00:00",
+      "updated_at": "2026-05-03T20:07:23.705306+00:00"
+    },
+    {
+      "id": "frag_63da337d",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "prayer_drift",
+      "pattern": "The prayer drifts into a long list of generic spiritual requests — 'protect us from all that harms us', 'guard our minds from doubt', 'fill our hearts with peace' — none of which are anchored to the reflection’s core themes: the authority to *tread on serpents and scorpions*, the totality of enemy power being rendered powerless, or the specific assurance that *nothing shall hurt you*. Instead, it reads like a general prayer for protection and peace, applicable to dozens of verses.",
+      "example_quote": "Protektahan Mo po kami mula sa lahat ng makasakit sa amin, pisikal man o espirituwal. Pangalagaan Mo ang aming isipan laban sa pagdududa at kawalan ng pag-asa. Puno'in Mo ang aming puso ng kapayapaan na tanging Ikaw lang ang makapagbibigay.",
+      "evidence_dates": [
+        "2026-01-27",
+        "2026-04-01",
+        "2026-06-08"
+      ],
+      "confidence": 0.7000000000000001,
+      "state": "confirmed",
+      "created_at": "2026-05-03T20:07:23.643108+00:00",
+      "updated_at": "2026-05-03T20:07:23.773884+00:00"
+    },
+    {
+      "id": "frag_7d310ab4",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "prayer_drift",
+      "pattern": "The prayer drifts into a long list of generic spiritual requests — especially the line listing all nine fruits of the Spirit — which, while biblical, is not anchored to the reflection’s core themes: the contrast between temporal vs. eternal value, the discipline of godliness as intentional training (like an athlete), and the dual promise of present and future blessing in 1 Tim 4:7–8.",
+      "example_quote": "Tulungan po Ninyo kaming linangin ang mga katangian na karapat-dapat sa Iyong pangalan: ang pag-ibig, kagalakan, kapayapaan, pagtitiyaga, kabaitan, kabutihan, katapatan, kahinahunan, at pagpipigil sa sarili.",
+      "evidence_dates": [
+        "2026-02-02",
+        "2026-03-15",
+        "2026-03-25",
+        "2026-06-23"
+      ],
+      "confidence": 0.8500000000000001,
+      "state": "confirmed",
+      "created_at": "2026-05-03T20:07:23.651092+00:00",
+      "updated_at": "2026-05-03T20:07:23.779759+00:00"
+    },
+    {
+      "id": "frag_6fd27d6d",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "other",
+      "pattern": "The reflection is rich and heartfelt, but it never engages with the *specific rhetorical force* of Luke 15:32 as the father’s direct speech to the *panganay* — a moment charged with relational tension, contrast between grace and resentment, and the father’s deliberate choice to affirm the prodigal *in front of* the elder brother. Instead, it treats the verse as a general statement about God’s joy, missing the interpersonal drama that makes this verse unique in the parable.",
+      "example_quote": "Ang Lukas 15:32 ay nagsisilbing matamis na paalala sa walang hanggang pag-ibig at mapagpatawad na puso ng Diyos Ama, na nag-aanyaya sa atin upang tunay na magbunyi sa bawat muling pagbabalik.",
+      "evidence_dates": [
+        "2026-02-10"
+      ],
+      "confidence": 0.4,
+      "state": "candidate",
+      "created_at": "2026-05-03T20:07:23.665218+00:00",
+      "updated_at": "2026-05-03T20:07:23.665218+00:00"
+    },
+    {
+      "id": "frag_3aaab430",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "other",
+      "pattern": "The reflection is rich and vivid, but it never engages with the *specific phrase* 'matuwid siyang humatol at makipagdigma' as a single, inseparable divine action — where judgment and warfare are not sequential but co-constitutive: His warfare *is* His righteous judgment, and His judgment *is* His victorious war. Instead, it treats 'humatol' and 'makipagdigma' as separate attributes, making the reflection applicable to any verse about divine justice or victory (e.g., Isaiah 63:1–6 or Revelation 19:15), failing the Specificity Test.",
+      "example_quote": "matuwid siyang humatol at makipagdigma",
+      "evidence_dates": [
+        "2026-02-14"
+      ],
+      "confidence": 0.4,
+      "state": "candidate",
+      "created_at": "2026-05-03T20:07:23.667316+00:00",
+      "updated_at": "2026-05-03T20:07:23.667316+00:00"
+    },
+    {
+      "id": "frag_da5402fe",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "other",
+      "pattern": "The reflection is rich and theologically sound, but it never engages with what makes Hebrews 4:14–16 *distinctive*: the direct link between Jesus’ high-priestly sympathy (v. 15) and the *immediate, bold access* to God’s throne *because of that sympathy* — not just general empathy or sinless perfection, but the specific pastoral logic that His tested humanity *qualifies Him to help us now*, making our approach *confident*, not merely hopeful. Nearly all of it could apply equally to Hebrews 2:17–18 or 5:2, without anchoring to the verse’s unique rhetorical pivot: 'Therefore… let us draw near' — a conclusion grounded in *His tested compassion*, not just His divinity or authority.",
+      "example_quote": "Ang pambihirang aspeto ng ating Dakilang Pinakapunong Pari ay ang kanyang malalim na pagkaunawa sa ating kalagayan. Si Hesus, bagaman Diyos, ay nagpakumbaba upang maging tao at maranasan ang bawat pagsubok, tukso, at kahinaan na ating nararanasan sa mundong ito.",
+      "evidence_dates": [
+        "2026-02-25"
+      ],
+      "confidence": 0.4,
+      "state": "candidate",
+      "created_at": "2026-05-03T20:07:23.675633+00:00",
+      "updated_at": "2026-05-03T20:07:23.675633+00:00"
+    },
+    {
+      "id": "frag_0c7e9f4c",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "prayer_drift",
+      "pattern": "The prayer drifts into a long list of generic spiritual requests — 'live worthily', 'show Your love to others', 'be witnesses', 'spread the Gospel' — none of which are anchored to the reflection’s core themes: the necessity of Christ’s death and resurrection as foretold, the role of remembrance ('Alalahanin ninyo...'), the contrast between grief and divine triumph, or the theological weight of 'kailangang ipagkanulo... at muling mabubuhay'. It feels like a standard Easter prayer, not one shaped by Luke 24:6–7.",
+      "example_quote": "Gabayan Mo kami, Panginoon, upang mamuhay kami nang karapat-dapat sa aming pananampalataya, nagpapakita ng Iyong pag-ibig sa bawat tao sa paligid namin. Puno ng kababaang-loob naming idinadalangin, Iyong tulungan kaming maging saksi ng Iyong tagumpay at magpatuloy sa pagpapalaganap ng Iyong Mabuting Balita sa buong mundo.",
+      "evidence_dates": [
+        "2026-03-16"
+      ],
+      "confidence": 0.4,
+      "state": "candidate",
+      "created_at": "2026-05-03T20:07:23.691391+00:00",
+      "updated_at": "2026-05-03T20:07:23.691391+00:00"
+    },
+    {
+      "id": "frag_ff2ab6e8",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "other",
+      "pattern": "The reflection is rich but generic — it could apply equally to any verse about spiritual worship or praise (e.g., Romans 12:1, 1 Peter 2:5, Revelation 4–5), without anchoring to what makes Hebrews 13:15–16 unique: the *pairing* of verbal praise ('papuri bilang handog') with *ethical action* ('paggawa ng mabuti at pagtulong sa kapwa') as *both* being 'alay na kinalulugdan ng Diyos' — a rare, concrete equivalence in Scripture that redefines worship as inseparable from neighbor-love.",
+      "example_quote": "Ang sipi mula sa Mga Hebreo 13:15-16 ay naglalahad ng dalawang mahahalagang paraan ng pagpapahayag ng ating pagsamba sa Diyos sa Bagong Tipan.",
+      "evidence_dates": [
+        "2026-03-19",
+        "2026-07-30"
+      ],
+      "confidence": 0.55,
+      "state": "candidate",
+      "created_at": "2026-05-03T20:07:23.697645+00:00",
+      "updated_at": "2026-05-03T20:07:23.819414+00:00"
+    },
+    {
+      "id": "frag_30f513a9",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "other",
+      "pattern": "The reflection is beautiful and theologically rich, but it never engages with the *specific claims* in Colossians 1:15–17 — especially 'firstborn over all creation', 'all things created *through Him and for Him*', and 'in Him all things hold together' — instead speaking generically about Christ revealing God’s love/justice/mercy, which could apply equally to John 1, Hebrews 1, or even Isaiah 40. It fails the Specificity Test.",
+      "example_quote": "Sa pamamagitan Niya, naging posible para sa sangkatauhan na makita, maunawaan, at makaugnay ang walang-hanggang Diyos, na kung hindi man ay mananatiling isang hiwaga.",
+      "evidence_dates": [
+        "2026-03-22"
+      ],
+      "confidence": 0.4,
+      "state": "candidate",
+      "created_at": "2026-05-03T20:07:23.701764+00:00",
+      "updated_at": "2026-05-03T20:07:23.701764+00:00"
+    },
+    {
+      "id": "frag_647b7fe9",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "other",
+      "pattern": "The reflection is thoughtful but generic — it describes doubt and the need for physical proof, yet never names or develops what makes John 20:29 unique: Jesus’ beatitude ('Mapalad ang mga naniniwala kahit hindi nila ako nakita') as a defining blessing for *post-resurrection faith*, not just a contrast to Thomas’ doubt; the verse centers on blessedness of unseen faith, not merely human limitation.",
+      "example_quote": "Ang kanyang pag-aalinlangan, na hayagang sinabi na hindi siya maniniwala hangga't hindi niya nakikita at nahahawakan ang mga sugat ni Hesus, ay isang salamin ng likas na paghahangad ng tao ng nakikitang patunay.",
+      "evidence_dates": [
+        "2026-04-03"
+      ],
+      "confidence": 0.4,
+      "state": "candidate",
+      "created_at": "2026-05-03T20:07:23.711009+00:00",
+      "updated_at": "2026-05-03T20:07:23.711009+00:00"
+    },
+    {
+      "id": "frag_f2b2a023",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "prayer_drift",
+      "pattern": "The prayer drifts into a long list of generic ministry aspirations ('pakainin ang Inyong mga tupa', 'maibahagi ang Mabuting Balita', 'magmalasakit sa bawat kapatid') without anchoring to the reflection’s core themes: the threefold restoration through love-questions, Pedro’s grief and humble surrender ('alam po ninyo ang lahat ng bagay'), and the inseparable link between confessed love and *specific* shepherding responsibility — not general evangelism or church service.",
+      "example_quote": "Gawin po kaming mga kasangkapan Ninyo upang pakainin ang Inyong mga tupa—ang mga nangangailangan ng pag-asa, ang mga uhaw sa katotohanan, at ang mga nagugutom sa Inyong Salita. Turuan po Ninyo kaming magmalasakit sa bawat kapatid, na tularan ang Inyong pag-ibig na walang kondisyon at walang hanggan. Palakasin po Ninyo kami upang aming maibahagi ang Mabuting Balita at maipakita ang Inyong pag-ibig sa aming mga kapwa.",
+      "evidence_dates": [
+        "2026-04-06"
+      ],
+      "confidence": 0.4,
+      "state": "candidate",
+      "created_at": "2026-05-03T20:07:23.713599+00:00",
+      "updated_at": "2026-05-03T20:07:23.713599+00:00"
+    },
+    {
+      "id": "frag_887ff297",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "other",
+      "pattern": "The reflection is rich and theologically sound, but it never engages with what makes Colossians 3:1–2 *distinctive*: the present-tense resurrection reality ('you have been raised') as the *ground* for mind-renewal — not just a future hope or general spiritual principle. Nearly all of it could apply equally to Ephesians 2:6 or Romans 6:4 without change.",
+      "example_quote": "Binuhay kayong muli na kasama ni Cristo, kaya't ang pagtuunan ninyo ng isip ay ang mga bagay na nasa langit na kinaroroonan ni Cristo, na nakaupo sa kanan ng Diyos.",
+      "evidence_dates": [
+        "2026-04-11"
+      ],
+      "confidence": 0.4,
+      "state": "candidate",
+      "created_at": "2026-05-03T20:07:23.720027+00:00",
+      "updated_at": "2026-05-03T20:07:23.720027+00:00"
+    },
+    {
+      "id": "frag_57a36aa6",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "other",
+      "pattern": "The reflection is rich and theologically sound, but it never engages with what makes Matthew 16:18–19 *distinctive*: Jesus’ wordplay on 'Petros' (Peter) and 'petra' (rock), the immediate context of Peter’s confession *as the first human to articulate this truth*, and how this moment functions as a turning point in Matthew’s Gospel — where Jesus begins revealing His suffering and resurrection. Instead, it reads like a general treatise on church authority and eschatological victory, applicable equally to Ephesians 2 or 1 Corinthians 3.",
+      "example_quote": "Si Simon Pedro, sa kanyang pagkilala kay Kristo bilang Anak ng Diyos na buhay, ay naging kinatawan ng paniniwalang ito, na siyang tunay na saligan ng Kanyang kaharian sa lupa.",
+      "evidence_dates": [
+        "2026-04-15"
+      ],
+      "confidence": 0.4,
+      "state": "candidate",
+      "created_at": "2026-05-03T20:07:23.724778+00:00",
+      "updated_at": "2026-05-03T20:07:23.724778+00:00"
+    },
+    {
+      "id": "frag_8713fd47",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "other",
+      "pattern": "The reflection is rich and moving, but it never engages with what makes Acts 9:3–6 *distinct* from other conversion accounts — especially the *repetition of the name* ('Saulo, Saulo!'), which signals divine urgency and personal address, or the *theological weight of 'inuusig mo ako'* — not just 'you persecute my people' but 'you persecute *me*', revealing Christ’s mystical union with His body. Nearly all of it could apply equally to Paul’s later retellings in Acts 22 or 26, or even to other call narratives like Isaiah 6 or Jeremiah 1.",
+      "example_quote": "Ang tanong, “Saulo, Saulo! Bakit mo ako inuusig?” ay hindi lamang isang pagtatanong kundi isang makapangyarihang pagbubunyag ng katotohanan.",
+      "evidence_dates": [
+        "2026-05-15"
+      ],
+      "confidence": 0.4,
+      "state": "candidate",
+      "created_at": "2026-05-03T20:07:23.744480+00:00",
+      "updated_at": "2026-05-03T20:07:23.744480+00:00"
+    },
+    {
+      "id": "frag_b85cc67e",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "other",
+      "pattern": "The reflection is theologically sound but generic — it could apply equally to John 14:6, Acts 10:43, or 1 Timothy 2:5 without changing a word; it never engages with what makes Acts 4:12 *distinct*: its courtroom setting (before the Sanhedrin), its polemical force against Jewish religious authority, or the shocking claim that salvation is tied not just to Jesus’ person but specifically to *His name* — a concept deeply rooted in Hebrew thought where 'name' signifies identity, authority, and presence.",
+      "example_quote": "Ang Mga Gawa 4:12 ay isang makapangyarihang deklarasyon na binibigkas ni Pedro sa harap ng Sanhedrin, matapos niyang pagalingin ang isang pilay sa pangalan ni Hesus. Ito ay hindi lamang isang simpleng pahayag; isa itong matapang na pagpapatotoo sa gitna ng matinding pagtutol at pag-uusig.",
+      "evidence_dates": [
+        "2026-05-18"
+      ],
+      "confidence": 0.4,
+      "state": "candidate",
+      "created_at": "2026-05-03T20:07:23.756879+00:00",
+      "updated_at": "2026-05-03T20:07:23.756879+00:00"
+    },
+    {
+      "id": "frag_ad1addb6",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "other",
+      "pattern": "The reflection is theologically rich but fails the Specificity Test — it could apply equally to Matthew 18:11, Luke 5:32, or even John 3:17; it never engages with what makes Luke 19:10 unique: its immediate context (Zacchaeus’ story), the verb 'hanapin' (to seek/search actively), or the noun 'naligaw' (the lost — not just sinners generally, but those socially excluded, like tax collectors, whom Jesus deliberately enters their homes to find).",
+      "example_quote": "Ang talatang Lucas 19:10 ay nagsisilbing isang mahalagang deklarasyon, naglalahad ng pinakabuod ng dahilan ng pagdating ni Kristo sa ating mundo.",
+      "evidence_dates": [
+        "2026-06-22"
+      ],
+      "confidence": 0.4,
+      "state": "candidate",
+      "created_at": "2026-05-03T20:07:23.778346+00:00",
+      "updated_at": "2026-05-03T20:07:23.778346+00:00"
+    },
+    {
+      "id": "frag_2500bd15",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "other",
+      "pattern": "The reflection starts strong with the verse’s contrast between 'no debt' and the 'enduring debt of love', but then drifts into generic financial wisdom ('kalayaan mula sa pasaning pinansyal', 'karunungan ng pagiging masinop sa ating mga pinansya') — none of which is in Romans 13:8, which speaks only of *moral* debt (love as fulfillment of law), not personal finance or budgeting advice.",
+      "example_quote": "pagiging malaya sa utang ay nagbibigay ng kapayapaan ng isip, nagpapahintulot sa atin na maglingkod nang walang hadlang, at sumasalamin sa karunungan ng pagiging masinop sa ating mga pinansya",
+      "evidence_dates": [
+        "2026-07-06"
+      ],
+      "confidence": 0.4,
+      "state": "candidate",
+      "created_at": "2026-05-03T20:07:23.785663+00:00",
+      "updated_at": "2026-05-03T20:07:23.785663+00:00"
+    },
+    {
+      "id": "frag_08961f68",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "other",
+      "pattern": "The reflection is rich and theologically sound, but it never engages with the *specific imperative* in Romans 6:11 — 'ituring ang inyong sarili' (reckon yourselves) — as a present-tense, active, daily mental posture rooted in the indicative of union with Christ; instead, it drifts into general exhortations about identity change and spiritual freedom that could apply equally to Ephesians 2:1–10 or Colossians 3:1–4 without referencing what makes this verse distinct: the verb 'reckon' (logizomai) as a disciplined, faith-activated act of aligning thought with gospel reality.",
+      "example_quote": "Ang panawagang \"ituring ang inyong sarili\" ay nagsasaad ng isang sadyang pagpili, isang kaisipan na kailangan nating yakapin at ipamuhay araw-araw.",
+      "evidence_dates": [
+        "2026-07-15"
+      ],
+      "confidence": 0.4,
+      "state": "candidate",
+      "created_at": "2026-05-03T20:07:23.797307+00:00",
+      "updated_at": "2026-05-03T20:07:23.797307+00:00"
+    },
+    {
+      "id": "frag_b719dd16",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "other",
+      "pattern": "The reflection is rich and coherent, but it never engages with the *specific phrase* 'sapagkat iyan ang dahilan kung bakit kayo tinawag sa iisang katawan' — especially the causal link between Christ’s peace *as the reason* for our calling into one body, not just a tool for maintaining unity. This makes the reflection generic: nearly all of it could apply equally to Ephesians 4:3 ('pagpapanatili ng pagkakaisa') or Philippians 2:1–2 without changing a word.",
+      "example_quote": "Ang kapayapaang ito ang mismong dahilan kung bakit tayo tinawag upang maging iisang katawan.",
+      "evidence_dates": [
+        "2026-07-17"
+      ],
+      "confidence": 0.4,
+      "state": "candidate",
+      "created_at": "2026-05-03T20:07:23.809955+00:00",
+      "updated_at": "2026-05-03T20:07:23.809955+00:00"
+    },
+    {
+      "id": "frag_4a1f381f",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "other",
+      "pattern": "The reflection is rich and inspiring, but it never engages with what makes Luke 1:37 *distinctive* in its context — namely, that this declaration comes *specifically in response to Mary’s 'how can this be?' question about virgin conception*, anchoring God’s omnipotence not in abstract power but in His faithful, covenant-keeping action to fulfill ancient promises (e.g., Isaac, Samson, Samuel, John the Baptist) — a pattern Luke highlights. Without that link, the reflection could apply equally to Genesis 18:14, Jeremiah 32:27, or Matthew 19:26.",
+      "example_quote": "Ang salitang “sapagkat walang anumang bagay na hindi kayang gawin ng Diyos” na matatagpuan sa Lucas 1:37 ay isang napakalakas na deklarasyon ng sukdulang kapangyarihan ng ating Lumikha.",
+      "evidence_dates": [
+        "2026-07-22"
+      ],
+      "confidence": 0.4,
+      "state": "candidate",
+      "created_at": "2026-05-03T20:07:23.811585+00:00",
+      "updated_at": "2026-05-03T20:07:23.811585+00:00"
     }
   ]
 }
