@@ -2,9 +2,9 @@
   "language": "fil",
   "version": "MBB05",
   "genome_version": "fil-MBB05-2025-v1",
-  "total_entries_reviewed": 14,
-  "total_pauses": 14,
-  "updated_at": "2026-05-02T22:28:52.088166+00:00",
+  "total_entries_reviewed": 29,
+  "total_pauses": 29,
+  "updated_at": "2026-05-03T04:23:24.160046+00:00",
   "fragments": [
     {
       "id": "frag_abc8a040",
@@ -15,12 +15,14 @@
       "example_quote": "Linisin Mo ang aming mga puso at patuloy na palakasin ang aming pananampalataya sa Iyong Anak. Bigyan Mo kami ng kakayahang mamuhay nang nararapat sa Iyong kabutihan at ng Espiritu Santo na gumagabay sa aming mga desisyon.",
       "evidence_dates": [
         "2025-09-02",
-        "2026-02-12"
+        "2026-02-12",
+        "2025-10-29",
+        "2026-07-19"
       ],
-      "confidence": 0.55,
-      "state": "candidate",
+      "confidence": 0.8500000000000001,
+      "state": "confirmed",
       "created_at": "2026-05-02T22:28:52.047888+00:00",
-      "updated_at": "2026-05-02T22:28:52.071059+00:00"
+      "updated_at": "2026-05-03T04:23:24.158234+00:00"
     },
     {
       "id": "frag_14b15ca4",
@@ -78,10 +80,10 @@
       "evidence_dates": [
         "2025-11-21"
       ],
-      "confidence": 0.4,
+      "confidence": 0.55,
       "state": "candidate",
       "created_at": "2026-05-02T22:28:52.062392+00:00",
-      "updated_at": "2026-05-02T22:28:52.062392+00:00"
+      "updated_at": "2026-05-03T04:23:24.131901+00:00"
     },
     {
       "id": "frag_12106159",
@@ -92,12 +94,14 @@
       "example_quote": "Ang sipi mula sa Aklat ng Roma, kabanata uno talata beynte, ay naglalatag ng isang napakalalim na katotohanan hinggil sa ating Panginoon.",
       "evidence_dates": [
         "2025-12-08",
-        "2026-03-14"
+        "2026-03-14",
+        "2025-11-24",
+        "2026-07-12"
       ],
-      "confidence": 0.55,
-      "state": "candidate",
+      "confidence": 0.8500000000000001,
+      "state": "confirmed",
       "created_at": "2026-05-02T22:28:52.064187+00:00",
-      "updated_at": "2026-05-02T22:28:52.073852+00:00"
+      "updated_at": "2026-05-03T04:23:24.156988+00:00"
     },
     {
       "id": "frag_b1c1732c",
@@ -110,10 +114,10 @@
         "2025-12-24",
         "2026-07-24"
       ],
-      "confidence": 0.55,
-      "state": "candidate",
+      "confidence": 0.7000000000000001,
+      "state": "confirmed",
       "created_at": "2026-05-02T22:28:52.065474+00:00",
-      "updated_at": "2026-05-02T22:28:52.086666+00:00"
+      "updated_at": "2026-05-03T04:23:24.158845+00:00"
     },
     {
       "id": "frag_44e6d418",
@@ -153,12 +157,90 @@
       "pattern": "The reflection is generic — it could apply equally to any verse about spiritual joy in others’ faithfulness (e.g., Phil 1:4, 2 Cor 7:13, 1 Thess 3:9), without anchoring to what makes 3 John 1:4 unique: the *personal, paternal delight* of an aging apostle hearing *specific reports* ('marinig ang balitang...') — not just abstract 'righteous living', but *testimony-based affirmation* of truth-walking.",
       "example_quote": "Ang talatang ito, na buong pagmamahal na isinulat, ay nagpapakita ng isang malalim na ugnayan sa pagitan ng espirituwal na magulang at ng kanyang mga pinatnubayan, na ang kagalakan ay nakasalalay sa katapatan ng kanilang paglakad.",
       "evidence_dates": [
-        "2026-05-20"
+        "2026-05-20",
+        "2025-09-06"
+      ],
+      "confidence": 0.7000000000000001,
+      "state": "confirmed",
+      "created_at": "2026-05-02T22:28:52.081320+00:00",
+      "updated_at": "2026-05-03T04:23:24.150968+00:00"
+    },
+    {
+      "id": "frag_b6f2e57f",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "other",
+      "pattern": "The reflection repeatedly emphasizes divine sovereignty and unconditional mercy, but it never engages with the *specific wording or context* of Romans 9:15–16 — especially the Exodus quotation ('I will have mercy on whom I have mercy') and its function in Paul’s argument about election and Israel’s unbelief. Instead, it reads like a generic treatise on grace, applicable equally to Ephesians 2 or Titus 3 — failing the Specificity Test.",
+      "example_quote": "Ang Mga Taga-Roma 9:15-16 ay naglalahad ng isang dakilang katotohanan na nagbibigay-liwanag sa walang hanggang kapangyarihan at ganap na pagpapasya ng Diyos pagdating sa pagbibigay ng Kanyang kahabagan.",
+      "evidence_dates": [
+        "2025-08-03",
+        "2025-09-17",
+        "2026-06-17"
+      ],
+      "confidence": 0.7000000000000001,
+      "state": "confirmed",
+      "created_at": "2026-05-03T04:23:24.115453+00:00",
+      "updated_at": "2026-05-03T04:23:24.154252+00:00"
+    },
+    {
+      "id": "frag_691111e6",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "other",
+      "pattern": "The reflection is deeply theological and beautifully written, but it never names or engages with the *specific claim* of Romans 1:20 — that God’s invisible attributes are 'clearly seen' *because they are understood through what has been made*, making people 'without excuse'. Instead, it speaks broadly about creation revealing God, without anchoring in the verse’s unique logic: not just revelation, but *inexcusability* as a direct consequence of that clarity. That core idea — the moral accountability arising from general revelation — is underdeveloped and ultimately displaced by themes of worship, surrender, and sovereignty that, while true, aren’t the verse’s central thrust.",
+      "example_quote": "Sa harap ng napakaliwanag na paghahayag na ito, ano ang nararapat nating maging tugon? Hindi lamang sapat na simpleng makita ang kagandahan at kaayusan ng mga nilikha; kinakailangan nating hanapin at kilalanin ang Lumikha na nasa likod ng lahat ng ito.",
+      "evidence_dates": [
+        "2025-12-08"
       ],
       "confidence": 0.4,
       "state": "candidate",
-      "created_at": "2026-05-02T22:28:52.081320+00:00",
-      "updated_at": "2026-05-02T22:28:52.081320+00:00"
+      "created_at": "2026-05-03T04:23:24.132871+00:00",
+      "updated_at": "2026-05-03T04:23:24.132871+00:00"
+    },
+    {
+      "id": "frag_f673cd4b",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "other",
+      "pattern": "The reflection is deeply theological and well-written, but it never names or engages with the *specific structure* of 1 Timoteo 1:15–16 — especially the twin claims: (1) 'this saying is trustworthy' as a liturgical formula, and (2) Pablo’s self-identification as 'the foremost sinner' *in order that* Christ’s limitless patience might become an example for future believers. The reflection treats 'foremost sinner' as a general humility motif, not as a functional, purpose-driven claim tied to the phrase 'so that in me first...' — making it generic enough to fit any verse about grace or conversion.",
+      "example_quote": "Ang kanyang pagkilala sa sarili bilang 'pinakamasama' ay hindi lamang isang retorika kundi isang tapat na pagtataya sa kanyang mga nagawang kasalanan laban sa Diyos at sa Kanyang mga anak.",
+      "evidence_dates": [
+        "2026-02-12"
+      ],
+      "confidence": 0.4,
+      "state": "candidate",
+      "created_at": "2026-05-03T04:23:24.139798+00:00",
+      "updated_at": "2026-05-03T04:23:24.139798+00:00"
+    },
+    {
+      "id": "frag_5debe703",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "other",
+      "pattern": "The reflection is generic — it speaks broadly about Scripture’s value and purpose but never names or develops the two specific elements highlighted in Romans 15:4: (1) that Scripture was written 'for our instruction' (not just 'for learning' but with moral and spiritual formation in view), and (2) that its purpose is to produce hope *through endurance and encouragement* — a unique causal chain absent from the reflection.",
+      "example_quote": "Ang bawat salitang isinulat noong sinaunang panahon ay may layuning kapaki-pakinabang para sa kasalukuyang henerasyon, hindi lamang bilang kasaysayan kundi bilang mapagkakatiwalaang gabay sa ating espirituwal na paglalakbay.",
+      "evidence_dates": [
+        "2026-03-24"
+      ],
+      "confidence": 0.4,
+      "state": "candidate",
+      "created_at": "2026-05-03T04:23:24.143573+00:00",
+      "updated_at": "2026-05-03T04:23:24.143573+00:00"
+    },
+    {
+      "id": "frag_d5c8c89b",
+      "language": "fil",
+      "version": "MBB05",
+      "category": "register_drift",
+      "pattern": "The reflection is deeply theological and coherent, but it reads like a seminary lecture rather than a devotional — terms like 'espirituwal na awtoridad', 'magdeklara ng kalooban ng Diyos', and 'moralidad at espirituwal na pamumuhay' feel academic and distant for a morning devotional; a lay reader would pause, wondering if they're supposed to *do* something or just absorb doctrine.",
+      "example_quote": "espirituwal na awtoridad na ipinagkaloob sa iglesya upang magdeklara ng kalooban ng Diyos, magpatupad ng disiplina, at magpahayag ng kapatawaran ayon sa Banal na Kasulatan",
+      "evidence_dates": [
+        "2026-04-15"
+      ],
+      "confidence": 0.4,
+      "state": "candidate",
+      "created_at": "2026-05-03T04:23:24.145793+00:00",
+      "updated_at": "2026-05-03T04:23:24.145793+00:00"
     }
   ]
 }
