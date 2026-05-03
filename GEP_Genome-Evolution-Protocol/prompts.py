@@ -432,6 +432,8 @@ For each flag: quote the shortest verbatim phrase from the text that contains th
 If you cannot isolate a verbatim phrase for a flag, skip that flag.
 suggested_fix: rewrite only the quoted phrase with the minimal correction. Do not rewrite the full sentence.
 
+diff: unified diff format — one "-" line with quoted_problem, one "+" line with suggested_fix.
+
 Return ONLY valid JSON. No markdown. No preamble.
 First character must be {{ and last must be }}.
 
@@ -443,6 +445,7 @@ Schema:
             "type": "typo" | "repetition" | "grammar" | "unnatural",
             "quoted_problem": "shortest verbatim phrase containing the error",
             "suggested_fix": "corrected version of that phrase only",
+            "diff": "unified diff string: one '-' line then one '+' line",
             "confidence": 0.0 to 1.0
         }}
     ]

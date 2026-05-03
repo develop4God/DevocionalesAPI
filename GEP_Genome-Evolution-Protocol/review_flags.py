@@ -210,6 +210,7 @@ def build_report(
     input_path: Path,
     results_path: Path,
     verdict_filter: str,  # "FLAG" | "PAUSE" | "ALL"
+    show_diff: bool = False,
 ) -> tuple[str, int, int, int]:
     """
     Join input + results, filter by verdict, build report string.
@@ -275,6 +276,8 @@ def build_report(
                 issue = flag0.get("type", "") or ""
                 parsed["quoted_pause"] = flag0.get("quoted_problem") or ""
                 parsed["confidence"] = flag0.get("confidence", 1.0)
+                # If model provides a unified diff string, capture it for display
+                parsed["diff"] = flag0.get("diff", "")
 
             quoted_val = parsed.get(quoted_key, "") or ""
 
@@ -294,6 +297,7 @@ def build_report(
                     "quoted": quoted_val,
                     "conf": parsed.get("confidence", ""),
                     "category": parsed.get("category", "") or "",
+                    "diff": parsed.get("diff", ""),
                     "qa_tag": qa_tag,
                     **fields,
                 }
@@ -351,6 +355,11 @@ def build_report(
             lines.append(f"CONF        {e['conf']}")
             lines.append(f"ISSUE       {e['issue']}")
             lines.append(f"QUOTED      {e['quoted']}")
+            if show_diff and e.get("diff"):
+                lines.append("")
+                lines.append("DIFF")
+                for dl in str(e.get("diff", "")).splitlines():
+                    lines.append(dl)
             lines.append("")
             if e.get("versiculo"):
                 lines.append(f"VER  {e['versiculo']}")
@@ -408,6 +417,11 @@ def main() -> None:
         metavar="FILE",
         help="Override output report path (default: data/reports/review_...txt)",
     )
+    parser.add_argument(
+        "--diff",
+        action="store_true",
+        help="Include model-provided unified diff in the report (Phase 1)",
+    )
     args = parser.parse_args()
 
     # Normalise verdict default per phase
@@ -458,6 +472,7 @@ def main() -> None:
         input_path=input_path,
         results_path=results_path,
         verdict_filter=verdict_filter,
+        show_diff=args.diff,
     )
 
     # Resolve output path
