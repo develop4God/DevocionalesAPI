@@ -35,7 +35,8 @@ except ImportError:
     pass
 
 # ── Project imports ───────────────────────────────────────────────────────────
-from audit import audit_path, append_record, build_record
+from audit import audit_path, append_record, build_record, compute_asset_id
+from datetime import datetime, timezone
 from cloud_client import _parse_reaction
 from models import PauseCategory, ReaderReaction, Verdict
 from genome import absorb_reaction, ensure_genome, save_genome
@@ -231,7 +232,7 @@ def process_results(
     log_path = audit_path(lang, version, year)
 
     # Load existing audit into memory for dedup (id:phase)
-    existing: set[str] = set()      # "id:phase"
+    existing: set[str] = set()  # "id:phase"
     if log_path.exists() and not overwrite:
         with open(log_path, encoding="utf-8") as f:
             for line in f:
@@ -300,7 +301,38 @@ def process_results(
 
             raw_content = extract_content(result)
             if not raw_content:
-                if f"{custom_id}:{phase}" in existing:
+                # compute candidate asset id for this (empty) response
+                action_tmp = "error_parse"
+                err_reaction_tmp = ReaderReaction(
+                    verdict=Verdict.OK,
+                    reaction="[collect_batch] Empty response from batch provider.",
+                    quoted_pause=None,
+                    category=None,
+                    confidence=0.0,
+                )
+                candidate_row_tmp = {
+                    "date": entry_meta["date"],
+                    "id": custom_id,
+                    "language": lang,
+                    "version": version,
+                    "reviewed_at": datetime.now(timezone.utc).isoformat(),
+                    "action": action_tmp,
+                    "phase": phase,
+                    "verdict": err_reaction_tmp.verdict.value,
+                    "reaction": err_reaction_tmp.reaction,
+                    "quoted_pause": err_reaction_tmp.quoted_pause,
+                    "category": None,
+                    "confidence": err_reaction_tmp.confidence,
+                    "genome_fragment_id": None,
+                    "raw_response": None,
+                    "phase1_verdict": None,
+                    "phase1_issue": None,
+                    "phase1_quoted": None,
+                    "phase1_confidence": None,
+                    "phase1_raw": None,
+                }
+                candidate_asset_tmp = compute_asset_id(candidate_row_tmp)
+                if f"{custom_id}:{phase}:{candidate_asset_tmp}" in existing:
                     skipped += 1
                     continue
                 print(
@@ -333,7 +365,38 @@ def process_results(
                 reaction = _parse_reaction(raw_content)
 
             if reaction is None:
-                if f"{custom_id}:{phase}" in existing:
+                # compute candidate asset id for this parse-failure case
+                action_tmp = "error_parse"
+                err_reaction_tmp = ReaderReaction(
+                    verdict=Verdict.OK,
+                    reaction="[collect_batch] Could not parse JSON from model response.",
+                    quoted_pause=None,
+                    category=None,
+                    confidence=0.0,
+                )
+                candidate_row_tmp = {
+                    "date": entry_meta["date"],
+                    "id": custom_id,
+                    "language": lang,
+                    "version": version,
+                    "reviewed_at": datetime.now(timezone.utc).isoformat(),
+                    "action": "error_parse",
+                    "phase": phase,
+                    "verdict": err_reaction_tmp.verdict.value,
+                    "reaction": err_reaction_tmp.reaction,
+                    "quoted_pause": err_reaction_tmp.quoted_pause,
+                    "category": None,
+                    "confidence": err_reaction_tmp.confidence,
+                    "genome_fragment_id": None,
+                    "raw_response": raw_content,
+                    "phase1_verdict": None,
+                    "phase1_issue": None,
+                    "phase1_quoted": None,
+                    "phase1_confidence": None,
+                    "phase1_raw": None,
+                }
+                candidate_asset_tmp = compute_asset_id(candidate_row_tmp)
+                if f"{custom_id}:{phase}:{candidate_asset_tmp}" in existing:
                     skipped += 1
                     continue
                 print(
@@ -389,8 +452,31 @@ def process_results(
 
             action = "flagged" if reaction.verdict.value == "PAUSE" else "reviewed"
 
-            # Dedup by composite key id:phase
-            if f"{custom_id}:{phase}" in existing:
+            # Dedup by composite key id:phase:asset_id
+            # build candidate row to compute asset id exactly as audit would
+            candidate_row = {
+                "date": entry_meta["date"],
+                "id": custom_id,
+                "language": lang,
+                "version": version,
+                "reviewed_at": datetime.now(timezone.utc).isoformat(),
+                "action": action,
+                "phase": phase,
+                "verdict": reaction.verdict.value,
+                "reaction": reaction.reaction,
+                "quoted_pause": reaction.quoted_pause,
+                "category": reaction.category.value if reaction.category else None,
+                "confidence": reaction.confidence,
+                "genome_fragment_id": None,
+                "raw_response": raw_content,
+                "phase1_verdict": None,
+                "phase1_issue": None,
+                "phase1_quoted": None,
+                "phase1_confidence": None,
+                "phase1_raw": None,
+            }
+            candidate_asset = compute_asset_id(candidate_row)
+            if f"{custom_id}:{phase}:{candidate_asset}" in existing:
                 skipped += 1
                 continue
 
