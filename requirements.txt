@@ -1,0 +1,14 @@
+# Core — shared across GEP + seed_generation
+pyyaml
+python-dotenv
+
+# seed_generation
+anthropic==0.42.0
+fastapi==0.135.2
+google-genai==1.68.0
+openai
+pydantic==2.12.5
+requests==2.33.0
+tenacity==9.1.4
+tqdm==4.67.3
+uvicorn==0.42.0
