@@ -30,7 +30,7 @@ try:
     from dotenv import load_dotenv
     from pathlib import Path as _Path
 
-    load_dotenv(dotenv_path=_Path(__file__).parent / ".env")
+    load_dotenv(dotenv_path=_Path(__file__).parent.parent / ".env")
 except ImportError:
     pass
 
