@@ -1,0 +1,58 @@
+# providers.yml
+# ─────────────────────────────────────────────────────────────────────────────
+# Config for the sync, in-process generation providers (shared/providers.py).
+# Separate from BATCH/providers.yml, which configures the async/batch layer
+# (provider_adapter.py) — different concern, different provider set.
+#
+# kind:
+#   local — runs on-machine (Ollama), no API key, no per-token cost
+#   api   — remote provider, requires api_key_env
+#
+# supports_thinking: whether this model has a reasoning/chain-of-thought mode
+#   (Ollama's "think" field, Qwen's "enable_thinking", etc.)
+# thinking_enabled: default for that mode when supports_thinking is true —
+#   off by default here since reflexion/oracion generation doesn't need it
+#   and it costs extra tokens/latency.
+#
+# To add a model alias: add one entry under the provider's `models` map.
+# To change a provider's default model: change `defaults.model`.
+# ─────────────────────────────────────────────────────────────────────────────
+
+providers:
+
+  ollama:
+    kind: local
+    url: http://localhost:11434/api/generate
+    timeout_seconds: 180
+    models:
+      gemma4-26b:
+        model_id: gemma4:26b
+        supports_thinking: false
+      qwen3-30b:
+        model_id: qwen3:30b
+        supports_thinking: true
+        thinking_enabled: false
+    defaults:
+      model: gemma4-26b
+
+  gemini:
+    kind: api
+    api_key_env: GOOGLE_API_KEY
+    models:
+      gemini-2.0-flash:
+        model_id: gemini-2.0-flash
+        max_output_tokens: 8192
+        supports_thinking: false
+    defaults:
+      model: gemini-2.0-flash
+
+  anthropic:
+    kind: api
+    api_key_env: ANTHROPIC_API_KEY
+    models:
+      claude-sonnet-4-6:
+        model_id: claude-sonnet-4-6
+        max_tokens: 4096
+        supports_thinking: false
+    defaults:
+      model: claude-sonnet-4-6

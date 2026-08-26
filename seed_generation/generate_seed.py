@@ -5,9 +5,9 @@ Unified, provider-swappable seed-driven devotional generator.
 
 Replaces the old server/client split (API_Server_Seed.py +
 client_generate_from_seed.py) for local/direct providers — no HTTP,
-no server process. One prompt (pipeline_shared.build_prompt), one
-JSON-repair strategy (pipeline_shared.repair_json), one assembly step
-(generation_core.DevotionalBuilder), any provider from providers.py.
+no server process. One prompt + parser (generation_core.build_prompt /
+parse_content), one assembly step (generation_core.DevotionalBuilder),
+any provider from providers.py — all in seed_generation/shared/.
 
 Usage:
   python generate_seed.py --seed seeds/seed_es_RVR1960.json \\
@@ -29,6 +29,10 @@ import signal
 import sys
 import json
 from datetime import datetime
+from pathlib import Path
+
+# generation_core.py and providers.py live in seed_generation/shared/.
+sys.path.insert(0, str(Path(__file__).resolve().parent / "shared"))
 
 from generation_core import (
     DevotionalBuilder,
@@ -38,15 +42,7 @@ from generation_core import (
     parse_content,
     save_output,
 )
-from providers import PROVIDERS
-
-
-def _build_generator(provider: str, model: str | None):
-    cls = PROVIDERS.get(provider)
-    if cls is None:
-        raise ValueError(f"Unknown provider {provider!r}. Available: {list(PROVIDERS)}")
-    kwargs = {"model": model} if model else {}
-    return cls(**kwargs)
+from providers import PROVIDERS, build_generator
 
 
 def generate_from_seed(
@@ -69,7 +65,7 @@ def generate_from_seed(
     print(f"  Output   : {output_dir}")
     print(SEP + "\n")
 
-    generator = _build_generator(provider, model)
+    generator = build_generator(provider, model)
 
     with open(seed_path, encoding="utf-8") as f:
         seed = json.load(f)

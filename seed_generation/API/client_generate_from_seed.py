@@ -17,8 +17,8 @@ import requests
 from datetime import datetime
 from tkinter import Tk, filedialog, messagebox, simpledialog
 
-# generation_core.py lives in seed_generation/, one level up from API/.
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+# generation_core.py lives in seed_generation/shared/.
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "shared"))
 from generation_core import DevotionalBuilder, DevotionalValidationError
 
 API_URL = "http://127.0.0.1:50003/generate_creative"
