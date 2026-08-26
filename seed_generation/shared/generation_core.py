@@ -64,7 +64,9 @@ def build_prompt(verse_cita: str, lang: str) -> str:
             f"Write this closing phrase exactly ONCE, as the very last words of the prayer.",
             f"RULES:\n"
             f"- ALL text MUST be 100% in {lang} — no language mixing.\n"
-            f"- Do NOT include transliterations, romanizations, or text in parentheses.",
+            f"- Do NOT include transliterations, romanizations, or text in parentheses.\n"
+            f"- Feel free to open the reflection in a way that fits the verse's own tone, "
+            f"rather than a standard formula.",
         ]
     )
 
