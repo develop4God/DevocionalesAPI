@@ -35,7 +35,7 @@ from tenacity import (
     wait_exponential,
 )
 
-from seed_content_validator import validate_and_fix
+from seed_generation.tools.seed_content_validator import validate_and_fix
 
 # =============================================================================
 # STARTUP
