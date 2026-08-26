@@ -1,0 +1,38 @@
+{
+  "2026-08-01": {
+    "versiculo": {
+      "cita": "Hebreos 5:8-9",
+      "texto": "Y aunque era Hijo, por lo que padeció aprendió la obediencia; y habiendo sido perfeccionado, vino a ser autor de eterna salvación para todos los que le obedecen."
+    },
+    "para_meditar": [
+      { "cita": "Filipenses 2:8", "texto": "Y estando en la condición de hombre, se humilló a sí mismo, haciéndose obediente hasta la muerte, y muerte de cruz." },
+      { "cita": "Romanos 5:19", "texto": "Porque como por la desobediencia de un hombre los muchos fueron constituidos pecadores, así también por la obediencia de uno, los muchos serán constituidos justos." },
+      { "cita": "Juan 14:15", "texto": "Si me amáis, guardad mis mandamientos." }
+    ],
+    "tags": ["Obediencia", "Sufrimiento"]
+  },
+  "2026-08-02": {
+    "versiculo": {
+      "cita": "2 Corintios 5:7",
+      "texto": "(Porque por fe andamos, no por vista)"
+    },
+    "para_meditar": [
+      { "cita": "Hebreos 11:1", "texto": "Es, pues, la fe la certeza de lo que se espera, la convicción de lo que no se ve." },
+      { "cita": "Romanos 8:24-25", "texto": "Porque en esperanza fuimos salvos; pero la esperanza que se ve, no es esperanza; porque lo que alguno ve, ¿a qué esperarlo? Pero si esperamos lo que no vemos, con paciencia lo aguardamos." },
+      { "cita": "Proverbios 3:5-6", "texto": "Fíate de Jehová de todo tu corazón, Y no te apoyes en tu propia prudencia. Reconócele en todos tus caminos, Y él enderezará tus veredas." }
+    ],
+    "tags": ["Fe", "Confianza"]
+  },
+  "2026-08-03": {
+    "versiculo": {
+      "cita": "Romanos 12:15",
+      "texto": "Gozaos con los que se gozan; llorad con los que lloran."
+    },
+    "para_meditar": [
+      { "cita": "1 Corintios 12:26", "texto": "Y si un miembro padece, todos los miembros se duelen con él; y si un miembro recibe honra, todos los miembros se gozan con él." },
+      { "cita": "Filipenses 2:4", "texto": "no mirando cada uno por lo suyo propio, sino cada cual también por lo de los otros." },
+      { "cita": "Gálatas 6:2", "texto": "Sobrellevad los unos las cargas de los otros, y cumplid así la ley de Cristo." }
+    ],
+    "tags": ["Empatía", "Compasión"]
+  }
+}

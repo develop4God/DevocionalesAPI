@@ -1,0 +1,52 @@
+{
+  "2026-08-01": {
+    "versiculo": {
+      "cita": "S.Juan 15:5",
+      "texto": "Yo soy la vid, vosotros los pámpanos; el que permanece en mí, y yo en él, éste lleva mucho fruto; porque separados de mí nada podéis hacer."
+    },
+    "para_meditar": [
+      { "cita": "S.Juan 15:5", "texto": "Yo soy la vid, vosotros los pámpanos; el que permanece en mí, y yo en él, éste lleva mucho fruto; porque separados de mí nada podéis hacer." }
+    ],
+    "tags": ["Jesús", "fe", "permanecer"]
+  },
+  "2026-08-02": {
+    "versiculo": {
+      "cita": "Filipenses 4:13",
+      "texto": "Todo lo puedo en Cristo que me fortalece."
+    },
+    "para_meditar": [
+      { "cita": "Filipenses 4:13", "texto": "Todo lo puedo en Cristo que me fortalece." }
+    ],
+    "tags": ["fortaleza", "Cristo", "confianza"]
+  },
+  "2026-08-03": {
+    "versiculo": {
+      "cita": "Isaías 41:10",
+      "texto": "No temas, porque yo estoy contigo; no desmayes, porque yo soy tu Dios que te esfuerzo; siempre te ayudaré, siempre te sustentaré con la diestra de mi justicia."
+    },
+    "para_meditar": [
+      { "cita": "Isaías 41:10", "texto": "No temas, porque yo estoy contigo; no desmayes, porque yo soy tu Dios que te esfuerzo; siempre te ayudaré, siempre te sustentaré con la diestra de mi justicia." }
+    ],
+    "tags": ["temor", "confianza", "ayuda"]
+  },
+  "2026-08-04": {
+    "versiculo": {
+      "cita": "Proverbios 3:5-6",
+      "texto": "Fíate de Jehová de todo tu corazón, y no te apoyes en tu propia prudencia. Reconócelo en todos tus caminos, y él enderezará tus veredas."
+    },
+    "para_meditar": [
+      { "cita": "Proverbios 3:5-6", "texto": "Fíate de Jehová de todo tu corazón, y no te apoyes en tu propia prudencia. Reconócelo en todos tus caminos, y él enderezará tus veredas." }
+    ],
+    "tags": ["confianza", "sabiduría", "guía"]
+  },
+  "2026-08-05": {
+    "versiculo": {
+      "cita": "Romanos 8:28",
+      "texto": "Y sabemos que a los que aman a Dios, todas las cosas les ayudan a bien, esto es, a los que conforme a su propósito son llamados."
+    },
+    "para_meditar": [
+      { "cita": "Romanos 8:28", "texto": "Y sabemos que a los que aman a Dios, todas las cosas les ayudan a bien, esto es, a los que conforme a su propósito son llamados." }
+    ],
+    "tags": ["propósito", "amor de Dios", "esperanza"]
+  }
+}
