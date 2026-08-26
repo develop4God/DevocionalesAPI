@@ -1,22 +1,19 @@
 {
   "meta": {
-    "total": 294,
+    "total": 366,
     "languages": [
-      "en",
-      "hi",
-      "es",
-      "pt",
-      "fr",
-      "zh",
-      "ja",
-      "de",
-      "ko",
-      "ru",
       "ar",
-      "tl",
-      "fil"
+      "de",
+      "en",
+      "es",
+      "fil",
+      "fr",
+      "hi",
+      "ja",
+      "pt",
+      "zh"
     ],
-    "last_updated": "2026-04-27",
+    "last_updated": "2026-08-26",
     "version": "3.1.0",
     "note": "Keys are normalized: lowercase, no spaces/hyphens/apostrophes. Use normalize(tag) before lookup.",
     "missing": {
@@ -27,10 +24,7 @@
       "zh": [],
       "ja": [],
       "de": [],
-      "ko": [],
-      "ru": [],
       "ar": [],
-      "tl": [],
       "fil": []
     }
   },
@@ -53,10 +47,7 @@
       "zh": "住",
       "ja": "住む",
       "de": "Bleiben",
-      "ko": "거하다",
-      "ru": "пребывать",
       "ar": "الثبات",
-      "tl": "Manatili kay Kristo",
       "fil": "Manatili"
     },
     "abiding": {
@@ -68,10 +59,7 @@
       "zh": "常住",
       "ja": "住まう",
       "de": "Verbleiben",
-      "ko": "거함",
-      "ru": "пребывание",
       "ar": "الدوام",
-      "tl": "Pananatili",
       "fil": "Pananatili"
     },
     "abundantlife": {
@@ -83,10 +71,7 @@
       "zh": "丰盛生命",
       "ja": "豊かな命",
       "de": "Reiches Leben",
-      "ko": "풍성한 삶",
-      "ru": "жизнь с избытком",
       "ar": "الحياة الوفيرة",
-      "tl": "Buhay na sagana",
       "fil": "Buhay na Sagana"
     },
     "access": {
@@ -98,10 +83,7 @@
       "zh": "进入",
       "ja": "アクセス",
       "de": "Zugang",
-      "ko": "접근",
-      "ru": "доступ",
       "ar": "الوصول",
-      "tl": "Paglapit sa Diyos",
       "fil": "Paglapit"
     },
     "accountability": {
@@ -113,10 +95,7 @@
       "zh": "问责",
       "ja": "説明責任",
       "de": "Rechenschaft",
-      "ko": "책임감",
-      "ru": "ответственность",
       "ar": "المساءلة",
-      "tl": "Pananagutan",
       "fil": "Pananagutan"
     },
     "action": {
@@ -128,10 +107,7 @@
       "zh": "行动",
       "ja": "行動",
       "de": "Handlung",
-      "ko": "행동",
-      "ru": "действие",
       "ar": "العمل",
-      "tl": "Pagkilos",
       "fil": "Gawa"
     },
     "adoption": {
@@ -143,10 +119,7 @@
       "zh": "收养",
       "ja": "養子縁組",
       "de": "Adoption",
-      "ko": "입양",
-      "ru": "усыновление",
       "ar": "التبني",
-      "tl": "Pag-aampon",
       "fil": "Pag-aampon"
     },
     "allegiance": {
@@ -158,10 +131,7 @@
       "zh": "忠诚",
       "ja": "忠誠",
       "de": "Loyalität",
-      "ko": "충성",
-      "ru": "преданность",
       "ar": "الولاء",
-      "tl": "Katapatan",
       "fil": "Katapatan"
     },
     "almighty": {
@@ -173,10 +143,7 @@
       "zh": "全能",
       "ja": "全能",
       "de": "Allmächtig",
-      "ko": "전능하신",
-      "ru": "Всемогущий",
       "ar": "القدير",
-      "tl": "Makapangyarihan",
       "fil": "Makapangyarihan"
     },
     "ambassador": {
@@ -188,10 +155,7 @@
       "zh": "大使",
       "ja": "大使",
       "de": "Botschafter",
-      "ko": "대사",
-      "ru": "посол",
       "ar": "السفير",
-      "tl": "Sugo",
       "fil": "Embahador"
     },
     "anger": {
@@ -203,10 +167,7 @@
       "zh": "愤怒",
       "ja": "怒り",
       "de": "Zorn",
-      "ko": "분노",
-      "ru": "гнев",
       "ar": "الغضب",
-      "tl": "Galit",
       "fil": "Galit"
     },
     "anointing": {
@@ -218,10 +179,7 @@
       "zh": "膏抹",
       "ja": "油注ぎ",
       "de": "Salbung",
-      "ko": "기름부음",
-      "ru": "помазание",
       "ar": "المسحة",
-      "tl": "Pagpapahid",
       "fil": "Pahid"
     },
     "anxiety": {
@@ -233,10 +191,7 @@
       "zh": "焦虑",
       "ja": "不安",
       "de": "Angst",
-      "ko": "염려",
-      "ru": "тревога",
       "ar": "القلق",
-      "tl": "Pagkabalisa",
       "fil": "Pagkabalisa"
     },
     "armor": {
@@ -248,10 +203,7 @@
       "zh": "盔甲",
       "ja": "鎧",
       "de": "Rüstung",
-      "ko": "갑옷",
-      "ru": "броня",
       "ar": "الدرع",
-      "tl": "Sandata",
       "fil": "Baluti"
     },
     "assurance": {
@@ -263,10 +215,7 @@
       "zh": "确信",
       "ja": "確信",
       "de": "Gewissheit",
-      "ko": "확신",
-      "ru": "уверенность",
       "ar": "اليقين",
-      "tl": "Katiyakan",
       "fil": "Katiyakan"
     },
     "attention": {
@@ -278,10 +227,7 @@
       "zh": "注意",
       "ja": "注意",
       "de": "Aufmerksamkeit",
-      "ko": "주의",
-      "ru": "внимание",
       "ar": "الانتباه",
-      "tl": "Atensyon",
       "fil": "Pansin"
     },
     "authority": {
@@ -293,10 +239,7 @@
       "zh": "权柄",
       "ja": "権威",
       "de": "Autorität",
-      "ko": "권위",
-      "ru": "власть",
       "ar": "السلطة",
-      "tl": "Awtoridad",
       "fil": "Awtoridad"
     },
     "baptism": {
@@ -308,10 +251,7 @@
       "zh": "洗礼",
       "ja": "バプテスマ",
       "de": "Taufe",
-      "ko": "세례",
-      "ru": "крещение",
       "ar": "المعمودية",
-      "tl": "Bautismo",
       "fil": "Bautismo"
     },
     "belief": {
@@ -323,10 +263,7 @@
       "zh": "信念",
       "ja": "信仰",
       "de": "Überzeugung",
-      "ko": "믿음",
-      "ru": "вера",
       "ar": "الاعتقاد",
-      "tl": "Pananampalataya",
       "fil": "Paniniwala"
     },
     "believe": {
@@ -338,10 +275,7 @@
       "zh": "相信",
       "ja": "信じる",
       "de": "Glauben",
-      "ko": "믿다",
-      "ru": "верить",
       "ar": "الإيمان",
-      "tl": "Manampalataya",
       "fil": "Maniwala"
     },
     "blessedness": {
@@ -353,10 +287,7 @@
       "zh": "蒙福",
       "ja": "幸い",
       "de": "Seligkeit",
-      "ko": "복됨",
-      "ru": "блаженство",
       "ar": "الطوبى",
-      "tl": "Pagpapala",
       "fil": "Kapalaran"
     },
     "blessing": {
@@ -368,10 +299,7 @@
       "zh": "祝福",
       "ja": "祝福",
       "de": "Segen",
-      "ko": "축복",
-      "ru": "благословение",
       "ar": "البركة",
-      "tl": "Pagpapala",
       "fil": "Pagpapala"
     },
     "boldness": {
@@ -383,10 +311,7 @@
       "zh": "勇气",
       "ja": "大胆さ",
       "de": "Kühnheit",
-      "ko": "담대함",
-      "ru": "дерзновение",
       "ar": "الجرأة",
-      "tl": "Katapangan",
       "fil": "Katapangan"
     },
     "brotherhood": {
@@ -398,10 +323,7 @@
       "zh": "弟兄情谊",
       "ja": "兄弟愛",
       "de": "Bruderschaft",
-      "ko": "형제애",
-      "ru": "братство",
       "ar": "الأخوة",
-      "tl": "Kapatiran",
       "fil": "Pagkakapatiran"
     },
     "burden": {
@@ -413,10 +335,7 @@
       "zh": "重担",
       "ja": "重荷",
       "de": "Last",
-      "ko": "짐",
-      "ru": "бремя",
       "ar": "الحمل",
-      "tl": "Pasanin",
       "fil": "Pasanin"
     },
     "calling": {
@@ -428,10 +347,7 @@
       "zh": "呼召",
       "ja": "召し",
       "de": "Berufung",
-      "ko": "부르심",
-      "ru": "призвание",
       "ar": "الدعوة",
-      "tl": "Tawag",
       "fil": "Tawag"
     },
     "character": {
@@ -443,10 +359,7 @@
       "zh": "品格",
       "ja": "人格",
       "de": "Charakter",
-      "ko": "성품",
-      "ru": "характер",
       "ar": "الشخصية",
-      "tl": "Pagkatao",
       "fil": "Karakter"
     },
     "charity": {
@@ -458,10 +371,7 @@
       "zh": "慈善",
       "ja": "愛徳",
       "de": "Nächstenliebe",
-      "ko": "자선",
-      "ru": "благотворительность",
       "ar": "المحبة",
-      "tl": "Pag-ibig",
       "fil": "Kawanggawa"
     },
     "choice": {
@@ -473,10 +383,7 @@
       "zh": "选择",
       "ja": "選択",
       "de": "Wahl",
-      "ko": "선택",
-      "ru": "выбор",
       "ar": "الاختيار",
-      "tl": "Pagpili",
       "fil": "Pagpili"
     },
     "chosen": {
@@ -488,10 +395,7 @@
       "zh": "被选",
       "ja": "選ばれた",
       "de": "Auserwählt",
-      "ko": "선택받은",
-      "ru": "избранные",
       "ar": "المختار",
-      "tl": "Hinirang",
       "fil": "Hinirang"
     },
     "christ": {
@@ -503,10 +407,7 @@
       "zh": "基督",
       "ja": "キリスト",
       "de": "Christus",
-      "ko": "그리스도",
-      "ru": "Христос",
       "ar": "المسيح",
-      "tl": "Kristo",
       "fil": "Kristo"
     },
     "christlikeness": {
@@ -518,10 +419,7 @@
       "zh": "效法基督",
       "ja": "キリストに似る",
       "de": "Christusähnlichkeit",
-      "ko": "그리스도 닮음",
-      "ru": "уподобление Христу",
       "ar": "الشبه بالمسيح",
-      "tl": "Pagka-Kristo",
       "fil": "Pagiging Katulad ni Kristo"
     },
     "christmas": {
@@ -533,10 +431,7 @@
       "zh": "圣诞",
       "ja": "クリスマス",
       "de": "Weihnachten",
-      "ko": "성탄절",
-      "ru": "Рождество",
       "ar": "الميلاد",
-      "tl": "Pasko",
       "fil": "Pasko"
     },
     "church": {
@@ -548,10 +443,7 @@
       "zh": "教会",
       "ja": "教会",
       "de": "Gemeinde",
-      "ko": "교회",
-      "ru": "церковь",
       "ar": "الكنيسة",
-      "tl": "Simbahan",
       "fil": "Simbahan"
     },
     "citizenship": {
@@ -563,10 +455,7 @@
       "zh": "公民身份",
       "ja": "市民権",
       "de": "Bürgerschaft",
-      "ko": "시민권",
-      "ru": "гражданство",
       "ar": "المواطنة",
-      "tl": "Pagkamamamayan",
       "fil": "Pagkamamamayan"
     },
     "cleansing": {
@@ -578,10 +467,7 @@
       "zh": "洁净",
       "ja": "きよめ",
       "de": "Reinigung",
-      "ko": "정결",
-      "ru": "очищение",
       "ar": "التطهير",
-      "tl": "Paglilinis",
       "fil": "Paglilinis"
     },
     "comfort": {
@@ -593,10 +479,7 @@
       "zh": "安慰",
       "ja": "慰め",
       "de": "Trost",
-      "ko": "위로",
-      "ru": "утешение",
       "ar": "العزاء",
-      "tl": "Kaaliwan",
       "fil": "Kaginhawaan"
     },
     "comforter": {
@@ -608,10 +491,7 @@
       "zh": "保惠师",
       "ja": "慰め主",
       "de": "Tröster",
-      "ko": "보혜사",
-      "ru": "Утешитель",
       "ar": "المعزي",
-      "tl": "Mang-aaliw",
       "fil": "Mang-aaliw"
     },
     "commandment": {
@@ -623,10 +503,7 @@
       "zh": "诫命",
       "ja": "戒め",
       "de": "Gebot",
-      "ko": "계명",
-      "ru": "заповедь",
       "ar": "الوصية",
-      "tl": "Utos",
       "fil": "Utos"
     },
     "commandments": {
@@ -638,10 +515,7 @@
       "zh": "诫命",
       "ja": "戒め",
       "de": "Gebote",
-      "ko": "계명",
-      "ru": "заповеди",
       "ar": "الوصايا",
-      "tl": "Mga utos",
       "fil": "Mga Utos"
     },
     "commission": {
@@ -653,10 +527,7 @@
       "zh": "大使命",
       "ja": "大宣教命令",
       "de": "Auftrag",
-      "ko": "사명",
-      "ru": "поручение",
       "ar": "المهمة",
-      "tl": "Komisyon",
       "fil": "Misyon"
     },
     "commitment": {
@@ -668,10 +539,7 @@
       "zh": "委身",
       "ja": "献身",
       "de": "Verpflichtung",
-      "ko": "헌신",
-      "ru": "посвящение",
       "ar": "الالتزام",
-      "tl": "Pagtatalaga",
       "fil": "Pangako"
     },
     "communion": {
@@ -683,10 +551,7 @@
       "zh": "圣餐",
       "ja": "聖餐",
       "de": "Abendmahl",
-      "ko": "성찬",
-      "ru": "причастие",
       "ar": "الشركة",
-      "tl": "Pakikipag-isa",
       "fil": "Komunyon"
     },
     "community": {
@@ -698,10 +563,7 @@
       "zh": "团契",
       "ja": "共同体",
       "de": "Gesellschaft",
-      "ko": "공동체",
-      "ru": "общность",
       "ar": "المجتمع",
-      "tl": "Pamayanan",
       "fil": "Komunidad"
     },
     "compassion": {
@@ -713,10 +575,7 @@
       "zh": "怜悯",
       "ja": "あわれみ",
       "de": "Mitgefühl",
-      "ko": "긍휼",
-      "ru": "сострадание",
       "ar": "الرحمة",
-      "tl": "Habag",
       "fil": "Awa"
     },
     "completeness": {
@@ -728,10 +587,7 @@
       "zh": "完全",
       "ja": "完全さ",
       "de": "Vollständigkeit",
-      "ko": "완전함",
-      "ru": "полнота",
       "ar": "الكمال",
-      "tl": "Kaganapan",
       "fil": "Kumpletong Buhay"
     },
     "confession": {
@@ -743,10 +599,7 @@
       "zh": "认罪",
       "ja": "告白",
       "de": "Bekenntnis",
-      "ko": "고백",
-      "ru": "исповедание",
       "ar": "الاعتراف",
-      "tl": "Pagpapahayag",
       "fil": "Pagtatapat"
     },
     "confidence": {
@@ -758,10 +611,7 @@
       "zh": "信心",
       "ja": "確信",
       "de": "Zuversicht",
-      "ko": "확신",
-      "ru": "доверие",
       "ar": "الثقة",
-      "tl": "Pagtitiwala",
       "fil": "Tiwala"
     },
     "conscience": {
@@ -773,10 +623,7 @@
       "zh": "良心",
       "ja": "良心",
       "de": "Gewissen",
-      "ko": "양심",
-      "ru": "совесть",
       "ar": "الضمير",
-      "tl": "Budhi",
       "fil": "Konsyensya"
     },
     "consider": {
@@ -788,10 +635,7 @@
       "zh": "默想",
       "ja": "考える",
       "de": "Betrachten",
-      "ko": "묵상",
-      "ru": "размышлять",
       "ar": "التأمل",
-      "tl": "Isaalang-alang",
       "fil": "Pagnilayan"
     },
     "constancy": {
@@ -803,10 +647,7 @@
       "zh": "坚定",
       "ja": "不変",
       "de": "Beständigkeit",
-      "ko": "변함없음",
-      "ru": "постоянство",
       "ar": "الديمومة",
-      "tl": "Katatagan",
       "fil": "Tiyaga"
     },
     "contentment": {
@@ -818,10 +659,7 @@
       "zh": "知足",
       "ja": "満足",
       "de": "Zufriedenheit",
-      "ko": "만족",
-      "ru": "довольство",
       "ar": "الرضا",
-      "tl": "Kasiyahan",
       "fil": "Kasiyahan"
     },
     "control": {
@@ -833,10 +671,7 @@
       "zh": "自制",
       "ja": "制御",
       "de": "Kontrolle",
-      "ko": "절제",
-      "ru": "контроль",
       "ar": "السيطرة",
-      "tl": "Pagpipigil",
       "fil": "Kontrol"
     },
     "conversion": {
@@ -848,10 +683,7 @@
       "zh": "悔改归主",
       "ja": "回心",
       "de": "Bekehrung",
-      "ko": "회심",
-      "ru": "обращение",
       "ar": "التحول",
-      "tl": "Pagbabagong-loob",
       "fil": "Pagbabago"
     },
     "courage": {
@@ -863,10 +695,7 @@
       "zh": "勇气",
       "ja": "勇気",
       "de": "Mut",
-      "ko": "용기",
-      "ru": "мужество",
       "ar": "الشجاعة",
-      "tl": "Tapang",
       "fil": "Tapang"
     },
     "covenant": {
@@ -878,10 +707,7 @@
       "zh": "圣约",
       "ja": "契約",
       "de": "Bund",
-      "ko": "언약",
-      "ru": "завет",
       "ar": "العهد",
-      "tl": "Tipan",
       "fil": "Tipan"
     },
     "creation": {
@@ -893,10 +719,7 @@
       "zh": "创造",
       "ja": "創造",
       "de": "Schöpfung",
-      "ko": "창조",
-      "ru": "творение",
       "ar": "الخليقة",
-      "tl": "Paglikha",
       "fil": "Nilikha"
     },
     "cross": {
@@ -908,10 +731,7 @@
       "zh": "十字架",
       "ja": "十字架",
       "de": "Kreuz",
-      "ko": "십자가",
-      "ru": "крест",
       "ar": "الصليب",
-      "tl": "Krus",
       "fil": "Krus"
     },
     "crucifixion": {
@@ -923,10 +743,7 @@
       "zh": "钉十字架",
       "ja": "十字架刑",
       "de": "Kreuzigung",
-      "ko": "십자가형",
-      "ru": "распятие",
       "ar": "الصلب",
-      "tl": "Krusipikasyon",
       "fil": "Pagpapako sa Krus"
     },
     "darkness": {
@@ -938,10 +755,7 @@
       "zh": "黑暗",
       "ja": "暗闇",
       "de": "Finsternis",
-      "ko": "어둠",
-      "ru": "тьма",
       "ar": "الظلام",
-      "tl": "Kadiliman",
       "fil": "Kadiliman"
     },
     "death": {
@@ -953,10 +767,7 @@
       "zh": "死亡",
       "ja": "死",
       "de": "Tod",
-      "ko": "죽음",
-      "ru": "смерть",
       "ar": "الموت",
-      "tl": "Kamatayan",
       "fil": "Kamatayan"
     },
     "deception": {
@@ -968,10 +779,7 @@
       "zh": "欺骗",
       "ja": "欺き",
       "de": "Täuschung",
-      "ko": "속임",
-      "ru": "обман",
       "ar": "الخداع",
-      "tl": "Panlilinlang",
       "fil": "Panlilinlang"
     },
     "deliverance": {
@@ -983,10 +791,7 @@
       "zh": "拯救",
       "ja": "救い出し",
       "de": "Befreiung",
-      "ko": "해방",
-      "ru": "избавление",
       "ar": "النجاة",
-      "tl": "Pagliligtas",
       "fil": "Pagliligtas"
     },
     "dependence": {
@@ -998,10 +803,7 @@
       "zh": "依靠",
       "ja": "依存",
       "de": "Abhängigkeit",
-      "ko": "의존",
-      "ru": "зависимость",
       "ar": "الاتكال",
-      "tl": "Pagdepende",
       "fil": "Pag-asa sa Diyos"
     },
     "desire": {
@@ -1013,10 +815,7 @@
       "zh": "渴慕",
       "ja": "願い",
       "de": "Verlangen",
-      "ko": "소망",
-      "ru": "желание",
       "ar": "الشوق",
-      "tl": "Pagnanais",
       "fil": "Pagnanasa"
     },
     "detachment": {
@@ -1028,10 +827,7 @@
       "zh": "超脱",
       "ja": "離脱",
       "de": "Loslösung",
-      "ko": "분리",
-      "ru": "отрешённость",
       "ar": "التحرر",
-      "tl": "Paghihiwalay",
       "fil": "Paghiwalay sa Mundo"
     },
     "devotion": {
@@ -1043,10 +839,7 @@
       "zh": "敬虔",
       "ja": "献身",
       "de": "Andacht",
-      "ko": "헌신",
-      "ru": "благоговение",
       "ar": "التقوى",
-      "tl": "Debosyon",
       "fil": "Debosyon"
     },
     "diligence": {
@@ -1058,10 +851,7 @@
       "zh": "勤奋",
       "ja": "勤勉",
       "de": "Fleiß",
-      "ko": "부지런함",
-      "ru": "усердие",
       "ar": "الاجتهاد",
-      "tl": "Sipag",
       "fil": "Kasipagan"
     },
     "discernment": {
@@ -1073,10 +863,7 @@
       "zh": "分辨",
       "ja": "識別",
       "de": "Unterscheidung",
-      "ko": "분별",
-      "ru": "различение",
       "ar": "التمييز",
-      "tl": "Pagkilala",
       "fil": "Pagdidisyerno"
     },
     "discipleship": {
@@ -1088,10 +875,7 @@
       "zh": "门徒训练",
       "ja": "弟子訓練",
       "de": "Jüngerschaft",
-      "ko": "제자도",
-      "ru": "ученичество",
       "ar": "التلمذة",
-      "tl": "Pag-aalagad",
       "fil": "Pagiging Alagad"
     },
     "discipline": {
@@ -1103,10 +887,7 @@
       "zh": "管教",
       "ja": "訓練",
       "de": "Disziplin",
-      "ko": "훈련",
-      "ru": "дисциплина",
       "ar": "الانضباط",
-      "tl": "Disiplina",
       "fil": "Disiplina"
     },
     "divinity": {
@@ -1118,10 +899,7 @@
       "zh": "神性",
       "ja": "神性",
       "de": "Göttlichkeit",
-      "ko": "신성",
-      "ru": "божественность",
       "ar": "الألوهية",
-      "tl": "Pagka-Diyos",
       "fil": "Pagka-Diyos"
     },
     "doubt": {
@@ -1133,10 +911,7 @@
       "zh": "疑惑",
       "ja": "疑い",
       "de": "Zweifel",
-      "ko": "의심",
-      "ru": "сомнение",
       "ar": "الشك",
-      "tl": "Pagdududa",
       "fil": "Pag-aalinlangan"
     },
     "duty": {
@@ -1148,10 +923,7 @@
       "zh": "责任",
       "ja": "義務",
       "de": "Pflicht",
-      "ko": "의무",
-      "ru": "долг",
       "ar": "الواجب",
-      "tl": "Tungkulin",
       "fil": "Tungkulin"
     },
     "edification": {
@@ -1163,10 +935,7 @@
       "zh": "造就",
       "ja": "霊的成長",
       "de": "Erbauung",
-      "ko": "덕을 세움",
-      "ru": "назидание",
       "ar": "البنيان",
-      "tl": "Pagpapatibay",
       "fil": "Pagtatayo ng Pananampalataya"
     },
     "elevation": {
@@ -1178,10 +947,7 @@
       "zh": "提升",
       "ja": "高揚",
       "de": "Erhebung",
-      "ko": "높임",
-      "ru": "возвышение",
       "ar": "الرفعة",
-      "tl": "Pag-angat",
       "fil": "Pagtataguyod"
     },
     "empathy": {
@@ -1193,10 +959,7 @@
       "zh": "同理心",
       "ja": "共感",
       "de": "Einfühlungsvermögen",
-      "ko": "공감",
-      "ru": "эмпатия",
       "ar": "التعاطف",
-      "tl": "Empatiya",
       "fil": "Empatiya"
     },
     "encouragement": {
@@ -1208,10 +971,7 @@
       "zh": "鼓励",
       "ja": "励まし",
       "de": "Ermutigung",
-      "ko": "격려",
-      "ru": "ободрение",
       "ar": "التشجيع",
-      "tl": "Pampalakas-loob",
       "fil": "Pagpapalakas ng Loob"
     },
     "endtimes": {
@@ -1223,10 +983,7 @@
       "zh": "末世",
       "ja": "終末",
       "de": "Endzeit",
-      "ko": "말세",
-      "ru": "последние времена",
       "ar": "آخر الزمان",
-      "tl": "Mga huling araw",
       "fil": "Huling Panahon"
     },
     "endurance": {
@@ -1238,10 +995,7 @@
       "zh": "忍耐",
       "ja": "忍耐",
       "de": "Ausdauer",
-      "ko": "인내",
-      "ru": "стойкость",
       "ar": "الاحتمال",
-      "tl": "Pagtitiyaga",
       "fil": "Pagtitiis"
     },
     "equipping": {
@@ -1253,10 +1007,7 @@
       "zh": "装备",
       "ja": "訓練",
       "de": "Ausrüstung",
-      "ko": "구비함",
-      "ru": "оснащение",
       "ar": "التجهيز",
-      "tl": "Pagsasanay",
       "fil": "Paghahanda"
     },
     "eternal": {
@@ -1268,10 +1019,7 @@
       "zh": "永恒",
       "ja": "永遠の",
       "de": "Ewig",
-      "ko": "영원한",
-      "ru": "вечный",
       "ar": "الأبدي",
-      "tl": "Walang hanggan",
       "fil": "Walang Hanggan"
     },
     "eternallife": {
@@ -1283,10 +1031,7 @@
       "zh": "永生",
       "ja": "永遠の命",
       "de": "Ewiges Leben",
-      "ko": "영생",
-      "ru": "вечная жизнь",
       "ar": "الحياة الأبدية",
-      "tl": "Buhay na walang hanggan",
       "fil": "Buhay na Walang Hanggan"
     },
     "eternity": {
@@ -1298,10 +1043,7 @@
       "zh": "永恒",
       "ja": "永遠",
       "de": "Ewigkeit",
-      "ko": "영원",
-      "ru": "вечность",
       "ar": "الأبدية",
-      "tl": "Kawalang-hanggan",
       "fil": "Kawalang Hanggan"
     },
     "eucharist": {
@@ -1313,10 +1055,7 @@
       "zh": "圣体",
       "ja": "聖体",
       "de": "Eucharistie",
-      "ko": "성체",
-      "ru": "евхаристия",
       "ar": "الإفخارستيا",
-      "tl": "Eukaristiya",
       "fil": "Eukaristiya"
     },
     "evangelism": {
@@ -1328,10 +1067,7 @@
       "zh": "传福音",
       "ja": "伝道",
       "de": "Evangelisation",
-      "ko": "전도",
-      "ru": "евангелизация",
       "ar": "الكرازة",
-      "tl": "Ebanghelismo",
       "fil": "Ebanghelismo"
     },
     "evidence": {
@@ -1343,10 +1079,7 @@
       "zh": "凭据",
       "ja": "証拠",
       "de": "Beweis",
-      "ko": "증거",
-      "ru": "свидетельство",
       "ar": "الدليل",
-      "tl": "Katibayan",
       "fil": "Patunay"
     },
     "exaltation": {
@@ -1358,10 +1091,7 @@
       "zh": "高举",
       "ja": "高挙",
       "de": "Erhöhung",
-      "ko": "높임",
-      "ru": "прославление",
       "ar": "التعالي",
-      "tl": "Pagdakila",
       "fil": "Pagdadakila"
     },
     "examination": {
@@ -1373,10 +1103,7 @@
       "zh": "省察",
       "ja": "吟味",
       "de": "Prüfung",
-      "ko": "점검",
-      "ru": "испытание",
       "ar": "الفحص",
-      "tl": "Pagsusuri",
       "fil": "Pagsusuri"
     },
     "example": {
@@ -1388,10 +1115,7 @@
       "zh": "榜样",
       "ja": "模範",
       "de": "Vorbild",
-      "ko": "본보기",
-      "ru": "пример",
       "ar": "المثال",
-      "tl": "Halimbawa",
       "fil": "Halimbawa"
     },
     "faith": {
@@ -1403,10 +1127,7 @@
       "zh": "信心",
       "ja": "信仰",
       "de": "Glaube",
-      "ko": "믿음",
-      "ru": "вера",
       "ar": "الإيمان",
-      "tl": "Pananampalataya",
       "fil": "Pananampalataya"
     },
     "faithfulness": {
@@ -1418,10 +1139,7 @@
       "zh": "信实",
       "ja": "誠実",
       "de": "Treue",
-      "ko": "신실함",
-      "ru": "верность",
       "ar": "الأمانة",
-      "tl": "Katapatan",
       "fil": "Katapatan"
     },
     "family": {
@@ -1433,10 +1151,7 @@
       "zh": "家庭",
       "ja": "家族",
       "de": "Familie",
-      "ko": "가족",
-      "ru": "семья",
       "ar": "العائلة",
-      "tl": "Pamilya",
       "fil": "Pamilya"
     },
     "fear": {
@@ -1448,10 +1163,7 @@
       "zh": "敬畏",
       "ja": "恐れ",
       "de": "Ehrfurcht",
-      "ko": "경외",
-      "ru": "страх",
       "ar": "الخشية",
-      "tl": "Takot",
       "fil": "Takot"
     },
     "fellowship": {
@@ -1463,10 +1175,7 @@
       "zh": "相交",
       "ja": "交わり",
       "de": "Gemeinschaft",
-      "ko": "교제",
-      "ru": "общение",
       "ar": "الشركة",
-      "tl": "Pakikipag-isa",
       "fil": "Pakikisama"
     },
     "finished": {
@@ -1478,10 +1187,7 @@
       "zh": "成了",
       "ja": "成し遂げた",
       "de": "Vollbracht",
-      "ko": "다 이루었다",
-      "ru": "совершилось",
       "ar": "المكتمل",
-      "tl": "Natapos na",
       "fil": "Natupad na"
     },
     "flesh": {
@@ -1493,10 +1199,7 @@
       "zh": "肉体",
       "ja": "肉",
       "de": "Fleisch",
-      "ko": "육체",
-      "ru": "плоть",
       "ar": "الجسد",
-      "tl": "Laman",
       "fil": "Laman"
     },
     "focus": {
@@ -1508,10 +1211,7 @@
       "zh": "专注",
       "ja": "集中",
       "de": "Fokus",
-      "ko": "집중",
-      "ru": "сосредоточенность",
       "ar": "التركيز",
-      "tl": "Pagtuon",
       "fil": "Pokus"
     },
     "following": {
@@ -1523,10 +1223,7 @@
       "zh": "跟随",
       "ja": "従う",
       "de": "Nachfolge",
-      "ko": "따름",
-      "ru": "следование",
       "ar": "الاتباع",
-      "tl": "Pagsunod",
       "fil": "Pagsunod"
     },
     "forgiveness": {
@@ -1538,10 +1235,7 @@
       "zh": "饶恕",
       "ja": "赦し",
       "de": "Vergebung",
-      "ko": "용서",
-      "ru": "прощение",
       "ar": "المغفرة",
-      "tl": "Kapatawaran",
       "fil": "Kapatawaran"
     },
     "foundation": {
@@ -1553,10 +1247,7 @@
       "zh": "根基",
       "ja": "基礎",
       "de": "Fundament",
-      "ko": "기초",
-      "ru": "основание",
       "ar": "الأساس",
-      "tl": "Saligan",
       "fil": "Pundasyon"
     },
     "freedom": {
@@ -1568,10 +1259,7 @@
       "zh": "自由",
       "ja": "自由",
       "de": "Freiheit",
-      "ko": "자유",
-      "ru": "свобода",
       "ar": "الحرية",
-      "tl": "Kalayaan",
       "fil": "Kalayaan"
     },
     "fruit": {
@@ -1583,10 +1271,7 @@
       "zh": "果子",
       "ja": "実",
       "de": "Frucht",
-      "ko": "열매",
-      "ru": "плод",
       "ar": "الثمر",
-      "tl": "Bunga",
       "fil": "Bunga"
     },
     "fruitfulness": {
@@ -1598,10 +1283,7 @@
       "zh": "结果累累",
       "ja": "実を結ぶ",
       "de": "Fruchtbarkeit",
-      "ko": "열매 맺음",
-      "ru": "плодоносность",
       "ar": "الثمرة",
-      "tl": "Pagkabunga",
       "fil": "Pagiging Mabunga"
     },
     "fullness": {
@@ -1613,10 +1295,7 @@
       "zh": "丰满",
       "ja": "満ち満ちる",
       "de": "Fülle",
-      "ko": "충만",
-      "ru": "полнота",
       "ar": "الامتلاء",
-      "tl": "Kapuspusan",
       "fil": "Kasaganaan"
     },
     "genealogy": {
@@ -1628,10 +1307,7 @@
       "zh": "家谱",
       "ja": "系図",
       "de": "Genealogie",
-      "ko": "족보",
-      "ru": "родословие",
       "ar": "النسب",
-      "tl": "Angkan",
       "fil": "Talaan ng Lahi"
     },
     "generosity": {
@@ -1643,10 +1319,7 @@
       "zh": "慷慨",
       "ja": "寛大さ",
       "de": "Großzügigkeit",
-      "ko": "너그러움",
-      "ru": "щедрость",
       "ar": "الكرم",
-      "tl": "Pagkabukas-palad",
       "fil": "Pagkabukas-palad"
     },
     "gifts": {
@@ -1658,10 +1331,7 @@
       "zh": "恩赐",
       "ja": "賜物",
       "de": "Gaben",
-      "ko": "은사",
-      "ru": "дары",
       "ar": "المواهب",
-      "tl": "Mga kaloob",
       "fil": "Mga Kaloob"
     },
     "giving": {
@@ -1673,10 +1343,7 @@
       "zh": "给予",
       "ja": "与える",
       "de": "Geben",
-      "ko": "드림",
-      "ru": "даяние",
       "ar": "العطاء",
-      "tl": "Pagbibigay",
       "fil": "Pagbibigay"
     },
     "glory": {
@@ -1688,10 +1355,7 @@
       "zh": "荣耀",
       "ja": "栄光",
       "de": "Herrlichkeit",
-      "ko": "영광",
-      "ru": "слава",
       "ar": "المجد",
-      "tl": "Kaluwalhatian",
       "fil": "Kaluwalhatian"
     },
     "god": {
@@ -1703,10 +1367,7 @@
       "zh": "神",
       "ja": "神",
       "de": "Gott",
-      "ko": "하나님",
-      "ru": "Бог",
       "ar": "الله",
-      "tl": "Diyos",
       "fil": "Diyos"
     },
     "godliness": {
@@ -1718,10 +1379,7 @@
       "zh": "敬虔",
       "ja": "敬虔",
       "de": "Gottesfurcht",
-      "ko": "경건",
-      "ru": "благочестие",
       "ar": "التقوى",
-      "tl": "Pagkamaka-Diyos",
       "fil": "Kabanalan"
     },
     "godspower": {
@@ -1733,10 +1391,7 @@
       "zh": "上帝的能力",
       "ja": "神の力",
       "de": "Gottes Macht",
-      "ko": "하나님의 능력",
-      "ru": "сила Бога",
       "ar": "قدرة الله",
-      "tl": "Kapangyarihan ng Diyos",
       "fil": "Kapangyarihan ng Diyos"
     },
     "godspresence": {
@@ -1748,10 +1403,7 @@
       "zh": "上帝同在",
       "ja": "神の臨在",
       "de": "Gottes Gegenwart",
-      "ko": "하나님의 임재",
-      "ru": "присутствие Бога",
       "ar": "حضور الله",
-      "tl": "Presensya ng Diyos",
       "fil": "Presensya ng Diyos"
     },
     "godswisdom": {
@@ -1763,10 +1415,7 @@
       "zh": "上帝的智慧",
       "ja": "神の知恵",
       "de": "Gottes Weisheit",
-      "ko": "하나님의 지혜",
-      "ru": "мудрость Бога",
       "ar": "حكمة الله",
-      "tl": "Karunungan ng Diyos",
       "fil": "Karunungan ng Diyos"
     },
     "good": {
@@ -1778,10 +1427,7 @@
       "zh": "善",
       "ja": "善",
       "de": "Gut",
-      "ko": "선",
-      "ru": "благо",
       "ar": "الخير",
-      "tl": "Mabuti",
       "fil": "Mabuti"
     },
     "goodness": {
@@ -1793,10 +1439,7 @@
       "zh": "良善",
       "ja": "善良さ",
       "de": "Güte",
-      "ko": "선하심",
-      "ru": "благость",
       "ar": "الصلاح",
-      "tl": "Kabutihan",
       "fil": "Kabutihan"
     },
     "gospel": {
@@ -1808,10 +1451,7 @@
       "zh": "福音",
       "ja": "福音",
       "de": "Evangelium",
-      "ko": "복음",
-      "ru": "Евангелие",
       "ar": "الإنجيل",
-      "tl": "Ebanghelyo",
       "fil": "Ebanghelyo"
     },
     "grace": {
@@ -1823,10 +1463,7 @@
       "zh": "恩典",
       "ja": "恵み",
       "de": "Gnade",
-      "ko": "은혜",
-      "ru": "благодать",
       "ar": "النعمة",
-      "tl": "Biyaya",
       "fil": "Biyaya"
     },
     "gratitude": {
@@ -1838,10 +1475,7 @@
       "zh": "感恩",
       "ja": "感謝",
       "de": "Dankbarkeit",
-      "ko": "감사",
-      "ru": "благодарность",
       "ar": "الامتنان",
-      "tl": "Pasasalamat",
       "fil": "Pasasalamat"
     },
     "greed": {
@@ -1853,10 +1487,7 @@
       "zh": "贪婪",
       "ja": "貪欲",
       "de": "Habgier",
-      "ko": "탐욕",
-      "ru": "жадность",
       "ar": "الجشع",
-      "tl": "Kasakiman",
       "fil": "Kasakiman"
     },
     "growth": {
@@ -1868,10 +1499,7 @@
       "zh": "成长",
       "ja": "成長",
       "de": "Wachstum",
-      "ko": "성장",
-      "ru": "рост",
       "ar": "النمو",
-      "tl": "Paglago",
       "fil": "Paglago"
     },
     "guidance": {
@@ -1883,10 +1511,7 @@
       "zh": "引导",
       "ja": "導き",
       "de": "Führung",
-      "ko": "인도",
-      "ru": "руководство",
       "ar": "الإرشاد",
-      "tl": "Patnubay",
       "fil": "Patnubay"
     },
     "harvest": {
@@ -1898,10 +1523,7 @@
       "zh": "收割",
       "ja": "収穫",
       "de": "Ernte",
-      "ko": "추수",
-      "ru": "жатва",
       "ar": "الحصاد",
-      "tl": "Pag-aani",
       "fil": "Ani"
     },
     "healing": {
@@ -1913,10 +1535,7 @@
       "zh": "医治",
       "ja": "癒し",
       "de": "Heilung",
-      "ko": "치유",
-      "ru": "исцеление",
       "ar": "الشفاء",
-      "tl": "Pagpapagaling",
       "fil": "Pagpapagaling"
     },
     "heart": {
@@ -1928,10 +1547,7 @@
       "zh": "心",
       "ja": "心",
       "de": "Herz",
-      "ko": "마음",
-      "ru": "сердце",
       "ar": "القلب",
-      "tl": "Puso",
       "fil": "Puso"
     },
     "heaven": {
@@ -1943,10 +1559,7 @@
       "zh": "天堂",
       "ja": "天",
       "de": "Himmel",
-      "ko": "천국",
-      "ru": "небо",
       "ar": "السماء",
-      "tl": "Langit",
       "fil": "Langit"
     },
     "holiness": {
@@ -1958,10 +1571,7 @@
       "zh": "圣洁",
       "ja": "聖さ",
       "de": "Heiligkeit",
-      "ko": "거룩함",
-      "ru": "святость",
       "ar": "القداسة",
-      "tl": "Kabanalan",
       "fil": "Kabanalan"
     },
     "holyspirit": {
@@ -1973,10 +1583,7 @@
       "zh": "圣灵",
       "ja": "聖霊",
       "de": "Heiliger Geist",
-      "ko": "성령",
-      "ru": "Святой Дух",
       "ar": "الروح القدس",
-      "tl": "Espiritu Santo",
       "fil": "Espiritu Santo"
     },
     "hope": {
@@ -1988,10 +1595,7 @@
       "zh": "盼望",
       "ja": "望み",
       "de": "Hoffnung",
-      "ko": "소망",
-      "ru": "надежда",
       "ar": "الرجاء",
-      "tl": "Pag-asa",
       "fil": "Pag-asa"
     },
     "humility": {
@@ -2003,10 +1607,7 @@
       "zh": "谦卑",
       "ja": "謙遜",
       "de": "Demut",
-      "ko": "겸손",
-      "ru": "смирение",
       "ar": "التواضع",
-      "tl": "Kapakanuhan",
       "fil": "Kababaang-loob"
     },
     "identity": {
@@ -2018,10 +1619,7 @@
       "zh": "身份",
       "ja": "アイデンティティ",
       "de": "Identität",
-      "ko": "정체성",
-      "ru": "идентичность",
       "ar": "الهوية",
-      "tl": "Pagkakakilanlan",
       "fil": "Pagkakakilanlan"
     },
     "idolatry": {
@@ -2033,10 +1631,7 @@
       "zh": "偶像崇拜",
       "ja": "偶像崇拝",
       "de": "Götzenanbetung",
-      "ko": "우상숭배",
-      "ru": "идолопоклонство",
       "ar": "الوثنية",
-      "tl": "Pagsamba sa diyus-diyosan",
       "fil": "Idolatriya"
     },
     "impossible": {
@@ -2048,10 +1643,7 @@
       "zh": "不可能",
       "ja": "不可能",
       "de": "Unmöglich",
-      "ko": "불가능",
-      "ru": "невозможное",
       "ar": "المستحيل",
-      "tl": "Imposible",
       "fil": "Imposible"
     },
     "incarnation": {
@@ -2063,10 +1655,7 @@
       "zh": "道成肉身",
       "ja": "受肉",
       "de": "Menschwerdung",
-      "ko": "성육신",
-      "ru": "воплощение",
       "ar": "التجسد",
-      "tl": "Pagkakatawang-tao",
       "fil": "Pagkakatawang-tao"
     },
     "inclusivity": {
@@ -2078,10 +1667,7 @@
       "zh": "包容",
       "ja": "包括性",
       "de": "Inklusion",
-      "ko": "포용",
-      "ru": "инклюзивность",
       "ar": "الشمولية",
-      "tl": "Pagiging inklusibo",
       "fil": "Pagiging Bukas sa Lahat"
     },
     "influence": {
@@ -2093,10 +1679,7 @@
       "zh": "影响",
       "ja": "影響",
       "de": "Einfluss",
-      "ko": "영향",
-      "ru": "влияние",
       "ar": "التأثير",
-      "tl": "Impluwensya",
       "fil": "Impluwensya"
     },
     "inheritance": {
@@ -2108,10 +1691,7 @@
       "zh": "产业",
       "ja": "相続",
       "de": "Erbe",
-      "ko": "기업",
-      "ru": "наследие",
       "ar": "الميراث",
-      "tl": "Mana",
       "fil": "Mana"
     },
     "inner": {
@@ -2123,10 +1703,7 @@
       "zh": "内心",
       "ja": "内なる",
       "de": "Inneres",
-      "ko": "내면",
-      "ru": "внутренний",
       "ar": "الداخلي",
-      "tl": "Panloob",
       "fil": "Panloob"
     },
     "inspiration": {
@@ -2138,10 +1715,7 @@
       "zh": "默示",
       "ja": "霊感",
       "de": "Inspiration",
-      "ko": "영감",
-      "ru": "вдохновение",
       "ar": "الإلهام",
-      "tl": "Inspirasyon",
       "fil": "Inspirasyon"
     },
     "integrity": {
@@ -2153,10 +1727,7 @@
       "zh": "正直",
       "ja": "誠実",
       "de": "Integrität",
-      "ko": "정직",
-      "ru": "честность",
       "ar": "النزاهة",
-      "tl": "Integridad",
       "fil": "Integridad"
     },
     "intercession": {
@@ -2168,10 +1739,7 @@
       "zh": "代祷",
       "ja": "とりなし",
       "de": "Fürbitte",
-      "ko": "중보",
-      "ru": "ходатайство",
       "ar": "الشفاعة",
-      "tl": "Pamamagitan",
       "fil": "Pamamagitan sa Panalangin"
     },
     "intimacy": {
@@ -2183,10 +1751,7 @@
       "zh": "亲密",
       "ja": "親密さ",
       "de": "Innigkeit",
-      "ko": "친밀함",
-      "ru": "близость",
       "ar": "القرب",
-      "tl": "Paglalapitan",
       "fil": "Intimidad"
     },
     "invitation": {
@@ -2198,10 +1763,7 @@
       "zh": "邀请",
       "ja": "招待",
       "de": "Einladung",
-      "ko": "초청",
-      "ru": "приглашение",
       "ar": "الدعوة",
-      "tl": "Imbitasyon",
       "fil": "Imbitasyon"
     },
     "israel": {
@@ -2213,10 +1775,7 @@
       "zh": "以色列",
       "ja": "イスラエル",
       "de": "Israel",
-      "ko": "이스라엘",
-      "ru": "Израиль",
       "ar": "إسرائيل",
-      "tl": "Israel",
       "fil": "Israel"
     },
     "jesus": {
@@ -2228,10 +1787,7 @@
       "zh": "耶稣",
       "ja": "イエス",
       "de": "Jesus",
-      "ko": "예수",
-      "ru": "Иисус",
       "ar": "يسوع",
-      "tl": "Hesus",
       "fil": "Jesus"
     },
     "journey": {
@@ -2243,10 +1799,7 @@
       "zh": "旅程",
       "ja": "旅路",
       "de": "Reise",
-      "ko": "여정",
-      "ru": "путь",
       "ar": "الرحلة",
-      "tl": "Paglalakbay",
       "fil": "Paglalakbay"
     },
     "joy": {
@@ -2258,10 +1811,7 @@
       "zh": "喜乐",
       "ja": "喜び",
       "de": "Freude",
-      "ko": "기쁨",
-      "ru": "радость",
       "ar": "الفرح",
-      "tl": "Kagalakan",
       "fil": "Kagalakan"
     },
     "judgment": {
@@ -2273,10 +1823,7 @@
       "zh": "审判",
       "ja": "裁き",
       "de": "Gericht",
-      "ko": "심판",
-      "ru": "суд",
       "ar": "الدينونة",
-      "tl": "Paghuhukom",
       "fil": "Paghuhukom"
     },
     "justice": {
@@ -2288,10 +1835,7 @@
       "zh": "公义",
       "ja": "正義",
       "de": "Gerechtigkeit",
-      "ko": "정의",
-      "ru": "справедливость",
       "ar": "العدالة",
-      "tl": "Katarungan",
       "fil": "Katarungan"
     },
     "justification": {
@@ -2303,10 +1847,7 @@
       "zh": "称义",
       "ja": "義認",
       "de": "Rechtfertigung",
-      "ko": "칭의",
-      "ru": "оправдание",
       "ar": "التبرير",
-      "tl": "Pag-aaring ganap",
       "fil": "Katuwiran"
     },
     "kindness": {
@@ -2318,10 +1859,7 @@
       "zh": "仁慈",
       "ja": "親切",
       "de": "Freundlichkeit",
-      "ko": "친절",
-      "ru": "доброта",
       "ar": "اللطف",
-      "tl": "Kabaitan",
       "fil": "Kabaitan"
     },
     "kingdom": {
@@ -2333,10 +1871,7 @@
       "zh": "国度",
       "ja": "御国",
       "de": "Reich",
-      "ko": "나라",
-      "ru": "Царство",
       "ar": "الملكوت",
-      "tl": "Kaharian",
       "fil": "Kaharian"
     },
     "knowing": {
@@ -2348,10 +1883,7 @@
       "zh": "认识",
       "ja": "知る",
       "de": "Erkennen",
-      "ko": "앎",
-      "ru": "знание",
       "ar": "المعرفة",
-      "tl": "Pagkakilala",
       "fil": "Pagkilala"
     },
     "knowledge": {
@@ -2363,10 +1895,7 @@
       "zh": "知识",
       "ja": "知識",
       "de": "Wissen",
-      "ko": "지식",
-      "ru": "знание",
       "ar": "العلم",
-      "tl": "Kaalaman",
       "fil": "Kaalaman"
     },
     "leadership": {
@@ -2378,10 +1907,7 @@
       "zh": "领导",
       "ja": "リーダーシップ",
       "de": "Leiterschaft",
-      "ko": "리더십",
-      "ru": "лидерство",
       "ar": "القيادة",
-      "tl": "Pamumuno",
       "fil": "Pamumuno"
     },
     "liberty": {
@@ -2393,10 +1919,7 @@
       "zh": "自由",
       "ja": "自由",
       "de": "Unabhängigkeit",
-      "ko": "자유",
-      "ru": "свобода",
       "ar": "الحرية",
-      "tl": "Kalayaan",
       "fil": "Kalayaan"
     },
     "life": {
@@ -2408,10 +1931,7 @@
       "zh": "生命",
       "ja": "命",
       "de": "Leben",
-      "ko": "생명",
-      "ru": "жизнь",
       "ar": "الحياة",
-      "tl": "Buhay",
       "fil": "Buhay"
     },
     "light": {
@@ -2423,10 +1943,7 @@
       "zh": "光",
       "ja": "光",
       "de": "Licht",
-      "ko": "빛",
-      "ru": "свет",
       "ar": "النور",
-      "tl": "Liwanag",
       "fil": "Liwanag"
     },
     "livingwater": {
@@ -2438,10 +1955,7 @@
       "zh": "活水",
       "ja": "生ける水",
       "de": "Lebendiges Wasser",
-      "ko": "생수",
-      "ru": "живая вода",
       "ar": "الماء الحي",
-      "tl": "Buhay na tubig",
       "fil": "Tubig na Buhay"
     },
     "lord": {
@@ -2453,10 +1967,7 @@
       "zh": "主",
       "ja": "主",
       "de": "Herr",
-      "ko": "주님",
-      "ru": "Господь",
       "ar": "الرب",
-      "tl": "Panginoon",
       "fil": "Panginoon"
     },
     "lordship": {
@@ -2468,10 +1979,7 @@
       "zh": "主权",
       "ja": "主権",
       "de": "Herrschaft",
-      "ko": "주권",
-      "ru": "господство",
       "ar": "سيادة الرب",
-      "tl": "Pagkapanginoon",
       "fil": "Paghahari"
     },
     "love": {
@@ -2483,10 +1991,7 @@
       "zh": "爱",
       "ja": "愛",
       "de": "Liebe",
-      "ko": "사랑",
-      "ru": "любовь",
       "ar": "المحبة",
-      "tl": "Pag-ibig",
       "fil": "Pagmamahal"
     },
     "lukewarmness": {
@@ -2498,10 +2003,7 @@
       "zh": "不冷不热",
       "ja": "なまぬるさ",
       "de": "Lauheit",
-      "ko": "미지근함",
-      "ru": "теплохладность",
       "ar": "الفتور",
-      "tl": "Kakulangan ng sigla",
       "fil": "Kalamigan ng Pananampalataya"
     },
     "mammon": {
@@ -2513,10 +2015,7 @@
       "zh": "玛门",
       "ja": "マモン",
       "de": "Mammon",
-      "ko": "맘몬",
-      "ru": "маммона",
       "ar": "المال",
-      "tl": "Kayamanan",
       "fil": "Mammon"
     },
     "marriage": {
@@ -2528,10 +2027,7 @@
       "zh": "婚姻",
       "ja": "結婚",
       "de": "Ehe",
-      "ko": "결혼",
-      "ru": "брак",
       "ar": "الزواج",
-      "tl": "Kasalan",
       "fil": "Kasal"
     },
     "maturity": {
@@ -2543,10 +2039,7 @@
       "zh": "成熟",
       "ja": "成熟",
       "de": "Reife",
-      "ko": "성숙",
-      "ru": "зрелость",
       "ar": "النضج",
-      "tl": "Pagkamaygulang",
       "fil": "Pagkahinog"
     },
     "mediator": {
@@ -2558,10 +2051,7 @@
       "zh": "中保",
       "ja": "仲介者",
       "de": "Mittler",
-      "ko": "중보자",
-      "ru": "посредник",
       "ar": "الوسيط",
-      "tl": "Tagapamagitan",
       "fil": "Tagapamagitan"
     },
     "mercy": {
@@ -2573,10 +2063,7 @@
       "zh": "怜悯",
       "ja": "あわれみ",
       "de": "Barmherzigkeit",
-      "ko": "자비",
-      "ru": "милость",
       "ar": "الرحمة",
-      "tl": "Awa",
       "fil": "Awa"
     },
     "messiah": {
@@ -2588,10 +2075,7 @@
       "zh": "弥赛亚",
       "ja": "メシア",
       "de": "Messias",
-      "ko": "메시아",
-      "ru": "Мессия",
       "ar": "المسيا",
-      "tl": "Mesiyas",
       "fil": "Mesiyas"
     },
     "mind": {
@@ -2603,10 +2087,7 @@
       "zh": "心思",
       "ja": "心",
       "de": "Verstand",
-      "ko": "마음",
-      "ru": "разум",
       "ar": "العقل",
-      "tl": "Isip",
       "fil": "Isipan"
     },
     "mindrenewal": {
@@ -2618,10 +2099,7 @@
       "zh": "心意更新",
       "ja": "心の刷新",
       "de": "Erneuerung des Geistes",
-      "ko": "마음의 새로워짐",
-      "ru": "обновление ума",
       "ar": "تجديد العقل",
-      "tl": "Pagbabago ng isip",
       "fil": "Pagbabago ng Isipan"
     },
     "ministry": {
@@ -2633,10 +2111,7 @@
       "zh": "事奉",
       "ja": "奉仕",
       "de": "Dienst",
-      "ko": "사역",
-      "ru": "служение",
       "ar": "الخدمة",
-      "tl": "Ministeryo",
       "fil": "Ministeryo"
     },
     "miracle": {
@@ -2648,10 +2123,7 @@
       "zh": "神迹",
       "ja": "奇跡",
       "de": "Wunder",
-      "ko": "기적",
-      "ru": "чудо",
       "ar": "المعجزة",
-      "tl": "Himala",
       "fil": "Milagro"
     },
     "mission": {
@@ -2663,10 +2135,7 @@
       "zh": "使命",
       "ja": "使命",
       "de": "Mission",
-      "ko": "선교",
-      "ru": "миссия",
       "ar": "الرسالة",
-      "tl": "Misyon",
       "fil": "Misyon"
     },
     "money": {
@@ -2678,10 +2147,7 @@
       "zh": "金钱",
       "ja": "お金",
       "de": "Geld",
-      "ko": "돈",
-      "ru": "деньги",
       "ar": "المال",
-      "tl": "Salapi",
       "fil": "Pera"
     },
     "monotheism": {
@@ -2693,10 +2159,7 @@
       "zh": "一神论",
       "ja": "一神教",
       "de": "Monotheismus",
-      "ko": "유일신",
-      "ru": "монотеизм",
       "ar": "التوحيد",
-      "tl": "Paniniwala sa iisang Diyos",
       "fil": "Monoteismo"
     },
     "mortality": {
@@ -2708,10 +2171,7 @@
       "zh": "必死性",
       "ja": "死すべき存在",
       "de": "Sterblichkeit",
-      "ko": "죽을 운명",
-      "ru": "смертность",
       "ar": "الفناء",
-      "tl": "Pagkamatay",
       "fil": "Pagkamortal"
     },
     "mortification": {
@@ -2723,10 +2183,7 @@
       "zh": "治死肉体",
       "ja": "肉体の死",
       "de": "Abtötung",
-      "ko": "육체 죽임",
-      "ru": "умерщвление",
       "ar": "إماتة الجسد",
-      "tl": "Pagpapakasakit",
       "fil": "Pagtanggi sa Laman"
     },
     "motivation": {
@@ -2738,10 +2195,7 @@
       "zh": "动机",
       "ja": "動機",
       "de": "Motivation",
-      "ko": "동기",
-      "ru": "мотивация",
       "ar": "الدافع",
-      "tl": "Pagganyak",
       "fil": "Motibasyon"
     },
     "mystery": {
@@ -2753,10 +2207,7 @@
       "zh": "奥秘",
       "ja": "奥義",
       "de": "Geheimnis",
-      "ko": "신비",
-      "ru": "тайна",
       "ar": "السر",
-      "tl": "Hiwaga",
       "fil": "Misteryo"
     },
     "neighbor": {
@@ -2768,10 +2219,7 @@
       "zh": "邻舍",
       "ja": "隣人",
       "de": "Nächster",
-      "ko": "이웃",
-      "ru": "ближний",
       "ar": "القريب",
-      "tl": "Kapwa",
       "fil": "Kapwa"
     },
     "newbirth": {
@@ -2783,10 +2231,7 @@
       "zh": "重生",
       "ja": "新生",
       "de": "Neue Geburt",
-      "ko": "거듭남",
-      "ru": "новое рождение",
       "ar": "الميلاد الجديد",
-      "tl": "Bagong kapanganakan",
       "fil": "Bagong Buhay"
     },
     "obedience": {
@@ -2798,10 +2243,7 @@
       "zh": "顺服",
       "ja": "従順",
       "de": "Gehorsam",
-      "ko": "순종",
-      "ru": "послушание",
       "ar": "الطاعة",
-      "tl": "Pagsunod",
       "fil": "Pagsunod"
     },
     "opportunity": {
@@ -2813,10 +2255,7 @@
       "zh": "机会",
       "ja": "機会",
       "de": "Möglichkeit",
-      "ko": "기회",
-      "ru": "возможность",
       "ar": "الفرصة",
-      "tl": "Pagkakataon",
       "fil": "Pagkakataon"
     },
     "order": {
@@ -2828,10 +2267,7 @@
       "zh": "秩序",
       "ja": "秩序",
       "de": "Ordnung",
-      "ko": "질서",
-      "ru": "порядок",
       "ar": "النظام",
-      "tl": "Kaayusan",
       "fil": "Kaayusan"
     },
     "overcoming": {
@@ -2843,10 +2279,7 @@
       "zh": "得胜",
       "ja": "克服",
       "de": "Überwinden",
-      "ko": "이김",
-      "ru": "преодоление",
       "ar": "الغلبة",
-      "tl": "Pagtagumpay",
       "fil": "Pagtatagumpay"
     },
     "parable": {
@@ -2858,10 +2291,7 @@
       "zh": "比喻",
       "ja": "たとえ話",
       "de": "Gleichnis",
-      "ko": "비유",
-      "ru": "притча",
       "ar": "المثل",
-      "tl": "Talinghaga",
       "fil": "Talinghaga"
     },
     "path": {
@@ -2873,10 +2303,7 @@
       "zh": "道路",
       "ja": "道",
       "de": "Pfad",
-      "ko": "길",
-      "ru": "путь",
       "ar": "الطريق",
-      "tl": "Landas",
       "fil": "Landas"
     },
     "patience": {
@@ -2888,10 +2315,7 @@
       "zh": "忍耐",
       "ja": "忍耐",
       "de": "Geduld",
-      "ko": "인내",
-      "ru": "терпение",
       "ar": "الصبر",
-      "tl": "Pagtitiyaga",
       "fil": "Pasensya"
     },
     "peace": {
@@ -2903,10 +2327,7 @@
       "zh": "平安",
       "ja": "平和",
       "de": "Frieden",
-      "ko": "평화",
-      "ru": "мир",
       "ar": "السلام",
-      "tl": "Kapayapaan",
       "fil": "Kapayapaan"
     },
     "pentecost": {
@@ -2918,10 +2339,7 @@
       "zh": "五旬节",
       "ja": "ペンテコステ",
       "de": "Pfingsten",
-      "ko": "오순절",
-      "ru": "Пятидесятница",
       "ar": "العنصرة",
-      "tl": "Pentecostes",
       "fil": "Pentekostes"
     },
     "perilous": {
@@ -2933,10 +2351,7 @@
       "zh": "危险",
       "ja": "危険な",
       "de": "Gefährlich",
-      "ko": "위험한",
-      "ru": "опасный",
       "ar": "الخطر",
-      "tl": "Mapanganib",
       "fil": "Mapanganib"
     },
     "persecution": {
@@ -2948,10 +2363,7 @@
       "zh": "逼迫",
       "ja": "迫害",
       "de": "Verfolgung",
-      "ko": "핍박",
-      "ru": "гонение",
       "ar": "الاضطهاد",
-      "tl": "Pag-uusig",
       "fil": "Pag-uusig"
     },
     "perseverance": {
@@ -2963,10 +2375,7 @@
       "zh": "坚忍",
       "ja": "忍耐",
       "de": "Beharrlichkeit",
-      "ko": "인내",
-      "ru": "настойчивость",
       "ar": "المثابرة",
-      "tl": "Pagtitiyaga",
       "fil": "Pagtitiyaga"
     },
     "possibility": {
@@ -2978,10 +2387,7 @@
       "zh": "可能性",
       "ja": "可能性",
       "de": "Potenzial",
-      "ko": "가능성",
-      "ru": "возможность",
       "ar": "الإمكانية",
-      "tl": "Posibilidad",
       "fil": "Posibilidad"
     },
     "power": {
@@ -2993,10 +2399,7 @@
       "zh": "能力",
       "ja": "力",
       "de": "Kraft",
-      "ko": "능력",
-      "ru": "сила",
       "ar": "القوة",
-      "tl": "Kapangyarihan",
       "fil": "Kapangyarihan"
     },
     "praise": {
@@ -3008,10 +2411,7 @@
       "zh": "赞美",
       "ja": "賛美",
       "de": "Lob",
-      "ko": "찬양",
-      "ru": "хвала",
       "ar": "التسبيح",
-      "tl": "Papuri",
       "fil": "Papuri"
     },
     "prayer": {
@@ -3023,10 +2423,7 @@
       "zh": "祷告",
       "ja": "祈り",
       "de": "Gebet",
-      "ko": "기도",
-      "ru": "молитва",
       "ar": "الصلاة",
-      "tl": "Panalangin",
       "fil": "Panalangin"
     },
     "preaching": {
@@ -3038,10 +2435,7 @@
       "zh": "讲道",
       "ja": "説教",
       "de": "Predigt",
-      "ko": "설교",
-      "ru": "проповедь",
       "ar": "الوعظ",
-      "tl": "Pangangaral",
       "fil": "Pangangaral"
     },
     "predestination": {
@@ -3053,10 +2447,7 @@
       "zh": "预定",
       "ja": "予定",
       "de": "Prädestination",
-      "ko": "예정",
-      "ru": "предопределение",
       "ar": "التقدير الإلهي",
-      "tl": "Itinakdang kapalaran",
       "fil": "Predestinasyon"
     },
     "preeminence": {
@@ -3068,10 +2459,7 @@
       "zh": "首位",
       "ja": "卓越",
       "de": "Vorrang",
-      "ko": "탁월함",
-      "ru": "превосходство",
       "ar": "السبق",
-      "tl": "Kataas-taasan",
       "fil": "Karangalan"
     },
     "presence": {
@@ -3083,10 +2471,7 @@
       "zh": "同在",
       "ja": "臨在",
       "de": "Gegenwart",
-      "ko": "임재",
-      "ru": "присутствие",
       "ar": "الحضور",
-      "tl": "Pagkakaroon",
       "fil": "Presensya"
     },
     "pride": {
@@ -3098,10 +2483,7 @@
       "zh": "骄傲",
       "ja": "高慢",
       "de": "Stolz",
-      "ko": "교만",
-      "ru": "гордость",
       "ar": "الكبرياء",
-      "tl": "Kapalaluan",
       "fil": "Pagmamalaki"
     },
     "promise": {
@@ -3113,10 +2495,7 @@
       "zh": "应许",
       "ja": "約束",
       "de": "Verheißung",
-      "ko": "약속",
-      "ru": "обещание",
       "ar": "الموعد",
-      "tl": "Pangako",
       "fil": "Pangako"
     },
     "promises": {
@@ -3128,10 +2507,7 @@
       "zh": "应许",
       "ja": "約束",
       "de": "Verheißungen",
-      "ko": "약속들",
-      "ru": "обещания",
       "ar": "المواعيد",
-      "tl": "Mga pangako",
       "fil": "Mga Pangako"
     },
     "prophecy": {
@@ -3143,10 +2519,7 @@
       "zh": "预言",
       "ja": "預言",
       "de": "Prophezeiung",
-      "ko": "예언",
-      "ru": "пророчество",
       "ar": "النبوة",
-      "tl": "Hula",
       "fil": "Hula"
     },
     "protection": {
@@ -3158,10 +2531,7 @@
       "zh": "保护",
       "ja": "守り",
       "de": "Schutz",
-      "ko": "보호",
-      "ru": "защита",
       "ar": "الحماية",
-      "tl": "Proteksyon",
       "fil": "Proteksyon"
     },
     "provision": {
@@ -3173,10 +2543,7 @@
       "zh": "供应",
       "ja": "供給",
       "de": "Versorgung",
-      "ko": "공급",
-      "ru": "снабжение",
       "ar": "التزويد",
-      "tl": "Paglalaan",
       "fil": "Probisyon"
     },
     "purification": {
@@ -3188,10 +2555,7 @@
       "zh": "洁净",
       "ja": "きよめ",
       "de": "Läuterung",
-      "ko": "정화",
-      "ru": "очищение",
       "ar": "التطهير",
-      "tl": "Pagdadalisay",
       "fil": "Pagdadalisay"
     },
     "purity": {
@@ -3203,10 +2567,7 @@
       "zh": "纯洁",
       "ja": "純潔",
       "de": "Reinheit",
-      "ko": "순결",
-      "ru": "чистота",
       "ar": "الطهارة",
-      "tl": "Kadalisayan",
       "fil": "Kadalisayan"
     },
     "purpose": {
@@ -3218,10 +2579,7 @@
       "zh": "目的",
       "ja": "目的",
       "de": "Zweck",
-      "ko": "목적",
-      "ru": "цель",
       "ar": "الغاية",
-      "tl": "Layunin",
       "fil": "Layunin"
     },
     "pursuit": {
@@ -3233,10 +2591,7 @@
       "zh": "追求",
       "ja": "追い求め",
       "de": "Suche",
-      "ko": "추구",
-      "ru": "стремление",
       "ar": "الطلب",
-      "tl": "Pagpupunyagi",
       "fil": "Paghahanap"
     },
     "reaping": {
@@ -3248,10 +2603,7 @@
       "zh": "收割",
       "ja": "刈り取り",
       "de": "Einbringen",
-      "ko": "거둠",
-      "ru": "жатва",
       "ar": "الحصاد",
-      "tl": "Pag-aani",
       "fil": "Pag-aani"
     },
     "rebirth": {
@@ -3263,10 +2615,7 @@
       "zh": "重生",
       "ja": "再生",
       "de": "Wiedergeburt",
-      "ko": "다시 남",
-      "ru": "возрождение",
       "ar": "الولادة من جديد",
-      "tl": "Muling pagsilang",
       "fil": "Muling Pagsilang"
     },
     "receiving": {
@@ -3278,10 +2627,7 @@
       "zh": "接受",
       "ja": "受け取る",
       "de": "Empfangen",
-      "ko": "받음",
-      "ru": "получение",
       "ar": "القبول",
-      "tl": "Pagtanggap",
       "fil": "Pagtanggap"
     },
     "reconciliation": {
@@ -3293,10 +2639,7 @@
       "zh": "和好",
       "ja": "和解",
       "de": "Versöhnung",
-      "ko": "화해",
-      "ru": "примирение",
       "ar": "المصالحة",
-      "tl": "Pakikipagkasundo",
       "fil": "Pagkakasundo"
     },
     "redemption": {
@@ -3308,10 +2651,7 @@
       "zh": "救赎",
       "ja": "贖い",
       "de": "Erlösung",
-      "ko": "구속",
-      "ru": "искупление",
       "ar": "الفداء",
-      "tl": "Katubusan",
       "fil": "Pagtutubos"
     },
     "reign": {
@@ -3323,10 +2663,7 @@
       "zh": "统治",
       "ja": "統治",
       "de": "Regentschaft",
-      "ko": "통치",
-      "ru": "царствование",
       "ar": "الملكوت",
-      "tl": "Paghahari",
       "fil": "Paghahari"
     },
     "rejoicing": {
@@ -3338,10 +2675,7 @@
       "zh": "欢喜",
       "ja": "喜ぶ",
       "de": "Jubel",
-      "ko": "기뻐함",
-      "ru": "радование",
       "ar": "الابتهاج",
-      "tl": "Kagalakan",
       "fil": "Pagbubunyi"
     },
     "relationships": {
@@ -3353,10 +2687,7 @@
       "zh": "关系",
       "ja": "関係",
       "de": "Beziehungen",
-      "ko": "관계",
-      "ru": "отношения",
       "ar": "العلاقات",
-      "tl": "Mga relasyon",
       "fil": "Mga Relasyon"
     },
     "remembrance": {
@@ -3368,10 +2699,7 @@
       "zh": "记念",
       "ja": "記念",
       "de": "Gedächtnis",
-      "ko": "기억",
-      "ru": "воспоминание",
       "ar": "التذكار",
-      "tl": "Pag-alaala",
       "fil": "Pag-aalala"
     },
     "renewal": {
@@ -3383,10 +2711,7 @@
       "zh": "更新",
       "ja": "刷新",
       "de": "Erneuerung",
-      "ko": "새로워짐",
-      "ru": "обновление",
       "ar": "التجديد",
-      "tl": "Pagpapanibago",
       "fil": "Pagbabago"
     },
     "repentance": {
@@ -3398,10 +2723,7 @@
       "zh": "悔改",
       "ja": "悔い改め",
       "de": "Buße",
-      "ko": "회개",
-      "ru": "покаяние",
       "ar": "التوبة",
-      "tl": "Pagsisisi",
       "fil": "Pagsisisi"
     },
     "responsibility": {
@@ -3413,10 +2735,7 @@
       "zh": "责任",
       "ja": "責任",
       "de": "Verantwortung",
-      "ko": "책임",
-      "ru": "ответственность",
       "ar": "المسؤولية",
-      "tl": "Pananagutan",
       "fil": "Responsibilidad"
     },
     "rest": {
@@ -3428,10 +2747,7 @@
       "zh": "安息",
       "ja": "休み",
       "de": "Ruhe",
-      "ko": "안식",
-      "ru": "покой",
       "ar": "الراحة",
-      "tl": "Kapahingahan",
       "fil": "Pahinga"
     },
     "restoration": {
@@ -3443,10 +2759,7 @@
       "zh": "复兴",
       "ja": "回復",
       "de": "Wiederherstellung",
-      "ko": "회복",
-      "ru": "восстановление",
       "ar": "الاستعادة",
-      "tl": "Panunumbalik",
       "fil": "Pagpapanumbalik"
     },
     "resurrection": {
@@ -3458,10 +2771,7 @@
       "zh": "复活",
       "ja": "復活",
       "de": "Auferstehung",
-      "ko": "부활",
-      "ru": "воскресение",
       "ar": "القيامة",
-      "tl": "Pagkabuhay na muli",
       "fil": "Muling Pagkabuhay"
     },
     "return": {
@@ -3473,10 +2783,7 @@
       "zh": "再来",
       "ja": "再来",
       "de": "Wiederkommen",
-      "ko": "재림",
-      "ru": "возвращение",
       "ar": "العودة",
-      "tl": "Pagbabalik",
       "fil": "Pagbabalik"
     },
     "reward": {
@@ -3488,10 +2795,7 @@
       "zh": "赏赐",
       "ja": "報い",
       "de": "Belohnung",
-      "ko": "상급",
-      "ru": "награда",
       "ar": "الأجر",
-      "tl": "Gantimpala",
       "fil": "Gantimpala"
     },
     "righteousness": {
@@ -3503,10 +2807,7 @@
       "zh": "义",
       "ja": "義",
       "de": "Rechtschaffenheit",
-      "ko": "의로움",
-      "ru": "праведность",
       "ar": "البر",
-      "tl": "Katuwiran",
       "fil": "Katuwiran"
     },
     "sacrifice": {
@@ -3518,10 +2819,7 @@
       "zh": "祭物",
       "ja": "犠牲",
       "de": "Opfer",
-      "ko": "희생",
-      "ru": "жертва",
       "ar": "الذبيحة",
-      "tl": "Sakripisyo",
       "fil": "Sakripisyo"
     },
     "salvation": {
@@ -3533,10 +2831,7 @@
       "zh": "救恩",
       "ja": "救い",
       "de": "Heil",
-      "ko": "구원",
-      "ru": "спасение",
       "ar": "الخلاص",
-      "tl": "Kaligtasan",
       "fil": "Kaligtasan"
     },
     "sanctification": {
@@ -3548,10 +2843,7 @@
       "zh": "成圣",
       "ja": "聖化",
       "de": "Heiligung",
-      "ko": "성화",
-      "ru": "освящение",
       "ar": "التقديس",
-      "tl": "Pagpapaging-banal",
       "fil": "Pagpapabanal"
     },
     "scripture": {
@@ -3563,10 +2855,7 @@
       "zh": "圣经",
       "ja": "聖書",
       "de": "Schrift",
-      "ko": "성경",
-      "ru": "Писание",
       "ar": "الكتاب المقدس",
-      "tl": "Kasulatan",
       "fil": "Kasulatan"
     },
     "secondcoming": {
@@ -3578,10 +2867,7 @@
       "zh": "再来",
       "ja": "再臨",
       "de": "Zweites Kommen",
-      "ko": "재림",
-      "ru": "второе пришествие",
       "ar": "المجيء الثاني",
-      "tl": "Ikalawang pagparito",
       "fil": "Ikalawang Pagparito"
     },
     "seeking": {
@@ -3593,10 +2879,7 @@
       "zh": "寻求",
       "ja": "求める",
       "de": "Suchen",
-      "ko": "구함",
-      "ru": "искание",
       "ar": "الطلب",
-      "tl": "Paghanap",
       "fil": "Paghahanap"
     },
     "selfcontrol": {
@@ -3608,10 +2891,7 @@
       "zh": "自制",
       "ja": "自制",
       "de": "Selbstbeherrschung",
-      "ko": "자기 절제",
-      "ru": "самоконтроль",
       "ar": "ضبط النفس",
-      "tl": "Pagpipigil sa sarili",
       "fil": "Pagpipigil sa Sarili"
     },
     "selfexamination": {
@@ -3623,10 +2903,7 @@
       "zh": "自我省察",
       "ja": "自己吟味",
       "de": "Selbstprüfung",
-      "ko": "자기 점검",
-      "ru": "самоиспытание",
       "ar": "فحص النفس",
-      "tl": "Pagsusuri sa sarili",
       "fil": "Pagsusuri sa Sarili"
     },
     "selflessness": {
@@ -3638,10 +2915,7 @@
       "zh": "无私",
       "ja": "無私",
       "de": "Selbstlosigkeit",
-      "ko": "이타심",
-      "ru": "самоотверженность",
       "ar": "الإنكار الذاتي",
-      "tl": "Pagkamakasarili",
       "fil": "Kawalan ng Sariling Interes"
     },
     "servanthood": {
@@ -3653,10 +2927,7 @@
       "zh": "仆人心",
       "ja": "僕の心",
       "de": "Dienerschaft",
-      "ko": "섬김",
-      "ru": "служение",
       "ar": "العبودية",
-      "tl": "Paglilingkod",
       "fil": "Pagiging Lingkod"
     },
     "service": {
@@ -3668,10 +2939,7 @@
       "zh": "服务",
       "ja": "奉仕",
       "de": "Gottesdienst",
-      "ko": "섬김",
-      "ru": "служба",
       "ar": "الخدمة",
-      "tl": "Paglilingkod",
       "fil": "Paglilingkod"
     },
     "shepherd": {
@@ -3683,10 +2951,7 @@
       "zh": "牧人",
       "ja": "羊飼い",
       "de": "Hirte",
-      "ko": "목자",
-      "ru": "пастырь",
       "ar": "الراعي",
-      "tl": "Pastol",
       "fil": "Pastol"
     },
     "sin": {
@@ -3698,10 +2963,7 @@
       "zh": "罪",
       "ja": "罪",
       "de": "Sünde",
-      "ko": "죄",
-      "ru": "грех",
       "ar": "الخطيئة",
-      "tl": "Kasalanan",
       "fil": "Kasalanan"
     },
     "sonship": {
@@ -3713,10 +2975,7 @@
       "zh": "儿子名分",
       "ja": "子たる身分",
       "de": "Sohnschaft",
-      "ko": "아들됨",
-      "ru": "сыновство",
       "ar": "البنوة",
-      "tl": "Pagka-anak",
       "fil": "Pagiging Anak ng Diyos"
     },
     "sorrow": {
@@ -3728,10 +2987,7 @@
       "zh": "悲伤",
       "ja": "悲しみ",
       "de": "Trauer",
-      "ko": "슬픔",
-      "ru": "скорбь",
       "ar": "الحزن",
-      "tl": "Hapis",
       "fil": "Kalungkutan"
     },
     "soul": {
@@ -3743,10 +2999,7 @@
       "zh": "灵魂",
       "ja": "魂",
       "de": "Seele",
-      "ko": "영혼",
-      "ru": "душа",
       "ar": "النفس",
-      "tl": "Kaluluwa",
       "fil": "Kaluluwa"
     },
     "sovereignty": {
@@ -3758,10 +3011,7 @@
       "zh": "主权",
       "ja": "主権",
       "de": "Souveränität",
-      "ko": "주권",
-      "ru": "суверенитет",
       "ar": "السيادة",
-      "tl": "Soberanya",
       "fil": "Soberaniya"
     },
     "sowing": {
@@ -3773,10 +3023,7 @@
       "zh": "撒种",
       "ja": "種まき",
       "de": "Säen",
-      "ko": "뿌림",
-      "ru": "сеяние",
       "ar": "الزرع",
-      "tl": "Paghasik",
       "fil": "Pagtatanim"
     },
     "speech": {
@@ -3788,10 +3035,7 @@
       "zh": "言语",
       "ja": "言葉",
       "de": "Rede",
-      "ko": "말",
-      "ru": "речь",
       "ar": "الكلام",
-      "tl": "Pananalita",
       "fil": "Pananalita"
     },
     "spirit": {
@@ -3803,10 +3047,7 @@
       "zh": "灵",
       "ja": "霊",
       "de": "Geist",
-      "ko": "영",
-      "ru": "дух",
       "ar": "الروح",
-      "tl": "Espiritu",
       "fil": "Espiritu"
     },
     "spiritual": {
@@ -3818,10 +3059,7 @@
       "zh": "属灵",
       "ja": "霊的",
       "de": "Geistlich",
-      "ko": "영적",
-      "ru": "духовный",
       "ar": "الروحاني",
-      "tl": "Espiritwal",
       "fil": "Espirituwal"
     },
     "spiritualfood": {
@@ -3833,10 +3071,7 @@
       "zh": "属灵粮食",
       "ja": "霊の糧",
       "de": "Geistliche Nahrung",
-      "ko": "영적 양식",
-      "ru": "духовная пища",
       "ar": "الغذاء الروحاني",
-      "tl": "Pagkaing espiritwal",
       "fil": "Espirituwal na Pagkain"
     },
     "spiritualgrowth": {
@@ -3848,10 +3083,7 @@
       "zh": "属灵成长",
       "ja": "霊的成長",
       "de": "Geistliches Wachstum",
-      "ko": "영적 성장",
-      "ru": "духовный рост",
       "ar": "النمو الروحاني",
-      "tl": "Paglago sa espiritu",
       "fil": "Espirituwal na Paglago"
     },
     "spirituality": {
@@ -3863,10 +3095,7 @@
       "zh": "灵性",
       "ja": "霊性",
       "de": "Spiritualität",
-      "ko": "영성",
-      "ru": "духовность",
       "ar": "الروحانية",
-      "tl": "Espiritwalidad",
       "fil": "Espiritwalidad"
     },
     "spiritualwarfare": {
@@ -3878,10 +3107,7 @@
       "zh": "属灵争战",
       "ja": "霊的戦い",
       "de": "Geistlicher Kampf",
-      "ko": "영적 전투",
-      "ru": "духовная война",
       "ar": "الحرب الروحانية",
-      "tl": "Pakikidigmang espiritwal",
       "fil": "Espirituwal na Pakikidigma"
     },
     "stewardship": {
@@ -3893,10 +3119,7 @@
       "zh": "管家职分",
       "ja": "管理",
       "de": "Haushalterschaft",
-      "ko": "청지기",
-      "ru": "управление",
       "ar": "الوكالة",
-      "tl": "Pangangasiwa",
       "fil": "Pamamahala"
     },
     "strength": {
@@ -3908,10 +3131,7 @@
       "zh": "力量",
       "ja": "力",
       "de": "Stärke",
-      "ko": "힘",
-      "ru": "сила",
       "ar": "القوة",
-      "tl": "Lakas",
       "fil": "Lakas"
     },
     "struggle": {
@@ -3923,10 +3143,7 @@
       "zh": "争战",
       "ja": "戦い",
       "de": "Kampf",
-      "ko": "씨름",
-      "ru": "борьба",
       "ar": "الكفاح",
-      "tl": "Pakikibaka",
       "fil": "Pakikibaka"
     },
     "study": {
@@ -3938,10 +3155,7 @@
       "zh": "学习",
       "ja": "学び",
       "de": "Studium",
-      "ko": "공부",
-      "ru": "изучение",
       "ar": "الدراسة",
-      "tl": "Pag-aaral",
       "fil": "Pag-aaral"
     },
     "submission": {
@@ -3953,10 +3167,7 @@
       "zh": "顺服",
       "ja": "服従",
       "de": "Unterwerfung",
-      "ko": "복종",
-      "ru": "подчинение",
       "ar": "الخضوع",
-      "tl": "Pagpapasakop",
       "fil": "Pagsuko"
     },
     "suffering": {
@@ -3968,10 +3179,7 @@
       "zh": "苦难",
       "ja": "苦しみ",
       "de": "Leiden",
-      "ko": "고난",
-      "ru": "страдание",
       "ar": "المعاناة",
-      "tl": "Pagdurusa",
       "fil": "Pagdurusa"
     },
     "surrender": {
@@ -3983,10 +3191,7 @@
       "zh": "降服",
       "ja": "明け渡し",
       "de": "Hingabe",
-      "ko": "항복",
-      "ru": "сдача",
       "ar": "الاستسلام",
-      "tl": "Pagsuko",
       "fil": "Pagsusuko sa Diyos"
     },
     "teaching": {
@@ -3998,10 +3203,7 @@
       "zh": "教导",
       "ja": "教え",
       "de": "Lehre",
-      "ko": "가르침",
-      "ru": "учение",
       "ar": "التعليم",
-      "tl": "Pagtuturo",
       "fil": "Pagtuturo"
     },
     "temple": {
@@ -4013,10 +3215,7 @@
       "zh": "圣殿",
       "ja": "神殿",
       "de": "Tempel",
-      "ko": "성전",
-      "ru": "храм",
       "ar": "الهيكل",
-      "tl": "Templo",
       "fil": "Templo"
     },
     "temptation": {
@@ -4028,10 +3227,7 @@
       "zh": "试探",
       "ja": "誘惑",
       "de": "Versuchung",
-      "ko": "시험",
-      "ru": "искушение",
       "ar": "الإغراء",
-      "tl": "Tukso",
       "fil": "Tukso"
     },
     "thanksgiving": {
@@ -4043,10 +3239,7 @@
       "zh": "感恩",
       "ja": "感謝",
       "de": "Dankgebet",
-      "ko": "감사",
-      "ru": "благодарение",
       "ar": "الشكر",
-      "tl": "Pasasalamat",
       "fil": "Pasasalamat"
     },
     "thoughts": {
@@ -4058,10 +3251,7 @@
       "zh": "思想",
       "ja": "思い",
       "de": "Gedanken",
-      "ko": "생각",
-      "ru": "мысли",
       "ar": "الأفكار",
-      "tl": "Mga kaisipan",
       "fil": "Mga Kaisipan"
     },
     "time": {
@@ -4073,10 +3263,7 @@
       "zh": "时间",
       "ja": "時",
       "de": "Zeit",
-      "ko": "때",
-      "ru": "время",
       "ar": "الوقت",
-      "tl": "Panahon",
       "fil": "Panahon"
     },
     "transformation": {
@@ -4088,10 +3275,7 @@
       "zh": "变化",
       "ja": "変容",
       "de": "Verwandlung",
-      "ko": "변화",
-      "ru": "преображение",
       "ar": "التحول",
-      "tl": "Pagbabago",
       "fil": "Pagbabago"
     },
     "treasure": {
@@ -4103,10 +3287,7 @@
       "zh": "宝藏",
       "ja": "宝",
       "de": "Schatz",
-      "ko": "보물",
-      "ru": "сокровище",
       "ar": "الكنز",
-      "tl": "Kayamanan",
       "fil": "Kayamanan"
     },
     "trials": {
@@ -4118,10 +3299,7 @@
       "zh": "试炼",
       "ja": "試練",
       "de": "Prüfungen",
-      "ko": "시련",
-      "ru": "испытания",
       "ar": "التجارب",
-      "tl": "Pagsubok",
       "fil": "Mga Pagsubok"
     },
     "trust": {
@@ -4133,10 +3311,7 @@
       "zh": "信靠",
       "ja": "信頼",
       "de": "Vertrauen",
-      "ko": "신뢰",
-      "ru": "доверие",
       "ar": "الثقة",
-      "tl": "Pagtitiwala",
       "fil": "Tiwala"
     },
     "truth": {
@@ -4148,10 +3323,7 @@
       "zh": "真理",
       "ja": "真理",
       "de": "Wahrheit",
-      "ko": "진리",
-      "ru": "истина",
       "ar": "الحق",
-      "tl": "Katotohanan",
       "fil": "Katotohanan"
     },
     "understanding": {
@@ -4163,10 +3335,7 @@
       "zh": "理解",
       "ja": "悟り",
       "de": "Verständnis",
-      "ko": "이해",
-      "ru": "понимание",
       "ar": "الفهم",
-      "tl": "Pang-unawa",
       "fil": "Pag-unawa"
     },
     "unity": {
@@ -4178,10 +3347,7 @@
       "zh": "合一",
       "ja": "一致",
       "de": "Einheit",
-      "ko": "연합",
-      "ru": "единство",
       "ar": "الوحدة",
-      "tl": "Pagkakaisa",
       "fil": "Pagkakaisa"
     },
     "victory": {
@@ -4193,10 +3359,7 @@
       "zh": "得胜",
       "ja": "勝利",
       "de": "Sieg",
-      "ko": "승리",
-      "ru": "победа",
       "ar": "النصر",
-      "tl": "Tagumpay",
       "fil": "Tagumpay"
     },
     "vigilance": {
@@ -4208,10 +3371,7 @@
       "zh": "警醒",
       "ja": "油断なく",
       "de": "Wachsamkeit",
-      "ko": "깨어있음",
-      "ru": "бдительность",
       "ar": "اليقظة",
-      "tl": "Pagbabantay",
       "fil": "Pagbabantay"
     },
     "vine": {
@@ -4223,10 +3383,7 @@
       "zh": "葡萄树",
       "ja": "ぶどうの木",
       "de": "Weinstock",
-      "ko": "포도나무",
-      "ru": "виноградная лоза",
       "ar": "الكرمة",
-      "tl": "Puno ng ubas",
       "fil": "Puno ng Ubas"
     },
     "virtue": {
@@ -4238,10 +3395,7 @@
       "zh": "美德",
       "ja": "徳",
       "de": "Tugend",
-      "ko": "덕",
-      "ru": "добродетель",
       "ar": "الفضيلة",
-      "tl": "Kabanalan",
       "fil": "Birtud"
     },
     "walk": {
@@ -4253,10 +3407,7 @@
       "zh": "行走",
       "ja": "歩み",
       "de": "Wandel",
-      "ko": "행함",
-      "ru": "хождение",
       "ar": "السيرة",
-      "tl": "Paglakad",
       "fil": "Pamumuhay"
     },
     "watch": {
@@ -4268,10 +3419,7 @@
       "zh": "警醒",
       "ja": "目を覚ます",
       "de": "Wachen",
-      "ko": "깨어있다",
-      "ru": "бодрствование",
       "ar": "السهر",
-      "tl": "Pagmamasid",
       "fil": "Pagiging Handa"
     },
     "weakness": {
@@ -4283,10 +3431,7 @@
       "zh": "软弱",
       "ja": "弱さ",
       "de": "Schwäche",
-      "ko": "연약함",
-      "ru": "слабость",
       "ar": "الضعف",
-      "tl": "Kahinaan",
       "fil": "Kahinaan"
     },
     "wealth": {
@@ -4298,10 +3443,7 @@
       "zh": "财富",
       "ja": "富",
       "de": "Reichtum",
-      "ko": "부",
-      "ru": "богатство",
       "ar": "الثروة",
-      "tl": "Kayamanan",
       "fil": "Kayamanan"
     },
     "willingness": {
@@ -4313,10 +3455,7 @@
       "zh": "愿意",
       "ja": "喜んで",
       "de": "Bereitschaft",
-      "ko": "자원함",
-      "ru": "готовность",
       "ar": "الاستعداد",
-      "tl": "Pagkukusa",
       "fil": "Kagustuhan"
     },
     "wisdom": {
@@ -4328,10 +3467,7 @@
       "zh": "智慧",
       "ja": "知恵",
       "de": "Weisheit",
-      "ko": "지혜",
-      "ru": "мудрость",
       "ar": "الحكمة",
-      "tl": "Karunungan",
       "fil": "Karunungan"
     },
     "witness": {
@@ -4343,10 +3479,7 @@
       "zh": "见证",
       "ja": "証人",
       "de": "Zeuge",
-      "ko": "증인",
-      "ru": "свидетель",
       "ar": "الشاهد",
-      "tl": "Saksi",
       "fil": "Saksi"
     },
     "word": {
@@ -4358,10 +3491,7 @@
       "zh": "话语",
       "ja": "御言葉",
       "de": "Wort",
-      "ko": "말씀",
-      "ru": "Слово",
       "ar": "الكلمة",
-      "tl": "Salita",
       "fil": "Salita"
     },
     "work": {
@@ -4373,10 +3503,7 @@
       "zh": "工作",
       "ja": "働き",
       "de": "Arbeit",
-      "ko": "일",
-      "ru": "труд",
       "ar": "العمل",
-      "tl": "Gawa",
       "fil": "Gawa"
     },
     "works": {
@@ -4388,10 +3515,7 @@
       "zh": "行为",
       "ja": "わざ",
       "de": "Werke",
-      "ko": "행위",
-      "ru": "дела",
       "ar": "الأعمال",
-      "tl": "Mga gawa",
       "fil": "Mga Gawa"
     },
     "world": {
@@ -4403,10 +3527,7 @@
       "zh": "世界",
       "ja": "世",
       "de": "Welt",
-      "ko": "세상",
-      "ru": "мир",
       "ar": "العالم",
-      "tl": "Sanlibutan",
       "fil": "Mundo"
     },
     "worship": {
@@ -4418,10 +3539,7 @@
       "zh": "敬拜",
       "ja": "礼拝",
       "de": "Anbetung",
-      "ko": "예배",
-      "ru": "поклонение",
       "ar": "العبادة",
-      "tl": "Pagsamba",
       "fil": "Pagsamba"
     },
     "worthy": {
@@ -4433,10 +3551,7 @@
       "zh": "配得",
       "ja": "ふさわしい",
       "de": "Würdig",
-      "ko": "합당한",
-      "ru": "достойный",
       "ar": "المستحق",
-      "tl": "Karapat-dapat",
       "fil": "Karapat-dapat"
     },
     "yielding": {
@@ -4448,11 +3563,872 @@
       "zh": "顺服",
       "ja": "明け渡す",
       "de": "Nachgeben",
-      "ko": "양보",
-      "ru": "уступание",
       "ar": "التسليم",
-      "tl": "Pagpapasakop",
       "fil": "Pagsuko sa Diyos"
+    },
+    "acceptance": {
+      "en": "acceptance",
+      "hi": "स्वीकृति",
+      "es": "Aceptación",
+      "pt": "Aceitação",
+      "fr": "Acceptation",
+      "zh": "接纳",
+      "ja": "受容",
+      "de": "Annahme",
+      "ar": "القبول",
+      "fil": "Pagtanggap"
+    },
+    "aging": {
+      "en": "aging",
+      "hi": "बुढ़ापा",
+      "es": "Envejecer",
+      "pt": "Envelhecer",
+      "fr": "Vieillir",
+      "zh": "衰老",
+      "ja": "老い",
+      "de": "Altern",
+      "ar": "الشيخوخة",
+      "fil": "Pagtanda"
+    },
+    "anchor": {
+      "en": "anchor",
+      "hi": "लंगर",
+      "es": "Ancla",
+      "pt": "Âncora",
+      "fr": "Ancre",
+      "zh": "锚",
+      "ja": "錨",
+      "de": "Anker",
+      "ar": "المرساة",
+      "fil": "Angkla"
+    },
+    "approval": {
+      "en": "approval",
+      "hi": "स्वीकृति की चाह",
+      "es": "Aprobación",
+      "pt": "Aprovação",
+      "fr": "Approbation",
+      "zh": "认可",
+      "ja": "承認",
+      "de": "Anerkennung",
+      "ar": "الرضا",
+      "fil": "Pagsang-ayon"
+    },
+    "beatitudes": {
+      "en": "beatitudes",
+      "hi": "धन्यवाद वचन",
+      "es": "Bienaventuranzas",
+      "pt": "Bem-aventuranças",
+      "fr": "Béatitudes",
+      "zh": "真福八端",
+      "ja": "山上の垂訓",
+      "de": "Seligpreisungen",
+      "ar": "التطويبات",
+      "fil": "Mga Kapalaran"
+    },
+    "belonging": {
+      "en": "belonging",
+      "hi": "अपनापन",
+      "es": "Pertenencia",
+      "pt": "Pertencimento",
+      "fr": "Appartenance",
+      "zh": "归属",
+      "ja": "所属",
+      "de": "Zugehörigkeit",
+      "ar": "الانتماء",
+      "fil": "Pagiging Kabilang"
+    },
+    "bodyofchrist": {
+      "en": "bodyofchrist",
+      "hi": "मसीह की देह",
+      "es": "Cuerpo de Cristo",
+      "pt": "Corpo de Cristo",
+      "fr": "Corps du Christ",
+      "zh": "基督的身体",
+      "ja": "キリストの体",
+      "de": "Leib Christi",
+      "ar": "جسد المسيح",
+      "fil": "Katawan ni Kristo"
+    },
+    "breadoflife": {
+      "en": "breadoflife",
+      "hi": "जीवन की रोटी",
+      "es": "Pan de Vida",
+      "pt": "Pão da Vida",
+      "fr": "Pain de Vie",
+      "zh": "生命的粮",
+      "ja": "命のパン",
+      "de": "Brot des Lebens",
+      "ar": "خبز الحياة",
+      "fil": "Tinapay ng Buhay"
+    },
+    "celebration": {
+      "en": "celebration",
+      "hi": "उत्सव",
+      "es": "Celebración",
+      "pt": "Celebração",
+      "fr": "Célébration",
+      "zh": "庆祝",
+      "ja": "祝い",
+      "de": "Feier",
+      "ar": "الاحتفال",
+      "fil": "Pagdiriwang"
+    },
+    "children": {
+      "en": "children",
+      "hi": "बालक",
+      "es": "Hijos",
+      "pt": "Filhos",
+      "fr": "Enfants",
+      "zh": "儿女",
+      "ja": "子ら",
+      "de": "Kinder",
+      "ar": "الأبناء",
+      "fil": "Mga Anak"
+    },
+    "christinme": {
+      "en": "christinme",
+      "hi": "मुझमें मसीह",
+      "es": "Cristo en Mí",
+      "pt": "Cristo em Mim",
+      "fr": "Christ en Moi",
+      "zh": "基督在我里面",
+      "ja": "私の中のキリスト",
+      "de": "Christus in mir",
+      "ar": "المسيح فيّ",
+      "fil": "Si Kristo sa Akin"
+    },
+    "confidenceinprayer": {
+      "en": "confidenceinprayer",
+      "hi": "प्रार्थना में विश्वास",
+      "es": "Confianza en la Oración",
+      "pt": "Confiança na Oração",
+      "fr": "Confiance dans la Prière",
+      "zh": "祷告中的信心",
+      "ja": "祈りにおける確信",
+      "de": "Zuversicht im Gebet",
+      "ar": "الثقة في الصلاة",
+      "fil": "Kumpiyansa sa Panalangin"
+    },
+    "convictions": {
+      "en": "convictions",
+      "hi": "दृढ़ विश्वास",
+      "es": "Convicciones",
+      "pt": "Convicções",
+      "fr": "Convictions",
+      "zh": "信念",
+      "ja": "確信",
+      "de": "Überzeugungen",
+      "ar": "القناعات",
+      "fil": "Paninindigan"
+    },
+    "encounterwithgod": {
+      "en": "encounterwithgod",
+      "hi": "परमेश्वर से भेंट",
+      "es": "Encuentro con Dios",
+      "pt": "Encontro com Deus",
+      "fr": "Rencontre avec Dieu",
+      "zh": "与神相遇",
+      "ja": "神との出会い",
+      "de": "Begegnung mit Gott",
+      "ar": "لقاء الله",
+      "fil": "Pakikipagtagpo sa Diyos"
+    },
+    "faithandworks": {
+      "en": "faithandworks",
+      "hi": "विश्वास और कर्म",
+      "es": "Fe y Obras",
+      "pt": "Fé e Obras",
+      "fr": "Foi et Œuvres",
+      "zh": "信心与行为",
+      "ja": "信仰と行い",
+      "de": "Glaube und Werke",
+      "ar": "الإيمان والأعمال",
+      "fil": "Pananampalataya at Gawa"
+    },
+    "freedomtoserve": {
+      "en": "freedomtoserve",
+      "hi": "सेवा की स्वतंत्रता",
+      "es": "Libertad para Servir",
+      "pt": "Liberdade para Servir",
+      "fr": "Liberté de Servir",
+      "zh": "服事的自由",
+      "ja": "仕えるための自由",
+      "de": "Freiheit zu dienen",
+      "ar": "الحرية للخدمة",
+      "fil": "Kalayaang Maglingkod"
+    },
+    "gentleness": {
+      "en": "gentleness",
+      "hi": "नम्रता",
+      "es": "Mansedumbre",
+      "pt": "Mansidão",
+      "fr": "Douceur",
+      "zh": "温柔",
+      "ja": "柔和",
+      "de": "Sanftmut",
+      "ar": "الوداعة",
+      "fil": "Kahinahunan"
+    },
+    "genuinelove": {
+      "en": "genuinelove",
+      "hi": "सच्चा प्रेम",
+      "es": "Amor Genuino",
+      "pt": "Amor Genuíno",
+      "fr": "Amour Sincère",
+      "zh": "真诚的爱",
+      "ja": "真実の愛",
+      "de": "Aufrichtige Liebe",
+      "ar": "المحبة الصادقة",
+      "fil": "Tunay na Pag-ibig"
+    },
+    "giftsofthespirit": {
+      "en": "giftsofthespirit",
+      "hi": "आत्मा के वरदान",
+      "es": "Dones del Espíritu",
+      "pt": "Dons do Espírito",
+      "fr": "Dons de l'Esprit",
+      "zh": "圣灵的恩赐",
+      "ja": "御霊の賜物",
+      "de": "Gaben des Geistes",
+      "ar": "مواهب الروح",
+      "fil": "Mga Kaloob ng Espiritu"
+    },
+    "godslight": {
+      "en": "godslight",
+      "hi": "परमेश्वर की ज्योति",
+      "es": "Luz de Dios",
+      "pt": "Luz de Deus",
+      "fr": "Lumière de Dieu",
+      "zh": "神的光",
+      "ja": "神の光",
+      "de": "Gottes Licht",
+      "ar": "نور الله",
+      "fil": "Liwanag ng Diyos"
+    },
+    "godsname": {
+      "en": "godsname",
+      "hi": "परमेश्वर का नाम",
+      "es": "Nombre de Dios",
+      "pt": "Nome de Deus",
+      "fr": "Nom de Dieu",
+      "zh": "神的名",
+      "ja": "神の御名",
+      "de": "Gottes Name",
+      "ar": "اسم الله",
+      "fil": "Pangalan ng Diyos"
+    },
+    "government": {
+      "en": "government",
+      "hi": "शासन",
+      "es": "Gobierno",
+      "pt": "Governo",
+      "fr": "Gouvernement",
+      "zh": "政权",
+      "ja": "為政者",
+      "de": "Obrigkeit",
+      "ar": "الحكومة",
+      "fil": "Pamahalaan"
+    },
+    "greatcommission": {
+      "en": "greatcommission",
+      "hi": "महान आज्ञा",
+      "es": "Gran Comisión",
+      "pt": "Grande Comissão",
+      "fr": "Grande Mission",
+      "zh": "大使命",
+      "ja": "大宣教命令",
+      "de": "Missionsbefehl",
+      "ar": "الوصية العظمى للإرسالية",
+      "fil": "Dakilang Atas"
+    },
+    "holyspiritinprayer": {
+      "en": "holyspiritinprayer",
+      "hi": "प्रार्थना में पवित्र आत्मा",
+      "es": "El Espíritu en la Oración",
+      "pt": "O Espírito na Oração",
+      "fr": "L'Esprit dans la Prière",
+      "zh": "圣灵在祷告中",
+      "ja": "祈りにおける御霊",
+      "de": "Der Geist im Gebet",
+      "ar": "الروح في الصلاة",
+      "fil": "Espiritu sa Panalangin"
+    },
+    "hospitality": {
+      "en": "hospitality",
+      "hi": "आतिथ्य",
+      "es": "Hospitalidad",
+      "pt": "Hospitalidade",
+      "fr": "Hospitalité",
+      "zh": "款待",
+      "ja": "もてなし",
+      "de": "Gastfreundschaft",
+      "ar": "الضيافة",
+      "fil": "Pagkamapagpatuloy"
+    },
+    "illumination": {
+      "en": "illumination",
+      "hi": "प्रकाशन",
+      "es": "Iluminación",
+      "pt": "Iluminação",
+      "fr": "Illumination",
+      "zh": "光照",
+      "ja": "光照",
+      "de": "Erleuchtung",
+      "ar": "الاستنارة",
+      "fil": "Pagliliwanag"
+    },
+    "imitatinggod": {
+      "en": "imitatinggod",
+      "hi": "परमेश्वर का अनुकरण",
+      "es": "Imitando a Dios",
+      "pt": "Imitando a Deus",
+      "fr": "Imiter Dieu",
+      "zh": "效法神",
+      "ja": "神に倣う",
+      "de": "Gott nachahmen",
+      "ar": "الاقتداء بالله",
+      "fil": "Paggaya sa Diyos"
+    },
+    "keptbygod": {
+      "en": "keptbygod",
+      "hi": "परमेश्वर द्वारा सुरक्षित",
+      "es": "Guardado por Dios",
+      "pt": "Guardado por Deus",
+      "fr": "Gardé par Dieu",
+      "zh": "被神保守",
+      "ja": "神に守られる",
+      "de": "Von Gott bewahrt",
+      "ar": "محفوظ بالله",
+      "fil": "Iniingatan ng Diyos"
+    },
+    "kingdomofgod": {
+      "en": "kingdomofgod",
+      "hi": "परमेश्वर का राज्य",
+      "es": "Reino de Dios",
+      "pt": "Reino de Deus",
+      "fr": "Royaume de Dieu",
+      "zh": "神的国",
+      "ja": "神の国",
+      "de": "Reich Gottes",
+      "ar": "ملكوت الله",
+      "fil": "Kaharian ng Diyos"
+    },
+    "knowingod": {
+      "en": "knowingod",
+      "hi": "परमेश्वर को जानना",
+      "es": "Conocer a Dios",
+      "pt": "Conhecer a Deus",
+      "fr": "Connaître Dieu",
+      "zh": "认识神",
+      "ja": "神を知る",
+      "de": "Gott erkennen",
+      "ar": "معرفة الله",
+      "fil": "Pagkilala sa Diyos"
+    },
+    "lighttodarkness": {
+      "en": "lighttodarkness",
+      "hi": "अंधकार में ज्योति",
+      "es": "Luz en la Oscuridad",
+      "pt": "Luz nas Trevas",
+      "fr": "Lumière dans les Ténèbres",
+      "zh": "光照黑暗",
+      "ja": "闇に差す光",
+      "de": "Licht in der Finsternis",
+      "ar": "النور في الظلام",
+      "fil": "Liwanag sa Kadiliman"
+    },
+    "listening": {
+      "en": "listening",
+      "hi": "सुनना",
+      "es": "Escuchar",
+      "pt": "Ouvir",
+      "fr": "Écoute",
+      "zh": "聆听",
+      "ja": "傾聴",
+      "de": "Zuhören",
+      "ar": "الإصغاء",
+      "fil": "Pakikinig"
+    },
+    "livinghope": {
+      "en": "livinghope",
+      "hi": "जीवित आशा",
+      "es": "Esperanza Viva",
+      "pt": "Esperança Viva",
+      "fr": "Espérance Vivante",
+      "zh": "活的盼望",
+      "ja": "生ける望み",
+      "de": "Lebendige Hoffnung",
+      "ar": "الرجاء الحي",
+      "fil": "Buhay na Pag-asa"
+    },
+    "longing": {
+      "en": "longing",
+      "hi": "लालसा",
+      "es": "Anhelo",
+      "pt": "Anseio",
+      "fr": "Aspiration",
+      "zh": "渴慕",
+      "ja": "切望",
+      "de": "Sehnsucht",
+      "ar": "الشوق",
+      "fil": "Paghahangad"
+    },
+    "loss": {
+      "en": "loss",
+      "hi": "हानि",
+      "es": "Pérdida",
+      "pt": "Perda",
+      "fr": "Perte",
+      "zh": "失去",
+      "ja": "喪失",
+      "de": "Verlust",
+      "ar": "الخسارة",
+      "fil": "Pagkawala"
+    },
+    "loyalty": {
+      "en": "loyalty",
+      "hi": "निष्ठा",
+      "es": "Lealtad",
+      "pt": "Lealdade",
+      "fr": "Loyauté",
+      "zh": "忠诚",
+      "ja": "忠誠",
+      "de": "Treue",
+      "ar": "الولاء",
+      "fil": "Katapatan"
+    },
+    "materialism": {
+      "en": "materialism",
+      "hi": "भौतिकवाद",
+      "es": "Materialismo",
+      "pt": "Materialismo",
+      "fr": "Matérialisme",
+      "zh": "物质主义",
+      "ja": "物質主義",
+      "de": "Materialismus",
+      "ar": "المادية",
+      "fil": "Materyalismo"
+    },
+    "mentorship": {
+      "en": "mentorship",
+      "hi": "मार्गदर्शन",
+      "es": "Mentoría",
+      "pt": "Mentoria",
+      "fr": "Mentorat",
+      "zh": "属灵导师",
+      "ja": "師弟関係",
+      "de": "Mentorschaft",
+      "ar": "الإرشاد",
+      "fil": "Pagtuturo"
+    },
+    "mindset": {
+      "en": "mindset",
+      "hi": "मनोवृत्ति",
+      "es": "Mentalidad",
+      "pt": "Mentalidade",
+      "fr": "État d'Esprit",
+      "zh": "心态",
+      "ja": "心の持ち方",
+      "de": "Denkweise",
+      "ar": "العقلية",
+      "fil": "Pananaw"
+    },
+    "mourning": {
+      "en": "mourning",
+      "hi": "शोक",
+      "es": "Luto",
+      "pt": "Luto",
+      "fr": "Deuil",
+      "zh": "哀恸",
+      "ja": "悲しみ",
+      "de": "Trauer",
+      "ar": "الحزن",
+      "fil": "Pagluluksa"
+    },
+    "newbeginnings": {
+      "en": "newbeginnings",
+      "hi": "नई शुरुआत",
+      "es": "Nuevos Comienzos",
+      "pt": "Novos Começos",
+      "fr": "Nouveaux Départs",
+      "zh": "新的开始",
+      "ja": "新しい始まり",
+      "de": "Neuanfänge",
+      "ar": "بدايات جديدة",
+      "fil": "Bagong Simula"
+    },
+    "newcreation": {
+      "en": "newcreation",
+      "hi": "नई सृष्टि",
+      "es": "Nueva Creación",
+      "pt": "Nova Criação",
+      "fr": "Nouvelle Création",
+      "zh": "新造的人",
+      "ja": "新しい創造",
+      "de": "Neue Schöpfung",
+      "ar": "الخليقة الجديدة",
+      "fil": "Bagong Nilalang"
+    },
+    "omnipotence": {
+      "en": "omnipotence",
+      "hi": "सर्वशक्तिमत्ता",
+      "es": "Omnipotencia",
+      "pt": "Onipotência",
+      "fr": "Toute-Puissance",
+      "zh": "全能",
+      "ja": "全能",
+      "de": "Allmacht",
+      "ar": "القدرة المطلقة",
+      "fil": "Kapangyarihan sa Lahat"
+    },
+    "omniscience": {
+      "en": "omniscience",
+      "hi": "सर्वज्ञता",
+      "es": "Omnisciencia",
+      "pt": "Onisciência",
+      "fr": "Omniscience",
+      "zh": "全知",
+      "ja": "全知",
+      "de": "Allwissenheit",
+      "ar": "العلم المطلق",
+      "fil": "Kaalaman sa Lahat"
+    },
+    "passion": {
+      "en": "passion",
+      "hi": "उत्कट प्रेम",
+      "es": "Pasión",
+      "pt": "Paixão",
+      "fr": "Passion",
+      "zh": "热情",
+      "ja": "情熱",
+      "de": "Leidenschaft",
+      "ar": "الشغف",
+      "fil": "Sigasig"
+    },
+    "peacemaking": {
+      "en": "peacemaking",
+      "hi": "मेल कराना",
+      "es": "Pacificación",
+      "pt": "Pacificação",
+      "fr": "Recherche de la Paix",
+      "zh": "使人和睦",
+      "ja": "平和を作ること",
+      "de": "Friedensstiften",
+      "ar": "صنع السلام",
+      "fil": "Pagpapayapa"
+    },
+    "planning": {
+      "en": "planning",
+      "hi": "योजना",
+      "es": "Planificación",
+      "pt": "Planejamento",
+      "fr": "Planification",
+      "zh": "计划",
+      "ja": "計画",
+      "de": "Planung",
+      "ar": "التخطيط",
+      "fil": "Pagpaplano"
+    },
+    "praiseinsuffering": {
+      "en": "praiseinsuffering",
+      "hi": "दुःख में स्तुति",
+      "es": "Alabanza en el Sufrimiento",
+      "pt": "Louvor no Sofrimento",
+      "fr": "Louange dans la Souffrance",
+      "zh": "苦难中的赞美",
+      "ja": "苦難の中での賛美",
+      "de": "Lob im Leiden",
+      "ar": "التسبيح في الألم",
+      "fil": "Papuri sa Paghihirap"
+    },
+    "priorities": {
+      "en": "priorities",
+      "hi": "प्राथमिकताएँ",
+      "es": "Prioridades",
+      "pt": "Prioridades",
+      "fr": "Priorités",
+      "zh": "优先次序",
+      "ja": "優先順位",
+      "de": "Prioritäten",
+      "ar": "الأولويات",
+      "fil": "Mga Prayoridad"
+    },
+    "providence": {
+      "en": "providence",
+      "hi": "ईश्वरीय विधान",
+      "es": "Providencia",
+      "pt": "Providência",
+      "fr": "Providence",
+      "zh": "神的护理",
+      "ja": "摂理",
+      "de": "Vorsehung",
+      "ar": "العناية الإلهية",
+      "fil": "Kalinga ng Diyos"
+    },
+    "refuge": {
+      "en": "refuge",
+      "hi": "शरण",
+      "es": "Refugio",
+      "pt": "Refúgio",
+      "fr": "Refuge",
+      "zh": "避难所",
+      "ja": "避け所",
+      "de": "Zuflucht",
+      "ar": "الملجأ",
+      "fil": "Kanlungan"
+    },
+    "rootedinchrist": {
+      "en": "rootedinchrist",
+      "hi": "मसीह में जड़ जमाना",
+      "es": "Arraigados en Cristo",
+      "pt": "Arraigados em Cristo",
+      "fr": "Enracinés en Christ",
+      "zh": "在基督里扎根",
+      "ja": "キリストに根ざす",
+      "de": "In Christus verwurzelt",
+      "ar": "متأصلون في المسيح",
+      "fil": "Nakaugat kay Kristo"
+    },
+    "sacrificeofpraise": {
+      "en": "sacrificeofpraise",
+      "hi": "स्तुति का बलिदान",
+      "es": "Sacrificio de Alabanza",
+      "pt": "Sacrifício de Louvor",
+      "fr": "Sacrifice de Louange",
+      "zh": "赞美的祭",
+      "ja": "賛美のいけにえ",
+      "de": "Opfer des Lobes",
+      "ar": "ذبيحة التسبيح",
+      "fil": "Handog ng Papuri"
+    },
+    "sacrificiallove": {
+      "en": "sacrificiallove",
+      "hi": "बलिदानी प्रेम",
+      "es": "Amor Sacrificial",
+      "pt": "Amor Sacrificial",
+      "fr": "Amour Sacrificiel",
+      "zh": "牺牲的爱",
+      "ja": "犠牲的な愛",
+      "de": "Opferliebe",
+      "ar": "المحبة التضحوية",
+      "fil": "Pag-ibig na May Sakripisyo"
+    },
+    "solitude": {
+      "en": "solitude",
+      "hi": "एकांत",
+      "es": "Soledad",
+      "pt": "Solidão",
+      "fr": "Solitude",
+      "zh": "独处",
+      "ja": "孤独",
+      "de": "Einsamkeit",
+      "ar": "العزلة",
+      "fil": "Pag-iisa"
+    },
+    "spiritualdiscipline": {
+      "en": "spiritualdiscipline",
+      "hi": "आत्मिक अनुशासन",
+      "es": "Disciplina Espiritual",
+      "pt": "Disciplina Espiritual",
+      "fr": "Discipline Spirituelle",
+      "zh": "属灵操练",
+      "ja": "霊的修練",
+      "de": "Geistliche Disziplin",
+      "ar": "الانضباط الروحي",
+      "fil": "Espirituwal na Disiplina"
+    },
+    "spiritualsight": {
+      "en": "spiritualsight",
+      "hi": "आत्मिक दृष्टि",
+      "es": "Visión Espiritual",
+      "pt": "Visão Espiritual",
+      "fr": "Vision Spirituelle",
+      "zh": "属灵的眼光",
+      "ja": "霊的な目",
+      "de": "Geistliche Sicht",
+      "ar": "البصيرة الروحية",
+      "fil": "Espirituwal na Paningin"
+    },
+    "stillness": {
+      "en": "stillness",
+      "hi": "मौन",
+      "es": "Quietud",
+      "pt": "Quietude",
+      "fr": "Calme",
+      "zh": "静默",
+      "ja": "静けさ",
+      "de": "Stille",
+      "ar": "السكون",
+      "fil": "Katahimikan"
+    },
+    "strugglewithsin": {
+      "en": "strugglewithsin",
+      "hi": "पाप से संघर्ष",
+      "es": "Lucha contra el Pecado",
+      "pt": "Luta contra o Pecado",
+      "fr": "Lutte contre le Péché",
+      "zh": "与罪争战",
+      "ja": "罪との戦い",
+      "de": "Kampf gegen die Sünde",
+      "ar": "الصراع مع الخطية",
+      "fil": "Pakikibaka sa Kasalanan"
+    },
+    "sufferingtoglory": {
+      "en": "sufferingtoglory",
+      "hi": "दुःख से महिमा तक",
+      "es": "Del Sufrimiento a la Gloria",
+      "pt": "Do Sofrimento à Glória",
+      "fr": "De la Souffrance à la Gloire",
+      "zh": "从苦难到荣耀",
+      "ja": "苦難から栄光へ",
+      "de": "Vom Leiden zur Herrlichkeit",
+      "ar": "من الألم إلى المجد",
+      "fil": "Mula sa Hirap Tungo sa Kaluwalhatian"
+    },
+    "testimony": {
+      "en": "testimony",
+      "hi": "गवाही",
+      "es": "Testimonio",
+      "pt": "Testemunho",
+      "fr": "Témoignage",
+      "zh": "见证",
+      "ja": "証し",
+      "de": "Zeugnis",
+      "ar": "الشهادة",
+      "fil": "Patotoo"
+    },
+    "testing": {
+      "en": "testing",
+      "hi": "परीक्षा",
+      "es": "Prueba",
+      "pt": "Prova",
+      "fr": "Épreuve",
+      "zh": "试验",
+      "ja": "試練",
+      "de": "Prüfung",
+      "ar": "الاختبار",
+      "fil": "Pagsubok"
+    },
+    "value": {
+      "en": "value",
+      "hi": "मूल्य",
+      "es": "Valor",
+      "pt": "Valor",
+      "fr": "Valeur",
+      "zh": "价值",
+      "ja": "価値",
+      "de": "Wert",
+      "ar": "القيمة",
+      "fil": "Halaga"
+    },
+    "victoryoverdeath": {
+      "en": "victoryoverdeath",
+      "hi": "मृत्यु पर विजय",
+      "es": "Victoria sobre la Muerte",
+      "pt": "Vitória sobre a Morte",
+      "fr": "Victoire sur la Mort",
+      "zh": "胜过死亡",
+      "ja": "死に対する勝利",
+      "de": "Sieg über den Tod",
+      "ar": "الانتصار على الموت",
+      "fil": "Tagumpay Laban sa Kamatayan"
+    },
+    "vision": {
+      "en": "vision",
+      "hi": "दर्शन",
+      "es": "Visión",
+      "pt": "Visão",
+      "fr": "Vision",
+      "zh": "异象",
+      "ja": "幻",
+      "de": "Vision",
+      "ar": "الرؤيا",
+      "fil": "Bisyon"
+    },
+    "wellbeing": {
+      "en": "wellbeing",
+      "hi": "कल्याण",
+      "es": "Bienestar",
+      "pt": "Bem-estar",
+      "fr": "Bien-être",
+      "zh": "安康",
+      "ja": "幸福",
+      "de": "Wohlergehen",
+      "ar": "الرفاهية",
+      "fil": "Kapakanan"
+    },
+    "wilderness": {
+      "en": "wilderness",
+      "hi": "जंगल",
+      "es": "Desierto",
+      "pt": "Deserto",
+      "fr": "Désert",
+      "zh": "旷野",
+      "ja": "荒野",
+      "de": "Wüste",
+      "ar": "البرية",
+      "fil": "Ilang"
+    },
+    "womanhood": {
+      "en": "womanhood",
+      "hi": "स्त्रीत्व",
+      "es": "Feminidad",
+      "pt": "Feminilidade",
+      "fr": "Féminité",
+      "zh": "女性身份",
+      "ja": "女性であること",
+      "de": "Weiblichkeit",
+      "ar": "الأنوثة",
+      "fil": "Pagkababae"
+    },
+    "wonder": {
+      "en": "wonder",
+      "hi": "आश्चर्य",
+      "es": "Asombro",
+      "pt": "Admiração",
+      "fr": "Émerveillement",
+      "zh": "惊叹",
+      "ja": "驚嘆",
+      "de": "Staunen",
+      "ar": "الدهشة",
+      "fil": "Paghanga"
+    },
+    "worldliness": {
+      "en": "worldliness",
+      "hi": "सांसारिकता",
+      "es": "Mundanalidad",
+      "pt": "Mundanismo",
+      "fr": "Mondanité",
+      "zh": "属世",
+      "ja": "世俗性",
+      "de": "Weltlichkeit",
+      "ar": "محبة العالم",
+      "fil": "Kalayawan sa Mundo"
+    },
+    "worthyisthelamb": {
+      "en": "worthyisthelamb",
+      "hi": "मेम्ना योग्य है",
+      "es": "Digno es el Cordero",
+      "pt": "Digno é o Cordeiro",
+      "fr": "Digne est l'Agneau",
+      "zh": "羔羊是配得的",
+      "ja": "小羊は価値がある",
+      "de": "Würdig ist das Lamm",
+      "ar": "مستحق هو الحمل",
+      "fil": "Karapat-dapat ang Kordero"
+    },
+    "youth": {
+      "en": "youth",
+      "hi": "युवावस्था",
+      "es": "Juventud",
+      "pt": "Juventude",
+      "fr": "Jeunesse",
+      "zh": "青年",
+      "ja": "若さ",
+      "de": "Jugend",
+      "ar": "الشباب",
+      "fil": "Kabataan"
     }
   }
 }

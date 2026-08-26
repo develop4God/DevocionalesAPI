@@ -25,11 +25,15 @@ Usage:
         cita, texto, error = r.resolve("John 3:16")
 """
 
+import gzip
 import json
 import os
 import re
+import shutil
 import sqlite3
+import tempfile
 import urllib.request
+from typing import Self
 
 # ─────────────────────────────────────────────────────────────────────────────
 # CONSTANTS
@@ -42,6 +46,18 @@ BOOKS_SOT_URL = (
 
 # Devanagari digit → ASCII digit (for Hindi references)
 _DEVA = str.maketrans("०१२३४५६७८९", "0123456789")
+
+# HIOV_hi.SQLite3's `books.long_name` stores the Gospels in liturgical long
+# form (e.g. "लूका रचित सुसमाचार" = "the Gospel composed by Luke") instead of
+# the short form real Hindi Bibles use in citations. This mapping is applied
+# by long_name value, not by filename — see _native_book_name — so it's safe
+# regardless of what the DB file is named or how it was copied/symlinked.
+_HIOV_LONG_TO_SHORT = {
+    "मत्ती रचित सुसमाचार": "मत्ती",
+    "मरकुस रचित सुसमाचार": "मरकुस",
+    "लूका रचित सुसमाचार": "लूका",
+    "यूहन्ना रचित सुसमाचार": "यूहन्ना",
+}
 
 # Module-level cache — fetched once per Python process
 _books_sot_cache: dict | None = None
@@ -131,11 +147,20 @@ def fetch_text(
         (book_number, chapter, v_start, v_end),
     )
     rows = cursor.fetchall()
-    if not rows:
-        return None
+    if not rows or any(r[0] is None for r in rows):
+        return None  # missing row, or a NULL text cell (real gap in some DBs) — same as "not found"
     combined = " ".join(r[0] for r in rows)
-    combined = re.sub(r"<[^>]+>", "", combined)  # strip XML tags
-    combined = re.sub(r"[\u2460-\u24FF]", "", combined)  # strip Unicode ref markers
+    # <f>...</f> (footnote-marker number, e.g. "<f>[3]</f>") and <n>...</n>
+    # (translator's note, e.g. "<n>〔注：或作...〕</n>") wrap editorial
+    # apparatus, not verse text — must drop the whole element including its
+    # content (some CUV1919/zh rows contain 1000+ of these). Every other
+    # tag (<pb/>, <J>...</J> direct-speech, <i>...</i> supplied words) wraps
+    # real verse text, so only its markup is stripped by the generic pass
+    # below, not its content.
+    combined = re.sub(r"<f>.*?</f>", "", combined)
+    combined = re.sub(r"<n>.*?</n>", "", combined)
+    combined = re.sub(r"<[^>]+>", "", combined)  # strip remaining XML tags
+    combined = re.sub(r"[①-⓿]", "", combined)  # strip Unicode ref markers
     combined = re.sub(r"\s+", " ", combined).strip()
     return combined
 
@@ -175,12 +200,24 @@ class VerseResolver:
         books_sot_path: str | None = None,
     ) -> None:
         self.books_sot = load_books_sot(books_sot_path)
+        self._temp_path = None
+
+        if sqlite_path.endswith(".gz"):
+            fd, self._temp_path = tempfile.mkstemp(suffix=".SQLite3")
+            os.close(fd)
+            with (
+                gzip.open(sqlite_path, "rb") as src,
+                open(self._temp_path, "wb") as dst,
+            ):
+                shutil.copyfileobj(src, dst)
+            sqlite_path = self._temp_path
+
         self.conn = sqlite3.connect(sqlite_path)
         self.cursor = self.conn.cursor()
 
     # ── context manager support ───────────────────────────────────────────────
 
-    def __enter__(self) -> "VerseResolver":
+    def __enter__(self) -> Self:
         return self
 
     def __exit__(self, *_) -> None:
@@ -192,6 +229,9 @@ class VerseResolver:
             self.conn.close()
             self.conn = None
             self.cursor = None
+        if self._temp_path:
+            os.remove(self._temp_path)
+            self._temp_path = None
 
     # ── internal helpers ──────────────────────────────────────────────────────
 
@@ -208,7 +248,8 @@ class VerseResolver:
             )
             row = self.cursor.fetchone()
             if row and row[0]:
-                return row[0]
+                long_name = row[0]
+                return _HIOV_LONG_TO_SHORT.get(long_name, long_name)
         except sqlite3.OperationalError:
             pass  # `books` table absent in some minimal DB builds
         return fallback
