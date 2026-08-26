@@ -499,7 +499,10 @@ class FireworksAdapter(BaseAdapter):
 
         import tempfile
 
-        ts = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        # Fireworks dataset/job IDs must be lowercase a-z, 0-9, and hyphen only
+        # (confirmed by a real 400 "invalid dataset ID" on an underscore-
+        # containing timestamp) — %Y%m%d-%H%M%S, not %Y%m%d_%H%M%S.
+        ts = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
         job_id = f"devocionales-{requests[0].date_key[:7]}-{ts}"
         input_dataset_id = f"{job_id}-in"
         output_dataset_id = f"{job_id}-out"
@@ -520,7 +523,11 @@ class FireworksAdapter(BaseAdapter):
         print(f"INFO: Fireworks batch JSONL written — {len(requests)} lines → {tmp_path}")
         self._client.create_dataset(input_dataset_id, example_count=len(requests))
         self._client.upload(input_dataset_id, tmp_path)
-        self._client.create_dataset(output_dataset_id, example_count=len(requests))
+        # output_dataset_id is just a chosen name passed to submit() below —
+        # Fireworks creates that dataset itself when the job runs. Calling
+        # create_dataset() on it ourselves first was wrong (confirmed by a
+        # real 400 "output dataset ... is already created") and doesn't match
+        # the proven LangGraph reference flow, which never pre-creates it.
         # system_prompt shared across the whole batch (same for every request
         # here — see BatchRequest.system_prompt) is passed once at job level
         # instead of being repeated in every dataset line, so it's cached

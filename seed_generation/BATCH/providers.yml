@@ -110,8 +110,16 @@ providers:
         model_id: accounts/fireworks/models/gemma-4-26b-a4b-it
         max_tokens: 4096
         quality: production
+      # Dense (not MoE, no "A4B" suffix) — architecturally closer to the
+      # locally-validated gemma4:26b (also dense) than gemma-4-26b-a4b-it
+      # above. Pricing not yet confirmed — verify cost before a full
+      # 366-entry submission.
+      gemma-4-31b-it:
+        model_id: accounts/fireworks/models/gemma-4-31b-it
+        max_tokens: 4096
+        quality: production
     defaults:
-      model: qwen3-30b-a3b
+      model: gemma-4-31b-it
       poll_interval_seconds: 30
       timeout_seconds: 86400
       max_parallel: null                  # N/A for native batch
