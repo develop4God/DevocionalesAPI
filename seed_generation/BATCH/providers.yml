@@ -114,10 +114,21 @@ providers:
       # locally-validated gemma4:26b (also dense) than gemma-4-26b-a4b-it
       # above. Pricing not yet confirmed — verify cost before a full
       # 366-entry submission.
+      #
+      # Has always-on thinking mode: a real 15-entry test (2026-08-26) hit
+      # this on 1/15 rows — reasoning_content burned all 4096 max_tokens on
+      # internal draft/self-correction and finish_reason="length" with
+      # content="" (no actual answer emitted at all). Same failure mode
+      # LangGraph already fixed for gpt-oss-20b via reasoning_effort: low
+      # (see LangGraph/config/providers.yml's fireworks_batch_devotional_gen
+      # entry) — applied here too, plus a higher max_tokens so there's room
+      # for both a shortened reasoning pass and the actual JSON content.
       gemma-4-31b-it:
         model_id: accounts/fireworks/models/gemma-4-31b-it
-        max_tokens: 4096
+        max_tokens: 8192
         quality: production
+        extra_body:
+          reasoning_effort: low
     defaults:
       model: gemma-4-31b-it
       poll_interval_seconds: 30
