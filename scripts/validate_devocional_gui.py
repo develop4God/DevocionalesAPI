@@ -678,14 +678,10 @@ class App(tk.Tk):
 
     def _apply_theme(self, dark: bool = False):
         # Defer to shared theme helper so other modules can reuse the same
-        # dark/light styling. Support both running as a script (local import)
-        # and as a package (seed_generation.theme).
-        try:
-            import theme as theme_mod
+        # dark/light styling. theme.py lives alongside this script in scripts/.
+        import theme as theme_mod
 
-            apply_theme = theme_mod.apply_theme
-        except Exception:
-            from seed_generation.theme import apply_theme
+        apply_theme = theme_mod.apply_theme
 
         try:
             apply_theme(self, self.style, self.output, dark)
