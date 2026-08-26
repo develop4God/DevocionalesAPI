@@ -80,7 +80,7 @@ LITURGICAL_WHITELIST: frozenset = frozenset(
 # PRAYER ENDINGS — loaded once from JSON, reused everywhere
 # =============================================================================
 _PRAYER_ENDINGS_PATH = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), "prayer_endings.json"
+    os.path.dirname(os.path.abspath(__file__)), "..", "shared", "prayer_endings.json"
 )
 _PRAYER_ENDINGS: dict = {}
 

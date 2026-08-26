@@ -140,10 +140,7 @@ def build_prompt(
 def _load_prayer_endings() -> dict:
     import os
 
-    path = os.path.join(os.path.dirname(__file__), "prayer_endings.json")
-    # Fallback: if not found locally, check parent directory (one level up)
-    if not os.path.exists(path):
-        path = os.path.join(os.path.dirname(__file__), "..", "prayer_endings.json")
+    path = os.path.join(os.path.dirname(__file__), "..", "shared", "prayer_endings.json")
     try:
         with open(path, encoding="utf-8") as f:
             data = json.load(f)

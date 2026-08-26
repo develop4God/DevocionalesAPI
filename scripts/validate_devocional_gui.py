@@ -130,7 +130,7 @@ CJK_AMEN_VARIANTS = frozenset({"阿们", "阿门", "阿們", "阿門", "アー�
 HINDI_AMEN_VARIANTS = frozenset({"आमीन", "आमेन", "आमीन", "आमेन"})
 
 # Load all Amen variants from prayer_endings.json (covers ar, ru, ko, uk, etc.)
-_PRAYER_ENDINGS_FILE = Path(__file__).with_name("prayer_endings.json")
+_PRAYER_ENDINGS_FILE = Path(__file__).parent.parent / "seed_generation" / "shared" / "prayer_endings.json"
 UNICODE_AMEN_VARIANTS: frozenset = frozenset()
 try:
     with open(_PRAYER_ENDINGS_FILE, encoding="utf-8") as _f:

@@ -7,6 +7,22 @@ from pathlib import Path
 REFLEXION_MIN = 800
 ORACION_MIN = 150
 
+_PRAYER_ENDINGS_PATH = Path(__file__).parent / ".." / "shared" / "prayer_endings.json"
+_PRAYER_ENDINGS: dict = {}
+
+
+def _load_prayer_endings() -> dict:
+    global _PRAYER_ENDINGS
+    if _PRAYER_ENDINGS:
+        return _PRAYER_ENDINGS
+    try:
+        with open(_PRAYER_ENDINGS_PATH, encoding="utf-8") as f:
+            data = json.load(f)
+        _PRAYER_ENDINGS = {k: v for k, v in data.items() if not k.startswith("_")}
+    except Exception:
+        _PRAYER_ENDINGS = {}
+    return _PRAYER_ENDINGS
+
 
 # ── Amén normalizer ───────────────────────────────────────────────────────────
 def _normalize(word: str) -> str:
@@ -16,8 +32,7 @@ def _normalize(word: str) -> str:
 # ── validator (with Amén fix applied) ─────────────────────────────────────────
 def run_checks(oracion: str, reflexion: str, lang: str = "de") -> list[str]:
     issues = []
-    prayer_endings = {"de": ["Amen"], "es": ["Amen", "Amén"], "en": ["Amen"]}
-    endings = prayer_endings.get(lang, ["Amen"])
+    endings = _load_prayer_endings().get(lang, ["Amen"])
 
     # 1. Min length
     if len(reflexion.strip()) < REFLEXION_MIN:
