@@ -1,7 +1,11 @@
 """
-generate_seed.py
-─────────────────
+generate_from_seed.py
+──────────────────────
 Unified, provider-swappable seed-driven devotional generator.
+
+Takes an existing annual seed (verse citations, para_meditar, tags —
+built separately by seed_extractor_fetch.py) and generates the
+devotional content (reflexion + oracion) from it via a provider.
 
 Replaces the old server/client split (API_Server_Seed.py +
 client_generate_from_seed.py) for local/direct providers — no HTTP,
@@ -10,11 +14,11 @@ parse_content), one assembly step (generation_core.DevotionalBuilder),
 any provider from providers.py — all in seed_generation/shared/.
 
 Usage:
-  python generate_seed.py --seed seeds/seed_es_RVR1960.json \\
+  python generate_from_seed.py --seed seeds/seed_es_RVR1960.json \\
       --lang es --version RVR1960 --provider ollama --model gemma4:26b \\
       --limit 5
 
-  python generate_seed.py --seed seeds/seed_es_RVR1960.json \\
+  python generate_from_seed.py --seed seeds/seed_es_RVR1960.json \\
       --lang es --version RVR1960 --provider gemini --limit 5
 
 --limit caps how many seed entries are generated — for a quick quality
