@@ -57,6 +57,7 @@ def dry_run(
     master_lang: str,
     master_version: str,
     output_dir: str,
+    provider: str = "anthropic",
     start_date: str | None = None,
     limit: int | None = None,
 ) -> str:
@@ -64,9 +65,14 @@ def dry_run(
     Build prompts from seed and write a provider-agnostic JSONL to output_dir.
     No provider API is called. No cost. Use this to review prompts before submitting.
 
-    Each line: {custom_id, date, lang, version, verse, prompt}
+    For provider="fireworks", each line's "prompt" is the short per-day user
+    message actually submitted (see submit_batch) and "system_prompt" is the
+    shared instruction block sent once at job level — matches what actually
+    goes out, instead of the single combined prompt other providers use.
+    Other providers: each line is {custom_id, date, lang, version, verse, prompt}.
     """
     SEP = "=" * 60
+    use_system_split = provider == "fireworks"
 
     with open(seed_path, encoding="utf-8") as f:
         seed = json.load(f)
@@ -99,6 +105,8 @@ def dry_run(
     ts = datetime.now().strftime("%Y%m%d_%H%M%S")
     out_path = Path(output_dir) / f"prompts_{master_lang}_{master_version}_{ts}.jsonl"
 
+    system_prompt = build_system_prompt(master_lang) if use_system_split else None
+
     with open(out_path, "w", encoding="utf-8") as f:
         for date_key in all_dates:
             entry = seed[date_key]
@@ -111,8 +119,12 @@ def dry_run(
                 "lang": master_lang,
                 "version": master_version,
                 "verse": cita,
-                "prompt": build_prompt(cita, master_lang, topic, texto),
             }
+            if use_system_split:
+                record["system_prompt"] = system_prompt
+                record["prompt"] = build_user_prompt(cita, texto, topic)
+            else:
+                record["prompt"] = build_prompt(cita, master_lang, topic, texto)
             f.write(json.dumps(record, ensure_ascii=False) + "\n")
 
     print(f"✅ Dry-run JSONL → {out_path}")
@@ -367,6 +379,7 @@ def main():
             master_lang=args.lang,
             master_version=args.version,
             output_dir=args.output,
+            provider=args.provider,
             start_date=args.start_date,
             limit=args.limit,
         )
