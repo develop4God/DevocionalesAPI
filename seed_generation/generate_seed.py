@@ -29,12 +29,8 @@ import signal
 import sys
 import json
 from datetime import datetime
-from pathlib import Path
 
-# generation_core.py and providers.py live in seed_generation/shared/.
-sys.path.insert(0, str(Path(__file__).resolve().parent / "shared"))
-
-from generation_core import (
+from seed_generation.shared.generation_core import (
     DevotionalBuilder,
     DevotionalValidationError,
     CheckpointStore,
@@ -42,7 +38,7 @@ from generation_core import (
     parse_content,
     save_output,
 )
-from providers import PROVIDERS, build_generator
+from seed_generation.shared.providers import PROVIDERS, build_generator
 
 
 def generate_from_seed(

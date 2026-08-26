@@ -18,9 +18,7 @@ Launch:
 import json
 import os
 import re
-import sys
 import traceback
-from pathlib import Path
 from typing import Optional
 
 from dotenv import load_dotenv
@@ -36,11 +34,7 @@ from tenacity import (
     wait_exponential,
 )
 
-# seed_content_validator.py lives in seed_generation/tools/.
-_SEED_GENERATION_DIR = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(_SEED_GENERATION_DIR / "tools"))
-
-from seed_content_validator import validate_and_fix
+from seed_generation.tools.seed_content_validator import validate_and_fix
 
 # =============================================================================
 # STARTUP

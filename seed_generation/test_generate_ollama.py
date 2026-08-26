@@ -16,16 +16,11 @@ import argparse
 import json
 import os
 import re
-import sys
 import time
 import urllib.error
 import urllib.request
-from pathlib import Path
 
-# generation_core.py lives in seed_generation/shared/.
-sys.path.insert(0, str(Path(__file__).resolve().parent / "shared"))
-
-from generation_core import DevotionalBuilder, DevotionalValidationError
+from seed_generation.shared.generation_core import DevotionalBuilder, DevotionalValidationError
 
 OLLAMA_URL = "http://localhost:11434/api/generate"
 DEFAULT_MODEL = "gemma4:26b"
