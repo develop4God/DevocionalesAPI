@@ -9,13 +9,17 @@ Gemini provides: reflexion + oracion only.
 
 import json
 import os
-import re
 import signal
 import sys
 import time
+from pathlib import Path
 import requests
 from datetime import datetime
 from tkinter import Tk, filedialog, messagebox, simpledialog
+
+# generation_core.py lives in seed_generation/, one level up from API/.
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from generation_core import DevotionalBuilder, DevotionalValidationError
 
 API_URL = "http://127.0.0.1:50003/generate_creative"
 REQUEST_TIMEOUT = 300
@@ -24,81 +28,6 @@ CHECKPOINT_INTERVAL = 1
 
 _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 CHECKPOINT_FILE = os.path.join(_SCRIPT_DIR, "generate_seed_checkpoint.json")
-
-
-# =============================================================================
-# DEVOTIONAL BUILDER
-# =============================================================================
-
-
-class DevotionalValidationError(ValueError):
-    pass
-
-
-class DevotionalBuilder:
-    def __init__(self, date_key, seed_entry, master_lang, master_version):
-        self._date = date_key
-        self._seed = seed_entry
-        self._lang = master_lang
-        self._version = master_version
-        self._reflexion = ""
-        self._oracion = ""
-
-    def merge(self, reflexion, oracion):
-        self._reflexion = reflexion.strip()
-        self._oracion = oracion.strip()
-        return self
-
-    def _build_versiculo(self):
-        cita = self._seed["versiculo"]["cita"]
-        texto = self._seed["versiculo"]["texto"]
-        return cita + " " + self._version + ': "' + texto + '"'
-
-    def _build_id(self):
-        cita = self._seed["versiculo"]["cita"]
-        id_part = re.sub(r"\s+", "", cita).replace(":", "")
-        date_compact = self._date.replace("-", "")
-        return id_part + self._version + date_compact
-
-    def _extract_tags(self) -> list:
-        """
-        Read pre-translated tags directly from seed flat array.
-        Seed produces: "tags": ["यीशु", "मनन"]  (target language only)
-        Falls back to ["devotional", "fe"] if missing.
-        """
-        tags = self._seed.get("tags", [])
-        if isinstance(tags, list) and tags:
-            return tags
-        return ["devotional", "fe"]
-
-    def validate(self):
-        errors = []
-        if not self._reflexion:
-            errors.append("reflexion empty")
-        if not self._oracion:
-            errors.append("oracion empty")
-        if not self._seed.get("versiculo", {}).get("cita"):
-            errors.append("cita missing")
-        if not self._seed.get("versiculo", {}).get("texto"):
-            errors.append("texto missing")
-        if not self._seed.get("para_meditar"):
-            errors.append("para_meditar empty")
-        if errors:
-            raise DevotionalValidationError("[" + self._date + "] " + "; ".join(errors))
-
-    def build(self):
-        self.validate()
-        return {
-            "id": self._build_id(),
-            "date": self._date,
-            "language": self._lang,
-            "version": self._version,
-            "versiculo": self._build_versiculo(),
-            "reflexion": self._reflexion,
-            "para_meditar": self._seed["para_meditar"],
-            "oracion": self._oracion,
-            "tags": self._extract_tags(),
-        }
 
 
 # =============================================================================

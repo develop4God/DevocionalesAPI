@@ -18,7 +18,9 @@ Launch:
 import json
 import os
 import re
+import sys
 import traceback
+from pathlib import Path
 from typing import Optional
 
 from dotenv import load_dotenv
@@ -34,8 +36,11 @@ from tenacity import (
     wait_exponential,
 )
 
-from gemini_rate_limiter import GeminiRateLimiter, GeminiRateLimiterError
-from seed_generation.tools.seed_content_validator import validate_and_fix
+# seed_content_validator.py lives in seed_generation/tools/.
+_SEED_GENERATION_DIR = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(_SEED_GENERATION_DIR / "tools"))
+
+from seed_content_validator import validate_and_fix
 
 # =============================================================================
 # STARTUP
@@ -69,11 +74,6 @@ GENERATION_MODEL = "gemini-2.0-flash"
 
 # How many full Gemini regeneration attempts before giving up
 MAX_CONTENT_RETRIES = 3
-
-# =============================================================================
-# RATE LIMITER
-# =============================================================================
-_rate_limiter = GeminiRateLimiter(model=GENERATION_MODEL)
 
 # =============================================================================
 # SCRIPT VALIDATOR
@@ -141,8 +141,6 @@ async def _call_gemini_raw(
     verse_cita: str, lang: str, topic: Optional[str] = None
 ) -> CreativeContent:
     """Raw Gemini generation — returns reflexion + oracion. No validation."""
-    _rate_limiter.acquire()
-
     prompt_parts = "\n\n".join(
         [
             f"You are a devoted biblical devotional writer. "
@@ -203,8 +201,6 @@ async def _call_gemini_fix_script(
     bad_oracion: str,
 ) -> CreativeContent:
     """Script-fix retry — rewrites content into the correct language script."""
-    _rate_limiter.acquire()
-
     prompt = (
         f"The following devotional text is NOT written in {lang.upper()} script. "
         f"Rewrite it completely in {lang.upper()}. Keep the same devotional meaning.\n\n"
@@ -354,11 +350,6 @@ async def generate_creative(request: SeedGenerateRequest):
 
     except HTTPException:
         raise
-    except GeminiRateLimiterError as e:
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail=f"QUOTA_ERROR: {str(e)}",
-        )
     except RetryError as e:
         last = e.last_attempt.exception() if e.last_attempt else e
         print(f"ERROR: RetryError for {request.date}: {last}")

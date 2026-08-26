@@ -20,7 +20,7 @@ import time
 import urllib.error
 import urllib.request
 
-from client_generate_from_seed import DevotionalBuilder, DevotionalValidationError
+from generation_core import DevotionalBuilder, DevotionalValidationError
 
 OLLAMA_URL = "http://localhost:11434/api/generate"
 DEFAULT_MODEL = "gemma4:26b"
