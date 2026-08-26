@@ -23,6 +23,21 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Protocol
 
+_TAGS_MASTER_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "tags_master.json")
+_tags_master_cache: dict | None = None
+
+
+def _load_tags_master() -> dict:
+    global _tags_master_cache
+    if _tags_master_cache is None:
+        with open(_TAGS_MASTER_PATH, encoding="utf-8") as f:
+            _tags_master_cache = json.load(f)["tags"]
+    return _tags_master_cache
+
+
+def _normalize_tag(tag: str) -> str:
+    return re.sub(r"[\s\-']", "", tag).lower()
+
 
 # =============================================================================
 # PROMPT + PARSING — verified working with the local Ollama/gemma4 pipeline
@@ -115,9 +130,16 @@ class DevotionalBuilder:
 
     def _extract_tags(self) -> list:
         tags = self._seed.get("tags", [])
-        if isinstance(tags, list) and tags:
+        if not isinstance(tags, list) or not tags:
+            return ["devotional", "fe"]
+        if self._lang == "en":
             return tags
-        return ["devotional", "fe"]
+        tags_master = _load_tags_master()
+        translated = []
+        for tag in tags:
+            entry = tags_master.get(_normalize_tag(tag))
+            translated.append(entry[self._lang] if entry and self._lang in entry else tag)
+        return translated
 
     def validate(self) -> None:
         errors = []

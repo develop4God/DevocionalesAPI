@@ -32,6 +32,10 @@ providers:
         model_id: qwen3:30b
         supports_thinking: true
         thinking_enabled: false
+      qwen3.6-35b-a3b:
+        model_id: qwen3.6:35b-a3b
+        supports_thinking: true
+        thinking_enabled: false
     defaults:
       model: gemma4-26b
 
