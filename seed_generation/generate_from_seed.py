@@ -78,7 +78,7 @@ def generate_from_seed(
 
     checkpoint_file = os.path.join(
         output_dir,
-        f"generate_from_seed_checkpoint_{provider}.json",
+        f"generate_from_seed_checkpoint_{model or provider}.json",
     )
     checkpoint = CheckpointStore(checkpoint_file)
 
@@ -161,7 +161,7 @@ def generate_from_seed(
     print("\n" + "-" * 60)
 
     if completed:
-        out = save_output(completed, master_lang, master_version, output_dir, suffix=provider)
+        out = save_output(completed, master_lang, master_version, output_dir, suffix=model or provider)
         print(f"\nOutput  -> {out}")
         checkpoint.delete()
         if error_dates:
