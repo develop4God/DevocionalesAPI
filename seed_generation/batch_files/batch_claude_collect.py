@@ -39,7 +39,12 @@ from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
-# Import shared utilities
+# NOTE: batch_files/ has its own pipeline_shared.py (a divergent fork used by
+# batch_submit.py / batch_collect.py / batch_repair.py — different build_prompt
+# signature, different repair_json). This script was written against the
+# seed_generation/ ROOT pipeline_shared.py instead, so the parent directory is
+# added to sys.path explicitly to avoid silently picking up the local fork.
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from pipeline_shared import repair_json, _extract_first_balanced_object, build_prompt, _load_prayer_endings, _normalize_word, _check_prayer_ending, LITURGICAL_WHITELIST
 
 try:
