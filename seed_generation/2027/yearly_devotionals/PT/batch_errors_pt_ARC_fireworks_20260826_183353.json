@@ -1,0 +1,792 @@
+[
+  {
+    "date": "2027-08-07",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2027-08-30",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2027-08-14",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2027-09-02",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2027-08-28",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2027-08-17",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2027-11-16",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2027-10-26",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2027-08-12",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2027-09-29",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2027-10-17",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2027-11-19",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2027-11-29",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2027-10-03",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2027-08-26",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"A caminhada cristã é marcada por uma força que transcende a nossa própria capacidade humana. Quando olhamos para os heróis da fé descritos em Hebreus, percebemos que a fé é uma força v"
+  },
+  {
+    "date": "2027-11-30",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2027-09-17",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"O amor é a essência de toda a caminhada cristã e o fundamento sobre o qual"
+  },
+  {
+    "date": "2027-10-12",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"A oração do apóstolo Paulo pelos colossenses revela o coração de um pastor que deseja o bem mais profundo de suas ovelhas: o conhecimento real da vontade de Deus. Esse conhecimento é u"
+  },
+  {
+    "date": "2027-11-18",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"O chamado de Deus para o matrimônio é uma tapeçaria tecida com fios de amor, respeito e dedicação mútua. Quando olhamos para as instruções de Paulo aos Colossenses, percebemos que a vi"
+  },
+  {
+    "date": "2027-09-28",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2027-12-08",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2027-11-22",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2027-11-20",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2027-11-05",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2027-09-12",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2027-10-31",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2027-09-22",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2027-09-25",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2027-10-14",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"A vida em Cristo Jesus é um estado de absoluta liberdade e paz profunda. Quando contemplamos estas palavras de Paulo, percebemos que a nossa identidade está firmemente ancorada na graç"
+  },
+  {
+    "date": "2027-10-01",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"A verdade"
+  },
+  {
+    "date": "2027-09-03",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2027-08-20",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"A soberania de Deus sobre o tempo é um descanso profundo para a nossa alma. O Pai estabelece cada estação, cada momento e cada detalhe da história com o Seu próprio poder e sabedoria i"
+  },
+  {
+    "date": "2027-09-18",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2027-08-23",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"A paz de um coração tranquilo é um dos maiores tesouros que um cristão pode experimentar na sua caminhada com o Senhor. Quando o apóstolo João nos escreve estas palavras, ele nos convi"
+  },
+  {
+    "date": "2027-12-06",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2027-10-24",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"A jornada da fé é um caminho de proximidade constante com o nosso Criador. Quando o apóstolo Tiago nos convida a nos sujeitarmos a Deus, ele está nos oferecendo o segredo de uma vida d"
+  },
+  {
+    "date": "2027-08-25",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2027-10-28",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2027-11-12",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2027-08-08",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"A jornada da fé é um processo contínuo de transformação e amadurecimento. Tiago nos apresenta uma visão profunda sobre como Deus trabalha em nosso caráter através das circunstâncias da"
+  },
+  {
+    "date": "2027-10-11",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"A palavra de Deus em Tessalonicenses nos apresenta um estilo de vida que transborda a presença do Espírito Santo. O apóstolo Paulo nos convida a viver em um estado de constante comunhã"
+  },
+  {
+    "date": "2027-10-04",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"A identidade do cristão está profundamente enraizada na vontade eterna de Deus. Quando lemos as palavras do apóstolo Pedro, somos convidados a contemplar a majestosa obra da Trindade e"
+  },
+  {
+    "date": "2027-10-23",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"Jesus apresenta uma verdade profunda sobre a natureza da vida espiritual e do crescimento no Reino de Deus. Ele utiliza a imagem simples e poderosa de um grão de trigo para nos mostrar"
+  },
+  {
+    "date": "2027-11-14",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"As palavras de Jesus em Mateus 6 nos convidam a uma mudança profunda na nossa perspectiva sobre o que realmente importa. Ele nos apresenta a realidade de que tudo o que é material poss"
+  },
+  {
+    "date": "2027-10-05",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"A existência humana é marcada pela transitoriedade de todas as coisas. Olhamos para o horizonte e vemos a beleza de um céu azul, a força das montanhas e a vastidão dos oceanos, e tudo "
+  },
+  {
+    "date": "2027-09-06",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"A imagem da potente mão de Deus nos traz uma sensação de segurança profunda e de reverência sagrada. Quando o apóstolo Pedro nos convida à humildade, ele está nos chamando para um luga"
+  },
+  {
+    "date": "2027-08-27",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"O convite contido em Hebreus 4:16 é uma das promessas mais acolhedoras de toda a Escritura Sagrada. Ele nos chama para uma proximidade constante e segura com o Criador. O trono de Deus"
+  },
+  {
+    "date": "2027-10-02",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"A Palavra de Deus é o sopro divino que ilumina o nosso caminhar cotidiano. Quando abrimos as Escrituras, estamos nos encontrando com a própria voz do Criador, que deseja guiar cada pas"
+  },
+  {
+    "date": "2027-11-27",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"A Palavra de Deus nos apresenta uma verdade profunda sobre a natureza humana e a influência do nosso falar. Tiago utiliza imagens vívidas para ilustrar como algo tão pequeno quanto a l"
+  },
+  {
+    "date": "2027-10-21",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"A força que recebemos de Deus é um presente destinado ao serviço e ao cuidado com o próximo. Quando o Senhor nos fortalece em nossa caminhada espiritual, Ele nos capacita a ser um supo"
+  },
+  {
+    "date": "2027-12-02",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"A vida cristã é um movimento constante de entrega e continuidade. Quando olhamos para as palavras do apóstolo Paulo a Timóteo, percebemos que o Evangelho é um tesouro vivo que cresce à"
+  },
+  {
+    "date": "2027-10-15",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"A or"
+  },
+  {
+    "date": "2027-09-05",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"A intimidade com o Criador é o desejo mais profundo da alma humana. Em Suas palavras, Jesus revela o caminho para essa conexão extraordinária. Ele nos mostra que o amor é uma força que"
+  },
+  {
+    "date": "2027-09-11",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"A vida cristã é um caminho de constante transformação, onde cada estação possui um propósito divino específico para o nosso"
+  },
+  {
+    "date": "2027-09-09",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2027-09-01",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2027-11-11",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"As palavras de Jesus em Mateus 5:4 nos convidam a olhar para a dor com uma perspectiva de esperança eterna. O choro é uma expressão de nossa humanidade e um caminho de profunda intimid"
+  },
+  {
+    "date": "2027-12-11",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2027-12-16",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"A vida em Cristo é uma celebração constante da liberdade que o Senhor nos concedeu. Ao contemplarmos as palavras de Paulo, percebemos a magnitude da transformação que ocorreu em nosso "
+  },
+  {
+    "date": "2027-12-14",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"A grandeza de Jesus Cristo é algo que ultrapassa toda a nossa compreensão humana. Ao olharmos para o texto de Colossenses, somos apresentados a uma realidade gloriosa: Ele é o centro d"
+  },
+  {
+    "date": "2027-12-18",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2027-12-17",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2027-12-20",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"A jornada de fé de Abraão nos revela a profundidade do relacionamento que ele cultivava com o Criador. Quando o Senhor o chamou para oferecer Isaque, o filho da promessa, Abraão encont"
+  },
+  {
+    "date": "2027-12-25",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2027-12-24",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2027-12-26",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2027-12-27",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"A beleza de uma vida dedicada ao Reino de Deus se manifesta de forma muito especial através do movimento de pés que caminham em direção ao próximo. O apóstolo Paulo nos revela uma verd"
+  },
+  {
+    "date": "2027-12-29",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2027-12-30",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"A vida cristã é um convite constante para uma entrega vibr"
+  },
+  {
+    "date": "2028-01-01",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-01-11",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-01-15",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-01-16",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-01-14",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-01-20",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"A verdade sobre a nossa existência encontra o seu fundamento mais profundo no sacrifício de Jesus Cristo. Quando o apóstolo Paulo escreve que fomos comprados por um bom preço, ele está"
+  },
+  {
+    "date": "2028-01-26",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"As virtudes que sustentam a caminhada cristã possuem uma natureza eterna e divina. Quando olhamos para a vida sob a perspectiva do Reino, percebemos que a fé, a esperança e o amor form"
+  },
+  {
+    "date": "2028-01-28",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-01-17",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-02-04",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"A visão da Nova Jerusalém nos transporta para uma dimensão de perfeição e plenitude absoluta. Imagine um lugar onde a luz emana diretamente da presença do Criador. Este versículo nos r"
+  },
+  {
+    "date": "2028-02-03",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"O amor de Cristo possui uma força transformadora que envolve todo o nosso ser de maneira profunda e constante. Quando contemplamos a magnitude do sacrifício de Jesus na cruz, percebemo"
+  },
+  {
+    "date": "2028-02-05",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-02-11",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"A vida é composta por ciclos constantes, onde encontramos dias de sol radiante e momentos de tempestades intensas. Jesus nos apresenta uma imagem poderosa sobre como lidar com as inevi"
+  },
+  {
+    "date": "2028-02-12",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-02-13",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"O Reino de Deus é uma descoberta que transforma a alma. Quando Jesus descreve o homem que encontra um tesouro escondido, Ele nos convida a contemplar a preciosidade da vida com Deus. E"
+  },
+  {
+    "date": "2028-02-17",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-02-21",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-02-23",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-02-22",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"Deus possui um relógio perfeito para a Sua obra redentora. A história da humanidade caminha sob o governo de um Pai que conhece o momento exato de intervir em favor de Seus amados. Qua"
+  },
+  {
+    "date": "2028-03-15",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-03-24",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-03-27",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-02-25",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-03-22",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-03-23",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-03-01",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-03-31",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-03-25",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-04-02",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-03-06",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-02-24",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"O cântico de Maria é uma explosão de gratidão e reconhecimento da soberania divina. Ao pronunciar essas palavras, ela nos convida a olhar para além das circunstâncias humanas e focar n"
+  },
+  {
+    "date": "2028-03-08",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"As palavras de Jesus em João 6:48 ecoam com uma promessa de satisfação plena e eterna. Ao declarar \\\"Eu sou o pão da vida\\\", o Senhor apresenta a si mesmo como o sustento essencial par"
+  },
+  {
+    "date": "2028-03-21",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-02-26",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-03-09",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-02-28",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"Jesus apresenta uma verdade profunda sobre o caráter zeloso de nosso Pai Celestial. Ao observar a criação, percebemos que até os seres mais simples e pequenos estão sob o olhar atento "
+  },
+  {
+    "date": "2028-02-29",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"O amor de Deus se manifesta de uma maneira profundamente ativa e dedicada. Através da parábola da ovelha perdida, contemplamos o caráter de um Pastor que conhece cada um de Seus seguid"
+  },
+  {
+    "date": "2028-03-13",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"A promessa do retorno de nosso Senhor Jesus Cristo é o alicerce mais sólido sobre o qual podemos construir nossa esperança e nossa paz interior. Quando olhamos para as palavras de Paul"
+  },
+  {
+    "date": "2028-04-11",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-04-06",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-04-07",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"As palavras do apóstolo Paulo ressoam como um hino de vitória absoluta no coração de todo aquele que crê. Diante das circunstâncias da vida, a verdade eterna permanece inabalável: Deus"
+  },
+  {
+    "date": "2028-04-23",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"A vida cristã é uma celebração constante da vitória que Deus conquistou para nós através de Jesus Cristo. Quando olhamos para as Escrituras, percebemos que o Senhor nos conduz em um de"
+  },
+  {
+    "date": "2028-04-26",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-04-25",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"A caminhada cristã é marcada pela presença de desafios que testam nossa fé e nossa resistência. O apóstolo Paulo descreve com honestidade a experiência humana diante das dificuldades, "
+  },
+  {
+    "date": "2028-04-27",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"A vida cristã se manifesta intensamente na forma como interagimos com o mundo ao nosso redor. O apóstolo Paulo nos convida a uma consciência profunda sobre o nosso comportamento e as n"
+  },
+  {
+    "date": "2028-04-28",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-04-30",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-05-01",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-05-02",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-05-04",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"A verdadeira liberdade é um dos presentes mais preciosos que recebemos através do sacrifício de Jesus Cristo. Quando o Senhor nos resgatou, Ele nos concedeu a vida e a liberdade espiri"
+  },
+  {
+    "date": "2028-05-05",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-05-07",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-05-08",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-05-10",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"O apóstolo Paulo escreve estas palavras de um lugar de profunda entrega, identificando-se como alguém cativo do amor de Cristo. Ele nos faz um convite precioso para que nossa caminhada"
+  },
+  {
+    "date": "2028-05-13",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-05-15",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"A jornada da fé é um processo contínuo de transformação interior, onde cada passo dado é fruto da ação graciosa do Criador em nosso coração. Quando lemos as palavras de Paulo aos Filip"
+  },
+  {
+    "date": "2028-05-18",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-05-20",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-05-29",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"A Palavra de Deus nos revela uma identidade preciosa e solene ao descrever a igreja. Ela é apresentada como a casa de Deus, um lugar de comunhão, pertencimento e adoração ao Pai. Quand"
+  },
+  {
+    "date": "2028-05-30",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-05-31",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-06-01",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-06-02",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-06-04",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-06-06",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-06-07",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"A oração do apóstolo Paulo em Efésios 1:17 revela o desejo profundo de um pastor para o coração de seus amados. Ele clama para que o Pai da glória derrame sobre nós uma graça especial:"
+  },
+  {
+    "date": "2028-06-10",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"O autor de Hebreus nos convida a um olhar atento sobre o estado do nosso coração. A vida com Deus é uma caminhada contínua que exige vigilância e cuidado constante. O coração é o centr"
+  },
+  {
+    "date": "2028-07-01",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-06-19",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-06-16",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-07-09",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-07-07",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-07-02",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-07-12",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-06-24",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-06-13",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-07-03",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-06-12",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"A Palavra de Deus nos apresenta uma realidade solene e, ao mesmo tempo, profundamente motivadora para a nossa caminhada cristã. O apóstolo Paulo nos lembra que a nossa jornada terrena "
+  },
+  {
+    "date": "2028-06-27",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-06-18",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-07-08",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"A graça de Deus é um sopro de vida que transforma nossa existência de maneira profunda e completa. O apóstolo Paulo nos apresenta uma verdade maravilhosa sobre a nossa nova identidade "
+  },
+  {
+    "date": "2028-06-22",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"A grandeza de Deus se revela de forma extraordinária no ato de Sua infinita misericórdia. Ao olharmos para as palavras do apóstolo Pedro, somos convidados a celebrar o fato de que fomo"
+  },
+  {
+    "date": "2028-07-05",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"A Palavra de Deus nos convida a um olhar profundo sobre onde depositamos o nosso afeto e a nossa lealdade. Tiago utiliza uma linguagem forte para nos despertar para a importância de um"
+  },
+  {
+    "date": "2028-07-17",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-07-18",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-07-19",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-07-21",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  },
+  {
+    "date": "2028-07-30",
+    "reason": "parse_error",
+    "detail": "{\n\"reflexion\": \"O serviço que prestamos em nosso cotidiano possui um valor espiritual profundo e eterno. Cada tarefa, por mais simples que pareça aos olhos humanos, torna-se um ato de adoração quando "
+  },
+  {
+    "date": "2028-07-31",
+    "reason": "provider_error",
+    "detail": "empty_content"
+  }
+]

@@ -106,10 +106,19 @@ providers:
       # badge does not describe batch-inference eligibility.
       # Pricing not yet confirmed (not listed on fireworks.ai/pricing at time
       # of writing) — verify actual cost before a full 366-entry submission.
+      #
+      # Has always-on thinking mode, same as gemma-4-31b-it below: a real
+      # 362-entry run (2026-08-26) hit this on 158/362 rows — 101 with
+      # reasoning_content burning all 4096 max_tokens (finish_reason="length",
+      # content="") and 57 more with truncated/unparseable JSON. Fixed the
+      # same way as gemma-4-31b-it: max_tokens raised to 8192 and
+      # reasoning_effort: low added.
       gemma-4-26b-a4b-it:
         model_id: accounts/fireworks/models/gemma-4-26b-a4b-it
-        max_tokens: 4096
+        max_tokens: 8192
         quality: production
+        extra_body:
+          reasoning_effort: low
       # Dense (not MoE, no "A4B" suffix) — architecturally closer to the
       # locally-validated gemma4:26b (also dense) than gemma-4-26b-a4b-it
       # above. Pricing not yet confirmed — verify cost before a full

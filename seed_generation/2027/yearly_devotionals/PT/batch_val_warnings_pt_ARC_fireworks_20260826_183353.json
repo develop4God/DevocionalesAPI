@@ -1,0 +1,65 @@
+[
+  {
+    "date": "2027-09-10",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2027-09-24",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2027-10-16",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2027-08-29",
+    "issue": "phase1",
+    "detail": [
+      "dup_words_reflexion: consecutive duplicate 'ser. Ser'"
+    ]
+  },
+  {
+    "date": "2027-12-15",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2028-01-13",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2028-01-25",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2028-03-26",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  },
+  {
+    "date": "2028-05-27",
+    "issue": "phase1",
+    "detail": [
+      "double_amen: duplicate Amen artifact detected in closing"
+    ]
+  }
+]
