@@ -56,6 +56,14 @@ class BatchRequest:
     prompt: str
     model_id: str
     max_tokens: int = 4096
+    # Shared, byte-identical across every request in a batch (persona +
+    # instructions, no verse/topic) — only used by FireworksAdapter, which
+    # passes it once as the batch job's own system_prompt (Fireworks'
+    # documented "System Prompt Optimization", see FIREWORKS_BATCH_API.md)
+    # instead of repeating it in every dataset line. None for providers that
+    # don't support this (Anthropic, Gemini use `prompt` as a self-contained
+    # single message instead).
+    system_prompt: str | None = None
 
 
 @dataclass
@@ -513,9 +521,14 @@ class FireworksAdapter(BaseAdapter):
         self._client.create_dataset(input_dataset_id, example_count=len(requests))
         self._client.upload(input_dataset_id, tmp_path)
         self._client.create_dataset(output_dataset_id, example_count=len(requests))
+        # system_prompt shared across the whole batch (same for every request
+        # here — see BatchRequest.system_prompt) is passed once at job level
+        # instead of being repeated in every dataset line, so it's cached
+        # across all requests rather than billed on every one.
         self._client.submit(
             input_dataset_id=input_dataset_id,
             output_dataset_id=output_dataset_id,
+            system_prompt=requests[0].system_prompt,
             job_id=job_id,
             max_tokens=self._max_tokens,
         )

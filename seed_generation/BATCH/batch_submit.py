@@ -42,7 +42,7 @@ try:
 except ImportError:
     pass
 
-from pipeline_shared import build_prompt
+from pipeline_shared import build_prompt, build_system_prompt, build_user_prompt
 from provider_adapter import load_adapter, list_providers, BatchRequest
 
 _SCRIPT_DIR = Path(__file__).parent
@@ -242,19 +242,33 @@ def submit_batch(
         sys.exit(1)
 
     # ── Build BatchRequest objects ─────────────────────────────────────────
+    # Fireworks supports a job-level system_prompt shared across every
+    # request (see FIREWORKS_BATCH_API.md) — split persona/instructions
+    # (invariant) from the verse (per-day) so that shared prefix is sent once
+    # per batch, not once per line. Other providers keep the single
+    # self-contained prompt they've always used.
+    use_system_split = provider == "fireworks"
+    system_prompt = build_system_prompt(master_lang) if use_system_split else None
+
     requests: list[BatchRequest] = []
     for date_key in all_dates:
         seed_entry = seed[date_key]
         cita = seed_entry["versiculo"]["cita"]
         texto = seed_entry["versiculo"].get("texto", "")
         topic = seed_entry.get("topic")
+        prompt = (
+            build_user_prompt(cita, texto, topic)
+            if use_system_split
+            else build_prompt(cita, master_lang, topic, texto)
+        )
         requests.append(
             BatchRequest(
                 date_key=date_key,
                 custom_id=_safe_custom_id(date_key),
-                prompt=build_prompt(cita, master_lang, topic, texto),
+                prompt=prompt,
                 model_id=adapter.model_id,
                 max_tokens=adapter.max_tokens,
+                system_prompt=system_prompt,
             )
         )
 
