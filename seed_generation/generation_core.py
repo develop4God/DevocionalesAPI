@@ -25,6 +25,50 @@ from typing import Protocol
 
 
 # =============================================================================
+# PROMPT + PARSING — verified working with the local Ollama/gemma4 pipeline
+# (test_generate_ollama.py). This is the tested prompt, not pipeline_shared's
+# newer, unvalidated-against-Ollama prompt — keep them separate.
+# =============================================================================
+
+
+def build_prompt(verse_cita: str, lang: str) -> str:
+    return "\n\n".join(
+        [
+            f"You are a devoted biblical devotional writer. "
+            f'Write a christian devotional in {lang.upper()} based on the key verse: "{verse_cita}".',
+            "Write in a simple, warm, pastoral tone. "
+            "State ideas affirmatively — express what is true and present, "
+            "not what is absent, false, or being denied. "
+            "Avoid 'not X, but Y' style contrast constructions,"
+            "Return ONLY a valid JSON object with these exact keys:",
+            f"- `reflexion`: contextualized reflection on the verse "
+            f"(minimum 900 characters, in {lang}).",
+            f"- `oracion`: Prayer on the devotional theme (minimum 150 words, 100% in {lang}), "
+            f"MUST end with the standard closing phrase 'in the name of Jesus, amen', "
+            f"written entirely in {lang} (do not mix in any English words). "
+            f"Write this closing phrase exactly ONCE, as the very last words of the prayer.",
+            f"RULES:\n"
+            f"- ALL text MUST be 100% in {lang} — no language mixing.\n"
+            f"- Do NOT include transliterations, romanizations, or text in parentheses.",
+        ]
+    )
+
+
+def parse_content(raw_text: str) -> tuple[str, str]:
+    """Extract (reflexion, oracion) from raw model output. Raises ValueError on failure."""
+    raw = raw_text.strip().replace("```json", "").replace("```", "").strip()
+    match = re.search(r"\{.*\}", raw, re.DOTALL)
+    if not match:
+        raise ValueError("No JSON object found in model response")
+    data = json.loads(match.group())
+    reflexion = data.get("reflexion", "").strip()
+    oracion = data.get("oracion", "").strip()
+    if not reflexion or not oracion:
+        raise ValueError("Empty reflexion or oracion in model response")
+    return reflexion, oracion
+
+
+# =============================================================================
 # GENERATOR INTERFACE — the one seam providers plug into
 # =============================================================================
 
