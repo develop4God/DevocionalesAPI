@@ -287,14 +287,8 @@ def submit_batch(
 
     print(f"\nState file → {state_path}")
 
-    if adapter.batch_strategy == "openai_batch_file":
-        print("\nNext step (after downloading Fireworks results JSONL):")
-        print(
-            f"  python batch_collect.py --state {state_path} --results <results.jsonl>"
-        )
-    else:
-        print("\nNext step:")
-        print(f"  python batch_collect.py --state {state_path}")
+    print("\nNext step:")
+    print(f"  python batch_collect.py --state {state_path}")
     print(SEP + "\n")
 
     return str(state_path)

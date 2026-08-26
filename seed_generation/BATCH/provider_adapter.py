@@ -18,7 +18,6 @@ Usage:
 
 from __future__ import annotations
 
-import asyncio
 import datetime
 import json
 import os
@@ -446,297 +445,159 @@ class GeminiBatchAdapter(BaseAdapter):
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Fireworks adapter  (async parallel, OpenAI-compatible endpoint)
+# Fireworks adapter  (real batch API — account-scoped datasets/batchInferenceJobs)
 # ─────────────────────────────────────────────────────────────────────────────
 
 
 class FireworksAdapter(BaseAdapter):
     """
-    Uses openai SDK pointed at Fireworks base_url.
-    async_parallel strategy — same pattern as Gemini.
+    Uses batch_common.BatchClient, which speaks Fireworks' actual batch API:
+    account-scoped datasets + batchInferenceJobs — NOT the OpenAI-shaped
+    /files + /batches endpoints an earlier version of this adapter used (that
+    shape was proven wrong by a real 404 against the live API; see
+    batch_common/fireworks_template.py for the confirmed request/response shapes).
+
+    submit()  → create_dataset, upload input JSONL, create output dataset,
+                submit the batchInferenceJob. Returns job_id.
+    collect() → poll(job_id) until JOB_STATE_COMPLETED, download the output
+                dataset, parse each result line into a RawResult.
     """
 
     def __init__(self, provider_cfg: dict, model_alias: str):
         super().__init__(provider_cfg, model_alias)
-        try:
-            import openai as _openai
-        except ImportError:
-            raise ImportError("Run: pip install openai")
-        base_url = (
-            provider_cfg.get("base_url") or "https://api.fireworks.ai/inference/v1"
+        from batch_common import BatchClient, BatchProviderConfig
+
+        account_id_env_var = provider_cfg.get("account_id_env_var")
+        if not account_id_env_var:
+            raise ValueError(
+                "Fireworks batch requires 'account_id_env_var' in providers.yml "
+                "(its batch API is account-scoped: accounts/{id}/datasets/...)."
+            )
+
+        cfg = BatchProviderConfig(
+            provider_id="fireworks",
+            base_url=provider_cfg.get("base_url", "https://api.fireworks.ai/v1"),
+            model=self._model_id,
+            env_var=provider_cfg["api_key_env"],
+            account_id_env_var=account_id_env_var,
+            extra_body=self._model_cfg.get("extra_body"),
         )
-        self._client = _openai.AsyncOpenAI(
-            api_key=self._api_key,
-            base_url=base_url,
-        )
-        self._sync_client = _openai.OpenAI(
-            api_key=self._api_key,
-            base_url=base_url,
-        )
-        self._max_parallel = provider_cfg["defaults"].get("max_parallel", 20)
+        self._client = BatchClient(cfg)
+        self._poll_interval = provider_cfg["defaults"].get("poll_interval_seconds", 30)
+        self._timeout = provider_cfg["defaults"].get("timeout_seconds", 86_400)
 
     def submit(self, requests: list[BatchRequest]) -> str:
-        """Serialize requests to temp file — same pattern as Gemini."""
+        from batch_common import chat_request_record, write_jsonl
+
         import tempfile
 
-        payload = [
-            {
-                "date_key": r.date_key,
-                "custom_id": r.custom_id,
-                "prompt": r.prompt,
-                "model_id": r.model_id,
-                "max_tokens": r.max_tokens,
-            }
-            for r in requests
-        ]
-        tmp = tempfile.NamedTemporaryFile(
-            mode="w",
-            suffix=".json",
-            delete=False,
-            encoding="utf-8",
-            prefix="fireworks_job_",
-        )
-        json.dump(payload, tmp, ensure_ascii=False)
-        tmp.close()
-        print(
-            f"INFO: Fireworks async job queued — {len(requests)} requests → {tmp.name}"
-        )
-        return tmp.name
-
-    def collect(self, job_id: str, requests: list[BatchRequest]) -> list[RawResult]:
-        return asyncio.run(self._collect_async(requests))
-
-    async def _collect_async(self, requests: list[BatchRequest]) -> list[RawResult]:
-        sem = asyncio.Semaphore(self._max_parallel)
-
-        async def _one(req: BatchRequest) -> RawResult:
-            async with sem:
-                try:
-                    response = await self._client.chat.completions.create(
-                        model=req.model_id,
-                        max_tokens=req.max_tokens,
-                        messages=[{"role": "user", "content": req.prompt}],
-                    )
-                    text = response.choices[0].message.content.strip()
-                    if not text:
-                        return RawResult(date_key=req.date_key, error="empty response")
-                    return RawResult(date_key=req.date_key, raw_text=text)
-                except Exception as e:
-                    return RawResult(date_key=req.date_key, error=str(e))
-
-        tasks = [_one(r) for r in requests]
-        results = []
-        done = 0
-        total = len(tasks)
-        for coro in asyncio.as_completed(tasks):
-            result = await coro
-            done += 1
-            if done % 25 == 0 or done == total:
-                status = "✅" if result.succeeded else "❌"
-                print(f"  {status} {done}/{total} — {result.date_key}")
-            results.append(result)
-        return results
-
-    def generate_one(self, request: BatchRequest) -> RawResult:
-        """Sync fallback for repair."""
-        try:
-            response = self._sync_client.chat.completions.create(
-                model=request.model_id,
-                max_tokens=request.max_tokens,
-                messages=[{"role": "user", "content": request.prompt}],
-            )
-            text = response.choices[0].message.content.strip()
-            if not text:
-                return RawResult(date_key=request.date_key, error="empty response")
-            return RawResult(date_key=request.date_key, raw_text=text)
-        except Exception as e:
-            return RawResult(date_key=request.date_key, error=str(e))
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-# Fireworks adapter — OpenAI batch file generator  (openai_batch_file strategy)
-# ─────────────────────────────────────────────────────────────────────────────
-
-
-class FireworksBatchFileAdapter(BaseAdapter):
-    """
-    Generates an OpenAI-format batch JSONL file for manual upload to Fireworks AI.
-    Does NOT make any API calls during submit().
-
-    batch_strategy: openai_batch_file
-
-    Workflow:
-      1. submit(requests) → writes batch_input_<lang>_<version>_<ts>.jsonl
-                            to batch_files/, returns file path as job_id.
-      2. Upload the file manually to Fireworks AI.
-      3. Download results from Fireworks AI.
-      4. collect(results_path, requests) → parses OpenAI results JSONL,
-                                           returns list[RawResult].
-
-    OpenAI batch line format produced by submit():
-      {"custom_id": "...", "method": "POST", "url": "/v1/chat/completions",
-       "body": {"model": "...", "messages": [...], "max_tokens": N}}
-
-    OpenAI results line format expected by collect():
-      {"id": "...", "custom_id": "...",
-       "response": {"status_code": 200, "body": {"choices": [{"message": {"content": "..."}}]}},
-       "error": null}
-    """
-
-    def __init__(self, provider_cfg: dict, model_alias: str):
-        # Do NOT call super().__init__() — API key is not required for file generation.
-        self._cfg = provider_cfg
-        self._model_cfg = provider_cfg["models"][model_alias]
-        self._model_id = self._model_cfg["model_id"]
-        self._max_tokens = self._model_cfg.get("max_tokens", 4096)
-        self._batch_endpoint = provider_cfg.get(
-            "batch_endpoint", "/v1/chat/completions"
-        )
-        # API key loaded but not validated — only needed if collect() is used.
-        self._api_key = os.environ.get(provider_cfg.get("api_key_env", ""), "")
-
-    @staticmethod
-    def _to_jsonl_line(
-        request: BatchRequest, model_id: str, max_tokens: int, batch_endpoint: str
-    ) -> str:
-        """Produce one OpenAI batch-format JSONL line."""
-        record = {
-            "custom_id": request.custom_id,
-            "method": "POST",
-            "url": batch_endpoint,
-            "body": {
-                "model": model_id,
-                "messages": [{"role": "user", "content": request.prompt}],
-                "max_tokens": max_tokens,
-            },
-        }
-        return json.dumps(record, ensure_ascii=False)
-
-    def submit(self, requests: list[BatchRequest]) -> str:
-        """
-        Write all requests as an OpenAI batch JSONL file.
-        Returns the file path (used as job_id in the state file).
-        No API calls are made.
-        """
         ts = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-        out_dir = Path(__file__).parent
-        # Derive a human-readable name from the first request's date_key
-        first_dk = requests[0].date_key if requests else "batch"
-        slug = re.sub(r"[^a-zA-Z0-9_-]", "_", first_dk)[:20]
-        out_path = out_dir / f"batch_input_{slug}_{ts}.jsonl"
+        job_id = f"devocionales-{requests[0].date_key[:7]}-{ts}"
+        input_dataset_id = f"{job_id}-in"
+        output_dataset_id = f"{job_id}-out"
 
-        with open(out_path, "w", encoding="utf-8") as f:
-            for r in requests:
-                line = self._to_jsonl_line(
-                    r, self._model_id, self._max_tokens, self._batch_endpoint
-                )
-                f.write(line + "\n")
-
-        print(f"INFO: OpenAI batch JSONL written — {len(requests)} lines")
-        print(f"INFO: File → {out_path}")
-        print()
-        print("Next steps:")
-        print(f"  1. Upload {out_path.name} to Fireworks AI batch endpoint.")
-        print("     https://fireworks.ai  (Batch > Upload file)")
-        print("  2. Wait for batch to complete and download results JSONL.")
-        print("  3. Collect with:")
-        print(
-            "       python batch_collect.py --state <state_file> --results <results.jsonl>"
+        records = (
+            chat_request_record(
+                custom_id=r.custom_id,
+                messages=[{"role": "user", "content": r.prompt}],
+                max_tokens=r.max_tokens,
+                temperature=0.7,
+                response_format={"type": "json_object"},
+            )
+            for r in requests
         )
-        return str(out_path)
+        tmp_path = Path(tempfile.mkstemp(suffix=".jsonl", prefix="fireworks_batch_")[1])
+        write_jsonl(tmp_path, records)
+
+        print(f"INFO: Fireworks batch JSONL written — {len(requests)} lines → {tmp_path}")
+        self._client.create_dataset(input_dataset_id, example_count=len(requests))
+        self._client.upload(input_dataset_id, tmp_path)
+        self._client.create_dataset(output_dataset_id, example_count=len(requests))
+        self._client.submit(
+            input_dataset_id=input_dataset_id,
+            output_dataset_id=output_dataset_id,
+            job_id=job_id,
+            max_tokens=self._max_tokens,
+        )
+        print(f"INFO: Fireworks batch job submitted — job_id: {job_id}")
+        # job_id alone isn't enough to download results later — collect() needs
+        # the output dataset id too, so encode both in the returned string.
+        return f"{job_id}::{output_dataset_id}"
 
     def collect(self, job_id: str, requests: list[BatchRequest]) -> list[RawResult]:
-        """
-        Parse an OpenAI-format results JSONL file downloaded from Fireworks AI.
-        job_id must be the path to the results file (passed via --results in CLI).
+        import tempfile
 
-        Expected line format:
-          {"custom_id": "...", "response": {"status_code": 200,
-           "body": {"choices": [{"message": {"content": "..."}}]}}, "error": null}
-        """
-        results_path = job_id  # job_id holds the results file path
+        real_job_id, output_dataset_id = job_id.split("::", 1)
 
-        if not Path(results_path).is_file():
-            raise FileNotFoundError(
-                f"Results file not found: {results_path}\n"
-                "Pass the downloaded Fireworks results JSONL via --results."
-            )
+        print(f"INFO: Polling Fireworks batch {real_job_id}...")
+        self._client.poll(
+            real_job_id, interval=self._poll_interval, timeout=self._timeout
+        )
+
+        dest_dir = Path(tempfile.mkdtemp(prefix="fireworks_results_"))
+        print(f"INFO: Downloading results → {dest_dir}")
+        result_files = self._client.download(output_dataset_id, dest_dir)
 
         cid_map = {r.custom_id: r.date_key for r in requests}
         results: list[RawResult] = []
         missing = set(cid_map.keys())
 
-        with open(results_path, encoding="utf-8") as f:
-            for lineno, line in enumerate(f, 1):
-                line = line.strip()
-                if not line:
-                    continue
-                try:
-                    obj = json.loads(line)
-                except json.JSONDecodeError as e:
-                    print(f"WARNING: Skipping malformed line {lineno}: {e}")
-                    continue
+        for result_file in result_files:
+            with open(result_file, encoding="utf-8") as f:
+                for lineno, line in enumerate(f, 1):
+                    line = line.strip()
+                    if not line:
+                        continue
+                    try:
+                        obj = json.loads(line)
+                    except json.JSONDecodeError as e:
+                        print(f"WARNING: Skipping malformed line {lineno}: {e}")
+                        continue
 
-                custom_id = obj.get("custom_id", "")
-                date_key = cid_map.get(custom_id, custom_id)
-                missing.discard(custom_id)
+                    custom_id = obj.get("custom_id", "")
+                    date_key = cid_map.get(custom_id, custom_id)
+                    missing.discard(custom_id)
 
-                # API-level error
-                error_obj = obj.get("error")
-                if error_obj:
-                    results.append(
-                        RawResult(
-                            date_key=date_key,
-                            error=f"fireworks_batch_error: {error_obj}",
-                        )
-                    )
-                    continue
-
-                response = obj.get("response", {})
-                status = response.get("status_code", 0)
-
-                # Two supported formats:
-                #   OpenAI batch wrapper : response = {status_code, body: {choices}}
-                #   Fireworks direct     : response = {id, object, choices, ...}
-                has_choices = "choices" in response or "body" in response
-                if not has_choices and status != 200:
-                    results.append(
-                        RawResult(
-                            date_key=date_key,
-                            error=f"http_error: status_code={status}",
-                        )
-                    )
-                    continue
-
-                try:
-                    body = response.get("body", response)
-                    text = body["choices"][0]["message"]["content"].strip()
-                    if not text:
+                    error_obj = obj.get("error")
+                    if error_obj:
                         results.append(
-                            RawResult(date_key=date_key, error="empty_content")
+                            RawResult(
+                                date_key=date_key,
+                                error=f"fireworks_batch_error: {error_obj}",
+                            )
                         )
-                    else:
-                        results.append(RawResult(date_key=date_key, raw_text=text))
-                except (KeyError, IndexError, TypeError) as e:
-                    results.append(
-                        RawResult(
-                            date_key=date_key,
-                            error=f"parse_error: {e} | raw: {str(obj)[:120]}",
+                        continue
+
+                    try:
+                        body = obj.get("response", obj)
+                        text = body["choices"][0]["message"]["content"].strip()
+                        if not text:
+                            results.append(
+                                RawResult(date_key=date_key, error="empty_content")
+                            )
+                        else:
+                            results.append(RawResult(date_key=date_key, raw_text=text))
+                    except (KeyError, IndexError, TypeError) as e:
+                        results.append(
+                            RawResult(
+                                date_key=date_key,
+                                error=f"parse_error: {e} | raw: {str(obj)[:120]}",
+                            )
                         )
-                    )
 
         for missing_cid in missing:
             date_key = cid_map.get(missing_cid, missing_cid)
             print(f"WARNING: No result line for custom_id={missing_cid!r} ({date_key})")
             results.append(RawResult(date_key=date_key, error="missing_from_results"))
 
-        print(f"INFO: Parsed {len(results)} results from {results_path}")
+        print(f"INFO: Parsed {len(results)} results from {len(result_files)} file(s)")
         return results
 
     def generate_one(self, request: BatchRequest) -> RawResult:
         raise NotImplementedError(
-            "fireworks_batch uses openai_batch_file strategy — no direct API calls. "
-            "Use the 'fireworks' provider for async parallel generation instead."
+            "Fireworks batch has no single-request repair path — its API is "
+            "batch-only (datasets + batchInferenceJobs). Re-submit a small "
+            "batch (--limit 1) for repair instead."
         )
 
 
@@ -748,7 +609,6 @@ _ADAPTER_MAP: dict[str, type[BaseAdapter]] = {
     "anthropic": AnthropicAdapter,
     "gemini": GeminiBatchAdapter,
     "fireworks": FireworksAdapter,
-    "fireworks_batch": FireworksBatchFileAdapter,
 }
 
 

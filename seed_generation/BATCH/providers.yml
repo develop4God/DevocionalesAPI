@@ -68,10 +68,17 @@ providers:
       poll_interval_seconds: 120          # real batch — poll every 2 min
       max_parallel: null                  # N/A for native batch
 
+  # Fireworks' batch/dataset management API (datasets, batchInferenceJobs) is
+  # account-scoped and lives under plain /v1 — NOT the same host path as the
+  # live chat-completions API (.../inference/v1). Confirmed against
+  # devocionales-ai-review/batch_common/fireworks_template.py after a real 404
+  # on an earlier OpenAI-shaped (/files, /batches) attempt proved that shape
+  # wrong for this provider. See provider_adapter.py's FireworksAdapter.
   fireworks:
     api_key_env: FIREWORKS_API_KEY
-    batch_strategy: async_parallel
-    base_url: https://api.fireworks.ai/inference/v1
+    account_id_env_var: FIREWORKS_ACCOUNT_ID
+    batch_strategy: native
+    base_url: https://api.fireworks.ai/v1
     models:
       qwen3-30b-a3b:
         model_id: accounts/fireworks/models/qwen3-30b-a3b
@@ -91,39 +98,20 @@ providers:
         quality: production
         cost_input_per_mtok: 0.22
         cost_output_per_mtok: 0.88
-    defaults:
-      model: qwen3-30b-a3b
-      poll_interval_seconds: null         # N/A for async_parallel
-      max_parallel: 20
-
-  # fireworks_batch — generates an OpenAI-format batch JSONL for manual upload.
-  # No API calls are made. Upload the file to Fireworks AI manually, then
-  # collect results with: batch_collect.py --state <state> --results <results.jsonl>
-  fireworks_batch:
-    api_key_env: FIREWORKS_API_KEY        # not required for file generation
-    batch_strategy: openai_batch_file
-    base_url: https://api.fireworks.ai/inference/v1
-    batch_endpoint: /v1/chat/completions
-    models:
-      qwen3-vl-30b-a3b-thinking:
-        model_id: accounts/fireworks/models/qwen3-vl-30b-a3b-thinking
-        max_tokens: 8192
-        quality: production
-        cost_input_per_mtok: 0.15
-        cost_output_per_mtok: 0.60
-      qwen3p6-plus:
-        model_id: accounts/fireworks/models/qwen3p6-plus
-        max_tokens: 8192
-        quality: premium
-        cost_input_per_mtok: 0.50
-        cost_output_per_mtok: 3.00
-      llama4-maverick:
-        model_id: accounts/fireworks/models/llama4-maverick-instruct-basic
+      # Dense-vs-MoE note: this is MoE (25.2B total, 3.8B active) — a
+      # different architecture from the locally-validated gemma4:26b (dense,
+      # all 25.2B active). Confirmed batch-inference-capable via the actual
+      # Fireworks batch model picker UI (2026-08-26), despite its model
+      # detail page separately showing "Serverless: Not supported" — that
+      # badge does not describe batch-inference eligibility.
+      # Pricing not yet confirmed (not listed on fireworks.ai/pricing at time
+      # of writing) — verify actual cost before a full 366-entry submission.
+      gemma-4-26b-a4b-it:
+        model_id: accounts/fireworks/models/gemma-4-26b-a4b-it
         max_tokens: 4096
         quality: production
-        cost_input_per_mtok: 0.22
-        cost_output_per_mtok: 0.88
     defaults:
-      model: qwen3-vl-30b-a3b-thinking
-      poll_interval_seconds: null
-      max_parallel: null
+      model: qwen3-30b-a3b
+      poll_interval_seconds: 30
+      timeout_seconds: 86400
+      max_parallel: null                  # N/A for native batch
