@@ -39,6 +39,7 @@ seed_generation/ERRORS-RAG/
 !README*.md
 
 # Ignore large data and output files
+seed_generation/data/output/
 
 *.bak
 *.tmp

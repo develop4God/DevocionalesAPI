@@ -74,9 +74,11 @@ def generate_from_seed(
     total = len(all_dates)
     print(f"INFO: {total} seed entries\n")
 
+    os.makedirs(output_dir, exist_ok=True)
+
     checkpoint_file = os.path.join(
-        os.path.dirname(os.path.abspath(__file__)),
-        f"generate_seed_checkpoint_{provider}.json",
+        output_dir,
+        f"generate_from_seed_checkpoint_{provider}.json",
     )
     checkpoint = CheckpointStore(checkpoint_file)
 
@@ -189,7 +191,10 @@ def main():
     parser.add_argument("--version", required=True, help="Bible version code, e.g. RVR1960")
     parser.add_argument("--provider", required=True, choices=list(PROVIDERS), help="Generation provider")
     parser.add_argument("--model", default=None, help="Model name/tag override (provider-specific default if omitted)")
-    parser.add_argument("--output-dir", default=None, help="Output folder (default: seed file's own folder)")
+    parser.add_argument(
+        "--output-dir", default=None,
+        help="Output folder (default: seed_generation/data/output/<lang>/)",
+    )
     parser.add_argument("--start-date", default=None, help="Start date YYYY-MM-DD (optional)")
     parser.add_argument(
         "--limit",
@@ -199,7 +204,10 @@ def main():
     )
     args = parser.parse_args()
 
-    output_dir = args.output_dir or os.path.dirname(os.path.abspath(args.seed))
+    output_dir = args.output_dir or os.path.join(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+        "seed_generation", "data", "output", args.lang,
+    )
 
     generate_from_seed(
         seed_path=args.seed,
