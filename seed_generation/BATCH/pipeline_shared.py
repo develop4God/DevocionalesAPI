@@ -6,6 +6,11 @@ import unicodedata
 from typing import Optional
 
 # --- Constants ---
+LANG_LABEL_OVERRIDES = {
+    "fil": "Filipino (ISO 639-2 code: fil)",
+    "pt": "Brazilian Portuguese",
+}
+
 LITURGICAL_WHITELIST = frozenset(
     {
         "heilig",
@@ -103,7 +108,7 @@ def repair_json(raw_text: str) -> Optional[dict]:
 
 
 def _lang_label(lang: str) -> str:
-    return "Filipino (ISO 639-2 code: fil)" if lang == "fil" else lang.upper()
+    return LANG_LABEL_OVERRIDES.get(lang, lang.upper())
 
 
 # --- Prompt Builder ---
@@ -116,9 +121,8 @@ def build_prompt(
     prompt preview). Fireworks batch submission uses build_system_prompt +
     build_user_prompt instead — see their docstrings for why.
     """
-    lang_label = _lang_label(lang)
     return "\n\n".join(
-        [_system_body(lang_label), _user_body(verse_cita, verse_texto, topic)]
+        [_system_body(lang), _user_body(verse_cita, verse_texto, topic)]
     )
 
 
@@ -134,7 +138,7 @@ def build_system_prompt(lang: str) -> str:
     byte-identical across all 366 requests and prompt-caching applies,
     instead of re-sending the full instruction block on every line.
     """
-    return _system_body(_lang_label(lang))
+    return _system_body(lang)
 
 
 def build_user_prompt(
@@ -145,7 +149,19 @@ def build_user_prompt(
     return _user_body(verse_cita, verse_texto, topic)
 
 
-def _system_body(lang_label: str) -> str:
+def _system_body(lang: str) -> str:
+    lang_label = _lang_label(lang)
+    if lang == "en":
+        closing_instruction = (
+            f"MUST end with the standard closing phrase meaning "
+            f"'in the name of Jesus, amen', written in {lang_label}."
+        )
+    else:
+        closing_instruction = (
+            f"MUST end with the standard closing phrase meaning "
+            f"'in the name of Jesus, amen', translated into {lang_label} "
+            f"— do not output those words in English."
+        )
     return "\n\n".join(
         [
             "You are a devoted biblical devotional writer. "
@@ -158,8 +174,7 @@ def _system_body(lang_label: str) -> str:
             f"- `reflexion`: contextualized reflection on the verse "
             f"(minimum 900 characters, in {lang_label}).",
             f"- `oracion`: Prayer on the devotional theme (minimum 150 words, 100% in {lang_label}), "
-            f"MUST end with the standard closing phrase 'in the name of Jesus, amen', "
-            f"written entirely in {lang_label} (do not mix in any English words). "
+            f"{closing_instruction} "
             f"Write this closing phrase exactly ONCE, as the very last words of the prayer.",
             f"RULES:\n"
             f"- ALL text MUST be 100% in {lang_label} — no language mixing.\n"
