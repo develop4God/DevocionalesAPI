@@ -60,12 +60,41 @@ are shaped correctly: `{"custom_id": ..., "body": {"messages": [...], "max_token
   already carry their own `system` message in `body.messages` — reduces upload
   size while preserving prompt-cache effectiveness across the whole batch.
 - Only works with message-based inputs, not pre-tokenized (`prompt_token_ids`) jobs.
-- **We do not currently use this** — `FireworksAdapter.submit()` calls
-  `self._client.submit(...)` without a `system_prompt` argument, and every one of
-  our dataset lines is a single full `user` message (persona + instructions +
-  verse, all inlined). This is valid per the docs (a `system` message is optional,
-  not required), but it means we don't benefit from the cross-request prompt-cache
-  discount a shared, byte-identical system prompt would unlock — LangGraph's
-  `devotional_gen.py` in the sibling `devocionales-ai-review` project does use
-  this split (shared system prompt + short per-day user message) for exactly that
-  saving. Worth revisiting if per-request cost becomes a concern.
+- **We now use this** — `FireworksAdapter.submit()` passes `system_prompt=requests[0].system_prompt`
+  to `self._client.submit(...)`, and `batch_submit.py` builds each dataset line as a
+  short per-day `user` message only (verse + topic), with the shared persona/instructions
+  sent once at job level via `build_system_prompt()`. Confirmed working in production —
+  see the real run data below (44% of input tokens served from cache).
+
+## Real run: en/KJV, gemma-4-31b-it, 359 rows (2026-08-26)
+
+Job `devocionales-2027-08-20260826-170447`, dates 2027-08-08 → 2028-07-31.
+
+**Lifecycle timestamps (from Fireworks dashboard):**
+
+| Phase | Timestamp | Duration |
+|---|---|---|
+| Created | 17:04:50 | — |
+| Validated | 17:05:50 | 1 min (create → validate) |
+| Started running | 17:13:50 | 8 min (validate → start — queue wait) |
+| Completed | 17:17:50 | 4 min (start → complete — actual inference) |
+| **Total wall time** | | **13 min** |
+
+**Token usage (from Fireworks dashboard):**
+
+| Type | Tokens | Avg/row (359 rows) |
+|---|---|---|
+| Input (new) | 110.5K | ~308 |
+| Input (cached) | 87.0K | ~242 |
+| Output | 717.8K | ~1,999 |
+| **Total input** | **197.5K** | ~550 |
+
+44% of input tokens were served from cache (the shared system prompt), so the
+per-row cost only scales with the ~308 new tokens/row (verse + topic), not the
+full persona/instructions block repeated 359 times.
+
+Throughput during the 4-minute RUNNING phase: ~2,991 output tok/sec, ~1.5 rows/sec.
+Most of total wall time (8 of 13 min) was queue wait before running started, not
+compute — plan batch timing accordingly rather than assuming near-instant start.
+
+Result: 359/359 built, 14 phase1 validation warnings (non-blocking), 0 errors.

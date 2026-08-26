@@ -48,6 +48,9 @@ seed_generation/data/output/
 *.sh
 *.bat
 
+# Ignore batch job state/resume files (job_id, dates, timestamps only)
+seed_generation/BATCH/batch_state_*.json
+
 # Ignore audit and validation outputs
 *.audit
 *.validation
