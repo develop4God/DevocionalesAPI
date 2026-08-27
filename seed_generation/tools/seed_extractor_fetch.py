@@ -321,6 +321,25 @@ def fetch_text(
     if not rows:
         return None
     combined = " ".join(r[0] for r in rows)
+    # <f>...</f> (footnote markers, e.g. "[35\u2020]" or "[1]") and <n>...</n>
+    # (verse-number markers, e.g. "[1]") wrap pure metadata, not devotional
+    # text \u2014 unlike <e>/<i>/<t>, which wrap real verse content and must keep
+    # it. Delete these two tag pairs with their contents FIRST, before the
+    # boundary-period fix below \u2014 otherwise a footnote sitting right before
+    # </e> (e.g. "...Jud\u00E1. <f>[58\u2020]</f></e>") hides the sentence-ending
+    # period from that fix's lookbehind and it inserts a redundant one.
+    combined = re.sub(r"<f>.*?</f>", "", combined)
+    combined = re.sub(r"<n>.*?</n>", "", combined)
+    # A psalm superscription (<e>...</e>) immediately followed by the first
+    # verse-number marker (<n>[1]</n>, already removed above, hence
+    # \s*<[^>]+>\s* below still matching the empty <n></n>-adjacent tags) has
+    # no punctuation between them in the source data \u2014 stripping tags
+    # naively then collapses whitespace and glues title directly onto verse
+    # text (e.g. "Salmo de Davi O SENHOR..."). <e> is also used mid-verse for
+    # plain emphasis (confirmed in LU17_de), where it must NOT gain a period
+    # \u2014 so only fire on this specific title-then-verse-number boundary, not
+    # on every </e>.
+    combined = re.sub(r"([^\s.,;:!?])(\s*</e>(?:\s*<[^>]+>\s*)*)", r"\1.\2", combined)
     combined = re.sub(r"<[^>]+>", "", combined)
     combined = re.sub(r"[\u2460-\u24FF]", "", combined)
     combined = re.sub(r"\s+", " ", combined)
