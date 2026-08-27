@@ -44,8 +44,7 @@ seed_generation/data/output/
 *.bak
 *.tmp
 
-# Exclude user scripts and batch files
-*.sh
+# Exclude user batch files
 *.bat
 
 # Ignore batch job state/resume files (job_id, dates, timestamps only)
