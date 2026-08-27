@@ -10,14 +10,37 @@ Usage:
   python build_seed_for_language.py \\
       --source-seed seed_generation/2027/seeds/EN/seed_en_KJV_for_2027.json \\
       --db seed_generation/Bibles/ES/RVR1960_es.SQLite3 \\
+      --lang es \\
       --out seed_generation/2027/seeds/ES/seed_es_RVR1960_for_2027.json
 """
 
 import argparse
 import json
 import re
+from pathlib import Path
 
 from verse_resolver import VerseResolver
+
+_TAGS_MASTER_PATH = Path(__file__).parent.parent / "tags_master.json"
+
+
+def _normalize_tag(tag: str) -> str:
+    return re.sub(r"[\s\-']", "", tag).lower()
+
+
+def _load_tags_master() -> dict:
+    with open(_TAGS_MASTER_PATH, encoding="utf-8") as f:
+        return json.load(f)["tags"]
+
+
+def _translate_tags(tags: list, lang: str, tags_master: dict) -> list:
+    if lang == "en":
+        return tags
+    translated = []
+    for tag in tags:
+        entry = tags_master.get(_normalize_tag(tag))
+        translated.append(entry[lang] if entry and lang in entry else tag)
+    return translated
 
 # Some MyBible-format DBs (e.g. RVR1960_es, ARC_pt) store Gospel/epistle
 # long_names with a denominational "S." (San/Santo/São) prefix — "S. Mateo",
@@ -42,10 +65,11 @@ def _capitalize_first_letter(texto: str) -> str:
     return texto[0].upper() + texto[1:]
 
 
-def build_seed(source_seed_path: str, db_path: str, out_path: str) -> None:
+def build_seed(source_seed_path: str, db_path: str, lang: str, out_path: str) -> None:
     with open(source_seed_path, encoding="utf-8") as f:
         source = json.load(f)
 
+    tags_master = _load_tags_master()
     seed = {}
     errors = []
 
@@ -75,7 +99,7 @@ def build_seed(source_seed_path: str, db_path: str, out_path: str) -> None:
             seed[date_key] = {
                 "versiculo": {"cita": cita, "texto": texto},
                 "para_meditar": para_meditar,
-                "tags": entry["tags"],
+                "tags": _translate_tags(entry["tags"], lang, tags_master),
             }
 
     with open(out_path, "w", encoding="utf-8") as f:
@@ -92,10 +116,11 @@ def main():
     parser = argparse.ArgumentParser(description="Build a target-language seed from an existing English seed")
     parser.add_argument("--source-seed", required=True, help="Path to source English seed JSON")
     parser.add_argument("--db", required=True, help="Path to target-language SQLite Bible DB")
+    parser.add_argument("--lang", required=True, help="Target language code, e.g. es, pt")
     parser.add_argument("--out", required=True, help="Output seed file path")
     args = parser.parse_args()
 
-    build_seed(args.source_seed, args.db, args.out)
+    build_seed(args.source_seed, args.db, args.lang, args.out)
 
 
 if __name__ == "__main__":
