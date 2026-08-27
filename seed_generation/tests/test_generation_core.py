@@ -124,6 +124,28 @@ class TestCheckpointStatus(unittest.TestCase):
         )
         self.assertFalse(status["seed_matches"])
 
+    def test_readable_without_knowing_total_or_seed_path_in_advance(self):
+        # A discovery tool (e.g. a dashboard scanning many checkpoints) needs
+        # to read a checkpoint's own metadata (provider, model, seed_path,
+        # done count) BEFORE it knows total/seed_path — those two args must
+        # be optional, with seed_matches/pending simply omitted when unknown.
+        CheckpointStore(self.checkpoint_file).save(
+            {"2027-01-01": {}},
+            1,
+            "seed.json",
+            "es",
+            "RVR1960",
+            "out/",
+            provider="ollama",
+            model="gemma4:26b",
+        )
+        status = checkpoint_status(self.checkpoint_file)
+        self.assertEqual(status["done"], 1)
+        self.assertEqual(status["provider"], "ollama")
+        self.assertEqual(status["checkpoint_seed_path"], "seed.json")
+        self.assertIsNone(status["pending"])
+        self.assertIsNone(status["seed_matches"])
+
 
 class TestCheckpointStoreAtomicSave(unittest.TestCase):
     def setUp(self):
@@ -139,6 +161,37 @@ class TestCheckpointStoreAtomicSave(unittest.TestCase):
         with open(self.checkpoint_file, encoding="utf-8") as f:
             data = json.load(f)
         self.assertEqual(data["completed_count"], 1)
+
+    def test_save_stores_provider_and_model_for_discovery(self):
+        # A dashboard/status tool must be able to resume a checkpoint without
+        # the user re-typing --provider/--model — the checkpoint needs to
+        # remember them itself, not rely solely on its (lossy, slugified)
+        # filename as the only source of truth.
+        store = CheckpointStore(self.checkpoint_file)
+        store.save(
+            {"2027-01-01": {"id": "x"}},
+            1,
+            "seed.json",
+            "es",
+            "RVR1960",
+            "out/",
+            provider="ollama",
+            model="gemma4:26b",
+        )
+        with open(self.checkpoint_file, encoding="utf-8") as f:
+            data = json.load(f)
+        self.assertEqual(data["provider"], "ollama")
+        self.assertEqual(data["model"], "gemma4:26b")
+
+    def test_save_without_provider_model_still_works(self):
+        # Backward compatibility: existing call sites that don't pass these
+        # new optional kwargs must keep working unchanged.
+        store = CheckpointStore(self.checkpoint_file)
+        store.save({"2027-01-01": {"id": "x"}}, 1, "seed.json", "es", "RVR1960", "out/")
+        with open(self.checkpoint_file, encoding="utf-8") as f:
+            data = json.load(f)
+        self.assertIsNone(data.get("provider"))
+        self.assertIsNone(data.get("model"))
 
     def test_no_leftover_temp_file_after_save(self):
         store = CheckpointStore(self.checkpoint_file)

@@ -176,6 +176,8 @@ def generate_from_seed(
                 master_lang,
                 master_version,
                 output_dir,
+                provider=provider,
+                model=model,
             )
 
         except DevotionalValidationError as e:
@@ -191,7 +193,14 @@ def generate_from_seed(
 
     if interrupted and completed:
         checkpoint.save(
-            completed, success_count, seed_path, master_lang, master_version, output_dir
+            completed,
+            success_count,
+            seed_path,
+            master_lang,
+            master_version,
+            output_dir,
+            provider=provider,
+            model=model,
         )
         print("\nProgress saved. Run again to resume.")
         sys.exit(0)
@@ -287,10 +296,13 @@ def main():
     resume_group = parser.add_mutually_exclusive_group()
     resume_group.add_argument(
         "--resume",
+        "--continue",
+        dest="resume",
         action="store_true",
         default=None,
         help="Resume from an existing checkpoint without the interactive prompt "
-        "(for unattended/background runs)",
+        "(for unattended/background runs). --continue is an alias, matching "
+        "the convention used by git/yt-dlp/etc.",
     )
     resume_group.add_argument(
         "--no-resume",

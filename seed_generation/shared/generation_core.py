@@ -228,14 +228,18 @@ def pending_dates(all_dates: list[str], completed: dict) -> list[str]:
     return [d for d in all_dates if d not in completed]
 
 
-def checkpoint_status(checkpoint_file: str, total: int, seed_path: str) -> dict | None:
+def checkpoint_status(
+    checkpoint_file: str, total: int | None = None, seed_path: str | None = None
+) -> dict | None:
     """Read a checkpoint's progress without starting generation.
 
     Returns None if no checkpoint file exists at that path. Otherwise a dict
-    with done/pending/total counts and whether the checkpoint's own seed_path
-    matches the seed you're about to run against — the same mismatch check
-    generate_from_seed() makes before offering to resume, exposed here so it
-    can be inspected without triggering the interactive resume prompt.
+    with the checkpoint's own metadata (provider, model, seed_path, done
+    count) always populated. total/seed_path are optional — pass them when
+    you already know what you're about to run against, to also get
+    pending/seed_matches computed; a discovery tool that doesn't know either
+    in advance (e.g. scanning many checkpoints) can call this with neither,
+    and pending/seed_matches simply come back None.
     """
     data = CheckpointStore(checkpoint_file).load()
     if data is None:
@@ -244,10 +248,17 @@ def checkpoint_status(checkpoint_file: str, total: int, seed_path: str) -> dict 
     return {
         "checkpoint_file": checkpoint_file,
         "done": done,
-        "pending": total - done,
+        "pending": (total - done) if total is not None else None,
         "total": total,
-        "seed_matches": data.get("seed_path") == seed_path,
+        "seed_matches": (data.get("seed_path") == seed_path)
+        if seed_path is not None
+        else None,
         "checkpoint_seed_path": data.get("seed_path"),
+        "provider": data.get("provider"),
+        "model": data.get("model"),
+        "master_lang": data.get("master_lang"),
+        "master_version": data.get("master_version"),
+        "output_dir": data.get("output_dir"),
         "timestamp": data.get("timestamp"),
     }
 
@@ -281,6 +292,8 @@ class CheckpointStore:
         lang: str,
         version: str,
         output_dir: str,
+        provider: str | None = None,
+        model: str | None = None,
     ) -> None:
         data = {
             "completed": completed,
@@ -289,6 +302,8 @@ class CheckpointStore:
             "master_lang": lang,
             "master_version": version,
             "output_dir": output_dir,
+            "provider": provider,
+            "model": model,
             "timestamp": datetime.now().isoformat(),
         }
         directory = os.path.dirname(self.checkpoint_file) or "."
