@@ -19,15 +19,18 @@ import re
 
 from verse_resolver import VerseResolver
 
-# Some MyBible-format DBs (e.g. RVR1960_es) store Gospel long_names with a
-# denominational "S." (San/Santo) prefix — "S. Mateo", "S.Juan" — that real
-# citations don't use. Stripped here rather than in verse_resolver.py to
-# keep that file in sync with its upstream copy in devocionales-json.
-_S_PREFIX = re.compile(r"^S\.\s*")
+# Some MyBible-format DBs (e.g. RVR1960_es, ARC_pt) store Gospel/epistle
+# long_names with a denominational "S." (San/Santo/São) prefix — "S. Mateo",
+# "S.Juan", "1 S. Pedro" — that real citations don't use. The prefix can sit
+# either at the very start ("S. João") or right after a leading book number
+# ("1 S. Pedro"), so both positions must be matched. Stripped here rather
+# than in verse_resolver.py to keep that file in sync with its upstream copy
+# in devocionales-json.
+_S_PREFIX = re.compile(r"^(\d\s+)?S\.\s*")
 
 
 def _strip_s_prefix(cita: str) -> str:
-    return _S_PREFIX.sub("", cita)
+    return _S_PREFIX.sub(lambda m: m.group(1) or "", cita)
 
 
 def _capitalize_first_letter(texto: str) -> str:
