@@ -19,11 +19,14 @@ from __future__ import annotations
 import json
 import os
 import re
+import tempfile
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Protocol
 
-_TAGS_MASTER_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "tags_master.json")
+_TAGS_MASTER_PATH = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "tags_master.json"
+)
 _tags_master_cache: dict | None = None
 
 
@@ -106,7 +109,9 @@ class DevotionalValidationError(ValueError):
 
 
 class DevotionalBuilder:
-    def __init__(self, date_key: str, seed_entry: dict, master_lang: str, master_version: str):
+    def __init__(
+        self, date_key: str, seed_entry: dict, master_lang: str, master_version: str
+    ):
         self._date = date_key
         self._seed = seed_entry
         self._lang = master_lang
@@ -140,7 +145,9 @@ class DevotionalBuilder:
         translated = []
         for tag in tags:
             entry = tags_master.get(_normalize_tag(tag))
-            translated.append(entry[self._lang] if entry and self._lang in entry else tag)
+            translated.append(
+                entry[self._lang] if entry and self._lang in entry else tag
+            )
         return translated
 
     def validate(self) -> None:
@@ -176,6 +183,35 @@ class DevotionalBuilder:
 # =============================================================================
 # CHECKPOINT
 # =============================================================================
+
+_SAFE_IDENTIFIER_CHAR_RE = re.compile(r"[A-Za-z0-9._-]")
+
+
+def slugify_identifier(value: str) -> str:
+    """Turn an external value (e.g. a --model tag) into a filesystem-safe identifier.
+
+    Each character outside [A-Za-z0-9._-] is replaced by its hex code point
+    (e.g. ":" -> "-3a-"), not collapsed to a shared placeholder — collapsing
+    distinct unsafe characters to the same replacement lets two different
+    external values collide onto the same identifier (e.g. "a:b" and "a/b"
+    both becoming "a-b"), which would silently merge two runs' checkpoints.
+    This is the single point every external value must pass through before
+    becoming part of a filename — do not string-interpolate a raw external
+    value into a path anywhere else.
+    """
+    return "".join(
+        c if _SAFE_IDENTIFIER_CHAR_RE.match(c) else f"-{ord(c):x}-" for c in value
+    )
+
+
+def pending_dates(all_dates: list[str], completed: dict) -> list[str]:
+    """Dates from all_dates not yet present in completed, order preserved.
+
+    Resume must be content-based (skip by key), not position-based (skip by
+    count) — completed entries are not guaranteed to be an exact chronological
+    prefix of all_dates across arbitrary runs.
+    """
+    return [d for d in all_dates if d not in completed]
 
 
 @dataclass
@@ -217,8 +253,19 @@ class CheckpointStore:
             "output_dir": output_dir,
             "timestamp": datetime.now().isoformat(),
         }
-        with open(self.checkpoint_file, "w", encoding="utf-8") as f:
-            json.dump(data, f, ensure_ascii=False, indent=2)
+        directory = os.path.dirname(self.checkpoint_file) or "."
+        fd, tmp_path = tempfile.mkstemp(
+            dir=directory, prefix=".checkpoint_", suffix=".tmp"
+        )
+        try:
+            with os.fdopen(fd, "w", encoding="utf-8") as f:
+                json.dump(data, f, ensure_ascii=False, indent=2)
+                f.flush()
+                os.fsync(f.fileno())
+            os.replace(tmp_path, self.checkpoint_file)
+        except BaseException:
+            os.remove(tmp_path)
+            raise
         print(f"  checkpoint saved — {count} completed")
 
     def delete(self) -> None:
