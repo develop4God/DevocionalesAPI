@@ -1,0 +1,38 @@
+target-version = "py312"
+
+[lint]
+# Focused, high-value rule set — real bugs and risk patterns, not style
+# modernization (Python-version upgrade hints) or opinionated formatting-adjacent
+# rules. Reduced from ruff's full default set after a repo-wide audit found
+# ~460 findings, most of them style/UP* modernization noise unrelated to
+# correctness. Extend this list deliberately, not by re-enabling "ALL".
+select = [
+    "F",      # pyflakes — undefined names, unused imports/vars, real bugs
+    "E",      # pycodestyle errors
+    "W",      # pycodestyle warnings
+    "I",      # import sorting
+    "BLE",    # blind except Exception — swallows real errors
+    "S110",   # try/except/pass — silently discards failures
+    "F821",   # undefined name (redundant with F, kept explicit — this is the
+              # one category that means genuinely broken code, not style)
+]
+ignore = [
+    "E501",   # line-too-long — this codebase routinely exceeds 100 chars in
+              # f-strings/prompts (2000+ lines repo-wide); not a correctness
+              # signal here, would be pure noise. Revisit only alongside a
+              # deliberate line-length convention decision, not as a lint default.
+]
+
+# Not selected, and why (so a future "just enable everything" doesn't silently
+# reintroduce ~300 findings of noise):
+#   UP*   — Python-version modernization hints (type hint syntax, etc.) —
+#           style preference, not correctness; revisit once existing code is
+#           on a consistent baseline.
+#   ISC*  — implicit string concatenation — mostly false-positive-prone
+#           against this repo's multi-line prompt-building strings.
+#   DTZ*  — timezone-aware datetime — real signal eventually, deferred for a
+#           dedicated pass (touches datetime.now() call sites repo-wide).
+#   FURB*, PERF*, SIM*, RUF0* — nice-to-have refactor suggestions, not bugs.
+
+[format]
+line-ending = "lf"
