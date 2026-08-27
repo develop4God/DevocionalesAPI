@@ -39,6 +39,8 @@ from seed_generation.shared.generation_core import (
     DevotionalBuilder,
     DevotionalValidationError,
     build_prompt,
+    checkpoint_path_for,
+    checkpoint_status,
     parse_content,
     pending_dates,
     save_output,
@@ -56,15 +58,26 @@ def generate_from_seed(
     model: str | None = None,
     start_date: str | None = None,
     limit: int | None = None,
+    resume: bool | None = None,
 ) -> None:
+    """
+    resume: None = ask interactively when a matching checkpoint is found
+            (default, current behavior). True = resume without asking —
+            for unattended/background runs. False = ignore any checkpoint
+            and start fresh, without asking.
+    """
+    os.makedirs(output_dir, exist_ok=True)
+    checkpoint_file = checkpoint_path_for(output_dir, provider, model)
+
     SEP = "=" * 60
     print("\n" + SEP)
     print("SEED-DRIVEN GENERATOR")
     print(SEP)
-    print(f"  Seed     : {seed_path}")
-    print(f"  Lang     : {master_lang}  Version: {master_version}")
-    print(f"  Provider : {provider}" + (f" ({model})" if model else ""))
-    print(f"  Output   : {output_dir}")
+    print(f"  Seed       : {seed_path}")
+    print(f"  Lang       : {master_lang}  Version: {master_version}")
+    print(f"  Provider   : {provider}" + (f" ({model})" if model else ""))
+    print(f"  Output     : {output_dir}")
+    print(f"  Checkpoint : {checkpoint_file}")
     print(SEP + "\n")
 
     generator = build_generator(provider, model)
@@ -76,12 +89,6 @@ def generate_from_seed(
     total = len(all_dates)
     print(f"INFO: {total} seed entries\n")
 
-    os.makedirs(output_dir, exist_ok=True)
-
-    checkpoint_file = os.path.join(
-        output_dir,
-        f"generate_from_seed_checkpoint_{slugify_identifier(model or provider)}.json",
-    )
     checkpoint = CheckpointStore(checkpoint_file)
 
     completed: dict = {}
@@ -96,6 +103,8 @@ def generate_from_seed(
         all_dates = all_dates[:limit]
         total = len(all_dates)
         print(f"INFO: Limited to first {total} dates (--limit {limit})")
+    elif resume is False:
+        checkpoint.delete()
     else:
         data = checkpoint.load()
         if data and data.get("seed_path") != seed_path:
@@ -105,12 +114,18 @@ def generate_from_seed(
                 f"({seed_path!r}) — ignoring it and starting fresh."
             )
         elif data:
-            ans = (
-                input(f"\nCheckpoint — {data['completed_count']} done. Resume? (y/n): ")
-                .strip()
-                .lower()
-            )
-            if ans == "y":
+            if resume is True:
+                should_resume = True
+            else:
+                ans = (
+                    input(
+                        f"\nCheckpoint — {data['completed_count']} done. Resume? (y/n): "
+                    )
+                    .strip()
+                    .lower()
+                )
+                should_resume = ans == "y"
+            if should_resume:
                 completed = data["completed"]
                 print(f"INFO: Resuming — {len(completed)}/{total} already done\n")
 
@@ -213,6 +228,31 @@ def generate_from_seed(
     print("=" * 60 + "\n")
 
 
+def print_status(
+    seed_path: str, provider: str, model: str | None, output_dir: str
+) -> None:
+    """Report a checkpoint's progress for this (seed, provider, model) without
+    starting generation — for `--status`."""
+    with open(seed_path, encoding="utf-8") as f:
+        total = len(json.load(f))
+    checkpoint_file = checkpoint_path_for(output_dir, provider, model)
+    status = checkpoint_status(checkpoint_file, total=total, seed_path=seed_path)
+    if status is None:
+        print(f"No checkpoint found at {checkpoint_file}")
+        print(f"({total} seed entries, 0 done)")
+        return
+    print(f"Checkpoint : {status['checkpoint_file']}")
+    if status["seed_matches"]:
+        print("Seed match : yes")
+    else:
+        print(
+            f"Seed match : NO — checkpoint was for {status['checkpoint_seed_path']!r}"
+        )
+    print(f"Done       : {status['done']}/{status['total']}")
+    print(f"Pending    : {status['pending']}")
+    print(f"Last saved : {status['timestamp']}")
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Provider-swappable seed-driven devotional generator"
@@ -244,6 +284,25 @@ def main():
         default=None,
         help="Max seed entries to generate — e.g. 5 for a quick test instead of the full seed",
     )
+    resume_group = parser.add_mutually_exclusive_group()
+    resume_group.add_argument(
+        "--resume",
+        action="store_true",
+        default=None,
+        help="Resume from an existing checkpoint without the interactive prompt "
+        "(for unattended/background runs)",
+    )
+    resume_group.add_argument(
+        "--no-resume",
+        dest="resume",
+        action="store_false",
+        help="Ignore and delete any existing checkpoint, start fresh without asking",
+    )
+    parser.add_argument(
+        "--status",
+        action="store_true",
+        help="Report checkpoint progress (done/pending) and exit — no generation runs",
+    )
     args = parser.parse_args()
 
     output_dir = args.output_dir or os.path.join(
@@ -254,6 +313,10 @@ def main():
         args.lang,
     )
 
+    if args.status:
+        print_status(args.seed, args.provider, args.model, output_dir)
+        return
+
     generate_from_seed(
         seed_path=args.seed,
         master_lang=args.lang,
@@ -263,6 +326,7 @@ def main():
         model=args.model,
         start_date=args.start_date,
         limit=args.limit,
+        resume=args.resume,
     )
 
 

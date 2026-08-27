@@ -204,6 +204,20 @@ def slugify_identifier(value: str) -> str:
     )
 
 
+def checkpoint_path_for(output_dir: str, provider: str, model: str | None) -> str:
+    """The one place a (provider, model) pair maps to its checkpoint file path.
+
+    Both the generator (to load/save) and any status/inspection tooling (to
+    find a checkpoint without running generation) must compute this the same
+    way — a second, slightly-different f-string for the same path is exactly
+    the kind of drift that causes a checkpoint to silently go "missing".
+    """
+    return os.path.join(
+        output_dir,
+        f"generate_from_seed_checkpoint_{slugify_identifier(model or provider)}.json",
+    )
+
+
 def pending_dates(all_dates: list[str], completed: dict) -> list[str]:
     """Dates from all_dates not yet present in completed, order preserved.
 
@@ -212,6 +226,30 @@ def pending_dates(all_dates: list[str], completed: dict) -> list[str]:
     prefix of all_dates across arbitrary runs.
     """
     return [d for d in all_dates if d not in completed]
+
+
+def checkpoint_status(checkpoint_file: str, total: int, seed_path: str) -> dict | None:
+    """Read a checkpoint's progress without starting generation.
+
+    Returns None if no checkpoint file exists at that path. Otherwise a dict
+    with done/pending/total counts and whether the checkpoint's own seed_path
+    matches the seed you're about to run against — the same mismatch check
+    generate_from_seed() makes before offering to resume, exposed here so it
+    can be inspected without triggering the interactive resume prompt.
+    """
+    data = CheckpointStore(checkpoint_file).load()
+    if data is None:
+        return None
+    done = data["completed_count"]
+    return {
+        "checkpoint_file": checkpoint_file,
+        "done": done,
+        "pending": total - done,
+        "total": total,
+        "seed_matches": data.get("seed_path") == seed_path,
+        "checkpoint_seed_path": data.get("seed_path"),
+        "timestamp": data.get("timestamp"),
+    }
 
 
 @dataclass

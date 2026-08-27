@@ -17,9 +17,25 @@ import unittest
 
 from seed_generation.shared.generation_core import (
     CheckpointStore,
+    checkpoint_path_for,
+    checkpoint_status,
     pending_dates,
     slugify_identifier,
 )
+
+
+class TestCheckpointPathFor(unittest.TestCase):
+    def test_uses_model_when_given(self):
+        path = checkpoint_path_for("out", "ollama", "gemma4:26b")
+        self.assertIn(slugify_identifier("gemma4:26b"), path)
+
+    def test_falls_back_to_provider_when_no_model(self):
+        path = checkpoint_path_for("out", "gemini", None)
+        self.assertIn("gemini", path)
+
+    def test_joined_under_output_dir(self):
+        path = checkpoint_path_for("some/out/dir", "ollama", "gemma4:26b")
+        self.assertTrue(path.startswith("some/out/dir"))
 
 
 class TestSlugifyIdentifier(unittest.TestCase):
@@ -69,6 +85,44 @@ class TestPendingDates(unittest.TestCase):
         all_dates = ["2027-01-01", "2027-01-02"]
         completed = {"2027-01-01": {}, "2027-01-02": {}}
         self.assertEqual(pending_dates(all_dates, completed), [])
+
+
+class TestCheckpointStatus(unittest.TestCase):
+    def setUp(self):
+        self.tmpdir = tempfile.TemporaryDirectory()
+        self.checkpoint_file = os.path.join(self.tmpdir.name, "checkpoint.json")
+
+    def tearDown(self):
+        self.tmpdir.cleanup()
+
+    def test_no_checkpoint_file_returns_none(self):
+        self.assertIsNone(
+            checkpoint_status(self.checkpoint_file, total=10, seed_path="seed.json")
+        )
+
+    def test_reports_done_and_pending_counts(self):
+        CheckpointStore(self.checkpoint_file).save(
+            {"2027-01-01": {}, "2027-01-02": {}},
+            2,
+            "seed.json",
+            "es",
+            "RVR1960",
+            "out/",
+        )
+        status = checkpoint_status(self.checkpoint_file, total=5, seed_path="seed.json")
+        self.assertEqual(status["done"], 2)
+        self.assertEqual(status["pending"], 3)
+        self.assertEqual(status["total"], 5)
+        self.assertTrue(status["seed_matches"])
+
+    def test_flags_seed_mismatch(self):
+        CheckpointStore(self.checkpoint_file).save(
+            {"2027-01-01": {}}, 1, "old_seed.json", "es", "RVR1960", "out/"
+        )
+        status = checkpoint_status(
+            self.checkpoint_file, total=5, seed_path="new_seed.json"
+        )
+        self.assertFalse(status["seed_matches"])
 
 
 class TestCheckpointStoreAtomicSave(unittest.TestCase):

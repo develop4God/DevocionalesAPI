@@ -23,3 +23,8 @@ include = ["seed_generation*"]
 [build-system]
 requires = ["setuptools>=61"]
 build-backend = "setuptools.build_meta"
+
+[dependency-groups]
+dev = [
+    "ruff>=0.16.4",
+]
