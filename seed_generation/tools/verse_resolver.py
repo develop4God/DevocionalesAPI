@@ -159,6 +159,7 @@ def fetch_text(
     # below, not its content.
     combined = re.sub(r"<f>.*?</f>", "", combined)
     combined = re.sub(r"<n>.*?</n>", "", combined)
+    combined = re.sub(r"<S>.*?</S>", "", combined)  # Strong's number, e.g. "<S>25</S>"
     combined = re.sub(r"<[^>]+>", "", combined)  # strip remaining XML tags
     combined = re.sub(r"[①-⓿]", "", combined)  # strip Unicode ref markers
     combined = re.sub(r"\s+", " ", combined).strip()
