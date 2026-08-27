@@ -206,17 +206,24 @@ def _resume(entry: dict) -> None:
     input(_c("\n  Press Enter to continue…", _DIM))
 
 
-def main() -> None:
+def run_dashboard(output_root: str = _OUTPUT_ROOT) -> None:
+    """The dashboard's interactive loop — reusable from a wrapping menu
+    (seed_generation/main.py) as well as standalone `python -m ...dashboard`.
+    """
     while True:
         os.system("clear")
         _banner()
-        entries = discover_checkpoints()
+        entries = discover_checkpoints(output_root)
         _print_checkpoints(entries)
         chosen = _choose(entries)
         if chosen is None:
             print(_c("\n  Goodbye.\n", _DIM))
             break
         _resume(chosen)
+
+
+def main() -> None:
+    run_dashboard()
 
 
 if __name__ == "__main__":

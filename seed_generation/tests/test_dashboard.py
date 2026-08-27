@@ -13,7 +13,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-from seed_generation.dashboard import _resume, discover_checkpoints
+from seed_generation.dashboard import _resume, discover_checkpoints, run_dashboard
 from seed_generation.shared.generation_core import CheckpointStore, checkpoint_path_for
 
 
@@ -169,6 +169,17 @@ class TestResume(unittest.TestCase):
             _resume(entry)  # must not raise
         outputs = [f for f in os.listdir(self.lang_dir) if f.startswith("raw_")]
         self.assertEqual(outputs, [])  # nothing generated — refused safely
+
+
+class TestRunDashboardIsReusable(unittest.TestCase):
+    def test_exits_cleanly_with_no_checkpoints_and_empty_input(self):
+        # A top-level main.py menu needs to call into the dashboard loop as a
+        # plain function (not just `python -m seed_generation.dashboard`) —
+        # run_dashboard() must exist, take an output_root, and return (not
+        # sys.exit / not raise) when the user immediately backs out.
+        with tempfile.TemporaryDirectory() as tmp:
+            with patch("os.system"), patch("builtins.input", return_value=""):
+                run_dashboard(output_root=tmp)  # must not raise
 
 
 if __name__ == "__main__":
