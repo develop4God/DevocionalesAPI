@@ -10,7 +10,7 @@ devotional content (reflexion + oracion) from it via a provider.
 Replaces the old server/client split (API_Server_Seed.py +
 client_generate_from_seed.py) for local/direct providers — no HTTP,
 no server process. One prompt + parser (generation_core.build_prompt /
-parse_content), one assembly step (generation_core.DevotionalBuilder),
+parse_content), one assembly step (generation_core.ContentBuilder),
 any provider from providers.py — all in seed_generation/shared/.
 
 Usage:
@@ -36,7 +36,7 @@ from datetime import datetime
 
 from seed_generation.shared.generation_core import (
     CheckpointStore,
-    DevotionalBuilder,
+    ContentBuilder,
     DevotionalValidationError,
     build_prompt,
     checkpoint_path_for,
@@ -161,10 +161,10 @@ def generate_from_seed(
             raw = generator.generate(prompt)
             reflexion, oracion = parse_content(raw)
 
-            builder = DevotionalBuilder(
-                date_key, seed_entry, master_lang, master_version
-            )
-            devotional = builder.merge(reflexion, oracion).build()
+            builder = ContentBuilder(date_key, seed_entry, master_lang, master_version)
+            devotional = builder.merge(
+                {"reflexion": reflexion, "oracion": oracion}
+            ).build()
             completed[date_key] = devotional
             success_count += 1
             print(f"  OK — {len(reflexion)} chars | tags: {devotional['tags']}")

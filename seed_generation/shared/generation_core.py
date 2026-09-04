@@ -5,7 +5,7 @@ Provider-agnostic shared logic for seed-driven devotional generation.
 
 Extracted from the duplicated code in client_generate_from_seed.py,
 client_generate_from_seed_claude.py, and test_generate_ollama.py:
-DevotionalBuilder, checkpoint load/save/delete, and save_output were
+ContentBuilder, checkpoint load/save/delete, and save_output were
 each reimplemented identically in all three files. This module is the
 single source of truth going forward.
 
@@ -40,6 +40,27 @@ def _load_tags_master() -> dict:
 
 def _normalize_tag(tag: str) -> str:
     return re.sub(r"[\s\-']", "", tag).lower()
+
+
+def translate_tags(tags: list, lang: str) -> list:
+    if lang == "en":
+        return tags
+    tags_master = _load_tags_master()
+    translated = []
+    for tag in tags:
+        entry = tags_master.get(_normalize_tag(tag))
+        translated.append(entry[lang] if entry and lang in entry else tag)
+    return translated
+
+
+def build_devotional_seed_entry(
+    cita: str, texto: str, para_meditar: list, tags: list
+) -> dict:
+    return {
+        "versiculo": {"cita": cita, "texto": texto},
+        "para_meditar": para_meditar,
+        "tags": tags,
+    }
 
 
 # =============================================================================
@@ -108,7 +129,7 @@ class DevotionalValidationError(ValueError):
     pass
 
 
-class DevotionalBuilder:
+class ContentBuilder:
     def __init__(
         self, date_key: str, seed_entry: dict, master_lang: str, master_version: str
     ):
@@ -116,12 +137,11 @@ class DevotionalBuilder:
         self._seed = seed_entry
         self._lang = master_lang
         self._version = master_version
-        self._reflexion = ""
-        self._oracion = ""
+        self._fields: dict = {}
 
-    def merge(self, reflexion: str, oracion: str) -> "DevotionalBuilder":
-        self._reflexion = reflexion.strip()
-        self._oracion = oracion.strip()
+    def merge(self, fields: dict) -> "ContentBuilder":
+        """fields: the format-specific generated content, e.g. {"reflexion": ..., "oracion": ...}."""
+        self._fields = fields
         return self
 
     def _build_versiculo(self) -> str:
@@ -152,10 +172,6 @@ class DevotionalBuilder:
 
     def validate(self) -> None:
         errors = []
-        if not self._reflexion:
-            errors.append("reflexion empty")
-        if not self._oracion:
-            errors.append("oracion empty")
         if not self._seed.get("versiculo", {}).get("cita"):
             errors.append("cita missing")
         if not self._seed.get("versiculo", {}).get("texto"):
@@ -173,10 +189,9 @@ class DevotionalBuilder:
             "language": self._lang,
             "version": self._version,
             "versiculo": self._build_versiculo(),
-            "reflexion": self._reflexion,
             "para_meditar": self._seed["para_meditar"],
-            "oracion": self._oracion,
             "tags": self._extract_tags(),
+            **self._fields,
         }
 
 
