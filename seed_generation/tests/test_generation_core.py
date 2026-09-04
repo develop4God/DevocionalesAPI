@@ -17,11 +17,98 @@ import unittest
 
 from seed_generation.shared.generation_core import (
     CheckpointStore,
+    ContentBuilder,
+    DevotionalValidationError,
+    build_devotional_seed_entry,
     checkpoint_path_for,
     checkpoint_status,
     pending_dates,
     slugify_identifier,
+    translate_tags,
 )
+
+
+class TestTranslateTags(unittest.TestCase):
+    def test_english_returns_tags_unchanged(self):
+        self.assertEqual(translate_tags(["abide", "faith"], "en"), ["abide", "faith"])
+
+    def test_translates_known_tag_to_target_language(self):
+        self.assertEqual(translate_tags(["abide"], "es"), ["Permanecer"])
+
+    def test_unknown_tag_falls_back_to_original(self):
+        self.assertEqual(translate_tags(["not-a-real-tag"], "es"), ["not-a-real-tag"])
+
+    def test_normalizes_case_and_punctuation_before_lookup(self):
+        self.assertEqual(translate_tags(["Abide"], "es"), ["Permanecer"])
+
+
+class TestBuildDevotionalSeedEntry(unittest.TestCase):
+    def test_builds_expected_shape(self):
+        para_meditar = [{"cita": "Romanos 5:8", "texto": "texto"}]
+        entry = build_devotional_seed_entry(
+            "Juan 3:16", "texto del versiculo", para_meditar, ["fe"]
+        )
+        self.assertEqual(
+            entry,
+            {
+                "versiculo": {"cita": "Juan 3:16", "texto": "texto del versiculo"},
+                "para_meditar": para_meditar,
+                "tags": ["fe"],
+            },
+        )
+
+    def test_empty_para_meditar_and_tags_are_preserved_not_defaulted(self):
+        entry = build_devotional_seed_entry("Juan 3:16", "texto", [], [])
+        self.assertEqual(entry["para_meditar"], [])
+        self.assertEqual(entry["tags"], [])
+
+
+class TestContentBuilder(unittest.TestCase):
+    def _seed_entry(self, **overrides):
+        base = {
+            "versiculo": {"cita": "Juan 3:16", "texto": "texto del versiculo"},
+            "para_meditar": [{"cita": "Romanos 5:8", "texto": "texto"}],
+            "tags": ["fe"],
+        }
+        base.update(overrides)
+        return base
+
+    def test_build_merges_arbitrary_fields_into_the_common_shape(self):
+        builder = ContentBuilder("2027-01-01", self._seed_entry(), "es", "RVR1960")
+        devo = builder.merge({"reflexion": "r", "oracion": "o"}).build()
+        self.assertEqual(devo["id"], "Juan316RVR196020270101")
+        self.assertEqual(devo["date"], "2027-01-01")
+        self.assertEqual(devo["language"], "es")
+        self.assertEqual(devo["version"], "RVR1960")
+        self.assertEqual(devo["versiculo"], 'Juan 3:16 RVR1960: "texto del versiculo"')
+        self.assertEqual(devo["reflexion"], "r")
+        self.assertEqual(devo["oracion"], "o")
+
+    def test_build_works_with_a_different_field_set_for_another_format(self):
+        # The generalization this class exists for: any fields dict merges in,
+        # not just devotional's reflexion/oracion.
+        builder = ContentBuilder("2027-01-01", self._seed_entry(), "es", "RVR1960")
+        devo = builder.merge({"discussion_questions": ["q1", "q2"]}).build()
+        self.assertEqual(devo["discussion_questions"], ["q1", "q2"])
+        self.assertNotIn("reflexion", devo)
+
+    def test_missing_cita_raises_validation_error(self):
+        seed_entry = self._seed_entry(versiculo={"cita": "", "texto": "x"})
+        builder = ContentBuilder("2027-01-01", seed_entry, "es", "RVR1960")
+        with self.assertRaises(DevotionalValidationError):
+            builder.merge({"reflexion": "r"}).build()
+
+    def test_empty_para_meditar_raises_validation_error(self):
+        seed_entry = self._seed_entry(para_meditar=[])
+        builder = ContentBuilder("2027-01-01", seed_entry, "es", "RVR1960")
+        with self.assertRaises(DevotionalValidationError):
+            builder.merge({"reflexion": "r"}).build()
+
+    def test_missing_tags_default_to_devotional_fe(self):
+        seed_entry = self._seed_entry(tags=[])
+        builder = ContentBuilder("2027-01-01", seed_entry, "es", "RVR1960")
+        devo = builder.merge({"reflexion": "r"}).build()
+        self.assertEqual(devo["tags"], ["devotional", "fe"])
 
 
 class TestCheckpointPathFor(unittest.TestCase):

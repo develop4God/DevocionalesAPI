@@ -22,6 +22,8 @@ from datetime import date, timedelta
 from bible_text_normalizer import clean_resolved as clean
 from verse_resolver import VerseResolver
 
+from seed_generation.shared.generation_core import build_devotional_seed_entry
+
 
 def build_seed(pilot_path: str, db_path: str, start_date: str, out_path: str) -> None:
     with open(pilot_path, encoding="utf-8") as f:
@@ -50,11 +52,9 @@ def build_seed(pilot_path: str, db_path: str, start_date: str, out_path: str) ->
             tags = [entry["primary_tag"]] + entry.get("secondary_tags", [])
 
             date_key = current_date.isoformat()
-            seed[date_key] = {
-                "versiculo": {"cita": cita, "texto": texto},
-                "para_meditar": para_meditar,
-                "tags": tags,
-            }
+            seed[date_key] = build_devotional_seed_entry(
+                cita, texto, para_meditar, tags
+            )
             current_date += timedelta(days=1)
 
     with open(out_path, "w", encoding="utf-8") as f:
@@ -68,8 +68,12 @@ def build_seed(pilot_path: str, db_path: str, start_date: str, out_path: str) ->
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Build a KJV seed file from a pilot verse list")
-    parser.add_argument("--pilot", required=True, help="Path to pilot JSON (reference/related/tags)")
+    parser = argparse.ArgumentParser(
+        description="Build a KJV seed file from a pilot verse list"
+    )
+    parser.add_argument(
+        "--pilot", required=True, help="Path to pilot JSON (reference/related/tags)"
+    )
     parser.add_argument("--db", required=True, help="Path to KJV SQLite DB")
     parser.add_argument("--start-date", required=True, help="First date YYYY-MM-DD")
     parser.add_argument("--out", required=True, help="Output seed file path")

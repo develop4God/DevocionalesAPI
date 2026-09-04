@@ -2,7 +2,7 @@
 generate_from_seed.py — Seed-driven devotional generator.
 Works with API_Server_Seed.py.
 
-Python owns: DevotionalBuilder, tags, ID, versiculo field,
+Python owns: ContentBuilder, tags, ID, versiculo field,
              para_meditar, checkpoint, final JSON structure.
 Gemini provides: reflexion + oracion only.
 """
@@ -12,11 +12,15 @@ import os
 import signal
 import sys
 import time
-import requests
 from datetime import datetime
 from tkinter import Tk, filedialog, messagebox, simpledialog
 
-from seed_generation.shared.generation_core import DevotionalBuilder, DevotionalValidationError
+import requests
+
+from seed_generation.shared.generation_core import (
+    ContentBuilder,
+    DevotionalValidationError,
+)
 
 API_URL = "http://127.0.0.1:50003/generate_creative"
 REQUEST_TIMEOUT = 300
@@ -260,10 +264,12 @@ def generate_from_seed(
             oracion = data.get("oracion", "").strip()
 
             try:
-                builder = DevotionalBuilder(
+                builder = ContentBuilder(
                     date_key, seed_entry, master_lang, master_version
                 )
-                devotional = builder.merge(reflexion, oracion).build()
+                devotional = builder.merge(
+                    {"reflexion": reflexion, "oracion": oracion}
+                ).build()
                 completed[date_key] = devotional
                 success_count += 1
                 print(
