@@ -33,9 +33,18 @@ try:
 except ImportError:
     pass
 
-from pipeline_shared import repair_json, build_prompt
-from pipeline_shared import _check_prayer_ending, _load_prayer_endings
-from provider_adapter import load_adapter, BatchRequest, RawResult
+from pipeline_shared import (
+    _check_prayer_ending,
+    _load_prayer_endings,
+    build_prompt,
+    repair_json,
+)
+from provider_adapter import BatchRequest, RawResult, load_adapter
+
+from seed_generation.shared.generation_core import (
+    ContentBuilder,
+    DevotionalValidationError,
+)
 
 _SCRIPT_DIR = Path(__file__).parent
 
@@ -116,26 +125,12 @@ def run_phase1(reflexion: str, oracion: str, lang: str) -> tuple[bool, list[str]
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Devotional builder  (identical to original)
+# Devotional builder
 # ─────────────────────────────────────────────────────────────────────────────
 
 
 def _safe_custom_id(date_key: str) -> str:
     return re.sub(r"[^a-zA-Z0-9_-]", "_", date_key)[:64]
-
-
-def _build_id(date_key: str, seed_entry: dict, lang: str, version: str) -> str:
-    cita = seed_entry.get("versiculo", {}).get("cita", "")
-    book_ref = re.sub(r"[^A-Za-z0-9]", "", cita)[:10]
-    date_slug = date_key.replace("-", "")
-    return f"{book_ref}{version}{date_slug}"
-
-
-def _build_versiculo_str(seed_entry: dict, version: str) -> str:
-    v = seed_entry.get("versiculo", {})
-    cita = v.get("cita", "")
-    txt = v.get("texto", "")
-    return f'{cita} {version}: "{txt}"'
 
 
 def build_devotional(
@@ -146,28 +141,14 @@ def build_devotional(
     reflexion: str,
     oracion: str,
 ) -> dict:
-    required = ["versiculo", "para_meditar"]
-    for k in required:
-        if not seed_entry.get(k):
-            raise ValueError(f"[{date_key}] seed missing required field: {k}")
-    if not seed_entry["versiculo"].get("cita"):
-        raise ValueError(f"[{date_key}] versiculo.cita is empty")
-
-    tags = seed_entry.get("tags", [])
-    if not isinstance(tags, list) or not tags:
-        tags = ["devotional"]
-
-    return {
-        "id": _build_id(date_key, seed_entry, lang, version),
-        "date": date_key,
-        "language": lang,
-        "version": version,
-        "versiculo": _build_versiculo_str(seed_entry, version),
-        "reflexion": reflexion,
-        "para_meditar": seed_entry["para_meditar"],
-        "oracion": oracion,
-        "tags": tags,
-    }
+    try:
+        return (
+            ContentBuilder(date_key, seed_entry, lang, version)
+            .merge({"reflexion": reflexion, "oracion": oracion})
+            .build()
+        )
+    except DevotionalValidationError as e:
+        raise ValueError(str(e)) from e
 
 
 # ─────────────────────────────────────────────────────────────────────────────

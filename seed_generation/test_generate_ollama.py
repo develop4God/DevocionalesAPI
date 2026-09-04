@@ -2,7 +2,7 @@
 test_generate_ollama.py — Standalone quality-test script for a local Ollama model.
 
 Generates devotionals (reflexion + oracion) for a small seed slice, in-process,
-without running the FastAPI server. Same prompt shape and DevotionalBuilder
+without running the FastAPI server. Same prompt shape and ContentBuilder
 as API_Server_Seed.py / client_generate_from_seed.py, so output is directly
 comparable to Gemini/Claude runs.
 
@@ -20,13 +20,19 @@ import time
 import urllib.error
 import urllib.request
 
-from seed_generation.shared.generation_core import DevotionalBuilder, DevotionalValidationError
+from seed_generation.shared.generation_core import (
+    ContentBuilder,
+    DevotionalValidationError,
+)
 
 OLLAMA_URL = "http://localhost:11434/api/generate"
 DEFAULT_MODEL = "gemma4:26b"
 DEFAULT_SEED = os.path.join(
     os.path.dirname(os.path.abspath(__file__)),
-    "2026", "seeds", "ES", "seed_es_RVR1960_ollama_test.json",
+    "2026",
+    "seeds",
+    "ES",
+    "seed_es_RVR1960_ollama_test.json",
 )
 MASTER_LANG = "es"
 MASTER_VERSION = "RVR1960"
@@ -122,8 +128,10 @@ def main():
         )
 
         try:
-            builder = DevotionalBuilder(date_key, seed_entry, MASTER_LANG, MASTER_VERSION)
-            devotional = builder.merge(reflexion, oracion).build()
+            builder = ContentBuilder(date_key, seed_entry, MASTER_LANG, MASTER_VERSION)
+            devotional = builder.merge(
+                {"reflexion": reflexion, "oracion": oracion}
+            ).build()
             completed[date_key] = devotional
         except DevotionalValidationError as e:
             print(f"  Validation error: {e}")
@@ -137,10 +145,16 @@ def main():
 
     ts = time.strftime("%Y%m%d_%H%M%S")
     out_dir = os.path.dirname(os.path.abspath(args.seed))
-    out_path = os.path.join(out_dir, f"ollama_test_{args.model.replace(':', '-')}_{ts}.json")
+    out_path = os.path.join(
+        out_dir, f"ollama_test_{args.model.replace(':', '-')}_{ts}.json"
+    )
     with open(out_path, "w", encoding="utf-8") as f:
-        json.dump({"data": {MASTER_LANG: {d: [v] for d, v in completed.items()}}}, f,
-                   ensure_ascii=False, indent=2)
+        json.dump(
+            {"data": {MASTER_LANG: {d: [v] for d, v in completed.items()}}},
+            f,
+            ensure_ascii=False,
+            indent=2,
+        )
 
     print("=" * 60)
     print(f"Generated {len(completed)}/{len(dates)} devotionals")

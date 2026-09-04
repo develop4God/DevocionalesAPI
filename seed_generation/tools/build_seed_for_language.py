@@ -17,30 +17,13 @@ Usage:
 import argparse
 import json
 import re
-from pathlib import Path
 
 from verse_resolver import VerseResolver
 
-_TAGS_MASTER_PATH = Path(__file__).parent.parent / "tags_master.json"
-
-
-def _normalize_tag(tag: str) -> str:
-    return re.sub(r"[\s\-']", "", tag).lower()
-
-
-def _load_tags_master() -> dict:
-    with open(_TAGS_MASTER_PATH, encoding="utf-8") as f:
-        return json.load(f)["tags"]
-
-
-def _translate_tags(tags: list, lang: str, tags_master: dict) -> list:
-    if lang == "en":
-        return tags
-    translated = []
-    for tag in tags:
-        entry = tags_master.get(_normalize_tag(tag))
-        translated.append(entry[lang] if entry and lang in entry else tag)
-    return translated
+from seed_generation.shared.generation_core import (
+    build_devotional_seed_entry,
+    translate_tags,
+)
 
 # Some MyBible-format DBs (e.g. RVR1960_es, ARC_pt) store Gospel/epistle
 # long_names with a denominational "S." (San/Santo/São) prefix — "S. Mateo",
@@ -69,7 +52,6 @@ def build_seed(source_seed_path: str, db_path: str, lang: str, out_path: str) ->
     with open(source_seed_path, encoding="utf-8") as f:
         source = json.load(f)
 
-    tags_master = _load_tags_master()
     seed = {}
     errors = []
 
@@ -89,18 +71,20 @@ def build_seed(source_seed_path: str, db_path: str, lang: str, out_path: str) ->
             for p in entry["para_meditar"]:
                 r_cita, r_texto, r_err = resolver.resolve(p["cita"])
                 if r_err:
-                    errors.append({"date": date_key, "reference": p["cita"], "error": r_err})
+                    errors.append(
+                        {"date": date_key, "reference": p["cita"], "error": r_err}
+                    )
                     continue
-                para_meditar.append({
-                    "cita": _strip_s_prefix(r_cita),
-                    "texto": _capitalize_first_letter(r_texto),
-                })
+                para_meditar.append(
+                    {
+                        "cita": _strip_s_prefix(r_cita),
+                        "texto": _capitalize_first_letter(r_texto),
+                    }
+                )
 
-            seed[date_key] = {
-                "versiculo": {"cita": cita, "texto": texto},
-                "para_meditar": para_meditar,
-                "tags": _translate_tags(entry["tags"], lang, tags_master),
-            }
+            seed[date_key] = build_devotional_seed_entry(
+                cita, texto, para_meditar, translate_tags(entry["tags"], lang)
+            )
 
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(seed, f, ensure_ascii=False, indent=2)
@@ -113,10 +97,18 @@ def build_seed(source_seed_path: str, db_path: str, lang: str, out_path: str) ->
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Build a target-language seed from an existing English seed")
-    parser.add_argument("--source-seed", required=True, help="Path to source English seed JSON")
-    parser.add_argument("--db", required=True, help="Path to target-language SQLite Bible DB")
-    parser.add_argument("--lang", required=True, help="Target language code, e.g. es, pt")
+    parser = argparse.ArgumentParser(
+        description="Build a target-language seed from an existing English seed"
+    )
+    parser.add_argument(
+        "--source-seed", required=True, help="Path to source English seed JSON"
+    )
+    parser.add_argument(
+        "--db", required=True, help="Path to target-language SQLite Bible DB"
+    )
+    parser.add_argument(
+        "--lang", required=True, help="Target language code, e.g. es, pt"
+    )
     parser.add_argument("--out", required=True, help="Output seed file path")
     args = parser.parse_args()
 
