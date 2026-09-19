@@ -45,6 +45,13 @@ def load_entries(json_path: str, lang: str) -> dict[str, list[str]]:
     return {date: entry.get("tags", []) for date, entry in data.items()}
 
 
+def _normalize_tag(tag: str) -> str:
+    """Lowercase + strip spaces, hyphens, apostrophes — mirrors extract_seed.py's normalize_tag."""
+    import re
+
+    return re.sub(r"[\s\-']+", "", tag).lower()
+
+
 def expected_translation(en_tag: str, target_lang: str, tags_master: dict) -> str | None:
     """
     Look up en_tag's canonical entry in tags_master.json (keyed by the EN
@@ -53,8 +60,11 @@ def expected_translation(en_tag: str, target_lang: str, tags_master: dict) -> st
     """
     entry = tags_master.get(en_tag)
     if entry is None:
+        entry = tags_master.get(_normalize_tag(en_tag))
+    if entry is None:
+        norm = _normalize_tag(en_tag)
         for candidate in tags_master.values():
-            if candidate.get("en") == en_tag:
+            if candidate.get("en") == en_tag or _normalize_tag(candidate.get("en", "")) == norm:
                 entry = candidate
                 break
     if entry is None:
