@@ -70,6 +70,14 @@ KJV_URLS = {
 _LOCAL_KJV = {
     2025: os.path.join(_SCRIPT_DIR, "BASE1-Devocional_year_2025_en_KJV.json"),
     2026: os.path.join(_SCRIPT_DIR, "BASE2-Devocional_year_2026_en_KJV.json"),
+    2027: os.path.join(
+        _SCRIPT_DIR,
+        "..",
+        "2027",
+        "yearly_devotionals",
+        "EN",
+        "Devocional_year_2027_en_KJV.json",
+    ),
 }
 
 DB_DIR = os.path.join(_SCRIPT_DIR, "Bibles")
