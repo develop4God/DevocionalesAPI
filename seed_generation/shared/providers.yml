@@ -23,7 +23,7 @@ providers:
   ollama:
     kind: local
     url: http://localhost:11434/api/generate
-    timeout_seconds: 180
+    timeout_seconds: 300
     models:
       gemma4-26b:
         model_id: gemma4:26b
