@@ -36,7 +36,6 @@ def run(cmd: list[str]) -> subprocess.CompletedProcess:
 def find_running_instance() -> dict | None:
     result = run([
         "oci", "compute", "instance", "list",
-        "--auth", "security_token",
         "--compartment-id", COMPARTMENT_ID,
         "--display-name", DISPLAY_NAME,
         "--lifecycle-state", "RUNNING",
@@ -56,7 +55,6 @@ def find_running_instance() -> dict | None:
 def get_public_ip(instance_id: str) -> str | None:
     result = run([
         "oci", "compute", "instance", "list-vnics",
-        "--auth", "security_token",
         "--instance-id", instance_id,
     ])
     if result.returncode != 0 or not result.stdout.strip():

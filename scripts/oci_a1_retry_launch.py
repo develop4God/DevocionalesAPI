@@ -9,8 +9,8 @@ it by hand.
 Usage:
     python3 scripts/oci_a1_retry_launch.py
 
-Requires the OCI CLI configured with a valid session (oci session authenticate),
-using --auth security_token like the rest of this session's commands.
+Requires the OCI CLI configured with a permanent API key profile in
+~/.oci/config (no browser session token, so it never expires mid-run).
 """
 import json
 import subprocess
@@ -44,7 +44,6 @@ LAUNCH_TIMEOUT_SECONDS = 60
 def launch(ad: str) -> tuple[bool, str]:
     cmd = [
         "oci", "compute", "instance", "launch",
-        "--auth", "security_token",
         "--availability-domain", ad,
         "--compartment-id", COMPARTMENT_ID,
         "--display-name", DISPLAY_NAME,
