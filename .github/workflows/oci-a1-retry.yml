@@ -97,14 +97,20 @@ jobs:
                 continue
               fi
 
+              if echo "$OUTPUT" | grep -qE '"status": 429|TooManyRequests'; then
+                echo "Rate limited (429) on $AD. Backing off for 90s before continuing."
+                sleep 90
+                continue
+              fi
+
               echo "Unexpected error on $AD:"
               echo "$OUTPUT"
               exit 1
             done
 
             if [ "$(date +%s)" -lt "$DEADLINE" ]; then
-              echo "All ADs out of capacity this round, sleeping 20s..."
-              sleep 20
+              echo "All ADs out of capacity this round, sleeping 30s..."
+              sleep 30
             fi
           done
 
