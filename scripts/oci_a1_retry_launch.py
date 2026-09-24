@@ -7,16 +7,20 @@ Usage:
 Requires the OCI CLI configured with a valid session (oci session authenticate),
 using --auth security_token like the rest of this session's commands.
 """
+import json
 import subprocess
 import sys
 import time
 from datetime import datetime
+from pathlib import Path
 
 COMPARTMENT_ID = "ocid1.tenancy.oc1..aaaaaaaar4akt2yj6opp7jkpzc7dzkog2kki2swroy5ee5c3shvephg27tea"
 IMAGE_ID = "ocid1.image.oc1.iad.aaaaaaaacuygljashkvpqu5qqmlausq2vwrwasp3lxpbpitxjhvbhsktlhma"
 SUBNET_ID = "ocid1.subnet.oc1.iad.aaaaaaaagokuawamgikuy2r5uf4gsnrei3ctnbjn4irvbvwvuavqg4ssnmza"
 SSH_KEY_FILE = "/home/develop4god/.ssh/oracle_devocional.pub"
 DISPLAY_NAME = "gemma4-12b-server"
+
+RESULT_FILE = Path(__file__).parent / "gemma4_12b_server_instance.json"
 
 ADS = [
     "YOyk:US-ASHBURN-AD-1",
@@ -56,6 +60,12 @@ def main() -> None:
             if ok:
                 print(f"[{ts}] SUCCESS on {ad}!\n")
                 print(output)
+                data = json.loads(output)
+                RESULT_FILE.write_text(json.dumps({
+                    "instance_id": data["data"]["id"],
+                    "availability_domain": ad,
+                }, indent=2))
+                print(f"Instance info written to {RESULT_FILE}")
                 return
             if "Out of host capacity" in output:
                 print(f"[{ts}] Out of host capacity on {ad}, moving on.")
