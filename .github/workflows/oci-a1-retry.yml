@@ -1,0 +1,98 @@
+name: OCI A1.Flex Retry Launch
+
+on:
+  schedule:
+    # GitHub's minimum cron granularity is 5 minutes; matches the cadence
+    # used by community tools (e.g. hitrov/oci-arm-host-capacity).
+    - cron: "*/5 * * * *"
+  workflow_dispatch: {}
+
+concurrency:
+  group: oci-a1-retry
+  cancel-in-progress: false
+
+jobs:
+  retry-launch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install OCI CLI
+        run: pip install oci-cli
+
+      - name: Write OCI config and key
+        env:
+          OCI_USER_OCID: ${{ secrets.OCI_USER_OCID }}
+          OCI_TENANCY_OCID: ${{ secrets.OCI_TENANCY_OCID }}
+          OCI_FINGERPRINT: ${{ secrets.OCI_FINGERPRINT }}
+          OCI_PRIVATE_KEY: ${{ secrets.OCI_PRIVATE_KEY }}
+          OCI_REGION: us-ashburn-1
+        run: |
+          mkdir -p ~/.oci
+          echo "$OCI_PRIVATE_KEY" > ~/.oci/oci_api_key.pem
+          chmod 600 ~/.oci/oci_api_key.pem
+          cat > ~/.oci/config <<EOF
+          [DEFAULT]
+          user=$OCI_USER_OCID
+          fingerprint=$OCI_FINGERPRINT
+          key_file=~/.oci/oci_api_key.pem
+          tenancy=$OCI_TENANCY_OCID
+          region=$OCI_REGION
+          EOF
+
+      - name: Check if instance already exists
+        id: check
+        run: |
+          EXISTING=$(oci compute instance list \
+            --compartment-id "${{ secrets.OCI_TENANCY_OCID }}" \
+            --display-name gemma4-12b-server \
+            --lifecycle-state RUNNING \
+            --query "data[0].id" --raw-output 2>/dev/null || echo "")
+          if [ -n "$EXISTING" ] && [ "$EXISTING" != "null" ]; then
+            echo "found=true" >> "$GITHUB_OUTPUT"
+            echo "Instance already exists and is RUNNING: $EXISTING"
+          else
+            echo "found=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Retry launch across Ashburn ADs
+        if: steps.check.outputs.found == 'false'
+        env:
+          COMPARTMENT_ID: ${{ secrets.OCI_TENANCY_OCID }}
+          IMAGE_ID: "ocid1.image.oc1.iad.aaaaaaaacuygljashkvpqu5qqmlausq2vwrwasp3lxpbpitxjhvbhsktlhma"
+          SUBNET_ID: "ocid1.subnet.oc1.iad.aaaaaaaagokuawamgikuy2r5uf4gsnrei3ctnbjn4irvbvwvuavqg4ssnmza"
+          SSH_PUBLIC_KEY: ${{ secrets.OCI_SSH_PUBLIC_KEY }}
+        run: |
+          echo "$SSH_PUBLIC_KEY" > /tmp/ssh_key.pub
+          SUCCESS=false
+          for AD in "YOyk:US-ASHBURN-AD-1" "YOyk:US-ASHBURN-AD-2" "YOyk:US-ASHBURN-AD-3"; do
+            echo "Trying $AD ..."
+            OUTPUT=$(oci compute instance launch \
+              --availability-domain "$AD" \
+              --compartment-id "$COMPARTMENT_ID" \
+              --display-name gemma4-12b-server \
+              --shape VM.Standard.A1.Flex \
+              --shape-config '{"ocpus": 2, "memoryInGBs": 12}' \
+              --image-id "$IMAGE_ID" \
+              --subnet-id "$SUBNET_ID" \
+              --assign-public-ip true \
+              --ssh-authorized-keys-file /tmp/ssh_key.pub 2>&1) && LAUNCH_RC=0 || LAUNCH_RC=$?
+
+            if [ "$LAUNCH_RC" -eq 0 ]; then
+              echo "SUCCESS on $AD"
+              echo "$OUTPUT"
+              SUCCESS=true
+              break
+            fi
+
+            if echo "$OUTPUT" | grep -q "Out of host capacity"; then
+              echo "Out of host capacity on $AD, trying next."
+              continue
+            fi
+
+            echo "Unexpected error on $AD:"
+            echo "$OUTPUT"
+            exit 1
+          done
+
+          if [ "$SUCCESS" != "true" ]; then
+            echo "All ADs out of capacity this run. Will retry on next schedule."
+          fi
