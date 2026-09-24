@@ -55,6 +55,7 @@ jobs:
 
       - name: Retry launch across Ashburn ADs
         if: steps.check.outputs.found == 'false'
+        id: launch
         env:
           COMPARTMENT_ID: ${{ secrets.OCI_TENANCY_OCID }}
           IMAGE_ID: "ocid1.image.oc1.iad.aaaaaaaacuygljashkvpqu5qqmlausq2vwrwasp3lxpbpitxjhvbhsktlhma"
@@ -80,6 +81,7 @@ jobs:
               echo "SUCCESS on $AD"
               echo "$OUTPUT"
               SUCCESS=true
+              echo "launched=true" >> "$GITHUB_OUTPUT"
               break
             fi
 
@@ -95,4 +97,52 @@ jobs:
 
           if [ "$SUCCESS" != "true" ]; then
             echo "All ADs out of capacity this run. Will retry on next schedule."
+            echo "launched=false" >> "$GITHUB_OUTPUT"
           fi
+
+      - name: Wait for public IP
+        if: steps.check.outputs.found == 'true' || steps.launch.outputs.launched == 'true'
+        id: getip
+        run: |
+          for i in $(seq 1 30); do
+            INSTANCE_ID=$(oci compute instance list \
+              --compartment-id "${{ secrets.OCI_TENANCY_OCID }}" \
+              --display-name gemma4-12b-server \
+              --lifecycle-state RUNNING \
+              --query "data[0].id" --raw-output)
+            VNIC=$(oci compute instance list-vnics --instance-id "$INSTANCE_ID" --query "data[0].\"public-ip\"" --raw-output 2>/dev/null || echo "")
+            if [ -n "$VNIC" ] && [ "$VNIC" != "null" ]; then
+              echo "public_ip=$VNIC" >> "$GITHUB_OUTPUT"
+              echo "Public IP: $VNIC"
+              break
+            fi
+            echo "Waiting for public IP... ($i/30)"
+            sleep 10
+          done
+
+      - name: Install Ollama and pull gemma4:12b
+        if: steps.getip.outputs.public_ip != ''
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.OCI_SSH_PRIVATE_KEY }}
+          PUBLIC_IP: ${{ steps.getip.outputs.public_ip }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/oci_key
+          chmod 600 ~/.ssh/oci_key
+
+          for i in $(seq 1 30); do
+            if ssh -i ~/.ssh/oci_key -o StrictHostKeyChecking=accept-new -o ConnectTimeout=5 \
+              "ubuntu@$PUBLIC_IP" "echo ok"; then
+              break
+            fi
+            echo "Waiting for SSH... ($i/30)"
+            sleep 10
+          done
+
+          ssh -i ~/.ssh/oci_key -o StrictHostKeyChecking=accept-new "ubuntu@$PUBLIC_IP" \
+            "curl -fsSL https://ollama.com/install.sh | sh"
+
+          ssh -i ~/.ssh/oci_key -o StrictHostKeyChecking=accept-new "ubuntu@$PUBLIC_IP" \
+            "ollama pull gemma4:12b"
+
+          echo "Setup complete. gemma4:12b ready on $PUBLIC_IP"
