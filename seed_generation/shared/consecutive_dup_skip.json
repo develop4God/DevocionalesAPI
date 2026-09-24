@@ -1,0 +1,11 @@
+{
+  "_comment": "Words allowed to repeat consecutively (skipped by the dup_words content check) because they are intentional liturgical/rhetorical repetition, not a generation error. Match is case-insensitive after stripping sentence/list punctuation. Keyed by language code; 'any' applies to all languages.",
+  "any": ["amen", "amén", "āmen"],
+  "de": ["heilig", "halleluja", "hosanna"],
+  "en": ["holy", "hallelujah", "hosanna", "saul"],
+  "he": ["kadosh"],
+  "fr": ["nous", "vous"],
+  "hi": ["पवित्र"],
+  "fil": ["banal"],
+  "ar": ["قدوس"]
+}

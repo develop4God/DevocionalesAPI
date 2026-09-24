@@ -106,23 +106,28 @@ SENTENCE_ENDINGS = (
 # Words whose consecutive repetition is grammatically valid (not a copy error):
 #   - liturgical: intentional repetition (heilig heilig, holy holy)
 #   - reflexive pronouns: 'nous nous' in FR is a standard reflexive-verb construction
-CONSECUTIVE_DUP_SKIP = frozenset(
-    {
-        "heilig",
-        "holy",
-        "kadosh",
-        "halleluja",
-        "hosanna",
-        "amen",
-        "amén",
-        "āmen",
-        "nous",
-        "vous",  # French reflexive pronouns (nous nous aimons = we love one another)
-        "पवित्र",  # Hindi 'holy' — intentional liturgical repetition (cf. Rev 4:8)
-        "saul",  # Biblical quote: "Saul, Saul, why do you persecute me?" (Acts 9:4)
-        "banal",  # Tagalog 'holy' — Trisagion "Banal, banal, banal ang Panginoon" (Rev 4:8)
-    }
-)
+# Loaded from consecutive_dup_skip.json (decoupled per-language whitelist,
+# same pattern as prayer_endings.json below) so new languages/words don't
+# require touching this file.
+_DUP_SKIP_FILE = Path(__file__).parent.parent / "seed_generation" / "shared" / "consecutive_dup_skip.json"
+CONSECUTIVE_DUP_SKIP: frozenset = frozenset()
+try:
+    with open(_DUP_SKIP_FILE, encoding="utf-8") as _f:
+        _dup_skip = json.load(_f)
+    CONSECUTIVE_DUP_SKIP = frozenset(
+        w.lower()
+        for key, words in _dup_skip.items()
+        if key != "_comment"
+        for w in words
+    )
+except FileNotFoundError:
+    print(
+        f"WARNING: {_DUP_SKIP_FILE.name} not found — "
+        "liturgical repetition (holy/amen/etc.) will be flagged as dup_words errors.",
+        file=sys.stderr,
+    )
+except Exception as _ex:
+    print(f"WARNING: Could not load {_DUP_SKIP_FILE.name}: {_ex}", file=sys.stderr)
 # Sentence-ending punctuation: repetition across a sentence boundary is rhetorical, not an error
 SENT_END_PUNCT = frozenset({".", "!", "?", ":", "»", "\u201d"})
 AMEN_VARIANTS = frozenset({"amen", "amén", "āmen", "amem"})  # amem covers PT 'amém'
@@ -165,9 +170,12 @@ def _find_consecutive_dup(text: str):
         # Skip sentence-boundary repetition (e.g. 'love. Love,' or 'grace: Grace')
         if raw1 and raw1[-1] in SENT_END_PUNCT:
             continue
-        w1 = raw1.strip(".,;:!?").lower()
-        w2 = words[i + 1].strip(".,;:!?").lower()
-        if w1 == w2 and len(w1) > 3 and w1 not in CONSECUTIVE_DUP_SKIP:
+        w1 = raw1.strip(".,;:!?،؛؟").lower()
+        w2 = words[i + 1].strip(".,;:!?،؛؟").lower()
+        # Arabic 'و' (and) prefix: "وقدوس وقدوس" is "and holy and holy" — the
+        # skip-list check should match the underlying word, not the conjunction.
+        w1_bare = w1[1:] if w1.startswith("و") and len(w1) > 4 else w1
+        if w1 == w2 and len(w1) > 3 and w1 not in CONSECUTIVE_DUP_SKIP and w1_bare not in CONSECUTIVE_DUP_SKIP:
             return f'"{raw1} {words[i + 1]}"'
     return None
 
