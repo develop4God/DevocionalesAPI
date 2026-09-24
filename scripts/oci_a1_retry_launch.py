@@ -38,6 +38,9 @@ ADS = [
 RETRY_INTERVAL_SECONDS = 20
 
 
+LAUNCH_TIMEOUT_SECONDS = 60
+
+
 def launch(ad: str) -> tuple[bool, str]:
     cmd = [
         "oci", "compute", "instance", "launch",
@@ -52,7 +55,23 @@ def launch(ad: str) -> tuple[bool, str]:
         "--assign-public-ip", "true",
         "--ssh-authorized-keys-file", SSH_KEY_FILE,
     ]
-    result = subprocess.run(cmd, capture_output=True, text=True)
+    print(f"  -> running: {' '.join(cmd)}", flush=True)
+    try:
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            stdin=subprocess.DEVNULL,
+            timeout=LAUNCH_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired:
+        print(f"  -> TIMED OUT after {LAUNCH_TIMEOUT_SECONDS}s (likely an expired session token"
+              " blocking on an interactive re-auth prompt). Run 'oci session authenticate"
+              " --region us-ashburn-1' and restart this script.", flush=True)
+        sys.exit(1)
+    print(f"  -> exit code: {result.returncode}", flush=True)
+    if result.stderr.strip():
+        print(f"  -> stderr: {result.stderr.strip()[:500]}", flush=True)
     return result.returncode == 0, (result.stdout if result.returncode == 0 else result.stderr)
 
 
