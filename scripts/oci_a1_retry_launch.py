@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 """Retry-launch a VM.Standard.A1.Flex instance across Ashburn ADs until OCI has capacity.
 
+On success, automatically launches setup_ollama_gemma.py in the background
+(detached, logs to setup_ollama_gemma.log next to this script) so Ollama
+install + model pull start immediately without waiting for the user to run
+it by hand.
+
 Usage:
     python3 scripts/oci_a1_retry_launch.py
 
@@ -21,6 +26,8 @@ SSH_KEY_FILE = "/home/develop4god/.ssh/oracle_devocional.pub"
 DISPLAY_NAME = "gemma4-12b-server"
 
 RESULT_FILE = Path(__file__).parent / "gemma4_12b_server_instance.json"
+SETUP_SCRIPT = Path(__file__).parent / "setup_ollama_gemma.py"
+SETUP_LOG_FILE = Path(__file__).parent / "setup_ollama_gemma.log"
 
 ADS = [
     "YOyk:US-ASHBURN-AD-1",
@@ -49,6 +56,21 @@ def launch(ad: str) -> tuple[bool, str]:
     return result.returncode == 0, (result.stdout if result.returncode == 0 else result.stderr)
 
 
+def launch_setup_script() -> None:
+    """Fire-and-forget: start setup_ollama_gemma.py detached so it keeps
+    running (installing Ollama, pulling the model) after this process exits,
+    without requiring the user to start it by hand."""
+    print(f"Launching {SETUP_SCRIPT.name} in the background (log: {SETUP_LOG_FILE}) ...", flush=True)
+    with open(SETUP_LOG_FILE, "w") as log_file:
+        subprocess.Popen(
+            [sys.executable, str(SETUP_SCRIPT)],
+            stdout=log_file,
+            stderr=subprocess.STDOUT,
+            stdin=subprocess.DEVNULL,
+            start_new_session=True,
+        )
+
+
 def main() -> None:
     attempt = 0
     while True:
@@ -66,6 +88,7 @@ def main() -> None:
                     "availability_domain": ad,
                 }, indent=2))
                 print(f"Instance info written to {RESULT_FILE}")
+                launch_setup_script()
                 return
             if "Out of host capacity" in output:
                 print(f"[{ts}] Out of host capacity on {ad}, moving on.")
