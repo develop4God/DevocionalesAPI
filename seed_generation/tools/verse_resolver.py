@@ -47,16 +47,164 @@ BOOKS_SOT_URL = (
 # Devanagari digit → ASCII digit (for Hindi references)
 _DEVA = str.maketrans("०१२३४५६७८९", "0123456789")
 
-# HIOV_hi.SQLite3's `books.long_name` stores the Gospels in liturgical long
-# form (e.g. "लूका रचित सुसमाचार" = "the Gospel composed by Luke") instead of
-# the short form real Hindi Bibles use in citations. This mapping is applied
-# by long_name value, not by filename — see _native_book_name — so it's safe
-# regardless of what the DB file is named or how it was copied/symlinked.
+# HIOV_hi.SQLite3's `books.long_name` stores every book in liturgical long
+# form (e.g. "लूका रचित सुसमाचार" = "the Gospel composed by Luke",
+# "रोमियों के नाम पौलुस प्रेरित की पत्री" = "the letter of Paul the apostle
+# to the Romans") instead of the short form real Hindi Bibles use in
+# citations. This mapping is applied by long_name value, not by filename —
+# see _native_book_name — so it's safe regardless of what the DB file is
+# named or how it was copied/symlinked. Covers all 66 books.
 _HIOV_LONG_TO_SHORT = {
+    "उत्पत्ति": "उत्पत्ति",
+    "निर्गमन": "निर्गमन",
+    "लैव्यव्यवस्था": "लैव्यव्यवस्था",
+    "गिनती": "गिनती",
+    "व्यवस्थाविवरण": "व्यवस्थाविवरण",
+    "यहोशू": "यहोशू",
+    "न्यायियों": "न्यायियों",
+    "रूत": "रूत",
+    "शमूएल की पहली पुस्तक": "1 शमूएल",
+    "शमूएल की दूसरी पुस्तक": "2 शमूएल",
+    "राजाओं का वृत्तान्त – पहला भाग": "1 राजाओं",
+    "राजाओं का वृत्तान्त – दूसरा भाग": "2 राजाओं",
+    "इतिहास नामक पुस्तक – पहला भाग": "1 इतिहास",
+    "इतिहास नामक पुस्तक – दूसरा भाग": "2 इतिहास",
+    "एज्रा नामक पुस्तक": "एज्रा",
+    "नहेम्याह नामक पुस्तक": "नहेम्याह",
+    "एस्तेर": "एस्तेर",
+    "अय्यूब": "अय्यूब",
+    "भजन संहिता": "भजन संहिता",
+    "नीतिवचन": "नीतिवचन",
+    "सभोपदेशक": "सभोपदेशक",
+    "श्रेष्‍ठगीत": "श्रेष्ठगीत",
+    "यशायाह भविष्यद्वक्‍ता की पुस्तक": "यशायाह",
+    "यिर्मयाह नामक पुस्तक": "यिर्मयाह",
+    "विलापगीत": "विलापगीत",
+    "यहेजकेल नामक पुस्तक": "यहेजकेल",
+    "दानिय्येल नामक पुस्तक": "दानिय्येल",
+    "होशे": "होशे",
+    "योएल": "योएल",
+    "आमोस": "आमोस",
+    "ओबद्याह": "ओबद्याह",
+    "योना": "योना",
+    "मीका": "मीका",
+    "नहूम": "नहूम",
+    "हबक्‍कूक": "हबक्कूक",
+    "सपन्याह": "सपन्याह",
+    "हाग्गै": "हाग्गै",
+    "जकर्याह": "जकर्याह",
+    "मलाकी": "मलाकी",
     "मत्ती रचित सुसमाचार": "मत्ती",
     "मरकुस रचित सुसमाचार": "मरकुस",
     "लूका रचित सुसमाचार": "लूका",
     "यूहन्ना रचित सुसमाचार": "यूहन्ना",
+    "प्रेरितों के कामों का वर्णन": "प्रेरितों के काम",
+    "रोमियों के नाम पौलुस प्रेरित की पत्री": "रोमियों",
+    "कुरिन्थियों के नाम पौलुस प्रेरित की पहली पत्री": "1 कुरिन्थियों",
+    "कुरिन्थियों के नाम पौलुस प्रेरित की दूसरी पत्री": "2 कुरिन्थियों",
+    "गलातियों के नाम पौलुस प्रेरित की पत्री": "गलातियों",
+    "इफिसियों के नाम पौलुस प्रेरित की पत्री": "इफिसियों",
+    "फिलिप्पियों के नाम पौलुस प्रेरित की पत्री": "फिलिप्पियों",
+    "कुलुस्सियों के नाम पौलुस प्रेरित की पत्री": "कुलुस्सियों",
+    "थिस्सलुनीकियों के नाम पौलुस प्रेरित की पहली पत्री": "1 थिस्सलुनीकियों",
+    "थिस्सलुनीकियों के नाम पौलुस प्रेरित की दूसरी पत्री": "2 थिस्सलुनीकियों",
+    "तीमुथियुस के नाम पौलुस प्रेरित की पहली पत्री": "1 तीमुथियुस",
+    "तीमुथियुस के नाम पौलुस प्रेरित की दूसरी पत्री": "2 तीमुथियुस",
+    "तीतुस के नाम पौलुस प्रेरित की पत्री": "तीतुस",
+    "फिलेमोन के नाम पौलुस प्रेरित की पत्री": "फिलेमोन",
+    "इब्रानियों के नाम पत्री": "इब्रानियों",
+    "याकूब की पत्री": "याकूब",
+    "पतरस की पहली पत्री": "1 पतरस",
+    "पतरस की दूसरी पत्री": "2 पतरस",
+    "यूहन्ना की पहली पत्री": "1 यूहन्ना",
+    "यूहन्ना की दूसरी पत्री": "2 यूहन्ना",
+    "यूहन्ना की तीसरी पत्री": "3 यूहन्ना",
+    "यहूदा की पत्री": "यहूदा",
+    "यूहन्ना का प्रकाशितवाक्य": "प्रकाशितवाक्य",
+}
+
+# LU17_de.SQLite3's `books.long_name` stores every book in full liturgical
+# form (e.g. "Das Evangelium nach Johannes", "Der Brief des Paulus an die
+# Römer") instead of the short form real German citations use ("Johannes",
+# "Römer"). Applied by long_name value — see _native_book_name — so it's
+# safe regardless of what the DB file is named or how it was copied.
+_LU17_LONG_TO_SHORT = {
+    "Das erste Buch Mose (Genesis)": "1. Mose",
+    "Das zweite Buch Mose (Exodus)": "2. Mose",
+    "Das dritte Buch Mose (Levitikus)": "3. Mose",
+    "Das vierte Buch Mose (Numeri)": "4. Mose",
+    "Das fünfte Buch Mose (Deuteronomium)": "5. Mose",
+    "Das Buch Josua": "Josua",
+    "Das Buch der Richter": "Richter",
+    "Das Buch Rut": "Rut",
+    "Das erste Buch Samuel": "1. Samuel",
+    "Das zweite Buch Samuel": "2. Samuel",
+    "Das erste Buch der Könige": "1. Könige",
+    "Das zweite Buch der Könige": "2. Könige",
+    "Das erste Buch der Chronik": "1. Chronik",
+    "Das zweite Buch der Chronik": "2. Chronik",
+    "Das Buch Esra": "Esra",
+    "Das Buch Nehemia": "Nehemia",
+    "Das Buch Tobias (Tobit)": "Tobias",
+    "Das Buch Judit": "Judit",
+    "Das Buch Ester": "Ester",
+    "Stücke zum Buch Ester": "Stücke zu Ester",
+    "Das Buch Hiob (Ijob)": "Hiob",
+    "Der Psalter": "Psalm",
+    "Die Sprüche Salomos (Proverbia)": "Sprüche",
+    "Der Prediger Salomo (Kohelet)": "Prediger",
+    "Das Hohelied Salomos": "Hoheslied",
+    "Die Weisheit Salomos": "Weisheit",
+    "Das Buch Jesus Sirach": "Sirach",
+    "Der Prophet Jesaja": "Jesaja",
+    "Der Prophet Jeremia": "Jeremia",
+    "Die Klagelieder Jeremias": "Klagelieder",
+    "Das Buch Baruch": "Baruch",
+    "Der Prophet Hesekiel (Ezechiel)": "Hesekiel",
+    "Das Buch Daniel": "Daniel",
+    "Stücke zum Buch Daniel": "Stücke zu Daniel",
+    "Der Prophet Hosea": "Hosea",
+    "Der Prophet Joel": "Joel",
+    "Der Prophet Amos": "Amos",
+    "Der Prophet Obadja": "Obadja",
+    "Der Prophet Jona": "Jona",
+    "Der Prophet Micha": "Micha",
+    "Der Prophet Nahum": "Nahum",
+    "Der Prophet Habakuk": "Habakuk",
+    "Der Prophet Zefanja": "Zefanja",
+    "Der Prophet Haggai": "Haggai",
+    "Der Prophet Sacharja": "Sacharja",
+    "Der Prophet Maleachi": "Maleachi",
+    "Das erste Buch der Makkabäer": "1. Makkabäer",
+    "Das zweite Buch der Makkabäer": "2. Makkabäer",
+    "Das Evangelium nach Matthäus": "Matthäus",
+    "Das Evangelium nach Markus": "Markus",
+    "Das Evangelium nach Lukas": "Lukas",
+    "Das Evangelium nach Johannes": "Johannes",
+    "Die Apostelgeschichte des Lukas": "Apostelgeschichte",
+    "Der Brief des Paulus an die Römer": "Römer",
+    "Der erste Brief des Paulus an die Korinther": "1. Korinther",
+    "Der zweite Brief des Paulus an die Korinther": "2. Korinther",
+    "Der Brief des Paulus an die Galater": "Galater",
+    "Der Brief des Paulus an die Epheser": "Epheser",
+    "Der Brief des Paulus an die Philipper": "Philipper",
+    "Der Brief des Paulus an die Kolosser": "Kolosser",
+    "Der erste Brief des Paulus an die Thessalonicher": "1. Thessalonicher",
+    "Der zweite Brief des Paulus an die Thessalonicher": "2. Thessalonicher",
+    "Der erste Brief des Paulus an Timotheus": "1. Timotheus",
+    "Der zweite Brief des Paulus an Timotheus": "2. Timotheus",
+    "Der Brief des Paulus an Titus": "Titus",
+    "Der Brief des Paulus an Philemon": "Philemon",
+    "Der Brief an die Hebräer": "Hebräer",
+    "Der Brief des Jakobus": "Jakobus",
+    "Der erste Brief des Petrus": "1. Petrus",
+    "Der zweite Brief des Petrus": "2. Petrus",
+    "Der erste Brief des Johannes": "1. Johannes",
+    "Der zweite Brief des Johannes": "2. Johannes",
+    "Der dritte Brief des Johannes": "3. Johannes",
+    "Der Brief des Judas": "Judas",
+    "Die Offenbarung des Johannes": "Offenbarung",
+    "Das Gebet Manasses": "Gebet Manasses",
 }
 
 # Module-level cache — fetched once per Python process
@@ -250,7 +398,11 @@ class VerseResolver:
             row = self.cursor.fetchone()
             if row and row[0]:
                 long_name = row[0]
-                return _HIOV_LONG_TO_SHORT.get(long_name, long_name)
+                if long_name in _HIOV_LONG_TO_SHORT:
+                    return _HIOV_LONG_TO_SHORT[long_name]
+                if long_name in _LU17_LONG_TO_SHORT:
+                    return _LU17_LONG_TO_SHORT[long_name]
+                return long_name
         except sqlite3.OperationalError:
             pass  # `books` table absent in some minimal DB builds
         return fallback
