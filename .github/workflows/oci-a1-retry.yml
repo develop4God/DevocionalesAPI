@@ -2,9 +2,11 @@ name: OCI A1.Flex Retry Launch
 
 on:
   schedule:
-    # GitHub's minimum cron granularity is 5 minutes; matches the cadence
-    # used by community tools (e.g. hitrov/oci-arm-host-capacity).
-    - cron: "*/5 * * * *"
+    # Safety-net re-trigger: each job loops internally for ~5.5h (below
+    # GitHub's 6h job cap) retrying every 20s. This cron just makes sure a
+    # fresh job starts again if a previous one ever ran out its window
+    # without success. concurrency below prevents overlapping runs.
+    - cron: "0 */6 * * *"
   workflow_dispatch: {}
 
 concurrency:
@@ -53,7 +55,7 @@ jobs:
             echo "found=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Retry launch across Ashburn ADs
+      - name: Retry launch across Ashburn ADs for up to 5.5 hours
         if: steps.check.outputs.found == 'false'
         id: launch
         env:
@@ -64,39 +66,50 @@ jobs:
         run: |
           echo "$SSH_PUBLIC_KEY" > /tmp/ssh_key.pub
           SUCCESS=false
-          for AD in "YOyk:US-ASHBURN-AD-1" "YOyk:US-ASHBURN-AD-2" "YOyk:US-ASHBURN-AD-3"; do
-            echo "Trying $AD ..."
-            OUTPUT=$(oci compute instance launch \
-              --availability-domain "$AD" \
-              --compartment-id "$COMPARTMENT_ID" \
-              --display-name gemma4-12b-server \
-              --shape VM.Standard.A1.Flex \
-              --shape-config '{"ocpus": 2, "memoryInGBs": 12}' \
-              --image-id "$IMAGE_ID" \
-              --subnet-id "$SUBNET_ID" \
-              --assign-public-ip true \
-              --ssh-authorized-keys-file /tmp/ssh_key.pub 2>&1) && LAUNCH_RC=0 || LAUNCH_RC=$?
+          DEADLINE=$(( $(date +%s) + 5*3600 + 30*60 ))  # 5.5 hours from now
+          ATTEMPT=0
 
-            if [ "$LAUNCH_RC" -eq 0 ]; then
-              echo "SUCCESS on $AD"
+          while [ "$(date +%s)" -lt "$DEADLINE" ]; do
+            for AD in "YOyk:US-ASHBURN-AD-1" "YOyk:US-ASHBURN-AD-2" "YOyk:US-ASHBURN-AD-3"; do
+              ATTEMPT=$((ATTEMPT + 1))
+              echo "[$(date +%H:%M:%S)] Attempt $ATTEMPT — trying $AD ..."
+              OUTPUT=$(oci compute instance launch \
+                --availability-domain "$AD" \
+                --compartment-id "$COMPARTMENT_ID" \
+                --display-name gemma4-12b-server \
+                --shape VM.Standard.A1.Flex \
+                --shape-config '{"ocpus": 2, "memoryInGBs": 12}' \
+                --image-id "$IMAGE_ID" \
+                --subnet-id "$SUBNET_ID" \
+                --assign-public-ip true \
+                --ssh-authorized-keys-file /tmp/ssh_key.pub 2>&1) && LAUNCH_RC=0 || LAUNCH_RC=$?
+
+              if [ "$LAUNCH_RC" -eq 0 ]; then
+                echo "SUCCESS on $AD"
+                echo "$OUTPUT"
+                SUCCESS=true
+                echo "launched=true" >> "$GITHUB_OUTPUT"
+                break 2
+              fi
+
+              if echo "$OUTPUT" | grep -q "Out of host capacity"; then
+                echo "Out of host capacity on $AD, trying next."
+                continue
+              fi
+
+              echo "Unexpected error on $AD:"
               echo "$OUTPUT"
-              SUCCESS=true
-              echo "launched=true" >> "$GITHUB_OUTPUT"
-              break
-            fi
+              exit 1
+            done
 
-            if echo "$OUTPUT" | grep -q "Out of host capacity"; then
-              echo "Out of host capacity on $AD, trying next."
-              continue
+            if [ "$(date +%s)" -lt "$DEADLINE" ]; then
+              echo "All ADs out of capacity this round, sleeping 20s..."
+              sleep 20
             fi
-
-            echo "Unexpected error on $AD:"
-            echo "$OUTPUT"
-            exit 1
           done
 
           if [ "$SUCCESS" != "true" ]; then
-            echo "All ADs out of capacity this run. Will retry on next schedule."
+            echo "5.5h window exhausted with no capacity. Job ending; next scheduled run will pick up again."
             echo "launched=false" >> "$GITHUB_OUTPUT"
           fi
 
