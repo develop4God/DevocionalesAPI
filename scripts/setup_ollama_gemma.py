@@ -41,9 +41,15 @@ def find_running_instance() -> dict | None:
         "--display-name", DISPLAY_NAME,
         "--lifecycle-state", "RUNNING",
     ])
-    if result.returncode != 0:
+    if result.returncode != 0 or not result.stdout.strip():
+        if result.stderr.strip():
+            log(f"oci instance list error: {result.stderr.strip()}")
         return None
-    data = json.loads(result.stdout)["data"]
+    try:
+        data = json.loads(result.stdout)["data"]
+    except json.JSONDecodeError:
+        log(f"Unexpected non-JSON output from oci instance list: {result.stdout[:200]!r}")
+        return None
     return data[0] if data else None
 
 
@@ -53,9 +59,15 @@ def get_public_ip(instance_id: str) -> str | None:
         "--auth", "security_token",
         "--instance-id", instance_id,
     ])
-    if result.returncode != 0:
+    if result.returncode != 0 or not result.stdout.strip():
+        if result.stderr.strip():
+            log(f"oci list-vnics error: {result.stderr.strip()}")
         return None
-    data = json.loads(result.stdout)["data"]
+    try:
+        data = json.loads(result.stdout)["data"]
+    except json.JSONDecodeError:
+        log(f"Unexpected non-JSON output from oci list-vnics: {result.stdout[:200]!r}")
+        return None
     if not data:
         return None
     return data[0].get("public-ip")
