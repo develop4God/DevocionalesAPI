@@ -1,59 +1,40 @@
 # DevocionalesAPI
 
-This repository generates biblical devotionals using large language models. It contains server components for single-item generation and a provider-agnostic batch pipeline for yearly/devotional generation from seed files.
+This repository generates biblical devotionals using large language models. It is a provider-agnostic, seed-driven batch pipeline: seeds (verse citations, `para_meditar`, tags) are built ahead of time, then a provider (Ollama, Gemini, etc.) generates the devotional content (`reflexion` + `oracion`) for each entry, with checkpointing so runs can resume.
 
 Quick links
 
-- **GEP (Genome Evolution Protocol)**: [GEP_Genome-Evolution-Protocol/README.md](GEP_Genome-Evolution-Protocol/README.md) — Quality assurance system with two-phase validation
-- Batch pipeline documentation: [seed_generation/README_BATCH_PIPELINE.md](seed_generation/README_BATCH_PIPELINE.md)
-- Batch scripts and adapters: `seed_generation/`
-- Server and client: `API_Server.py`, `API_Client.py`
+- Batch pipeline documentation: [seed_generation/BATCH/README_BATCH_PIPELINE.md](seed_generation/BATCH/README_BATCH_PIPELINE.md)
+- Pipeline code: `seed_generation/`
 
 Overview
 
-- `API_Server.py`: FastAPI server that calls an LLM adapter to generate devotionals.
-- `API_Client.py`: Simple client for iterative generation via the server.
-- `seed_generation/`: Batch pipeline to submit seed JSON files to provider adapters, collect results, repair failures, and validate outputs.
-- `GEP_Genome-Evolution-Protocol/`: Quality assurance critic system using simulated readers with evolving pattern genome.
-
-Batch highlights
-
-- Provider-agnostic submission via `batch_submit.py` and `provider_adapter.py`.
-- `--dry-run`: write provider-agnostic prompt JSONL for review (no API calls).
-- `--dry-run-full`: print the exact wire payload for one seed entry (no API calls) to inspect adapter formatting.
-
-## GEP — Quality Assurance
-
-The **Genome Evolution Protocol (GEP)** validates devotional quality through a two-phase process:
-
-1. **Phase 1 (Linguistic)**: Fast scan for typos, grammar, repeated phrases, and unnatural phrasing
-   - No genome injection for clean, unbiased signals
-   - Verbatim gate filters hallucinated flags
-   - Returns: `CLEAN` or `FLAG`
-
-2. **Phase 2 (Content)**: Deep review for prayer drift, register issues, and hallucinations
-   - Genome-seeded prompts with confirmed patterns
-   - Simulated reader persona (language/culture-specific)
-   - Returns: `OK` or `PAUSE`
-
-**Recent improvements (2026-04):**
-- Removed genome injection from Phase 1 to prevent model confabulation
-- Added verbatim gate to filter hallucinated flags before audit log
-- Fixed parser for Fireworks responses starting mid-`<think>` tag
-- Added `corpus_scan()` for deterministic Python-based pattern search across full corpus
-
-See [GEP_Genome-Evolution-Protocol/README.md](GEP_Genome-Evolution-Protocol/README.md) for full documentation.
+- `seed_generation/main.py`: Interactive launcher (no flags to memorize) — generate a new seed or resume content generation.
+- `seed_generation/dashboard.py`: Auto-discovers every checkpoint under `seed_generation/data/output/*/`, shows progress (done/pending/total), and resumes a run by number.
+- `seed_generation/generate_from_seed.py`: Core generator — takes a seed JSON file and produces devotional content via a provider. Also runnable directly with flags (`--seed`, `--lang`, `--version`, `--provider`, `--model`, `--limit`, `--resume`).
+- `seed_generation/shared/`: Prompt building, response parsing, content assembly, and provider adapters shared across the pipeline.
+- `seed_generation/data/`: Seed inputs and generated output/checkpoints, organized by language.
 
 Getting started
 
 1. Install dependencies:
 ```bash
-pip install -r requirements.txt
+uv sync
 ```
 
-2. Read the batch pipeline docs:
+2. Run the interactive launcher:
 ```bash
-less seed_generation/README_BATCH_PIPELINE.md
+python3 -m seed_generation.main
 ```
 
-If you want, I can convert other README files to English or add more examples.
+3. Or run generation directly:
+```bash
+python3 -m seed_generation.generate_from_seed \
+  --seed seed_generation/2027/seeds/DE/seed_de_LU17_for_2027.json \
+  --lang de --version LU17 --provider ollama --model gemma4:26b --resume
+```
+
+4. Read the batch pipeline docs for more detail:
+```bash
+less seed_generation/BATCH/README_BATCH_PIPELINE.md
+```
