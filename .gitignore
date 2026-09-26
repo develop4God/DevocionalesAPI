@@ -34,7 +34,8 @@ secrets.*
 *.env
 
 # Project-specific sensitive files
-seed_generation/Bibles/
+seed_generation/Bibles/*
+!seed_generation/Bibles/README.md
 seed_generation/ERRORS-RAG/
 !README*.md
 

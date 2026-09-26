@@ -6,10 +6,11 @@ content) and re-resolves every citation against a target-language
 Bible DB, producing a seed file in the same date/shape but with native
 citations and verse text.
 
-Usage:
+Usage (--db accepts a local .gz directly; see seed_generation/Bibles/README.md
+for where to get one):
   python build_seed_for_language.py \\
       --source-seed seed_generation/2027/seeds/EN/seed_en_KJV_for_2027.json \\
-      --db seed_generation/Bibles/ES/RVR1960_es.SQLite3 \\
+      --db /home/develop4god/Projects/bible_versions/es/RVR1960_es.SQLite3.gz \\
       --lang es \\
       --out seed_generation/2027/seeds/ES/seed_es_RVR1960_for_2027.json
 """

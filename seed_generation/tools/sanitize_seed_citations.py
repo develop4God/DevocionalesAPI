@@ -24,10 +24,11 @@ re-applies it to seeds generated before that change.
 
 Usage
 ─────
-  # repair in place
+  # repair in place (--db needs an uncompressed .SQLite3; see
+  # seed_generation/Bibles/README.md for where to get one)
   python sanitize_seed_citations.py \\
       --seed seed_generation/2027/seeds/DE/seed_de_SCH2000_for_2027.json \\
-      --db   seed_generation/tools/Bibles/DE/SCH2000_de.SQLite3 \\
+      --db   /tmp/SCH2000_de.SQLite3 \\
       --lang de
 
   # preview without writing

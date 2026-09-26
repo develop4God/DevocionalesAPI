@@ -357,9 +357,11 @@ Both resolvers now call the shared sanitizer:
 **Repairing seeds generated before a config existed:**
 
 ```bash
+# --db needs an uncompressed .SQLite3; see seed_generation/Bibles/README.md
+# for where to fetch a Bible DB from (local clone or bible_versions repo)
 python seed_generation/tools/sanitize_seed_citations.py \
   --seed seed_generation/2027/seeds/DE/seed_de_SCH2000_for_2027.json \
-  --db   seed_generation/tools/Bibles/DE/SCH2000_de.SQLite3 \
+  --db   /tmp/SCH2000_de.SQLite3 \
   --lang de
 # 1464 citations changed, 0 problems — verse text, tags and dates untouched
 ```

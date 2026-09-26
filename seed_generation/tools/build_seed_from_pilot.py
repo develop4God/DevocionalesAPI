@@ -7,10 +7,11 @@ each citation against a KJV SQLite DB to build a seed file in the same
 shape as the existing per-language seeds (versiculo / para_meditar / tags),
 with sequential calendar dates assigned starting from --start-date.
 
-Usage:
+Usage (--db accepts a local .gz directly; see seed_generation/Bibles/README.md
+for where to get one):
   python build_seed_from_pilot.py \\
       --pilot seed_generation/data/sprint1_pilot.json \\
-      --db seed_generation/Bibles/KJV_en.SQLite3 \\
+      --db /home/develop4god/Projects/bible_versions/en/KJV_en.SQLite3.gz \\
       --start-date 2027-01-01 \\
       --out seed_generation/2027/seeds/EN/seed_en_KJV_for_2027.json
 """
