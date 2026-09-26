@@ -55,7 +55,7 @@ def build_seed(source_seed_path: str, db_path: str, lang: str, out_path: str) ->
     seed = {}
     errors = []
 
-    with VerseResolver(db_path) as resolver:
+    with VerseResolver(db_path, language=lang) as resolver:
         for date_key in sorted(source):
             entry = source[date_key]
 

@@ -32,6 +32,11 @@ import urllib.request
 from datetime import datetime
 from tkinter import Tk, filedialog, messagebox, simpledialog
 
+try:
+    from .book_name_normalizer import sanitize_book_name
+except ImportError:  # Direct execution from seed_generation/tools
+    from book_name_normalizer import sanitize_book_name
+
 # =============================================================================
 # 1. CONSTANTS & CONFIG
 # =============================================================================
@@ -415,9 +420,21 @@ def fetch_text(
     return combined
 
 
-def _native_book_name(cursor: sqlite3.Cursor, book_number: int, fallback: str) -> str:
+def _native_book_name(
+    cursor: sqlite3.Cursor,
+    book_number: int,
+    fallback: str,
+    language: str | None = None,
+) -> str:
     """
-    Query the DB's `books` table for the long_name of book_number.
+    Query the DB's `books` table for the long_name of book_number, then hand it
+    to the shared, data-driven `book_name_normalizer` so citations carry a
+    readable canonical title instead of the DB's raw liturgical long_name
+    (e.g. "Das Evangelium nach Johannes" → "Johannes"). The DB exposes no
+    citation-ready column — `short_name` is only an abbreviation and
+    `books_all.long_name` repeats the long form — so canonical titles are
+    curated per language in `book_name_sanitizers/<lang>.json`.
+
     Returns fallback (the EN name) if the table is absent or the row is missing.
     """
     try:
@@ -427,7 +444,7 @@ def _native_book_name(cursor: sqlite3.Cursor, book_number: int, fallback: str) -
         )
         row = cursor.fetchone()
         if row and row[0]:
-            return row[0]
+            return sanitize_book_name(row[0], book_number, language)
     except sqlite3.OperationalError:
         pass  # `books` table absent in some minimal DB builds
     return fallback
@@ -437,6 +454,7 @@ def resolve_reference(
     cita: str,
     books_sot: dict,
     cursor: sqlite3.Cursor,
+    language: str | None = None,
 ) -> tuple[str | None, str | None, str | None]:
     """
     Resolve EN reference → (local_cita, texto, error_reason).
@@ -444,8 +462,8 @@ def resolve_reference(
     On failure: (None, None, reason_string)
 
     book_number comes from the bible_books.json SOT (EN name → number).
-    Native book name is read from the DB's own `books` table — no per-language
-    mapping file is required.
+    The readable native book name comes from the DB via `book_name_normalizer`
+    (see `_native_book_name`); pass `language` to select its configuration.
     """
     parsed = parse_en_ref(cita)
     if parsed is None:
@@ -457,7 +475,9 @@ def resolve_reference(
     if book_number is None:
         return None, None, f"unknown book: '{book_en}' — not in bible_books.json SOT"
 
-    local_name = _native_book_name(cursor, book_number, fallback=book_en)
+    local_name = _native_book_name(
+        cursor, book_number, fallback=book_en, language=language
+    )
 
     texto = fetch_text(cursor, book_number, chapter, v_start, v_end)
     if texto is None:
@@ -635,7 +655,7 @@ def extract_seed(
             # Main verse
             main_ref_en = extract_ref_from_versiculo(entry.get("versiculo", ""))
             hi_main_cita, main_texto, main_err = resolve_reference(
-                main_ref_en, books_sot, cursor
+                main_ref_en, books_sot, cursor, language=target_lang
             )
             if main_err:
                 date_errors.append(
@@ -647,7 +667,7 @@ def extract_seed(
             for idx, pm in enumerate(entry.get("para_meditar", [])):
                 cita_en = pm.get("cita", "").strip()
                 hi_pm_cita, pm_texto, pm_err = resolve_reference(
-                    cita_en, books_sot, cursor
+                    cita_en, books_sot, cursor, language=target_lang
                 )
                 if pm_err:
                     date_errors.append(

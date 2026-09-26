@@ -35,6 +35,11 @@ import urllib.request
 from datetime import datetime
 
 try:
+    from .book_name_normalizer import sanitize_book_name
+except ImportError:  # Direct execution from seed_generation/tools
+    from book_name_normalizer import sanitize_book_name
+
+try:
     from tkinter import Tk, filedialog
 
     _HAS_TKINTER = True
@@ -271,9 +276,22 @@ def find_or_download_db(version_entry: dict, lang_code: str) -> str:
 # ─────────────────────────────────────────────────────────────────────────────
 
 
-def _native_book_name(cursor: sqlite3.Cursor, book_number: int, fallback: str) -> str:
+def _native_book_name(
+    cursor: sqlite3.Cursor,
+    book_number: int,
+    fallback: str,
+    language: str | None = None,
+) -> str:
     """
-    Query the DB's `books` table for the native long_name of *book_number*.
+    Query the DB's `books` table for the long_name of *book_number*, then hand
+    it to the shared, data-driven `book_name_normalizer` so the citation carries
+    a readable canonical title instead of the DB's raw liturgical long_name
+    (e.g. "Das Evangelium nach Johannes" → "Johannes", "Die Psalmen" →
+    "Psalm"). The DB itself exposes no citation-ready column — `short_name` is
+    only an abbreviation ("Joh", "Apg") and `books_all.long_name` repeats the
+    long form — so the canonical titles are curated per language in
+    `book_name_sanitizers/<lang>.json`, keyed by book_number.
+
     Returns *fallback* (the EN name) if the table is absent or the row is missing.
     """
     try:
@@ -283,7 +301,7 @@ def _native_book_name(cursor: sqlite3.Cursor, book_number: int, fallback: str) -
         )
         row = cursor.fetchone()
         if row and row[0]:
-            return row[0]
+            return sanitize_book_name(row[0], book_number, language)
     except sqlite3.OperationalError:
         pass  # `books` table absent in minimal DB builds
     return fallback
@@ -358,10 +376,14 @@ def resolve_reference(
     cita: str,
     books_sot: dict,
     cursor: sqlite3.Cursor,
+    language: str | None = None,
 ) -> tuple[str | None, str | None, str | None]:
     """
     Resolve an EN reference string to (native_citation, verse_text, error).
-    book_number comes from bible_books.json SOT; native book name comes from the DB.
+    book_number comes from bible_books.json SOT; the readable native book name
+    comes from the DB via `book_name_normalizer` (see `_native_book_name`).
+    *language* selects the sanitizer configuration; omit it to keep the DB's
+    raw long_name.
     """
     parsed = parse_en_ref(cita)
     if parsed is None:
@@ -373,7 +395,9 @@ def resolve_reference(
     if book_number is None:
         return None, None, f"unknown book: '{book_en}' — not in bible_books.json SOT"
 
-    local_name = _native_book_name(cursor, book_number, fallback=book_en)
+    local_name = _native_book_name(
+        cursor, book_number, fallback=book_en, language=language
+    )
 
     texto = fetch_text(cursor, book_number, chapter, v_start, v_end)
     if texto is None:
@@ -804,11 +828,11 @@ def run(
             # Main verse — try primary, then fallback
             main_ref_en = extract_ref_from_versiculo(entry.get("versiculo", ""))
             main_cita, main_texto, main_err = resolve_reference(
-                main_ref_en, books_sot, cursor
+                main_ref_en, books_sot, cursor, language=lang_code
             )
             if main_err and fallback_cursor is not None:
                 fb_cita, fb_texto, fb_err = resolve_reference(
-                    main_ref_en, books_sot, fallback_cursor
+                    main_ref_en, books_sot, fallback_cursor, language=lang_code
                 )
                 if not fb_err:
                     main_cita, main_texto, main_err = fb_cita, fb_texto, fb_err
@@ -823,11 +847,11 @@ def run(
             for idx, pm in enumerate(entry.get("para_meditar", [])):
                 cita_en = pm.get("cita", "").strip()
                 pm_cita, pm_texto, pm_err = resolve_reference(
-                    cita_en, books_sot, cursor
+                    cita_en, books_sot, cursor, language=lang_code
                 )
                 if pm_err and fallback_cursor is not None:
                     fb_cita, fb_texto, fb_err = resolve_reference(
-                        cita_en, books_sot, fallback_cursor
+                        cita_en, books_sot, fallback_cursor, language=lang_code
                     )
                     if not fb_err:
                         pm_cita, pm_texto, pm_err = fb_cita, fb_texto, fb_err

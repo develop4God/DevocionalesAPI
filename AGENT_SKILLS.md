@@ -311,3 +311,90 @@ python seed_extractor_fetch.py --year 2026 --lang ar --version NAV --output seed
 # Both now produce 365 entries, 0 errors, 0 violations
 ```
 
+### 8c. Book titles leaked liturgical long forms into citations
+
+`_native_book_name()` returned the DB's raw `books.long_name`, so citations shipped as
+`"Das Evangelium nach Johannes 10:14"` instead of `"Johannes 10:14"`. Found in
+`seed_de_SCH2000_for_2027.json`, where **all 1,464 citations** were affected.
+
+No DB column can fix this:
+
+| Column | Content | Usable? |
+|---|---|---|
+| `books.short_name` | `Joh`, `Apg`, `Mt`, `At` | ❌ abbreviation only |
+| `books.long_name` | `Das Evangelium nach Johannes` | ❌ liturgical long form |
+| `books_all.long_name` | repeats — sometimes amplifies — the long form | ❌ |
+
+Only PT NVI happens to have clean `books_all.long_name` values; PT ARC is worse
+(`O Santo Evangelho Segundo S. Mateus`). Neither German DB nor Hindi expose a
+citation-ready title.
+
+**Fix:** canonical titles are curated per language in
+`tools/book_name_sanitizers/<lang>.json`, keyed by the canonical MyBible
+`book_number` (version-independent within a language), applied through the shared
+`tools/book_name_normalizer.py`. **Adding a language or correcting a title is now a
+data change — no resolver edits.** Configured so far: `de` (76 books, covers both
+Luther 2017 *and* Schlachter 2000), `pt` (14), `hi` (41).
+
+Both resolvers now call the shared sanitizer:
+
+- `tools/verse_resolver.py` → `VerseResolver(db, language="de")` (used by
+  `build_seed_for_language.py`)
+- `tools/seed_extractor_fetch.py` and the legacy `tools/extract_seed.py` →
+  `resolve_reference(..., language=lang_code)`
+
+**Repairing seeds generated before a config existed:**
+
+```bash
+python seed_generation/tools/sanitize_seed_citations.py \
+  --seed seed_generation/2027/seeds/DE/seed_de_SCH2000_for_2027.json \
+  --db   seed_generation/tools/Bibles/DE/SCH2000_de.SQLite3 \
+  --lang de
+# 1464 citations changed, 0 problems — verse text, tags and dates untouched
+```
+
+The pass rewrites only the `cita` field (never re-resolves verse text), is
+idempotent, and exits non-zero if a title cannot be matched — the signal to extend
+that language's config. Covered by `tests/test_book_name_sanitizer.py` (25 tests).
+
+> **Historical note:** `seed_generation/2025/**` uses `Hohelied`, while 2026/2027 use
+> `Hoheslied`. Both are valid German, so this was left untouched — it is a corpus
+> consistency question, not a sanitizer bug.
+
+### 8d. German versification — two OT verses have different addresses
+
+German Bibles follow the Hebrew chapter split, so two English references have no
+German counterpart at the same address:
+
+| English (KJV/NIV seed) | German (LU17 / Schlachter 2000) |
+|---|---|
+| `Joel 2:28` | `Joel 3:1` |
+| `Malachi 4:2` | `Maleachi 3:20` |
+
+German Joel 2 ends at v27, and Maleachi has only 3 chapters. A straight EN→DE lookup
+therefore finds nothing — and because a per-verse failure is recorded as an error,
+the extractor **skips the entire date**, not just that verse. That is why
+`seed_de_SCH2000_for_2027.json` originally shipped with **364 entries instead of 366**.
+
+Both dates were repaired, so SCH2000 now carries the verse under its German address:
+
+- `2027-08-17` — `Apostelgeschichte 2:17-18` + `Joel 3:1`, `Johannes 14:16-17`, `Epheser 1:13-14`
+- `2028-02-06` — `Lukas 1:78-79` + `Maleachi 3:20`, `Jesaja 60:1-2`, `Römer 1:7`
+
+A fresh `build_seed_for_language.py --lang de` run **still** reports both as resolution
+errors, so a decoupled per-language versification map (a sibling of
+`book_name_sanitizers/`) is the next step whenever reproducible rebuilds are wanted.
+`seed_de_LU17_for_2027.json` still holds only 2 `para_meditar` entries for those two
+dates and would need the same two verses added.
+
+**Gotcha when rebuilding a seed by hand:**
+```bash
+PYTHONPATH=. python3 seed_generation/tools/build_seed_for_language.py \
+  --source-seed seed_generation/2027/seeds/EN/seed_en_KJV_for_2027.json \
+  --db /path/to/SCH2000_de.SQLite3 --lang de --out /tmp/rebuilt.json
+```
+`build_seed_for_language.py` imports `seed_generation.shared.generation_core`, so it
+needs the repo root on `PYTHONPATH` (the `-m seed_generation.*` form does this for free).
+
+
+
