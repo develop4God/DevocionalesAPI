@@ -18,6 +18,7 @@ Usage:
   (file pickers guide you through the 3 inputs + output folder)
 """
 
+import argparse
 import json
 import os
 import re
@@ -32,7 +33,7 @@ from tkinter import Tk, filedialog, messagebox, simpledialog
 
 
 def build_id(cita: str, version: str, date: str) -> str:
-    id_part = re.sub(r"\s+", "", cita).replace(":", "")
+    id_part = re.sub(r"[\s:\-]+", "", cita)
     date_compact = date.replace("-", "")
     return id_part + version + date_compact
 
@@ -184,6 +185,24 @@ def inject(source_path: str, seed_path: str, new_version: str, output_dir: str) 
 
 
 def main():
+    parser = argparse.ArgumentParser(
+        description="Inject a Bible-version seed into a complete devotional file."
+    )
+    parser.add_argument("--source", help="Path to source complete devotional JSON")
+    parser.add_argument("--seed", help="Path to seed JSON for the new version")
+    parser.add_argument("--version", help="New Bible version code (e.g. SCH2000, KJV)")
+    parser.add_argument("--output-dir", help="Output folder for the generated file")
+    args = parser.parse_args()
+
+    if args.source and args.seed and args.version and args.output_dir:
+        try:
+            out = inject(args.source, args.seed, args.version.strip(), args.output_dir)
+            print(f"\nDone!  File saved to:\n  {out}\n")
+        except Exception as e:
+            print(f"\nERROR: {e}")
+            sys.exit(1)
+        return
+
     root = Tk()
     root.withdraw()
 

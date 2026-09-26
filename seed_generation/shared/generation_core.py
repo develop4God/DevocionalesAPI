@@ -151,7 +151,7 @@ class ContentBuilder:
 
     def _build_id(self) -> str:
         cita = self._seed["versiculo"]["cita"]
-        id_part = re.sub(r"\s+", "", cita).replace(":", "")
+        id_part = re.sub(r"[\s:\-]+", "", cita)
         date_compact = self._date.replace("-", "")
         return id_part + self._version + date_compact
 
