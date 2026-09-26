@@ -21,30 +21,14 @@ Usage:
 import argparse
 import json
 import os
-import re
 import sys
 from datetime import datetime
 from tkinter import Tk, filedialog, messagebox, simpledialog
 
-
-# ─────────────────────────────────────────────────────────────────────────────
-# ID BUILDER  (mirrors DevotionalBuilder._build_id logic)
-# ─────────────────────────────────────────────────────────────────────────────
-
-
-def build_id(cita: str, version: str, date: str) -> str:
-    id_part = re.sub(r"[\s:\-]+", "", cita)
-    date_compact = date.replace("-", "")
-    return id_part + version + date_compact
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-# VERSICULO STRING BUILDER
-# ─────────────────────────────────────────────────────────────────────────────
-
-
-def build_versiculo(cita: str, texto: str, version: str) -> str:
-    return f'{cita} {version}: "{texto}"'
+from seed_generation.shared.generation_core import (
+    build_devotional_id as build_id,
+    build_versiculo_string as build_versiculo,
+)
 
 
 # ─────────────────────────────────────────────────────────────────────────────

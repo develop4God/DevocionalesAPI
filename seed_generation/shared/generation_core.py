@@ -125,6 +125,16 @@ class Generator(Protocol):
 # =============================================================================
 
 
+def build_versiculo_string(cita: str, texto: str, version: str) -> str:
+    return cita + " " + version + ': "' + texto + '"'
+
+
+def build_devotional_id(cita: str, version: str, date: str) -> str:
+    id_part = re.sub(r"[\s:.\-]+", "", cita)
+    date_compact = date.replace("-", "")
+    return id_part + version + date_compact
+
+
 class DevotionalValidationError(ValueError):
     pass
 
@@ -147,13 +157,11 @@ class ContentBuilder:
     def _build_versiculo(self) -> str:
         cita = self._seed["versiculo"]["cita"]
         texto = self._seed["versiculo"]["texto"]
-        return cita + " " + self._version + ': "' + texto + '"'
+        return build_versiculo_string(cita, texto, self._version)
 
     def _build_id(self) -> str:
         cita = self._seed["versiculo"]["cita"]
-        id_part = re.sub(r"[\s:\-]+", "", cita)
-        date_compact = self._date.replace("-", "")
-        return id_part + self._version + date_compact
+        return build_devotional_id(cita, self._version, self._date)
 
     def _extract_tags(self) -> list:
         tags = self._seed.get("tags", [])
