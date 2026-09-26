@@ -36,7 +36,10 @@ Resolve the exact file through `index.json` rather than guessing a name —
 some versions look alike but aren't (`KJV` vs `KJ2000` are different files
 with different hashes).
 
-## Local machine path
+## This machine
+
+`bible_versions` is already checked out here — no clone needed, just point
+`--db` at the `.gz` in place:
 
 ```
 /home/develop4god/Projects/bible_versions/<lang>/<VERSION>_<lang>.SQLite3.gz
@@ -50,12 +53,17 @@ python seed_generation/tools/build_seed_for_language.py \
     --out seed_generation/2027/seeds/DE/seed_de_LU17_for_2027.json
 ```
 
-## Remote (no local clone)
+## Cloud / remote / CI (no existing checkout)
 
-`--db` takes a local filesystem path, not a URL — download the `.gz` first
-(no need to decompress it), then point `--db` at that path:
+Clone `bible_versions` first, or download just the one `.gz` needed — `--db`
+takes a local filesystem path, not a URL, so it must land on disk first
+(no need to decompress it):
 
 ```bash
+# option A: clone once, reuse for every version
+git clone https://github.com/develop4God/bible_versions.git /tmp/bible_versions
+
+# option B: fetch a single file
 curl -sL "https://raw.githubusercontent.com/develop4God/bible_versions/main/de/LU17_de.SQLite3.gz" \
   -o /tmp/LU17_de.SQLite3.gz
 
