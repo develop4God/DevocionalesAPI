@@ -28,6 +28,31 @@ BOOKS_SOT_URL = (
 )
 _DEVA = str.maketrans("०१२३४५६७८९", "0123456789")
 _books_sot_cache: dict[str, int] | None = None
+_VERSIFICATION_SHIFTS_PATH = os.path.join(
+    os.path.dirname(__file__), "versification_shifts.json"
+)
+_versification_shifts_cache: dict | None = None
+
+
+def load_versification_shifts(language: str | None, db_version: str) -> dict[str, str]:
+    """Load known English->native chapter:verse remaps for *language*/*db_version*.
+
+    ``language`` is the seed's language code (e.g. ``de``); ``db_version`` is
+    the Bible DB's filename stem (e.g. ``LU17_de`` for ``Bibles/DE/LU17_de.SQLite3``).
+    Covers cases where a DB's chapter numbering diverges from the English
+    source references seeds are built from (e.g. German Joel/Malachi's
+    different chapter splits). Missing language/version is a safe no-op.
+    """
+    global _versification_shifts_cache
+    if not language:
+        return {}
+    if _versification_shifts_cache is None:
+        if os.path.exists(_VERSIFICATION_SHIFTS_PATH):
+            with open(_VERSIFICATION_SHIFTS_PATH, encoding="utf-8") as source:
+                _versification_shifts_cache = json.load(source)
+        else:
+            _versification_shifts_cache = {}
+    return _versification_shifts_cache.get(language.upper(), {}).get(db_version, {})
 
 
 def load_books_sot(local_path: str | None = None) -> dict[str, int]:
@@ -110,6 +135,11 @@ class VerseResolver:
     ) -> None:
         self.books_sot = load_books_sot(books_sot_path)
         self.language = language.lower() if language else None
+        db_version = os.path.basename(sqlite_path)
+        if db_version.lower().endswith(".gz"):
+            db_version = db_version[: -len(".gz")]
+        db_version = os.path.splitext(db_version)[0]
+        self.versification_shifts = load_versification_shifts(self.language, db_version)
         self._temp_path: str | None = None
         if sqlite_path.lower().endswith(".gz"):
             fd, self._temp_path = tempfile.mkstemp(suffix=".SQLite3")
@@ -160,6 +190,13 @@ class VerseResolver:
         book_number = self.books_sot.get(book_en)
         if book_number is None:
             return None, None, f"unknown book: '{book_en}' — not in bible_books.json SOT"
+
+        if v_start == v_end:
+            shift = self.versification_shifts.get(f"{book_en} {chapter}:{v_start}")
+            if shift:
+                chapter, _, verse = shift.partition(":")
+                chapter, v_start = int(chapter), int(verse)
+                v_end = v_start
 
         assert self.cursor is not None
         local_name = self._native_book_name(book_number, book_en)
