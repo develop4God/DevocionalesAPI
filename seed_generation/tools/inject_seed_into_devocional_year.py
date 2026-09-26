@@ -1,6 +1,6 @@
 """
-inject_bible_version.py
-───────────────────────
+inject_seed_into_devocional_year.py
+────────────────────────────────────
 Creates a new devotional file for a different Bible version by:
   1. Loading an existing COMPLETE devotional file (e.g. LU17 2025/2026).
   2. Loading a seed file for the TARGET version (e.g. SCH2000).
@@ -14,7 +14,7 @@ Creates a new devotional file for a different Bible version by:
 No API server required — pure offline data injection.
 
 Usage:
-  python inject_bible_version.py
+  python inject_seed_into_devocional_year.py
   (file pickers guide you through the 3 inputs + output folder)
 """
 
