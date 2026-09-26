@@ -334,7 +334,18 @@ citation-ready title.
 `book_number` (version-independent within a language), applied through the shared
 `tools/book_name_normalizer.py`. **Adding a language or correcting a title is now a
 data change — no resolver edits.** Configured so far: `de` (76 books, covers both
-Luther 2017 *and* Schlachter 2000), `pt` (14), `hi` (41).
+Luther 2017 *and* Schlachter 2000), `ar` (66 books, NAV *and* SVDA), `pt` (14),
+`hi` (41).
+
+A config may also declare an optional `aliases` block for **title-level variants that
+no DB column produces** — `book_names` is keyed by `book_number`, so on its own it
+cannot fix a title that only ever appears inside an already-written seed:
+
+```json
+{ "aliases": { "رؤيا يوحنا اللاهوتي": "الرؤيا" } }
+```
+
+Every alias target must itself be a configured canonical title (a test enforces this).
 
 Both resolvers now call the shared sanitizer:
 
@@ -355,7 +366,15 @@ python seed_generation/tools/sanitize_seed_citations.py \
 
 The pass rewrites only the `cita` field (never re-resolves verse text), is
 idempotent, and exits non-zero if a title cannot be matched — the signal to extend
-that language's config. Covered by `tests/test_book_name_sanitizer.py` (25 tests).
+that language's config. Covered by `tests/test_book_name_sanitizer.py` (31 tests).
+
+**Arabic:** every AR seed in the repo (2025/2026/2027, NAV and SVDA) carried raw
+`books.long_name` titles — NAV's fully-vocalized liturgical form
+(`رِسَالَةُ بُولُسَ ٱلرَّسُولِ إِلَى أَهْلِ رُومِيَةَ`) or SVDA's descriptive form
+(`الرسالة الى العبرانيين`). `ar.json` gives both versions one shared unvocalized
+citation convention (`رومية`). `ar` is deliberately **not** in `LATIN_LANGS`, and note
+that `SCRIPT_RANGES` has no `ar` entry — so `_has_target_script()` silently skips the
+Arabic script check during reverse tag validation.
 
 > **Historical note:** `seed_generation/2025/**` uses `Hohelied`, while 2026/2027 use
 > `Hoheslied`. Both are valid German, so this was left untouched — it is a corpus

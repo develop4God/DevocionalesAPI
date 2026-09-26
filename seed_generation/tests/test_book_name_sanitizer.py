@@ -20,7 +20,10 @@ import re
 import unittest
 from pathlib import Path
 
-from seed_generation.tools.book_name_normalizer import sanitize_book_name
+from seed_generation.tools.book_name_normalizer import (
+    load_title_aliases,
+    sanitize_book_name,
+)
 from seed_generation.tools.sanitize_seed_citations import (
     build_title_map,
     sanitize_citation,
@@ -30,6 +33,7 @@ from seed_generation.tools.sanitize_seed_citations import (
 _TOOLS_DIR = Path(__file__).resolve().parents[1] / "tools"
 _SANITIZER_DIR = _TOOLS_DIR / "book_name_sanitizers"
 LOCAL_LU17_DB = _TOOLS_DIR / "Bibles" / "DE" / "LU17_de.SQLite3"
+LOCAL_NAV_DB = _TOOLS_DIR / "Bibles" / "NAV_ar.SQLite3"
 
 # The 66 canonical Protestant book numbers used by the MyBible format.
 CANONICAL_66 = [
@@ -273,5 +277,41 @@ class TestBuildTitleMap(unittest.TestCase):
         _, changes, problems = sanitize_seed(seed, title_map)
         self.assertEqual(changes, [])
         self.assertEqual(problems, [])
+
+
+class TestTitleAliases(unittest.TestCase):
+    """`book_names` is keyed by book_number, so it can only correct titles a DB
+    itself produces. `aliases` declares title-level variants that no DB column
+    carries — without it the repair pass has no way to extend the config for
+    them, and would have to leave them unmatched forever."""
+
+    def test_aliases_default_to_empty(self):
+        self.assertEqual(load_title_aliases(None), {})
+        self.assertEqual(load_title_aliases("zz"), {})
+
+    def test_every_alias_target_is_a_configured_canonical_title(self):
+        for path in sorted(_SANITIZER_DIR.glob("*.json")):
+            data = json.loads(path.read_text(encoding="utf-8"))
+            canonical = set(data["book_names"].values())
+            unknown = set(data.get("aliases", {}).values()) - canonical
+            with self.subTest(language=path.stem):
+                self.assertEqual(unknown, set())
+
+    @unittest.skipUnless(LOCAL_NAV_DB.exists(), "NAV_ar.SQLite3 not present")
+    def test_variant_title_is_normalized_not_left_unmatched(self):
+        title_map = build_title_map(str(LOCAL_NAV_DB), "ar")
+        self.assertEqual(
+            sanitize_citation("رؤيا يوحنا اللاهوتي 22:17", title_map),
+            ("الرؤيا 22:17", "changed"),
+        )
+
+    @unittest.skipUnless(LOCAL_NAV_DB.exists(), "NAV_ar.SQLite3 not present")
+    def test_canonical_title_stays_canonical_after_aliases(self):
+        """Aliases must not break idempotency for the canonical form."""
+        title_map = build_title_map(str(LOCAL_NAV_DB), "ar")
+        self.assertEqual(
+            sanitize_citation("الرؤيا 22:17", title_map),
+            ("الرؤيا 22:17", "canonical"),
+        )
 
 

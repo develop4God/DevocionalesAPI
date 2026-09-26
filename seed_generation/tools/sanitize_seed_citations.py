@@ -50,10 +50,10 @@ import sys
 from pathlib import Path
 
 try:
-    from .book_name_normalizer import sanitize_book_name
+    from .book_name_normalizer import load_title_aliases, sanitize_book_name
 except ImportError:  # Direct execution from seed_generation/tools
     sys.path.insert(0, str(Path(__file__).resolve().parent))
-    from book_name_normalizer import sanitize_book_name
+    from book_name_normalizer import load_title_aliases, sanitize_book_name
 
 # "Johannes 3:16" / "1. Mose 1:1" / "Psalm 23:1-6" / "Die Psalmen 27:1"
 _CITA = re.compile(r"^(?P<title>.+?)\s+(?P<loc>\d+:\d+(?:-\d+)?)$")
@@ -66,6 +66,10 @@ def build_title_map(db_path: str, language: str) -> dict[str, str]:
     the "already correct" whitelist: a citation that has already been sanitized
     resolves to itself and is reported as ``canonical`` instead of unmatched. That
     is what makes the pass idempotent and re-runnable on any seed.
+
+    The language's optional ``aliases`` are merged last, so title-level variants
+    that no DB column produces (see ``book_name_normalizer.load_title_aliases``)
+    are normalized too, rather than being left unmatched.
     """
     conn = sqlite3.connect(db_path)
     try:
@@ -78,6 +82,7 @@ def build_title_map(db_path: str, language: str) -> dict[str, str]:
         for book_number, long_name in rows
     }
     title_map.update({canonical: canonical for canonical in title_map.values()})
+    title_map.update(load_title_aliases(language))
     return title_map
 
 
