@@ -20,6 +20,9 @@ from tkinter import filedialog, ttk, scrolledtext
 from pathlib import Path
 from datetime import date, timedelta
 
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from seed_generation.tools.seed_content_validator import run_phase1_checks
+
 REQUIRED_FIELDS = [
     "id",
     "date",
@@ -235,15 +238,10 @@ def check_content_quality(entry: dict, lang: str = "") -> list:
         issues.append(f"oracion too short: {len(o)} chars (min {oracion_min})")
     if r and not r.endswith(SENTENCE_ENDINGS):
         issues.append(f"reflexion truncated — ends: ...{r.rstrip()[-40:]}")
-    closing = o[-15:]
-    _latin_amens = len(re.findall(r"\bAm[eé]n\b", closing, re.IGNORECASE))
-    # Exclude Latin AMEN_VARIANTS from unicode count to avoid double-counting:
-    # _latin_amens already covers {'amen','amén','āmen','amem'} via regex.
-    _non_latin_unicode = UNICODE_AMEN_VARIANTS - AMEN_VARIANTS
-    _unicode_amens = sum(
-        closing.count(v) for v in (_non_latin_unicode | CJK_AMEN_VARIANTS)
-    )
-    if _latin_amens + _unicode_amens >= 2:
+    # double_amen: reuse seed_content_validator's check (120-char window) —
+    # this script's own 15-char window falsely matched "amen" inside "Namen" (de).
+    _, _sv_issues, _ = run_phase1_checks(r, o, lang)
+    if any(i.startswith("double_amen") for i in _sv_issues):
         issues.append("double_amen: duplicate Amen in closing")
     if o and not _check_prayer_ending(o):
         issues.append("prayer_ending: oracion does not end with Amen variant")
