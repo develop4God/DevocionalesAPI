@@ -234,7 +234,6 @@ def _box_bot() -> str:
 
 
 def _box_row(text: str, pad_char: str = " ") -> str:
-    visible = len(text.encode("utf-8").decode("utf-8"))
     # strip ANSI for length calc
     import re as _re
 
@@ -360,7 +359,7 @@ def find_latest_state_file() -> Optional[str]:
                 if count >= 2
                 else (dates[0] if count else "—")
             )
-        except Exception:
+        except (OSError, json.JSONDecodeError):
             provider, lang, version, count, dr = "?", "?", "?", 0, "—"
             mtime = "?"
 
@@ -408,7 +407,6 @@ def load_state(path: str) -> dict:
 
 
 def collect(state_path: str) -> None:
-    SEP = "=" * 60
     state = load_state(state_path)
 
     provider = state["provider"]
@@ -531,7 +529,7 @@ def collect(state_path: str) -> None:
                 _print_result_row(
                     date_key, "OK", f"r:{len(reflexion)} o:{len(oracion)}"
                 )
-        except Exception as e:
+        except (ValueError, KeyError) as e:
             _print_result_row(date_key, "BUILD_ERROR", str(e))
             error_records.append(
                 {"date": date_key, "reason": "build_error", "detail": str(e)}
