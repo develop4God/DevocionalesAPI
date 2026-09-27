@@ -24,30 +24,12 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Protocol
 
+from seed_generation.shared.language_length_bounds import get_length_bounds
+
 _TAGS_MASTER_PATH = os.path.join(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "tags_master.json"
 )
 _tags_master_cache: dict | None = None
-
-# Single source of truth for content length bounds — both generation_core's
-# own prompt (Ollama) and BATCH/pipeline_shared.py's prompt (Fireworks batch)
-# import these instead of hardcoding the numbers, so a change to the target
-# range can't be applied to one path and missed on the other.
-#
-# Both fields are bounded by character count (not word count) so the same
-# measurement works for every language, including ones with no word-spacing
-# (e.g. ja/zh) where len(text.split()) is meaningless.
-#
-# Derived from real 2025/2026 es/pt content (p5-p95), verified at 98-99.7%
-# pass rate against es_NVI, es (RVR1960), pt_ARC, pt_NVI. Scoped to
-# Latin-script languages only — ar/de/hi run meaningfully longer per
-# character, and fil's own history is too inconsistent (bimodal, shifts
-# year to year) to derive limits from. Extending these bounds to those
-# languages is unaddressed follow-up work, not covered by this range.
-REFLEXION_MIN_CHARS = 900
-REFLEXION_MAX_CHARS = 1350
-ORACION_MIN_CHARS = 550
-ORACION_MAX_CHARS = 900
 
 
 def _load_tags_master() -> dict:
@@ -91,6 +73,7 @@ def build_devotional_seed_entry(
 
 
 def build_prompt(verse_cita: str, lang: str) -> str:
+    bounds = get_length_bounds(lang)
     return "\n\n".join(
         [
             f"You are a devoted biblical devotional writer. "
@@ -101,9 +84,9 @@ def build_prompt(verse_cita: str, lang: str) -> str:
             "Avoid 'not X, but Y' style contrast constructions,"
             "Return ONLY a valid JSON object with these exact keys:",
             f"- `reflexion`: contextualized reflection on the verse "
-            f"({REFLEXION_MIN_CHARS}-{REFLEXION_MAX_CHARS} characters, in {lang}).",
+            f"({bounds.reflexion_min}-{bounds.reflexion_max} characters, in {lang}).",
             f"- `oracion`: Prayer on the devotional theme "
-            f"({ORACION_MIN_CHARS}-{ORACION_MAX_CHARS} characters, 100% in {lang}), "
+            f"({bounds.oracion_min}-{bounds.oracion_max} characters, 100% in {lang}), "
             f"MUST end with the standard closing phrase 'in the name of Jesus, amen', "
             f"written entirely in {lang} (do not mix in any English words). "
             f"Write this closing phrase exactly ONCE, as the very last words of the prayer.",

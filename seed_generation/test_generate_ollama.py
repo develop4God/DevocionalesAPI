@@ -21,13 +21,10 @@ import urllib.error
 import urllib.request
 
 from seed_generation.shared.generation_core import (
-    ORACION_MAX_CHARS,
-    ORACION_MIN_CHARS,
-    REFLEXION_MAX_CHARS,
-    REFLEXION_MIN_CHARS,
     ContentBuilder,
     DevotionalValidationError,
 )
+from seed_generation.shared.language_length_bounds import get_length_bounds
 
 OLLAMA_URL = "http://localhost:11434/api/generate"
 DEFAULT_MODEL = "gemma4:26b"
@@ -43,6 +40,7 @@ MASTER_VERSION = "RVR1960"
 
 
 def build_prompt(verse_cita: str, lang: str) -> str:
+    bounds = get_length_bounds(lang)
     return "\n\n".join(
         [
             f"You are a devoted biblical devotional writer. "
@@ -53,9 +51,9 @@ def build_prompt(verse_cita: str, lang: str) -> str:
             "Avoid 'not X, but Y' style contrast constructions,"
             "Return ONLY a valid JSON object with these exact keys:",
             f"- `reflexion`: contextualized reflection on the verse "
-            f"({REFLEXION_MIN_CHARS}-{REFLEXION_MAX_CHARS} characters, in {lang}).",
+            f"({bounds.reflexion_min}-{bounds.reflexion_max} characters, in {lang}).",
             f"- `oracion`: Prayer on the devotional theme "
-            f"({ORACION_MIN_CHARS}-{ORACION_MAX_CHARS} characters, 100% in {lang}), "
+            f"({bounds.oracion_min}-{bounds.oracion_max} characters, 100% in {lang}), "
             f"MUST end with the standard closing phrase 'in the name of Jesus, amen', "
             f"written entirely in {lang} (do not mix in any English words). "
             f"Write this closing phrase exactly ONCE, as the very last words of the prayer.",

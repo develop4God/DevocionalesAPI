@@ -47,12 +47,7 @@ from google import genai
 from google.genai import errors as genai_errors
 from google.genai import types
 
-from seed_generation.shared.generation_core import (
-    ORACION_MAX_CHARS,
-    ORACION_MIN_CHARS,
-    REFLEXION_MAX_CHARS,
-    REFLEXION_MIN_CHARS,
-)
+from seed_generation.shared.language_length_bounds import get_length_bounds
 
 # =============================================================================
 # CONFIG
@@ -170,24 +165,25 @@ def run_phase1_checks(reflexion: str, oracion: str, lang: str) -> tuple:
     }
     issues = []
     r, o = reflexion.strip(), oracion.strip()
+    bounds = get_length_bounds(lang)
 
     # 1a. Min length
-    if len(r) < REFLEXION_MIN_CHARS:
+    if len(r) < bounds.reflexion_min:
         flags["min_length"] = False
         issues.append(
-            f"reflexion too short: {len(r)} chars (min {REFLEXION_MIN_CHARS})"
+            f"reflexion too short: {len(r)} chars (min {bounds.reflexion_min})"
         )
-    if len(o) < ORACION_MIN_CHARS:
+    if len(o) < bounds.oracion_min:
         flags["min_length"] = False
-        issues.append(f"oracion too short: {len(o)} chars (min {ORACION_MIN_CHARS})")
+        issues.append(f"oracion too short: {len(o)} chars (min {bounds.oracion_min})")
 
-    # 1a2. Max length (the missing ceiling — see REFLEXION_MAX_CHARS/ORACION_MAX_CHARS)
-    if len(r) > REFLEXION_MAX_CHARS:
+    # 1a2. Max length (per-language ceiling — see language_length_bounds package)
+    if len(r) > bounds.reflexion_max:
         flags["max_length"] = False
-        issues.append(f"reflexion too long: {len(r)} chars (max {REFLEXION_MAX_CHARS})")
-    if len(o) > ORACION_MAX_CHARS:
+        issues.append(f"reflexion too long: {len(r)} chars (max {bounds.reflexion_max})")
+    if len(o) > bounds.oracion_max:
         flags["max_length"] = False
-        issues.append(f"oracion too long: {len(o)} chars (max {ORACION_MAX_CHARS})")
+        issues.append(f"oracion too long: {len(o)} chars (max {bounds.oracion_max})")
 
     # 1b. Prayer ending — lang-aware Amen check
     if not check_prayer_ending(o, lang):
@@ -515,6 +511,7 @@ async def fix_reflexion(
     Supports both old (google-generativeai) and new (google-genai) SDKs.
     """
     issues_txt = "\n".join(f"  - {i}" for i in issues)
+    bounds = get_length_bounds(lang)
 
     prompt = f"""You are a Christian devotional writer. Improve the reflection (reflexion) for language "{lang}".
 Based on verse: "{verse_cita}"
@@ -527,7 +524,7 @@ Original reflexion:
 
 Rules:
 1. Fix the specific issues listed above.
-2. Minimum {REFLEXION_MIN_CHARS} characters.
+2. Minimum {bounds.reflexion_min} characters.
 3. 100% in language "{lang}" — no language mixing.
 4. No consecutive duplicate words (e.g., "die die", "sind sind").
 5. No repeated sentences, phrases, or ideas.

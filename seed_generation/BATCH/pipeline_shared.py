@@ -5,12 +5,7 @@ import re
 import unicodedata
 from typing import Optional
 
-from seed_generation.shared.generation_core import (
-    ORACION_MAX_CHARS,
-    ORACION_MIN_CHARS,
-    REFLEXION_MAX_CHARS,
-    REFLEXION_MIN_CHARS,
-)
+from seed_generation.shared.language_length_bounds import get_length_bounds
 
 # --- Constants ---
 LANG_LABEL_OVERRIDES = {
@@ -158,6 +153,7 @@ def build_user_prompt(
 
 def _system_body(lang: str) -> str:
     lang_label = _lang_label(lang)
+    bounds = get_length_bounds(lang)
     if lang == "en":
         closing_instruction = (
             f"MUST end with the standard closing phrase meaning "
@@ -179,9 +175,9 @@ def _system_body(lang: str) -> str:
             "Avoid 'not X, but Y' style contrast constructions, "
             "Return ONLY a valid JSON object with these exact keys:",
             f"- `reflexion`: contextualized reflection on the verse "
-            f"({REFLEXION_MIN_CHARS}-{REFLEXION_MAX_CHARS} characters, in {lang_label}).",
+            f"({bounds.reflexion_min}-{bounds.reflexion_max} characters, in {lang_label}).",
             f"- `oracion`: Prayer on the devotional theme "
-            f"({ORACION_MIN_CHARS}-{ORACION_MAX_CHARS} characters, 100% in {lang_label}), "
+            f"({bounds.oracion_min}-{bounds.oracion_max} characters, 100% in {lang_label}), "
             f"{closing_instruction} "
             f"Write this closing phrase exactly ONCE, as the very last words of the prayer.",
             f"RULES:\n"
