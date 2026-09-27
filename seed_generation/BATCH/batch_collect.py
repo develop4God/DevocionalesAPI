@@ -324,7 +324,7 @@ def find_latest_state_file() -> Optional[str]:
                 if count >= 2
                 else (dates[0] if count else "—")
             )
-        except (OSError, json.JSONDecodeError):
+        except Exception:  # noqa: BLE001 - malformed state file must not abort the picker
             provider, lang, version, count, dr = "?", "?", "?", 0, "—"
             mtime = "?"
 
@@ -494,7 +494,7 @@ def collect(state_path: str) -> None:
                 _print_result_row(
                     date_key, "OK", f"r:{len(reflexion)} o:{len(oracion)}"
                 )
-        except (ValueError, KeyError) as e:
+        except Exception as e:  # noqa: BLE001 - one bad item must not abort the batch
             _print_result_row(date_key, "BUILD_ERROR", str(e))
             error_records.append(
                 {"date": date_key, "reason": "build_error", "detail": str(e)}
