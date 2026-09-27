@@ -45,15 +45,13 @@ from seed_generation.shared.generation_core import (
     ContentBuilder,
     DevotionalValidationError,
 )
+from seed_generation.shared.language_length_bounds import get_length_bounds
 
 _SCRIPT_DIR = Path(__file__).parent
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Phase 1 local validation  (identical logic to original collect)
 # ─────────────────────────────────────────────────────────────────────────────
-
-REFLEXION_MIN_CHARS = 800
-ORACION_MIN_CHARS = 150
 
 LITURGICAL_WHITELIST = frozenset(
     {
@@ -94,11 +92,16 @@ def _find_dup_words(text: str) -> Optional[str]:
 def run_phase1(reflexion: str, oracion: str, lang: str) -> tuple[bool, list[str]]:
     issues = []
     r, o = reflexion.strip(), oracion.strip()
+    bounds = get_length_bounds(lang)
 
-    if len(r) < REFLEXION_MIN_CHARS:
-        issues.append(f"reflexion too short: {len(r)} < {REFLEXION_MIN_CHARS}")
-    if len(o) < ORACION_MIN_CHARS:
-        issues.append(f"oracion too short: {len(o)} < {ORACION_MIN_CHARS}")
+    if len(r) < bounds.reflexion_min:
+        issues.append(f"reflexion too short: {len(r)} < {bounds.reflexion_min}")
+    if len(o) < bounds.oracion_min:
+        issues.append(f"oracion too short: {len(o)} < {bounds.oracion_min}")
+    if len(r) > bounds.reflexion_max:
+        issues.append(f"reflexion too long: {len(r)} > {bounds.reflexion_max}")
+    if len(o) > bounds.oracion_max:
+        issues.append(f"oracion too long: {len(o)} > {bounds.oracion_max}")
     if not r.endswith((".", "!", "?", "…", "।")):
         if len(r) > 0 and r[-1].isalnum():
             issues.append("reflexion_truncated: ends mid-word")
