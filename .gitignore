@@ -66,3 +66,7 @@ seed_generation/tags_master*.json
 .ruff_cache/
 .gep_session.json
 
+# Generated devotional HTML previews (app_preview.py output)
+*.preview.html
+*.preview_all.html
+
