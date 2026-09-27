@@ -42,10 +42,16 @@ from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
-
 # Google GenAI SDK (new only)
 from google import genai
 from google.genai import types
+
+from seed_generation.shared.generation_core import (
+    ORACION_MAX_WORDS,
+    ORACION_MIN_WORDS,
+    REFLEXION_MAX_CHARS,
+    REFLEXION_MIN_CHARS,
+)
 
 # =============================================================================
 # CONFIG
@@ -53,9 +59,6 @@ from google.genai import types
 VALIDATOR_MODEL = "gemini-2.0-flash"  # Phase 2 quality check
 FIX_ORACION_MODEL = "gemini-2.0-flash"  # Fix prayer  (cheap, ~150 words)
 FIX_REFLEXION_MODEL = "gemini-2.5-flash"  # Fix reflexion (quality, ~300 words)
-
-REFLEXION_MIN_CHARS = 800
-ORACION_MIN_CHARS = 150
 
 # Words allowed to repeat consecutively for liturgical/biblical reasons
 LITURGICAL_WHITELIST: frozenset = frozenset(
@@ -157,6 +160,7 @@ def run_phase1_checks(reflexion: str, oracion: str, lang: str) -> tuple:
     """
     flags = {
         "min_length": True,
+        "max_length": True,
         "prayer_ending": True,
         "double_amen": True,
         "no_dup_words_oracion": True,
@@ -172,9 +176,18 @@ def run_phase1_checks(reflexion: str, oracion: str, lang: str) -> tuple:
         issues.append(
             f"reflexion too short: {len(r)} chars (min {REFLEXION_MIN_CHARS})"
         )
-    if len(o) < ORACION_MIN_CHARS:
+    o_word_count = len(o.split())
+    if o_word_count < ORACION_MIN_WORDS:
         flags["min_length"] = False
-        issues.append(f"oracion too short: {len(o)} chars (min {ORACION_MIN_CHARS})")
+        issues.append(f"oracion too short: {o_word_count} words (min {ORACION_MIN_WORDS})")
+
+    # 1a2. Max length (the missing ceiling — see REFLEXION_MAX_CHARS/ORACION_MAX_WORDS)
+    if len(r) > REFLEXION_MAX_CHARS:
+        flags["max_length"] = False
+        issues.append(f"reflexion too long: {len(r)} chars (max {REFLEXION_MAX_CHARS})")
+    if o_word_count > ORACION_MAX_WORDS:
+        flags["max_length"] = False
+        issues.append(f"oracion too long: {o_word_count} words (max {ORACION_MAX_WORDS})")
 
     # 1b. Prayer ending — lang-aware Amen check
     if not check_prayer_ending(o, lang):
@@ -238,6 +251,7 @@ class ValidationResult:
     passed: bool
     # Phase 1
     min_length: bool
+    max_length: bool
     prayer_ending: bool
     double_amen: bool
     no_dup_words_oracion: bool
@@ -266,6 +280,7 @@ class ValidationResult:
         """True when reflexion-specific checks failed."""
         return not (
             self.min_length
+            and self.max_length
             and self.no_dup_words_reflexion
             and self.no_repetition
             and self.content_quality
@@ -276,6 +291,7 @@ class ValidationResult:
         return cls(
             passed=passed,
             min_length=flags["min_length"],
+            max_length=flags["max_length"],
             prayer_ending=flags["prayer_ending"],
             double_amen=flags["double_amen"],
             no_dup_words_oracion=flags["no_dup_words_oracion"],
@@ -296,6 +312,7 @@ class ValidationResult:
         return cls(
             passed=True,
             min_length=True,
+            max_length=True,
             prayer_ending=True,
             double_amen=True,
             no_dup_words_oracion=True,
@@ -386,6 +403,7 @@ Be strict but fair. Only mark false on clear, objective failures."""
         return ValidationResult(
             passed=all_passed,
             min_length=p1_flags["min_length"],
+            max_length=p1_flags["max_length"],
             prayer_ending=p1_flags["prayer_ending"],
             double_amen=p1_flags["double_amen"],
             no_dup_words_oracion=p1_flags["no_dup_words_oracion"],

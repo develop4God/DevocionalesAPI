@@ -21,6 +21,10 @@ import urllib.error
 import urllib.request
 
 from seed_generation.shared.generation_core import (
+    ORACION_MAX_WORDS,
+    ORACION_MIN_WORDS,
+    REFLEXION_MAX_CHARS,
+    REFLEXION_MIN_CHARS,
     ContentBuilder,
     DevotionalValidationError,
 )
@@ -49,8 +53,9 @@ def build_prompt(verse_cita: str, lang: str) -> str:
             "Avoid 'not X, but Y' style contrast constructions,"
             "Return ONLY a valid JSON object with these exact keys:",
             f"- `reflexion`: contextualized reflection on the verse "
-            f"(minimum 900 characters, in {lang}).",
-            f"- `oracion`: Prayer on the devotional theme (minimum 150 words, 100% in {lang}), "
+            f"({REFLEXION_MIN_CHARS}-{REFLEXION_MAX_CHARS} characters, in {lang}).",
+            f"- `oracion`: Prayer on the devotional theme "
+            f"({ORACION_MIN_WORDS}-{ORACION_MAX_WORDS} words, 100% in {lang}), "
             f"MUST end with the standard closing phrase 'in the name of Jesus, amen', "
             f"written entirely in {lang} (do not mix in any English words). "
             f"Write this closing phrase exactly ONCE, as the very last words of the prayer.",

@@ -29,6 +29,23 @@ _TAGS_MASTER_PATH = os.path.join(
 )
 _tags_master_cache: dict | None = None
 
+# Single source of truth for content length bounds — both generation_core's
+# own prompt (Ollama) and BATCH/pipeline_shared.py's prompt (Fireworks batch)
+# import these instead of hardcoding the numbers, so a change to the target
+# range can't be applied to one path and missed on the other.
+#
+# Derived from real 2025/2026 es/pt content (p5-p95), verified at 92-95% pass
+# rate against es_NVI, es (RVR1960), pt_ARC, pt_NVI. Scoped to Latin-script
+# languages only — ar/de/hi run meaningfully longer per character, ja/zh use
+# no word-spacing (oracion word-count is invalid for them), and fil's own
+# history is too inconsistent (bimodal, shifts year to year) to derive limits
+# from. Extending these bounds to those languages is unaddressed follow-up
+# work, not covered by this range.
+REFLEXION_MIN_CHARS = 900
+REFLEXION_MAX_CHARS = 1350
+ORACION_MIN_WORDS = 100
+ORACION_MAX_WORDS = 155
+
 
 def _load_tags_master() -> dict:
     global _tags_master_cache
@@ -81,8 +98,9 @@ def build_prompt(verse_cita: str, lang: str) -> str:
             "Avoid 'not X, but Y' style contrast constructions,"
             "Return ONLY a valid JSON object with these exact keys:",
             f"- `reflexion`: contextualized reflection on the verse "
-            f"(minimum 900 characters, in {lang}).",
-            f"- `oracion`: Prayer on the devotional theme (minimum 150 words, 100% in {lang}), "
+            f"({REFLEXION_MIN_CHARS}-{REFLEXION_MAX_CHARS} characters, in {lang}).",
+            f"- `oracion`: Prayer on the devotional theme "
+            f"({ORACION_MIN_WORDS}-{ORACION_MAX_WORDS} words, 100% in {lang}), "
             f"MUST end with the standard closing phrase 'in the name of Jesus, amen', "
             f"written entirely in {lang} (do not mix in any English words). "
             f"Write this closing phrase exactly ONCE, as the very last words of the prayer.",

@@ -34,6 +34,12 @@ from tenacity import (
     wait_exponential,
 )
 
+from seed_generation.shared.generation_core import (
+    ORACION_MAX_WORDS,
+    ORACION_MIN_WORDS,
+    REFLEXION_MAX_CHARS,
+    REFLEXION_MIN_CHARS,
+)
 from seed_generation.tools.seed_content_validator import validate_and_fix
 
 # =============================================================================
@@ -141,12 +147,13 @@ async def _call_gemini_raw(
             f'Write a devotional in {lang.upper()} based on the key verse: "{verse_cita}".',
             "Return ONLY a valid JSON object with these exact keys:",
             f"- `reflexion`: Deep contextualized reflection on the verse "
-            f"(minimum 900 characters, approximately 300 words, in {lang}). "
+            f"({REFLEXION_MIN_CHARS}-{REFLEXION_MAX_CHARS} characters, in {lang}). "
             f"Each paragraph must develop a distinct aspect of the verse.",
             "Do NOT repeat any word consecutively, even when separated by punctuation marks — "
             "Never write patterns (example: 'word, word', 'word. Word', 'word; word').",
             f"- Do NOT repeat the same sentence, phrase, or idea in different words.\n"
-            f"- `oracion`: Prayer on the devotional theme (minimum 150 words, 100% in {lang}). "
+            f"- `oracion`: Prayer on the devotional theme "
+            f"({ORACION_MIN_WORDS}-{ORACION_MAX_WORDS} words, 100% in {lang}). "
             f"MUST end with 'in the name of Jesus, amen' correctly translated to {lang}. "
             f"End with exactly one Amen — never write Amen twice.",
             "Do NOT repeat any word consecutively, even when separated by punctuation marks — "

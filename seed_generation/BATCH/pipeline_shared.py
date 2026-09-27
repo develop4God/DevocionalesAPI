@@ -5,6 +5,13 @@ import re
 import unicodedata
 from typing import Optional
 
+from seed_generation.shared.generation_core import (
+    ORACION_MAX_WORDS,
+    ORACION_MIN_WORDS,
+    REFLEXION_MAX_CHARS,
+    REFLEXION_MIN_CHARS,
+)
+
 # --- Constants ---
 LANG_LABEL_OVERRIDES = {
     "fil": "Filipino (ISO 639-2 code: fil)",
@@ -172,8 +179,9 @@ def _system_body(lang: str) -> str:
             "Avoid 'not X, but Y' style contrast constructions, "
             "Return ONLY a valid JSON object with these exact keys:",
             f"- `reflexion`: contextualized reflection on the verse "
-            f"(minimum 900 characters, in {lang_label}).",
-            f"- `oracion`: Prayer on the devotional theme (minimum 150 words, 100% in {lang_label}), "
+            f"({REFLEXION_MIN_CHARS}-{REFLEXION_MAX_CHARS} characters, in {lang_label}).",
+            f"- `oracion`: Prayer on the devotional theme "
+            f"({ORACION_MIN_WORDS}-{ORACION_MAX_WORDS} words, 100% in {lang_label}), "
             f"{closing_instruction} "
             f"Write this closing phrase exactly ONCE, as the very last words of the prayer.",
             f"RULES:\n"
