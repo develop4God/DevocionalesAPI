@@ -21,6 +21,7 @@ from pathlib import Path
 from datetime import date, timedelta
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
+from seed_generation.shared.consecutive_dup_skip import find_consecutive_duplicate
 from seed_generation.tools.seed_content_validator import run_phase1_checks
 
 REQUIRED_FIELDS = [
@@ -106,33 +107,6 @@ SENTENCE_ENDINGS = (
     "！",
     "？",
 )
-# Words whose consecutive repetition is grammatically valid (not a copy error):
-#   - liturgical: intentional repetition (heilig heilig, holy holy)
-#   - reflexive pronouns: 'nous nous' in FR is a standard reflexive-verb construction
-# Loaded from consecutive_dup_skip.json (decoupled per-language whitelist,
-# same pattern as prayer_endings.json below) so new languages/words don't
-# require touching this file.
-_DUP_SKIP_FILE = Path(__file__).parent.parent / "seed_generation" / "shared" / "consecutive_dup_skip.json"
-CONSECUTIVE_DUP_SKIP: frozenset = frozenset()
-try:
-    with open(_DUP_SKIP_FILE, encoding="utf-8") as _f:
-        _dup_skip = json.load(_f)
-    CONSECUTIVE_DUP_SKIP = frozenset(
-        w.lower()
-        for key, words in _dup_skip.items()
-        if key != "_comment"
-        for w in words
-    )
-except FileNotFoundError:
-    print(
-        f"WARNING: {_DUP_SKIP_FILE.name} not found — "
-        "liturgical repetition (holy/amen/etc.) will be flagged as dup_words errors.",
-        file=sys.stderr,
-    )
-except Exception as _ex:
-    print(f"WARNING: Could not load {_DUP_SKIP_FILE.name}: {_ex}", file=sys.stderr)
-# Sentence-ending punctuation: repetition across a sentence boundary is rhetorical, not an error
-SENT_END_PUNCT = frozenset({".", "!", "?", ":", "»", "\u201d"})
 AMEN_VARIANTS = frozenset({"amen", "amén", "āmen", "amem"})  # amem covers PT 'amém'
 CJK_AMEN_VARIANTS = frozenset({"阿们", "阿门", "阿們", "阿門", "アーメン", "ア-メン"})
 HINDI_AMEN_VARIANTS = frozenset({"आमीन", "आमेन", "आमीन", "आमेन"})
@@ -159,28 +133,6 @@ except Exception as _ex:
     print(
         f"WARNING: Could not load {_PRAYER_ENDINGS_FILE.name}: {_ex}", file=sys.stderr
     )
-
-
-def _find_consecutive_dup(text: str):
-    """Returns first consecutive duplicate word (len > 3, not in skip list), or None.
-
-    Skips repetition at sentence boundaries (rhetorical anaphora) and
-    known grammatical constructions (e.g. French reflexive 'nous nous').
-    """
-    words = text.split()
-    for i in range(len(words) - 1):
-        raw1 = words[i]
-        # Skip sentence-boundary repetition (e.g. 'love. Love,' or 'grace: Grace')
-        if raw1 and raw1[-1] in SENT_END_PUNCT:
-            continue
-        w1 = raw1.strip(".,;:!?،؛؟").lower()
-        w2 = words[i + 1].strip(".,;:!?،؛؟").lower()
-        # Arabic 'و' (and) prefix: "وقدوس وقدوس" is "and holy and holy" — the
-        # skip-list check should match the underlying word, not the conjunction.
-        w1_bare = w1[1:] if w1.startswith("و") and len(w1) > 4 else w1
-        if w1 == w2 and len(w1) > 3 and w1 not in CONSECUTIVE_DUP_SKIP and w1_bare not in CONSECUTIVE_DUP_SKIP:
-            return f'"{raw1} {words[i + 1]}"'
-    return None
 
 
 def _check_prayer_ending(oracion: str) -> bool:
@@ -245,10 +197,10 @@ def check_content_quality(entry: dict, lang: str = "") -> list:
         issues.append("double_amen: duplicate Amen in closing")
     if o and not _check_prayer_ending(o):
         issues.append("prayer_ending: oracion does not end with Amen variant")
-    dup = _find_consecutive_dup(r)
+    dup = find_consecutive_duplicate(r, lang)
     if dup:
         issues.append(f"dup_words_reflexion: {dup}")
-    dup = _find_consecutive_dup(o)
+    dup = find_consecutive_duplicate(o, lang)
     if dup:
         issues.append(f"dup_words_oracion: {dup}")
 

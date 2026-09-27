@@ -40,14 +40,13 @@ import unicodedata
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
 
 # Google GenAI SDK (new only)
 from google import genai
 from google.genai import errors as genai_errors
 from google.genai import types
 
-from seed_generation.shared.duplicate_word_whitelist import get_duplicate_whitelist
+from seed_generation.shared.consecutive_dup_skip import find_consecutive_duplicate
 from seed_generation.shared.language_length_bounds import get_length_bounds
 
 # =============================================================================
@@ -112,27 +111,6 @@ def check_prayer_ending(oracion: str, lang: str) -> bool:
 # =============================================================================
 
 
-def _find_consecutive_duplicate(text: str, lang: str) -> Optional[str]:
-    """
-    Returns the first consecutive duplicate word pair (excluding the
-    per-language whitelist — see shared/duplicate_word_whitelist.json), or
-    None if clean.
-
-    Uses simple lowercase + punctuation stripping only — no unicode
-    normalization — to avoid false positives on quoted speech, German
-    opening-quote „ marks, or biblical repetition phrases like „Wahrlich, wahrlich".
-    """
-    strip_chars = ".,;:!?،"
-    whitelist = get_duplicate_whitelist(lang)
-    words = text.split()
-    for i in range(len(words) - 1):
-        w1 = words[i].strip(strip_chars).lower()
-        w2 = words[i + 1].strip(strip_chars).lower()
-        if w1 == w2 and len(w1) > 3 and w1 not in whitelist:
-            return f"'{words[i]} {words[i + 1]}'"
-    return None
-
-
 def run_phase1_checks(reflexion: str, oracion: str, lang: str) -> tuple:
     """
     Phase 1: Local validation — no API cost.
@@ -184,13 +162,13 @@ def run_phase1_checks(reflexion: str, oracion: str, lang: str) -> tuple:
         issues.append("double_amen: duplicate Amen artifact detected in closing")
 
     # 1d. Consecutive duplicate words — oracion
-    dup = _find_consecutive_duplicate(o, lang)
+    dup = find_consecutive_duplicate(o, lang)
     if dup:
         flags["no_dup_words_oracion"] = False
         issues.append(f"dup_words_oracion: consecutive duplicate {dup}")
 
     # 1e. Consecutive duplicate words — reflexion
-    dup = _find_consecutive_duplicate(r, lang)
+    dup = find_consecutive_duplicate(r, lang)
     if dup:
         flags["no_dup_words_reflexion"] = False
         issues.append(f"dup_words_reflexion: consecutive duplicate {dup}")

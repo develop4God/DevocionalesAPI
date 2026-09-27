@@ -41,7 +41,7 @@ from pipeline_shared import (
 )
 from provider_adapter import BatchRequest, RawResult, load_adapter
 
-from seed_generation.shared.duplicate_word_whitelist import get_duplicate_whitelist
+from seed_generation.shared.consecutive_dup_skip import find_consecutive_duplicate
 from seed_generation.shared.generation_core import (
     ContentBuilder,
     DevotionalValidationError,
@@ -53,19 +53,6 @@ _SCRIPT_DIR = Path(__file__).parent
 # ─────────────────────────────────────────────────────────────────────────────
 # Phase 1 local validation  (identical logic to original collect)
 # ─────────────────────────────────────────────────────────────────────────────
-
-
-def _find_dup_words(text: str, lang: str) -> Optional[str]:
-    strip_chars = ".,;:!?،\"'()[]{}—–-\u2019\u2018\u201c\u201d"
-    whitelist = get_duplicate_whitelist(lang)
-    words = text.split()
-    for i in range(1, len(words)):
-        w1 = words[i - 1].strip(strip_chars).lower()
-        w2 = words[i].strip(strip_chars).lower()
-        if w1 and w2 and w1 == w2 and w1 not in whitelist:
-            return f"{words[i - 1]} {words[i]}"
-    return None
-
 
 def run_phase1(reflexion: str, oracion: str, lang: str) -> tuple[bool, list[str]]:
     issues = []
@@ -95,10 +82,10 @@ def run_phase1(reflexion: str, oracion: str, lang: str) -> tuple[bool, list[str]
     if amen_count >= 2:
         issues.append("double_amen: duplicate Amen artifact detected in closing")
 
-    dup_r = _find_dup_words(r, lang)
+    dup_r = find_consecutive_duplicate(r, lang)
     if dup_r:
         issues.append(f"dup_words_reflexion: consecutive duplicate '{dup_r}'")
-    dup_o = _find_dup_words(o, lang)
+    dup_o = find_consecutive_duplicate(o, lang)
     if dup_o:
         issues.append(f"dup_words_oracion: consecutive duplicate '{dup_o}'")
 
