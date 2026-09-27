@@ -47,6 +47,7 @@ from google import genai
 from google.genai import errors as genai_errors
 from google.genai import types
 
+from seed_generation.shared.duplicate_word_whitelist import get_duplicate_whitelist
 from seed_generation.shared.language_length_bounds import get_length_bounds
 
 # =============================================================================
@@ -55,25 +56,6 @@ from seed_generation.shared.language_length_bounds import get_length_bounds
 VALIDATOR_MODEL = "gemini-2.0-flash"  # Phase 2 quality check
 FIX_ORACION_MODEL = "gemini-2.0-flash"  # Fix prayer  (cheap, ~150 words)
 FIX_REFLEXION_MODEL = "gemini-2.5-flash"  # Fix reflexion (quality, ~300 words)
-
-# Words allowed to repeat consecutively for liturgical/biblical reasons
-LITURGICAL_WHITELIST: frozenset = frozenset(
-    {
-        "heilig",
-        "holy",
-        "kadosh",
-        "halleluja",
-        "hosanna",
-        "amen",
-        "amén",
-        "āmen",
-        # Tagalog liturgical phrases
-        "amen",
-        "aleluya",
-        "hosanna",
-        "panginoon",
-    }
-)
 
 # =============================================================================
 # PRAYER ENDINGS — loaded once from JSON, reused everywhere
@@ -130,21 +112,23 @@ def check_prayer_ending(oracion: str, lang: str) -> bool:
 # =============================================================================
 
 
-def _find_consecutive_duplicate(text: str) -> Optional[str]:
+def _find_consecutive_duplicate(text: str, lang: str) -> Optional[str]:
     """
-    Returns the first consecutive duplicate word pair (excluding liturgical
-    whitelist), or None if clean.
+    Returns the first consecutive duplicate word pair (excluding the
+    per-language whitelist — see shared/duplicate_word_whitelist.json), or
+    None if clean.
 
-    Uses simple lowercase + ASCII-punctuation stripping only — no unicode
+    Uses simple lowercase + punctuation stripping only — no unicode
     normalization — to avoid false positives on quoted speech, German
     opening-quote „ marks, or biblical repetition phrases like „Wahrlich, wahrlich".
     """
-    strip_chars = ".,;:!?"
+    strip_chars = ".,;:!?،"
+    whitelist = get_duplicate_whitelist(lang)
     words = text.split()
     for i in range(len(words) - 1):
         w1 = words[i].strip(strip_chars).lower()
         w2 = words[i + 1].strip(strip_chars).lower()
-        if w1 == w2 and len(w1) > 3 and w1 not in LITURGICAL_WHITELIST:
+        if w1 == w2 and len(w1) > 3 and w1 not in whitelist:
             return f"'{words[i]} {words[i + 1]}'"
     return None
 
@@ -200,13 +184,13 @@ def run_phase1_checks(reflexion: str, oracion: str, lang: str) -> tuple:
         issues.append("double_amen: duplicate Amen artifact detected in closing")
 
     # 1d. Consecutive duplicate words — oracion
-    dup = _find_consecutive_duplicate(o)
+    dup = _find_consecutive_duplicate(o, lang)
     if dup:
         flags["no_dup_words_oracion"] = False
         issues.append(f"dup_words_oracion: consecutive duplicate {dup}")
 
     # 1e. Consecutive duplicate words — reflexion
-    dup = _find_consecutive_duplicate(r)
+    dup = _find_consecutive_duplicate(r, lang)
     if dup:
         flags["no_dup_words_reflexion"] = False
         issues.append(f"dup_words_reflexion: consecutive duplicate {dup}")
