@@ -24,6 +24,7 @@ from typing import Optional
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, status
 from google import genai
+from google.genai import errors as genai_errors
 from google.genai import types
 from pydantic import BaseModel
 from tenacity import (
@@ -278,7 +279,7 @@ async def _generate_validated(
                 if not r_valid or not o_valid:
                     print("WARNING: Script fix still failed — will retry generation")
                     continue
-            except Exception as e:
+            except (genai_errors.APIError, ValueError) as e:
                 print(f"ERROR: Script fix failed: {e} — will retry generation")
                 continue
 
@@ -358,7 +359,8 @@ async def generate_creative(request: SeedGenerateRequest):
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail=f"Gemini retry exhausted: {str(last)}",
         )
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 — outermost endpoint boundary: any
+        # unhandled failure must become a clean 500, not an unhandled crash.
         traceback.print_exc()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

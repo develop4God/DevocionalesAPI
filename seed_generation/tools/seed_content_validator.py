@@ -44,6 +44,7 @@ from typing import Optional
 
 # Google GenAI SDK (new only)
 from google import genai
+from google.genai import errors as genai_errors
 from google.genai import types
 
 from seed_generation.shared.generation_core import (
@@ -97,7 +98,7 @@ def _load_prayer_endings() -> dict:
             data = json.load(f)
         _PRAYER_ENDINGS = {k: v for k, v in data.items() if not k.startswith("_")}
         print(f"INFO: prayer_endings.json loaded — {len(_PRAYER_ENDINGS)} languages")
-    except Exception as e:
+    except (OSError, json.JSONDecodeError) as e:
         print(
             f"WARNING: Could not load prayer_endings.json: {e} — using fallback ['Amen']"
         )
@@ -422,7 +423,7 @@ Be strict but fair. Only mark false on clear, objective failures."""
     except json.JSONDecodeError as e:
         print(f"WARNING: Phase 2 JSON parse error: {e}")
         return ValidationResult.skipped(f"p2_json_error: {e}")
-    except Exception as e:
+    except genai_errors.APIError as e:
         print(f"WARNING: Phase 2 failed: {e} — skipping")
         return ValidationResult.skipped(str(e))
 
@@ -500,7 +501,7 @@ Rules:
 
         print(f"INFO: fix_oracion ✅ (model: {FIX_ORACION_MODEL})")
         return fixed
-    except Exception as e:
+    except (genai_errors.APIError, AttributeError) as e:
         print(f"WARNING: fix_oracion failed: {e} — returning original")
         return oracion
 
@@ -545,7 +546,7 @@ Rules:
         fixed = response.text.strip()
         print(f"INFO: fix_reflexion ✅ (model: {FIX_REFLEXION_MODEL})")
         return fixed
-    except Exception as e:
+    except (genai_errors.APIError, AttributeError) as e:
         print(f"WARNING: fix_reflexion failed: {e} — returning original")
         return reflexion
 

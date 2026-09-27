@@ -106,7 +106,7 @@ def repair_json(raw_text: str) -> Optional[dict]:
                 .encode("raw_unicode_escape")
                 .decode("unicode_escape"),
             }
-        except Exception:
+        except UnicodeError:
             return {
                 "reflexion": reflexion_m.group(1),
                 "oracion": oracion_m.group(1),
@@ -210,7 +210,7 @@ def _load_prayer_endings() -> dict:
         with open(path, encoding="utf-8") as f:
             data = json.load(f)
         return {k: v for k, v in data.items() if not k.startswith("_")}
-    except Exception:
+    except (OSError, json.JSONDecodeError):
         return {}
 
 

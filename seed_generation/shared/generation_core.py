@@ -321,7 +321,7 @@ class CheckpointStore:
                     data = json.load(f)
                 print(f"INFO: Checkpoint found — {data['completed_count']} dates done")
                 return data
-            except Exception as e:
+            except (OSError, json.JSONDecodeError, KeyError) as e:
                 print(f"WARNING: Could not load checkpoint: {e}")
         return None
 
@@ -366,7 +366,7 @@ class CheckpointStore:
         if os.path.exists(self.checkpoint_file):
             try:
                 os.remove(self.checkpoint_file)
-            except Exception:
+            except OSError:
                 pass
 
 
