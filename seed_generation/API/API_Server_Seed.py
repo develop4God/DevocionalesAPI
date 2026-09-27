@@ -36,8 +36,8 @@ from tenacity import (
 )
 
 from seed_generation.shared.generation_core import (
-    ORACION_MAX_WORDS,
-    ORACION_MIN_WORDS,
+    ORACION_MAX_CHARS,
+    ORACION_MIN_CHARS,
     REFLEXION_MAX_CHARS,
     REFLEXION_MIN_CHARS,
 )
@@ -154,7 +154,7 @@ async def _call_gemini_raw(
             "Never write patterns (example: 'word, word', 'word. Word', 'word; word').",
             f"- Do NOT repeat the same sentence, phrase, or idea in different words.\n"
             f"- `oracion`: Prayer on the devotional theme "
-            f"({ORACION_MIN_WORDS}-{ORACION_MAX_WORDS} words, 100% in {lang}). "
+            f"({ORACION_MIN_CHARS}-{ORACION_MAX_CHARS} characters, 100% in {lang}). "
             f"MUST end with 'in the name of Jesus, amen' correctly translated to {lang}. "
             f"End with exactly one Amen — never write Amen twice.",
             "Do NOT repeat any word consecutively, even when separated by punctuation marks — "

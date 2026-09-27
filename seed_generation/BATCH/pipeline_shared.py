@@ -6,8 +6,8 @@ import unicodedata
 from typing import Optional
 
 from seed_generation.shared.generation_core import (
-    ORACION_MAX_WORDS,
-    ORACION_MIN_WORDS,
+    ORACION_MAX_CHARS,
+    ORACION_MIN_CHARS,
     REFLEXION_MAX_CHARS,
     REFLEXION_MIN_CHARS,
 )
@@ -181,7 +181,7 @@ def _system_body(lang: str) -> str:
             f"- `reflexion`: contextualized reflection on the verse "
             f"({REFLEXION_MIN_CHARS}-{REFLEXION_MAX_CHARS} characters, in {lang_label}).",
             f"- `oracion`: Prayer on the devotional theme "
-            f"({ORACION_MIN_WORDS}-{ORACION_MAX_WORDS} words, 100% in {lang_label}), "
+            f"({ORACION_MIN_CHARS}-{ORACION_MAX_CHARS} characters, 100% in {lang_label}), "
             f"{closing_instruction} "
             f"Write this closing phrase exactly ONCE, as the very last words of the prayer.",
             f"RULES:\n"

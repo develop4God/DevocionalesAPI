@@ -21,8 +21,8 @@ import urllib.error
 import urllib.request
 
 from seed_generation.shared.generation_core import (
-    ORACION_MAX_WORDS,
-    ORACION_MIN_WORDS,
+    ORACION_MAX_CHARS,
+    ORACION_MIN_CHARS,
     REFLEXION_MAX_CHARS,
     REFLEXION_MIN_CHARS,
     ContentBuilder,
@@ -55,7 +55,7 @@ def build_prompt(verse_cita: str, lang: str) -> str:
             f"- `reflexion`: contextualized reflection on the verse "
             f"({REFLEXION_MIN_CHARS}-{REFLEXION_MAX_CHARS} characters, in {lang}).",
             f"- `oracion`: Prayer on the devotional theme "
-            f"({ORACION_MIN_WORDS}-{ORACION_MAX_WORDS} words, 100% in {lang}), "
+            f"({ORACION_MIN_CHARS}-{ORACION_MAX_CHARS} characters, 100% in {lang}), "
             f"MUST end with the standard closing phrase 'in the name of Jesus, amen', "
             f"written entirely in {lang} (do not mix in any English words). "
             f"Write this closing phrase exactly ONCE, as the very last words of the prayer.",

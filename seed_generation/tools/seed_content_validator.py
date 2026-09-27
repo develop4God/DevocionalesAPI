@@ -48,8 +48,8 @@ from google.genai import errors as genai_errors
 from google.genai import types
 
 from seed_generation.shared.generation_core import (
-    ORACION_MAX_WORDS,
-    ORACION_MIN_WORDS,
+    ORACION_MAX_CHARS,
+    ORACION_MIN_CHARS,
     REFLEXION_MAX_CHARS,
     REFLEXION_MIN_CHARS,
 )
@@ -177,18 +177,17 @@ def run_phase1_checks(reflexion: str, oracion: str, lang: str) -> tuple:
         issues.append(
             f"reflexion too short: {len(r)} chars (min {REFLEXION_MIN_CHARS})"
         )
-    o_word_count = len(o.split())
-    if o_word_count < ORACION_MIN_WORDS:
+    if len(o) < ORACION_MIN_CHARS:
         flags["min_length"] = False
-        issues.append(f"oracion too short: {o_word_count} words (min {ORACION_MIN_WORDS})")
+        issues.append(f"oracion too short: {len(o)} chars (min {ORACION_MIN_CHARS})")
 
-    # 1a2. Max length (the missing ceiling — see REFLEXION_MAX_CHARS/ORACION_MAX_WORDS)
+    # 1a2. Max length (the missing ceiling — see REFLEXION_MAX_CHARS/ORACION_MAX_CHARS)
     if len(r) > REFLEXION_MAX_CHARS:
         flags["max_length"] = False
         issues.append(f"reflexion too long: {len(r)} chars (max {REFLEXION_MAX_CHARS})")
-    if o_word_count > ORACION_MAX_WORDS:
+    if len(o) > ORACION_MAX_CHARS:
         flags["max_length"] = False
-        issues.append(f"oracion too long: {o_word_count} words (max {ORACION_MAX_WORDS})")
+        issues.append(f"oracion too long: {len(o)} chars (max {ORACION_MAX_CHARS})")
 
     # 1b. Prayer ending — lang-aware Amen check
     if not check_prayer_ending(o, lang):
