@@ -1,10 +1,19 @@
 from .base import LengthBounds
 
-# Derived from 2027 ar_NAV content (p5-p95 + buffer): reflexion 903-1111,
-# oracion 839-983. The Latin default's oracion_max=900 sits below AR's own
-# median (915), so it needs a wider ceiling; reflexion already fits within
-# the Latin default but is restated here so AR's bounds are self-contained.
+# Derived from the published 2025 + 2026 ar_NAV corpus (365 entries each,
+# near-identical: reflexion median ~2200 / p5-p95 1700-2950, oracion median
+# ~1030 / p5-p95 790-1370), so Arabic readers keep the length they already
+# know. Upper bounds are trimmed below p95 because 2026 had outliers up to
+# 5050 chars. The 2027 NAV set generated under the Latin default (~1000 chars)
+# was about half that length, so these bounds replace the earlier ones that
+# had been derived from that 2027 file itself.
 LANGS = ("ar",)
 BOUNDS = LengthBounds(
-    reflexion_min=900, reflexion_max=1150, oracion_min=550, oracion_max=1000
+    reflexion_min=1800,
+    reflexion_max=2600,
+    oracion_min=800,
+    oracion_max=1300,
+    # 2025/2026 AR reflexions run ~380 words. Gemma undershoots a bare
+    # character range, so the word count is stated too.
+    style_hint="Aim for about 380 words in total (never fewer than 330).",
 )

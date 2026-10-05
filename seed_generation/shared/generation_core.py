@@ -84,7 +84,8 @@ def build_prompt(verse_cita: str, lang: str) -> str:
             "Avoid 'not X, but Y' style contrast constructions,"
             "Return ONLY a valid JSON object with these exact keys:",
             f"- `reflexion`: contextualized reflection on the verse "
-            f"({bounds.reflexion_min}-{bounds.reflexion_max} characters, in {lang}).",
+            f"({bounds.reflexion_min}-{bounds.reflexion_max} characters, in {lang})."
+            + (f" {bounds.style_hint}" if bounds.style_hint else ""),
             f"- `oracion`: Prayer on the devotional theme "
             f"({bounds.oracion_min}-{bounds.oracion_max} characters, 100% in {lang}), "
             f"MUST end with the standard closing phrase 'in the name of Jesus, amen', "
