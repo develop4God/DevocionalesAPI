@@ -287,5 +287,18 @@ class TestCheckpointStoreAtomicSave(unittest.TestCase):
         self.assertEqual(leftovers, [])
 
 
+class BuildPromptStyleHintTests(unittest.TestCase):
+    def test_arabic_prompt_includes_style_hint(self):
+        from seed_generation.shared.generation_core import build_prompt
+
+        self.assertIn("about 380 words", build_prompt("يوحنا 3:16", "ar"))
+
+    def test_other_languages_prompt_has_no_style_hint(self):
+        from seed_generation.shared.generation_core import build_prompt
+
+        for lang in ("es", "en", "pt", "fr"):
+            self.assertNotIn("380 words", build_prompt("John 3:16", lang))
+
+
 if __name__ == "__main__":
     unittest.main()
