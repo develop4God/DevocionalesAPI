@@ -6,6 +6,7 @@
 #
 # kind:
 #   local — runs on-machine (Ollama), no API key, no per-token cost
+#   remote — self-hosted on another machine (Oracle), no API key, no per-token cost
 #   api   — remote provider, requires api_key_env
 #
 # supports_thinking: whether this model has a reasoning/chain-of-thought mode
@@ -38,6 +39,20 @@ providers:
         thinking_enabled: false
     defaults:
       model: gemma4-26b
+
+  # Ollama on the Oracle OCI Always Free A1 server (2 OCPU / 12 GB, CPU-only,
+  # ~2-3 tok/s). Its Ollama listens on 127.0.0.1 only, so the url is the local
+  # end of an SSH tunnel: ssh -N -L 11435:127.0.0.1:11434 ubuntu@<server-ip>
+  oracle:
+    kind: remote
+    url: http://localhost:11435/api/generate
+    timeout_seconds: 900
+    models:
+      gemma4-12b:
+        model_id: gemma4:12b
+        supports_thinking: false
+    defaults:
+      model: gemma4-12b
 
   gemini:
     kind: api

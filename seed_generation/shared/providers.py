@@ -50,6 +50,8 @@ def resolve_model(provider: str, model_alias: str | None) -> dict:
 class OllamaGenerator:
     """Local Ollama model — no API key, no network beyond localhost."""
 
+    _config_key = "ollama"
+
     def __init__(
         self,
         model: str,
@@ -57,7 +59,7 @@ class OllamaGenerator:
         timeout: int | None = None,
         thinking_enabled: bool = False,
     ):
-        cfg = _load_config()["ollama"]
+        cfg = _load_config()[self._config_key]
         self._model = model
         self._url = url or cfg["url"]
         self._timeout = timeout or cfg["timeout_seconds"]
@@ -78,6 +80,12 @@ class OllamaGenerator:
         with urllib.request.urlopen(req, timeout=self._timeout) as resp:
             result = json.loads(resp.read().decode("utf-8"))
         return result.get("response", "")
+
+
+class OracleGenerator(OllamaGenerator):
+    """Ollama on the Oracle OCI server — reached through an SSH tunnel (see providers.yml)."""
+
+    _config_key = "oracle"
 
 
 class GeminiGenerator:
@@ -130,6 +138,7 @@ class AnthropicGenerator:
 
 PROVIDERS = {
     "ollama": OllamaGenerator,
+    "oracle": OracleGenerator,
     "gemini": GeminiGenerator,
     "anthropic": AnthropicGenerator,
 }
