@@ -15,16 +15,16 @@ on:
     inputs:
       lang:
         description: "Language code"
-        default: "es"
+        default: "fr"
       version:
         description: "Bible version code"
-        default: "RVR1960"
+        default: "LSG1910"
       seed:
         description: "Seed file path (repo-relative)"
-        default: "seed_generation/2026/seeds/ES/seed_es_RVR1960_ollama_test.json"
+        default: "seed_generation/2027/seeds/FR/seed_fr_LSG1910_for_2027.json"
       limit:
         description: "Max entries to generate (about 4.5 min each)"
-        default: "5"
+        default: "20"
 
 concurrency:
   group: oracle-server
