@@ -1,0 +1,168 @@
+name: Oracle generate devotionals
+
+# Manual run: generates N devotionals with the Oracle-hosted gemma4:12b through the
+# real generate_from_seed pipeline (--provider oracle) and checks that the output
+# entries are structurally valid (same keys as the yearly devotional files).
+# Generated JSON is uploaded as an artifact; nothing is committed back.
+#
+# The server's Ollama listens on 127.0.0.1 only, so the runner reaches it through
+# an SSH tunnel (providers.yml `oracle` -> localhost:11435). One request at a time:
+# the box has 2 CPU cores / 12 GB RAM, parallel requests gave no speedup and
+# caused an out-of-memory kill.
+
+on:
+  workflow_dispatch:
+    inputs:
+      lang:
+        description: "Language code"
+        default: "fr"
+      version:
+        description: "Bible version code"
+        default: "LSG1910"
+      seed:
+        description: "Seed file path (repo-relative)"
+        default: "seed_generation/2027/seeds/FR/seed_fr_LSG1910_for_2027.json"
+      limit:
+        description: "Max entries to generate (about 4.5 min each)"
+        default: "20"
+
+concurrency:
+  group: oracle-server
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 345
+    env:
+      INPUT_LANG: ${{ inputs.lang }}
+      INPUT_VERSION: ${{ inputs.version }}
+      INPUT_SEED: ${{ inputs.seed }}
+      INPUT_LIMIT: ${{ inputs.limit }}
+      TUNNEL_SOCK: /tmp/oci-tunnel.sock
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install pyyaml oci-cli
+
+      - name: Write OCI config and key
+        env:
+          OCI_USER_OCID: ${{ secrets.OCI_USER_OCID }}
+          OCI_TENANCY_OCID: ${{ secrets.OCI_TENANCY_OCID }}
+          OCI_FINGERPRINT: ${{ secrets.OCI_FINGERPRINT }}
+          OCI_PRIVATE_KEY: ${{ secrets.OCI_PRIVATE_KEY }}
+          OCI_REGION: us-ashburn-1
+        run: |
+          mkdir -p ~/.oci
+          echo "$OCI_PRIVATE_KEY" > ~/.oci/oci_api_key.pem
+          chmod 600 ~/.oci/oci_api_key.pem
+          cat > ~/.oci/config <<EOF
+          [DEFAULT]
+          user=$OCI_USER_OCID
+          fingerprint=$OCI_FINGERPRINT
+          key_file=~/.oci/oci_api_key.pem
+          tenancy=$OCI_TENANCY_OCID
+          region=$OCI_REGION
+          EOF
+
+      - name: Find the server
+        id: server
+        env:
+          COMPARTMENT_ID: ${{ secrets.OCI_TENANCY_OCID }}
+        run: |
+          INSTANCE_ID=$(oci compute instance list \
+            --compartment-id "$COMPARTMENT_ID" \
+            --display-name gemma4-12b-server \
+            --lifecycle-state RUNNING \
+            --query "data[0].id" --raw-output 2>/dev/null || echo "")
+          if [ -z "$INSTANCE_ID" ] || [ "$INSTANCE_ID" = "null" ]; then
+            echo "::error::gemma4-12b-server is not RUNNING"
+            exit 1
+          fi
+          IP=$(oci compute instance list-vnics --instance-id "$INSTANCE_ID" \
+            --query 'data[0]."public-ip"' --raw-output)
+          echo "::add-mask::$IP"
+          echo "ip=$IP" >> "$GITHUB_OUTPUT"
+
+      - name: Open SSH tunnel to Ollama
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.OCI_SSH_PRIVATE_KEY }}
+          SERVER_IP: ${{ steps.server.outputs.ip }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/oci_key
+          chmod 600 ~/.ssh/oci_key
+          for i in $(seq 1 30); do
+            if ssh -i ~/.ssh/oci_key -M -S "$TUNNEL_SOCK" -f -N \
+              -o ExitOnForwardFailure=yes -o StrictHostKeyChecking=accept-new \
+              -o ConnectTimeout=10 -o ServerAliveInterval=30 \
+              -L 11435:127.0.0.1:11434 "ubuntu@$SERVER_IP"; then
+              break
+            fi
+            echo "Waiting for SSH... ($i/30)"
+            sleep 10
+          done
+          ssh -S "$TUNNEL_SOCK" -O check "ubuntu@$SERVER_IP"
+          for i in $(seq 1 12); do
+            if curl -sf http://localhost:11435/api/tags | grep -q '"gemma4:12b"'; then
+              echo "Ollama reachable, gemma4:12b present"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "::error::Ollama not reachable through the tunnel or gemma4:12b missing"
+          exit 1
+
+      - name: Generate with --provider oracle
+        run: |
+          python -u -m seed_generation.generate_from_seed \
+            --seed "$INPUT_SEED" --lang "$INPUT_LANG" --version "$INPUT_VERSION" \
+            --provider oracle --limit "$INPUT_LIMIT" --output-dir out
+
+      - name: Check the generated entries
+        run: |
+          python - <<'PY'
+          import glob, json, os, sys
+
+          REQUIRED = {"id", "date", "language", "version", "versiculo",
+                      "reflexion", "para_meditar", "oracion", "tags"}
+          requested = int(os.environ["INPUT_LIMIT"])
+          lang = os.environ["INPUT_LANG"]
+          files = glob.glob("out/raw_*.json")
+          if not files:
+              print("::error::No devotionals were generated")
+              sys.exit(1)
+          days = json.load(open(files[0], encoding="utf-8"))["data"][lang]
+          bad = {d: sorted(REQUIRED - set(v[0])) for d, v in days.items() if REQUIRED - set(v[0])}
+          lines = [f"### Oracle generation: {len(days)}/{requested} entries generated",
+                   f"- structurally valid: {len(days) - len(bad)}/{len(days)}"]
+          lines += [f"- `{d}` missing keys: {', '.join(k)}" for d, k in bad.items()]
+          errors = glob.glob("out/generation_errors_*.json")
+          if errors:
+              lines.append(f"- skipped entries, see `{os.path.basename(errors[0])}` in the artifact")
+          open(os.environ["GITHUB_STEP_SUMMARY"], "a").write("\n".join(lines) + "\n")
+          print("\n".join(lines))
+          sys.exit(1 if bad else 0)
+          PY
+
+      - name: Upload generated devotionals
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: oracle-devotionals-${{ github.run_id }}
+          path: out/
+          if-no-files-found: ignore
+
+      - name: Close SSH tunnel
+        if: always()
+        env:
+          SERVER_IP: ${{ steps.server.outputs.ip }}
+        run: ssh -S "$TUNNEL_SOCK" -O exit "ubuntu@$SERVER_IP" || true
