@@ -300,5 +300,25 @@ class BuildPromptStyleHintTests(unittest.TestCase):
             self.assertNotIn("380 words", build_prompt("John 3:16", lang))
 
 
+class BuildPromptClosingPhraseTests(unittest.TestCase):
+    def test_non_english_forbids_english_closing_phrase(self):
+        from seed_generation.shared.generation_core import build_prompt
+
+        for lang in ("es", "pt", "de", "ar"):
+            prompt = build_prompt("Juan 3:16", lang)
+            self.assertIn(f"translated into {lang}", prompt)
+            self.assertIn("do not output those words in English", prompt)
+            self.assertIn("exactly ONCE", prompt)
+
+    def test_english_prompt_asks_for_english_closing_phrase(self):
+        from seed_generation.shared.generation_core import build_prompt
+
+        prompt = build_prompt("John 3:16", "en")
+        self.assertIn("'in the name of Jesus, amen', written in English.", prompt)
+        self.assertNotIn("do not output those words in English", prompt)
+        self.assertNotIn("do not mix in any English words", prompt)
+        self.assertIn("exactly ONCE", prompt)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -10,6 +10,8 @@ Usage:
   python3 test_generate_ollama.py [--limit N] [--model gemma4:26b]
 
 Requires Ollama running locally (http://localhost:11434) with the model pulled.
+For a remote server (e.g. via SSH tunnel), set OLLAMA_URL to its /api/generate URL.
+Slow servers can raise the per-request timeout (seconds) with OLLAMA_TIMEOUT.
 """
 
 import argparse
@@ -26,7 +28,8 @@ from seed_generation.shared.generation_core import (
 )
 from seed_generation.shared.language_length_bounds import get_length_bounds
 
-OLLAMA_URL = "http://localhost:11434/api/generate"
+OLLAMA_URL = os.environ.get("OLLAMA_URL", "http://localhost:11434/api/generate")
+OLLAMA_TIMEOUT = int(os.environ.get("OLLAMA_TIMEOUT", "180"))
 DEFAULT_MODEL = "gemma4:26b"
 DEFAULT_SEED = os.path.join(
     os.path.dirname(os.path.abspath(__file__)),
@@ -64,7 +67,7 @@ def build_prompt(verse_cita: str, lang: str) -> str:
     )
 
 
-def call_ollama(model: str, prompt: str, timeout: int = 180) -> dict:
+def call_ollama(model: str, prompt: str, timeout: int = OLLAMA_TIMEOUT) -> dict:
     payload = json.dumps(
         {"model": model, "prompt": prompt, "think": False, "stream": False}
     ).encode("utf-8")

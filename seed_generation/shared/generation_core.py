@@ -88,9 +88,15 @@ def build_prompt(verse_cita: str, lang: str) -> str:
             + (f" {bounds.style_hint}" if bounds.style_hint else ""),
             f"- `oracion`: Prayer on the devotional theme "
             f"({bounds.oracion_min}-{bounds.oracion_max} characters, 100% in {lang}), "
-            f"MUST end with the standard closing phrase 'in the name of Jesus, amen', "
-            f"written entirely in {lang} (do not mix in any English words). "
-            f"Write this closing phrase exactly ONCE, as the very last words of the prayer.",
+            + (
+                "MUST end with the standard closing phrase 'in the name of Jesus, amen', "
+                "written in English. "
+                if lang == "en"
+                else f"MUST end with the standard closing phrase meaning "
+                f"'in the name of Jesus, amen', translated into {lang} "
+                f"— do not output those words in English. "
+            )
+            + "Write this closing phrase exactly ONCE, as the very last words of the prayer.",
             f"RULES:\n"
             f"- ALL text MUST be 100% in {lang} — no language mixing.\n"
             f"- Do NOT include transliterations, romanizations, or text in parentheses.\n"
