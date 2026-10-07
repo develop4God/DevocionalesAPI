@@ -2,7 +2,7 @@
 sanitize_seed_citations.py
 ──────────────────────────
 Rewrite the *book title* of every citation in an existing seed file using the
-shared, data-driven book-name sanitizer (`book_name_normalizer` +
+shared, data-driven book-name sanitizer (`bible_resolver` +
 `book_name_sanitizers/<lang>.json`).
 
 Why this exists
@@ -18,7 +18,7 @@ completed) therefore carry raw long forms. This pass repairs them using the DB
 only to map raw title → book_number → canonical title; it never re-resolves
 verse text and never touches dates, tags, entry counts or entry order.
 
-It is deliberately decoupled from `verse_resolver`: adding or correcting a
+It is deliberately decoupled from `bible_resolver`: adding or correcting a
 language is a data change in `book_name_sanitizers/<lang>.json`, and this script
 re-applies it to seeds generated before that change.
 
@@ -48,13 +48,8 @@ import json
 import re
 import sqlite3
 import sys
-from pathlib import Path
 
-try:
-    from .book_name_normalizer import load_title_aliases, sanitize_book_name
-except ImportError:  # Direct execution from seed_generation/tools
-    sys.path.insert(0, str(Path(__file__).resolve().parent))
-    from book_name_normalizer import load_title_aliases, sanitize_book_name
+from bible_resolver import load_title_aliases, sanitize_book_name
 
 # "Johannes 3:16" / "1. Mose 1:1" / "Psalm 23:1-6" / "Die Psalmen 27:1"
 _CITA = re.compile(r"^(?P<title>.+?)\s+(?P<loc>\d+:\d+(?:-\d+)?)$")
@@ -69,7 +64,7 @@ def build_title_map(db_path: str, language: str) -> dict[str, str]:
     is what makes the pass idempotent and re-runnable on any seed.
 
     The language's optional ``aliases`` are merged last, so title-level variants
-    that no DB column produces (see ``book_name_normalizer.load_title_aliases``)
+    that no DB column produces (see ``bible_resolver.load_title_aliases``)
     are normalized too, rather than being left unmatched.
     """
     conn = sqlite3.connect(db_path)

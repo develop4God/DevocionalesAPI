@@ -56,6 +56,11 @@ wheels = [
 ]
 
 [[package]]
+name = "bible-resolver"
+version = "0.2.0"
+source = { git = "https://github.com/develop4God/bible_versions?rev=main#988c9a1a0a14115123dea1be522ece7f2f87eb07" }
+
+[[package]]
 name = "certifi"
 version = "2026.7.22"
 source = { registry = "https://pypi.org/simple" }
@@ -354,6 +359,7 @@ version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "anthropic" },
+    { name = "bible-resolver" },
     { name = "fastapi" },
     { name = "google-genai" },
     { name = "openai" },
@@ -374,6 +380,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "anthropic", specifier = "==0.42.0" },
+    { name = "bible-resolver", git = "https://github.com/develop4God/bible_versions?rev=main" },
     { name = "fastapi", specifier = "==0.135.2" },
     { name = "google-genai", specifier = "==1.68.0" },
     { name = "openai" },
