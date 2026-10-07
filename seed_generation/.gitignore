@@ -45,6 +45,7 @@ Bibles/**/*.SQLite3
 
 # Generated/Output files
 validation_report_*.json
+generate_from_seed_checkpoint_*.json
 
 
 *.log
