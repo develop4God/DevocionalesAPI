@@ -17,8 +17,10 @@ jobs:
   retry-launch:
     runs-on: ubuntu-latest
     steps:
+      - uses: astral-sh/setup-uv@v6
+
       - name: Install OCI CLI
-        run: pip install oci-cli
+        run: uv tool install oci-cli
 
       - name: Write OCI config and key
         env:

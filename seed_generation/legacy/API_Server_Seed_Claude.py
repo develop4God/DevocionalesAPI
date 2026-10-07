@@ -12,7 +12,7 @@ New vs Gemini version:
   - MAX_CONTENT_RETRIES controls how many full regeneration attempts are made
 
 Setup:
-  1. Install: pip install anthropic
+  1. Install: uv sync
   2. Set ANTHROPIC_API_KEY in .env
   3. Launch: python API_Server_Seed_Claude.py
 """

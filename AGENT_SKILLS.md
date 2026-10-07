@@ -60,7 +60,7 @@ async def _call_gemini_raw(verse_cita, lang, topic=None) -> CreativeContent:
 **Replace with a Claude call:**
 
 ```python
-# Install: pip install anthropic
+# Install: uv add anthropic
 import anthropic
 
 _claude_client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
@@ -184,7 +184,7 @@ oracion   = result["oracion"]
 | Async support | Native async (`aio.models`) | Use `asyncio.to_thread()` for the sync Anthropic SDK, or use `anthropic.AsyncAnthropic` |
 | Retries | `tenacity` decorator | `anthropic.Anthropic(max_retries=3)` or keep `tenacity` |
 
-Install: `pip install anthropic`
+Install: `uv add anthropic`
 
 ---
 
@@ -235,7 +235,7 @@ LATIN_LANGS = {"en", "es", "pt", "fr", "de"}  # do NOT add ar here; it needs scr
 |------|--------|
 | `seed_generation/API_Server_Seed.py` | Replace `_call_gemini_raw()` with Claude call; swap env var; remove google-genai imports |
 | `seed_generation/client_generate_from_seed.py` | Add `generate_reflexion_oracion()` using `anthropic`; replace `requests.post()` call |
-| `seed_generation/requirements.txt` | Replace `google-genai` with `anthropic` |
+| `pyproject.toml` | Replace `google-genai` with `anthropic` |
 | `seed_generation/API_Server_Seed.py` | Add `"ar": (0x0600, 0x06FF)` to `SCRIPT_RANGES` |
 
 ---
