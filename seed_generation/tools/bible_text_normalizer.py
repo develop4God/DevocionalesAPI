@@ -13,7 +13,7 @@ edition) that the Dart original wasn't written against, so its generic
 tag-stripper alone would leave their wrapped text behind as stray content.
 
 clean_resolved() handles text that has already gone through
-verse_resolver.py's fetch_text(): its <S>/<m>/<n>/<f> tag *markers* are
+bible_resolver's fetch_text(): its <S>/<m>/<n>/<f> tag *markers* are
 already stripped, but for a Strong's-numbered DB the digits they wrapped
 are left glued to the preceding word (e.g. "helper998") since that
 resolver has no Strong's-specific handling. Strip those bare trailing

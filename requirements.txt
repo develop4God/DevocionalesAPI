@@ -12,3 +12,4 @@ requests==2.33.0
 tenacity==9.1.4
 tqdm==4.67.3
 uvicorn==0.42.0
+bible-resolver @ git+https://github.com/develop4God/bible_versions@main

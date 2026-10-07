@@ -19,7 +19,7 @@ import argparse
 import json
 import re
 
-from verse_resolver import VerseResolver
+from bible_resolver import VerseResolver
 
 from seed_generation.shared.generation_core import (
     build_devotional_seed_entry,
@@ -31,8 +31,7 @@ from seed_generation.shared.generation_core import (
 # "S.Juan", "1 S. Pedro" — that real citations don't use. The prefix can sit
 # either at the very start ("S. João") or right after a leading book number
 # ("1 S. Pedro"), so both positions must be matched. Stripped here rather
-# than in verse_resolver.py to keep that file in sync with its upstream copy
-# in devocionales-json.
+# than in bible_resolver, which is shared with devocionales-json.
 _S_PREFIX = re.compile(r"^(\d\s+)?S\.\s*")
 
 

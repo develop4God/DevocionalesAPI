@@ -330,9 +330,10 @@ Only PT NVI happens to have clean `books_all.long_name` values; PT ARC is worse
 citation-ready title.
 
 **Fix:** canonical titles are curated per language in
-`tools/book_name_sanitizers/<lang>.json`, keyed by the canonical MyBible
+`data/book_name_sanitizers/<lang>.json` in the shared `bible_resolver` package
+(develop4God/bible_versions), keyed by the canonical MyBible
 `book_number` (version-independent within a language), applied through the shared
-`tools/book_name_normalizer.py`. **Adding a language or correcting a title is now a
+`bible_resolver.sanitize_book_name`. **Adding a language or correcting a title is now a
 data change — no resolver edits.** Configured so far: `de` (76 books, covers both
 Luther 2017 *and* Schlachter 2000), `ar` (66 books, NAV *and* SVDA), `pt` (14),
 `hi` (41).
@@ -349,7 +350,7 @@ Every alias target must itself be a configured canonical title (a test enforces 
 
 Both resolvers now call the shared sanitizer:
 
-- `tools/verse_resolver.py` → `VerseResolver(db, language="de")` (used by
+- `bible_resolver.VerseResolver(db, language="de")` (used by
   `build_seed_for_language.py`)
 - `tools/seed_extractor_fetch.py` and the legacy `tools/extract_seed.py` →
   `resolve_reference(..., language=lang_code)`
@@ -404,7 +405,7 @@ Both dates were repaired, so SCH2000 now carries the verse under its German addr
 
 A fresh `build_seed_for_language.py --lang de` run **still** reports both as resolution
 errors, so a decoupled per-language versification map (a sibling of
-`book_name_sanitizers/`) is the next step whenever reproducible rebuilds are wanted.
+`book_name_sanitizers/` in `bible_resolver`) is the next step whenever reproducible rebuilds are wanted.
 `seed_de_LU17_for_2027.json` still holds only 2 `para_meditar` entries for those two
 dates and would need the same two verses added.
 

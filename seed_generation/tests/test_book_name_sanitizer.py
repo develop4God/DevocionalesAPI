@@ -9,7 +9,7 @@ German Bibles actually use ("Johannes 10:14").
 No DB exposes a citation-ready title column — `short_name` is only an
 abbreviation ("Joh", "Apg") and `books_all.long_name` repeats the long form —
 so canonical titles are curated per language in
-`seed_generation/tools/book_name_sanitizers/<lang>.json`, keyed by the
+the shared `bible_resolver` package (`data/book_name_sanitizers/<lang>.json`), keyed by the
 canonical MyBible `book_number`. These tests protect that contract, the
 per-language config data, and the "only the citation title is rewritten"
 guarantee of the repair pass.
@@ -20,10 +20,9 @@ import re
 import unittest
 from pathlib import Path
 
-from seed_generation.tools.book_name_normalizer import (
-    load_title_aliases,
-    sanitize_book_name,
-)
+import bible_resolver
+from bible_resolver import load_title_aliases, sanitize_book_name
+
 from seed_generation.tools.sanitize_seed_citations import (
     build_title_map,
     sanitize_citation,
@@ -31,7 +30,9 @@ from seed_generation.tools.sanitize_seed_citations import (
 )
 
 _TOOLS_DIR = Path(__file__).resolve().parents[1] / "tools"
-_SANITIZER_DIR = _TOOLS_DIR / "book_name_sanitizers"
+_SANITIZER_DIR = (
+    Path(bible_resolver.__file__).resolve().parent / "data" / "book_name_sanitizers"
+)
 LOCAL_LU17_DB = _TOOLS_DIR / "Bibles" / "DE" / "LU17_de.SQLite3"
 LOCAL_NAV_DB = _TOOLS_DIR / "Bibles" / "NAV_ar.SQLite3"
 

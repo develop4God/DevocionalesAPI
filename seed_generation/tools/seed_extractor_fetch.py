@@ -34,10 +34,7 @@ import sys
 import urllib.request
 from datetime import datetime
 
-try:
-    from .book_name_normalizer import sanitize_book_name
-except ImportError:  # Direct execution from seed_generation/tools
-    from book_name_normalizer import sanitize_book_name
+from bible_resolver import sanitize_book_name
 
 try:
     from tkinter import Tk, filedialog
@@ -284,7 +281,7 @@ def _native_book_name(
 ) -> str:
     """
     Query the DB's `books` table for the long_name of *book_number*, then hand
-    it to the shared, data-driven `book_name_normalizer` so the citation carries
+    it to the shared, data-driven `bible_resolver` so the citation carries
     a readable canonical title instead of the DB's raw liturgical long_name
     (e.g. "Das Evangelium nach Johannes" → "Johannes", "Die Psalmen" →
     "Psalm"). The DB itself exposes no citation-ready column — `short_name` is
@@ -381,7 +378,7 @@ def resolve_reference(
     """
     Resolve an EN reference string to (native_citation, verse_text, error).
     book_number comes from bible_books.json SOT; the readable native book name
-    comes from the DB via `book_name_normalizer` (see `_native_book_name`).
+    comes from the DB via `bible_resolver` (see `_native_book_name`).
     *language* selects the sanitizer configuration; omit it to keep the DB's
     raw long_name.
     """

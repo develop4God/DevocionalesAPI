@@ -22,20 +22,17 @@ Usage:
 
 import gzip
 import json
+import os
 import re
 import shutil
 import sqlite3
 import sys
-import os
 import tempfile
 import urllib.request
 from datetime import datetime
 from tkinter import Tk, filedialog, messagebox, simpledialog
 
-try:
-    from .book_name_normalizer import sanitize_book_name
-except ImportError:  # Direct execution from seed_generation/tools
-    from book_name_normalizer import sanitize_book_name
+from bible_resolver import sanitize_book_name
 
 # =============================================================================
 # 1. CONSTANTS & CONFIG
@@ -428,7 +425,7 @@ def _native_book_name(
 ) -> str:
     """
     Query the DB's `books` table for the long_name of book_number, then hand it
-    to the shared, data-driven `book_name_normalizer` so citations carry a
+    to the shared, data-driven `bible_resolver` so citations carry a
     readable canonical title instead of the DB's raw liturgical long_name
     (e.g. "Das Evangelium nach Johannes" → "Johannes"). The DB exposes no
     citation-ready column — `short_name` is only an abbreviation and
@@ -462,7 +459,7 @@ def resolve_reference(
     On failure: (None, None, reason_string)
 
     book_number comes from the bible_books.json SOT (EN name → number).
-    The readable native book name comes from the DB via `book_name_normalizer`
+    The readable native book name comes from the DB via `bible_resolver`
     (see `_native_book_name`); pass `language` to select its configuration.
     """
     parsed = parse_en_ref(cita)

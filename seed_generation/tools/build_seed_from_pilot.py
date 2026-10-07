@@ -20,8 +20,8 @@ import argparse
 import json
 from datetime import date, timedelta
 
+from bible_resolver import VerseResolver
 from bible_text_normalizer import clean_resolved as clean
-from verse_resolver import VerseResolver
 
 from seed_generation.shared.generation_core import build_devotional_seed_entry
 

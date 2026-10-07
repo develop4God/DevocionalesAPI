@@ -1,7 +1,7 @@
 # Arabic (AR) devotionals — book-name fix and the `id` exception
 
 `NAV_ar` and `SVDA_ar` were originally built before the `ar.json` book-name
-sanitizer existed (see `seed_generation/tools/book_name_sanitizers/ar.json`).
+sanitizer existed (see `bible_resolver`'s `data/book_name_sanitizers/ar.json`).
 Their `versiculo`/`para_meditar` citations used each Bible DB's raw, verbose
 `long_name` (e.g. "رِسَالَةُ بُولُسَ ٱلرَّسُولِ إِلَى أَهْلِ رُومِيَةَ")
 instead of the canonical short form ("رومية"), and a translated version
