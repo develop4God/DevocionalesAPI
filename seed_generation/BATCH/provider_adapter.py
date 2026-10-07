@@ -139,7 +139,7 @@ class AnthropicAdapter(BaseAdapter):
         try:
             import anthropic as _anthropic
         except ImportError:
-            raise ImportError("Run: pip install anthropic")
+            raise ImportError("Run: uv sync")
         self._client = _anthropic.Anthropic(api_key=self._api_key)
         self._poll_interval = provider_cfg["defaults"].get("poll_interval_seconds", 60)
 
@@ -236,7 +236,7 @@ class GeminiBatchAdapter(BaseAdapter):
             from google import genai as _genai
             from google.genai import types as _types
         except ImportError:
-            raise ImportError("Run: pip install google-genai")
+            raise ImportError("Run: uv sync")
         self._genai = _genai
         self._types = _types
         self._client = _genai.Client(api_key=self._api_key)

@@ -46,12 +46,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
+      - uses: astral-sh/setup-uv@v6
         with:
           python-version: "3.12"
 
       - name: Install dependencies
-        run: pip install pyyaml oci-cli
+        run: |
+          uv sync --locked
+          uv tool install oci-cli
 
       - name: Write OCI config and key
         env:
@@ -123,13 +125,13 @@ jobs:
 
       - name: Generate with --provider oracle
         run: |
-          python -u -m seed_generation.generate_from_seed \
+          uv run python -u -m seed_generation.generate_from_seed \
             --seed "$INPUT_SEED" --lang "$INPUT_LANG" --version "$INPUT_VERSION" \
             --provider oracle --limit "$INPUT_LIMIT" --output-dir out
 
       - name: Check the generated entries
         run: |
-          python - <<'PY'
+          uv run python - <<'PY'
           import glob, json, os, sys
 
           REQUIRED = {"id", "date", "language", "version", "versiculo",
